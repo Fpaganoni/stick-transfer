@@ -3,7 +3,7 @@
 import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Compass, Target, MessageSquare, User, Building2 } from "lucide-react";
+import { Target, Compass, Building2, MessageSquare, User } from "lucide-react";
 import { HockeyXTicks } from "../ui/hockey-xtick";
 import { motion } from "framer-motion";
 
@@ -13,25 +13,25 @@ export function SideNavigation() {
   const t = useTranslations("navigation");
 
   const navItems = [
-    { href: "/feed", label: t("feed"), icon: Home },
-    { href: "/explore", label: t("explore"), icon: Compass },
     { href: "/opportunities", label: t("opportunities"), icon: Target },
+    { href: "/explore", label: t("players"), icon: Compass },
     { href: "/clubs", label: t("clubs"), icon: Building2 },
     { href: "/messages", label: t("messages"), icon: MessageSquare },
     { href: "/profile", label: t("profile"), icon: User },
   ];
 
-  // Build locale-aware href
   const getLocalizedHref = (href: string) => {
     if (locale === "en") return href;
     return `/${locale}${href}`;
   };
 
-  // Check if active, considering locale prefix
   const isActiveRoute = (href: string) => {
     const localizedHref = getLocalizedHref(href);
-    
-    if (href === "/feed" && (pathname === "/" || pathname === `/${locale}`)) {
+
+    if (
+      href === "/opportunities" &&
+      (pathname === "/" || pathname === `/${locale}`)
+    ) {
       return true;
     }
 
@@ -46,7 +46,7 @@ export function SideNavigation() {
         transition={{ duration: 0.2 }}
         className="mb-6 flex items-center justify-center w-10 h-10 cursor-pointer"
       >
-        <Link href={getLocalizedHref("/feed")} aria-label="Home">
+        <Link href={getLocalizedHref("/opportunities")} aria-label="Home">
           <HockeyXTicks size={32} className="text-foreground" />
         </Link>
       </motion.div>
@@ -69,7 +69,6 @@ export function SideNavigation() {
                   : "text-foreground/70 hover:bg-primary/10 hover:text-primary"
               }`}
             >
-              {/* Active indicator */}
               {isActive && (
                 <motion.span
                   layoutId="activeIndicator"

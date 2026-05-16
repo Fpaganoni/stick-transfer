@@ -9,21 +9,16 @@ import {
   CheckCircle,
 } from "lucide-react";
 import { motion } from "framer-motion";
-import { useState, useMemo } from "react";
-import { Badge } from "../ui/badge";
 import { User } from "@/types/models/user";
-import { GroupedStory } from "@/types/models/story";
+import { Badge } from "../ui/badge";
 import { useAuthStore } from "@/stores/useAuthStore";
-import { useStoryStore } from "@/stores/useStoryStore";
 import {
   useFollowUser,
   useFollowMutation,
   useUnfollowMutation,
 } from "@/hooks/useUsers";
-import { useActiveStories, useUserStories } from "@/hooks/useStories";
 import { mapRoleToEntityType } from "@/lib/utils/entity-type";
 import { ProfileStats } from "./profile-stats";
-import { StoryViewer } from "@/components/feed/story-viewer";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import Link from "next/link";
@@ -54,32 +49,6 @@ export function ClubProfileHeader({
   const t = useTranslations("clubProfile");
   const { user: currentUser } = useAuthStore();
   const router = useRouter();
-  const { seenStories } = useStoryStore();
-  const [isStoryOpen, setIsStoryOpen] = useState(false);
-
-  const { data: storiesData } = useUserStories(id);
-
-  const profileGroupedStory = useMemo<GroupedStory | null>(() => {
-    if (!storiesData?.userStories) return null;
-    const userStories = storiesData.userStories
-      .filter((s) => s.userId === id)
-      .sort(
-        (a, b) =>
-          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
-      );
-    if (userStories.length === 0) return null;
-    return {
-      userId: id,
-      user: userStories[0].user,
-      stories: userStories,
-      hasMultiple: userStories.length > 1,
-    };
-  }, [storiesData?.userStories, id]);
-
-  const hasActiveStory = !!profileGroupedStory;
-  const allStoriesSeen =
-    hasActiveStory &&
-    profileGroupedStory!.stories.every((s) => seenStories.includes(s.id));
 
   const entityType = mapRoleToEntityType(role);
   const { data: followersData } = useFollowUser(entityType, id);
@@ -135,24 +104,13 @@ export function ClubProfileHeader({
           sizes="100vw"
           className="object-cover"
         />
-        <div className="absolute inset-0 bg-linear-to-t from-background via-background/10 to-transparent z-10"></div>
+        <div className="absolute inset-0 bg-linear-to-t from-background via-background/10 to-transparent z-10" />
       </div>
 
-      {/* Profile Content */}
       <div className="px-4 pt-0 pb-6">
-        {/* Profile Picture and Info */}
         <div className="flex justify-between items-start mb-4">
           <div className="flex items-start gap-3 flex-1 -mt-24 relative z-10">
-            <div
-              onClick={hasActiveStory ? () => setIsStoryOpen(true) : undefined}
-              className={`rounded-full shrink-0 mx-2 p-[3px] ${
-                hasActiveStory
-                  ? allStoriesSeen
-                    ? "bg-muted cursor-pointer"
-                    : "bg-linear-to-tr from-primary to-primary/50 cursor-pointer"
-                  : ""
-              }`}
-            >
+            <div className="rounded-full shrink-0 mx-2">
               <motion.div
                 whileHover={{ scale: 1.05 }}
                 transition={{ duration: 0.2, ease: "easeInOut" }}
@@ -177,7 +135,6 @@ export function ClubProfileHeader({
                 <Badge variant="club">{role}</Badge>
               </div>
 
-              {/* Location */}
               {(city || country) && (
                 <p className="text-foreground-muted text-sm font-medium mt-1">
                   {[city, country].filter(Boolean).join(", ") || "🌍"}
@@ -188,7 +145,6 @@ export function ClubProfileHeader({
                 <ProfileStats userId={id} userRole={role} />
               </div>
 
-              {/* Bio */}
               <p className="text-foreground-muted text-sm text-center mb-2 leading-relaxed mt-2">
                 {bio || t("noBio")}
               </p>
@@ -223,11 +179,7 @@ export function ClubProfileHeader({
                     ? "bg-primary text-foreground border-2 border-primary"
                     : "text-foreground border-primary hover:bg-primary-hover"
                 }`}
-                title={
-                  isFollowing
-                    ? t("unfollow", { fallback: "Unfollow" })
-                    : "Follow"
-                }
+                title={isFollowing ? "Unfollow" : "Follow"}
               >
                 {followMutation.isPending || unfollowMutation.isPending ? (
                   <Loader2 className="w-5 h-5 animate-spin" />
@@ -251,14 +203,6 @@ export function ClubProfileHeader({
           )}
         </div>
       </div>
-      {isStoryOpen && profileGroupedStory && (
-        <StoryViewer
-          groups={[profileGroupedStory]}
-          initialGroupIndex={0}
-          initialStoryIndex={0}
-          onClose={() => setIsStoryOpen(false)}
-        />
-      )}
     </div>
   );
 }

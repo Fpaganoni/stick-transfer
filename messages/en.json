@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "FieldLink",
+    "appName": "Scordd",
     "loading": "Loading...",
     "error": "An error occurred",
     "save": "Save",
@@ -10,11 +10,10 @@
     "search": "Search"
   },
   "navigation": {
-    "feed": "Feed",
-    "explore": "Explore",
-    "messages": "Messages",
     "opportunities": "Opportunities",
+    "players": "Players/Coaches",
     "clubs": "Clubs",
+    "messages": "Messages",
     "profile": "Profile",
     "settings": "Settings",
     "logout": "Logout"
@@ -97,12 +96,12 @@
   },
   "landing": {
     "hero": {
-      "badge": "🏑 The field hockey social network",
-      "title": "Connect with the world of",
-      "titleHighlight": "Field Hockey",
-      "subtitle": "Join the ultimate platform for players, clubs, and coaches. Share your journey, discover opportunities, and connect with the global hockey community.",
-      "getStarted": "Get Started",
-      "explore": "Explore",
+      "badge": "🏑 The Hockey Job Board",
+      "title": "Connecting talent with",
+      "titleHighlight": "Hockey Opportunities",
+      "subtitle": "The professional platform for players, coaches, and clubs. Build your profile, discover job opportunities, and advance your hockey career.",
+      "getStarted": "Create Profile",
+      "explore": "Browse Jobs",
       "statsPlayers": "Players",
       "statsClubs": "Clubs",
       "statsCountries": "Countries"
@@ -202,59 +201,6 @@
         "cookies": "Cookies"
       },
       "copyright": "All rights reserved."
-    }
-  },
-  "feed": {
-    "loadingPosts": "Loading posts...",
-    "loadingStories": "Loading stories...",
-    "loadingMorePosts": "Loading more posts...",
-    "errorLoadingStories": "Error loading stories",
-    "noStoriesAvailable": "No stories available",
-    "scrollToLoadMore": "Scroll to load more posts",
-    "noMorePosts": "No more posts to load.",
-    "postNotFound": "Post not found.",
-    "postContent": "Post content",
-    "scrollLeft": "Scroll left",
-    "scrollRight": "Scroll right",
-    "story": "story",
-    "stories": "stories",
-    "createContent": {
-      "title": "Create",
-      "description": "Share a post or story with your community",
-      "createPost": "Create Post",
-      "postDescription": "Share text and images with your followers",
-      "createStory": "Create Story",
-      "storyDescription": "Share temporary content that expires after 24 hours"
-    },
-    "createPost": {
-      "contentPlaceholder": "What's on your mind?",
-      "addImageOptional": "Click to add image (optional)",
-      "uploading": "Uploading...",
-      "fileTooLarge": "File is too large. Maximum size: 50MB",
-      "invalidFileType": "Invalid file type. Please upload an image (JPG, PNG, GIF, WebP)",
-      "uploadFailed": "Failed to upload image. Please try again.",
-      "contentRequired": "Content is required to create a post",
-      "createPost": "Post",
-      "creating": "Creating...",
-      "postCreated": "Post created successfully!",
-      "postCreationFailed": "Failed to create post",
-      "cancel": "Cancel"
-    },
-    "createStory": {
-      "dragOrClick": "Drag and drop image or video here, or click to browse",
-      "supportedFormats": "Supported formats: JPG, PNG, GIF, MP4, WebM (Max 50MB)",
-      "addTextPlaceholder": "Add text to your story (optional)",
-      "fileTooLarge": "File is too large. Maximum size: 50MB",
-      "invalidFileType": "Invalid file type. Please upload an image or video",
-      "uploadFailed": "Failed to upload file. Please try again.",
-      "requiresFileOrText": "Story must have at least an image, video, or text",
-      "requiresFile": "Please upload an image or video",
-      "uploading": "Uploading...",
-      "createStory": "Create Story",
-      "creating": "Creating...",
-      "storyCreated": "Story created successfully!",
-      "storyCreationFailed": "Failed to create story",
-      "cancel": "Cancel"
     }
   },
   "explore": {
@@ -468,29 +414,6 @@
     "alreadyApplied": "You already applied",
     "opportunityNotFound": "This opportunity is no longer available",
     "applicationFailed": "Failed to submit application"
-  },
-  "posts": {
-    "like": "Like",
-    "comment": "Comment",
-    "share": "Share",
-    "newPost": "Create Post",
-    "whatAreYouThinking": "What's on your mind?",
-    "modal": {
-      "commentsTab": "Comments ({count})",
-      "likesTab": "Likes ({count})",
-      "noCommentsYet": "No comments yet.",
-      "reply": "Reply",
-      "noLikesYet": "No likes yet.",
-      "follow": "Follow",
-      "following": "Following",
-      "likesCount": "{count} Likes",
-      "addCommentPlaceholder": "Add a comment...",
-      "publish": "Publish",
-      "publishing": "Publishing...",
-      "share": "Share",
-      "linkCopied": "Link copied!",
-      "shareFailed": "Could not copy link"
-    }
   },
   "clubs": {
     "title": "Clubs",

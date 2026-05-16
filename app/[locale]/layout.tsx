@@ -11,9 +11,9 @@ import { Toaster } from "@/components/ui/sonner";
 import { locales } from "@/i18n/request";
 
 export const metadata: Metadata = {
-  title: "FieldLink - Field Hockey Community Network",
+  title: "Scordd - Hockey Job Board",
   description:
-    "Connect with field hockey players, coaches, and clubs worldwide",
+    "Connecting hockey talent with opportunities. Find jobs, trials, and clubs worldwide.",
   generator: "v0.app",
 };
 

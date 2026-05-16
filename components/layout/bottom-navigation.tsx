@@ -3,7 +3,7 @@
 import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Compass, Target, MessageSquare, User, Building2 } from "lucide-react";
+import { Target, Compass, Building2, MessageSquare, User } from "lucide-react";
 
 export function BottomNavigation() {
   const pathname = usePathname();
@@ -11,27 +11,25 @@ export function BottomNavigation() {
   const t = useTranslations("navigation");
 
   const navItems = [
-    { href: "/feed", label: t("feed"), icon: Home },
-    { href: "/explore", label: t("explore"), icon: Compass },
     { href: "/opportunities", label: t("opportunities"), icon: Target },
+    { href: "/explore", label: t("players"), icon: Compass },
     { href: "/clubs", label: t("clubs"), icon: Building2 },
     { href: "/messages", label: t("messages"), icon: MessageSquare },
     { href: "/profile", label: t("profile"), icon: User },
   ];
 
-  // Function to build locale-aware href
   const getLocalizedHref = (href: string) => {
-    if (locale === "en") {
-      return href; // English doesn't need prefix
-    }
+    if (locale === "en") return href;
     return `/${locale}${href}`;
   };
 
-  // Function to check if active, considering locale prefix
   const isActiveRoute = (href: string) => {
     const localizedHref = getLocalizedHref(href);
 
-    if (href === "/feed" && (pathname === "/" || pathname === `/${locale}`)) {
+    if (
+      href === "/opportunities" &&
+      (pathname === "/" || pathname === `/${locale}`)
+    ) {
       return true;
     }
 
@@ -50,7 +48,7 @@ export function BottomNavigation() {
             href={localizedHref}
             className={`flex flex-col items-center justify-center gap-1 py-2 px-3 rounded-lg transition-transform duration-200 cursor-pointer hover:scale-105 ${
               isActive
-                ? "text-primary scale-110 "
+                ? "text-primary scale-110"
                 : "text-foreground hover:text-primary"
             }`}
           >

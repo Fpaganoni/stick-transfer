@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "FieldLink",
+    "appName": "Scordd",
     "loading": "Cargando...",
     "error": "Ocurrió un error",
     "save": "Guardar",
@@ -10,11 +10,10 @@
     "search": "Buscar"
   },
   "navigation": {
-    "feed": "Feed",
-    "explore": "Explorar",
-    "messages": "Mensajes",
     "opportunities": "Oportunidades",
+    "players": "Jugadores/Coaches",
     "clubs": "Clubes",
+    "messages": "Mensajes",
     "profile": "Perfil",
     "settings": "Configuración",
     "logout": "Cerrar sesión"
@@ -97,12 +96,12 @@
   },
   "landing": {
     "hero": {
-      "badge": "🏑 La red social de hockey sobre césped",
-      "title": "Conéctate con el mundo del",
-      "titleHighlight": "Hockey sobre Césped",
-      "subtitle": "Únete a la plataforma definitiva para jugadores, clubes y entrenadores. Comparte tu trayectoria, descubre oportunidades y conéctate con la comunidad global de hockey.",
-      "getStarted": "Comenzar",
-      "explore": "Explorar",
+      "badge": "🏑 El Job Board del Hockey",
+      "title": "Conectando talento con",
+      "titleHighlight": "Oportunidades de Hockey",
+      "subtitle": "La plataforma profesional para jugadores, entrenadores y clubes. Crea tu perfil, descubre oportunidades de trabajo y avanza en tu carrera de hockey.",
+      "getStarted": "Crear Perfil",
+      "explore": "Ver Empleos",
       "statsPlayers": "Jugadores",
       "statsClubs": "Clubes",
       "statsCountries": "Países"
@@ -202,59 +201,6 @@
         "cookies": "Cookies"
       },
       "copyright": "Todos los derechos reservados."
-    }
-  },
-  "feed": {
-    "loadingPosts": "Cargando publicaciones...",
-    "loadingStories": "Cargando historias...",
-    "loadingMorePosts": "Cargando más publicaciones...",
-    "errorLoadingStories": "Error al cargar historias",
-    "noStoriesAvailable": "No hay historias disponibles",
-    "scrollToLoadMore": "Desplázate para cargar más publicaciones",
-    "noMorePosts": "No hay más publicaciones para cargar.",
-    "postNotFound": "Publicación no encontrada.",
-    "postContent": "Contenido de la publicación",
-    "scrollLeft": "Desplazar a la izquierda",
-    "scrollRight": "Desplazar a la derecha",
-    "story": "historia",
-    "stories": "historias",
-    "createContent": {
-      "title": "Crear",
-      "description": "Comparte una publicación o historia con tu comunidad",
-      "createPost": "Crear Publicación",
-      "postDescription": "Comparte texto e imágenes con tus seguidores",
-      "createStory": "Crear Historia",
-      "storyDescription": "Comparte contenido temporal que caduca después de 24 horas"
-    },
-    "createPost": {
-      "contentPlaceholder": "¿Qué estás pensando?",
-      "addImageOptional": "Haz clic para añadir imagen (opcional)",
-      "uploading": "Subiendo...",
-      "fileTooLarge": "El archivo es demasiado grande. Tamaño máximo: 50MB",
-      "invalidFileType": "Tipo de archivo inválido. Por favor, sube una imagen (JPG, PNG, GIF, WebP)",
-      "uploadFailed": "Error al subir la imagen. Por favor, intenta de nuevo.",
-      "contentRequired": "El contenido es requerido para crear una publicación",
-      "createPost": "Publicar",
-      "creating": "Creando...",
-      "postCreated": "¡Publicación creada exitosamente!",
-      "postCreationFailed": "Error al crear la publicación",
-      "cancel": "Cancelar"
-    },
-    "createStory": {
-      "dragOrClick": "Arrastra y suelta la imagen o video aquí, o haz clic para examinar",
-      "supportedFormats": "Formatos soportados: JPG, PNG, GIF, MP4, WebM (Máx 50MB)",
-      "addTextPlaceholder": "Añade texto a tu historia (opcional)",
-      "fileTooLarge": "El archivo es demasiado grande. Tamaño máximo: 50MB",
-      "invalidFileType": "Tipo de archivo inválido. Por favor, sube una imagen o video",
-      "uploadFailed": "Error al subir el archivo. Por favor, intenta de nuevo.",
-      "requiresFileOrText": "La historia debe tener al menos una imagen, video o texto",
-      "requiresFile": "Por favor, sube una imagen o video",
-      "uploading": "Subiendo...",
-      "createStory": "Crear Historia",
-      "creating": "Creando...",
-      "storyCreated": "¡Historia creada exitosamente!",
-      "storyCreationFailed": "Error al crear la historia",
-      "cancel": "Cancelar"
     }
   },
   "explore": {
@@ -468,29 +414,6 @@
     "alreadyApplied": "Ya aplicaste",
     "opportunityNotFound": "Esta oportunidad ya no está disponible",
     "applicationFailed": "Error al enviar la solicitud"
-  },
-  "posts": {
-    "like": "Me gusta",
-    "comment": "Comentar",
-    "share": "Compartir",
-    "newPost": "Crear publicación",
-    "whatAreYouThinking": "¿Qué estás pensando?",
-    "modal": {
-      "commentsTab": "Comentarios ({count})",
-      "likesTab": "Me gusta ({count})",
-      "noCommentsYet": "Aún no hay comentarios.",
-      "reply": "Responder",
-      "noLikesYet": "Nadie ha dado me gusta todavía.",
-      "follow": "Seguir",
-      "following": "Siguiendo",
-      "likesCount": "{count} Me gusta",
-      "addCommentPlaceholder": "Agrega un comentario...",
-      "publish": "Publicar",
-      "publishing": "Publicando...",
-      "share": "Compartir",
-      "linkCopied": "¡Enlace copiado!",
-      "shareFailed": "No se pudo copiar el enlace"
-    }
   },
   "clubs": {
     "title": "Clubes",

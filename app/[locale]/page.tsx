@@ -2,7 +2,7 @@
 
 import { LandingPage } from "@/components/pages/landing-page";
 import { AppShell } from "@/components/layout/app-shell";
-import { FeedPage } from "@/components/pages/feed-page";
+import { OpportunitiesPage } from "@/components/pages/opportunities-page";
 import { useAuthStore } from "@/stores/useAuthStore";
 
 export default function Home() {
@@ -13,8 +13,8 @@ export default function Home() {
   }
 
   return (
-    <AppShell title="Feed">
-      <FeedPage />
+    <AppShell title="Explorar Oportunidades">
+      <OpportunitiesPage />
     </AppShell>
   );
 }
