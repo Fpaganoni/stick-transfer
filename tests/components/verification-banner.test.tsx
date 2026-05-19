@@ -2,6 +2,7 @@ import { render, screen } from "@testing-library/react";
 import { VerificationBanner } from "@/components/clubs/verification-banner";
 import { Club } from "@/types/models/club";
 import { NextIntlClientProvider } from "next-intl";
+import { describe, it, expect, vi } from "vitest";
 
 const mockMessages = {
   clubs: {
@@ -27,11 +28,13 @@ describe("VerificationBanner", () => {
     render(
       <NextIntlClientProvider locale="en" messages={mockMessages}>
         <VerificationBanner club={mockClub} onVerifyClick={onVerifyClick} />
-      </NextIntlClientProvider>
+      </NextIntlClientProvider>,
     );
 
     expect(screen.getByText("Club Not Verified")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /verify club/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /verify club/i }),
+    ).toBeInTheDocument();
   });
 
   it("renders pending banner", () => {
@@ -40,7 +43,7 @@ describe("VerificationBanner", () => {
     render(
       <NextIntlClientProvider locale="en" messages={mockMessages}>
         <VerificationBanner club={pendingClub} onVerifyClick={onVerifyClick} />
-      </NextIntlClientProvider>
+      </NextIntlClientProvider>,
     );
 
     expect(screen.getByText("Verification Pending")).toBeInTheDocument();
@@ -48,14 +51,19 @@ describe("VerificationBanner", () => {
   });
 
   it("does not render when verified", () => {
-    const verifiedClub = { ...mockClub, verificationStatus: "VERIFIED" as const };
+    const verifiedClub = {
+      ...mockClub,
+      verificationStatus: "VERIFIED" as const,
+    };
     const onVerifyClick = vi.fn();
-    const { container } = render(
+    render(
       <NextIntlClientProvider locale="en" messages={mockMessages}>
         <VerificationBanner club={verifiedClub} onVerifyClick={onVerifyClick} />
-      </NextIntlClientProvider>
+      </NextIntlClientProvider>,
     );
 
-    expect(container.firstChild).toBeEmptyDOMElement();
+    // El componente retorna null → no hay botón ni texto de verificación en el DOM
+    expect(screen.queryByRole("button")).not.toBeInTheDocument();
+    expect(screen.queryByText("Club Not Verified")).not.toBeInTheDocument();
   });
 });

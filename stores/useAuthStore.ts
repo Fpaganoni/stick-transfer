@@ -36,7 +36,9 @@ export const useAuthStore = create<AuthState>()(
       },
 
       register: (user: User, token: string) => {
-        set({ user, token, isLoggedIn: true });
+        // El registro guarda el usuario pero NO inicia sesión automáticamente.
+        // La página de registro llama a login() explícitamente tras verificar el token.
+        set({ user, token, isLoggedIn: false });
       },
 
       updateUser: (data: UpdateUserInput) => {

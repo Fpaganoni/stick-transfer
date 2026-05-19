@@ -1,3 +1,8 @@
+/**
+ * What: Unit tests for useRequestClubVerification hook.
+ * Why: Verifies that the mutation is called with the correct GraphQL variables.
+ *      The file uses JSX (QueryClientProvider wrapper) so it must be .tsx.
+ */
 import { renderHook, waitFor } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useRequestClubVerification } from "@/hooks/useClubMutations";
