@@ -12,7 +12,6 @@ export const GET_NOTIFICATIONS = gql`
       isRead
       recipientId
       entityId
-      postId
       createdAt
       actor {
         id

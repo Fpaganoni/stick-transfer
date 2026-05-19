@@ -2,11 +2,8 @@
 
 import {
   Edit,
-  UserPlus,
-  UserCheck,
   MessageCircle,
   Download,
-  Loader2,
   Move,
   Check,
   X,
@@ -16,14 +13,7 @@ import { useState, useRef, useCallback, useEffect } from "react";
 import { Badge } from "../ui/badge";
 import { User } from "@/types/models/user";
 import { useAuthStore } from "@/stores/useAuthStore";
-import {
-  useFollowUser,
-  useFollowMutation,
-  useUnfollowMutation,
-  useUpdateUser,
-} from "@/hooks/useUsers";
-import { mapRoleToEntityType } from "@/lib/utils/entity-type";
-import { ProfileStats } from "./profile-stats";
+import { useUpdateUser } from "@/hooks/useUsers";
 import { CvSection } from "./cv-section";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
@@ -129,44 +119,7 @@ export function ProfileHeader({
     setIsRepositioning(false);
   };
 
-  const entityType = mapRoleToEntityType(role);
-  const { data: followersData } = useFollowUser(entityType, id);
-  const isFollowing = followersData?.followers?.some(
-    (f: any) => f.followerId === currentUser?.id,
-  );
 
-  const followMutation = useFollowMutation();
-  const unfollowMutation = useUnfollowMutation();
-
-  const handleToggleFollow = () => {
-    if (!currentUser) {
-      toast.error("You must be logged in to follow users");
-      return;
-    }
-
-    const followerId = currentUser.id;
-    const followerType = mapRoleToEntityType(currentUser.role);
-    const followingId = id;
-    const followingType = entityType;
-
-    if (isFollowing) {
-      unfollowMutation.mutate(
-        { followerId, followerType, followingId, followingType },
-        {
-          onSuccess: () => toast.success(`Unfollowed ${name}`),
-          onError: () => toast.error("Failed to unfollow"),
-        },
-      );
-    } else {
-      followMutation.mutate(
-        { followerId, followerType, followingId, followingType },
-        {
-          onSuccess: () => toast.success(`Now following ${name}`),
-          onError: () => toast.error("Failed to follow"),
-        },
-      );
-    }
-  };
 
   const handleMessage = () => {
     router.push(`/messages?userId=${id}&name=${encodeURIComponent(name)}`);
@@ -280,9 +233,6 @@ export function ProfileHeader({
                   {position || t("positionNotSet")}
                 </span>
               </div>
-              <div className="mt-1">
-                <ProfileStats userId={id} userRole={role} />
-              </div>
 
               <CvSection
                 userId={id}
@@ -313,33 +263,6 @@ export function ProfileHeader({
             </Link>
           ) : (
             <div className="flex gap-4 justify-start ml-40">
-              <motion.button
-                onClick={handleToggleFollow}
-                disabled={
-                  followMutation.isPending || unfollowMutation.isPending
-                }
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className={`p-3 rounded-full border-2 transition-colors flex items-center justify-center shadow-sm ${
-                  isFollowing
-                    ? "bg-primary text-foreground border-2 border-primary"
-                    : "text-foreground border-primary hover:bg-primary-hover"
-                }`}
-                title={
-                  isFollowing
-                    ? t("unfollow", { fallback: "Unfollow" })
-                    : t("follow")
-                }
-              >
-                {followMutation.isPending || unfollowMutation.isPending ? (
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                ) : isFollowing ? (
-                  <UserCheck className="w-5 h-5" />
-                ) : (
-                  <UserPlus className="w-5 h-5" />
-                )}
-              </motion.button>
-
               <motion.button
                 onClick={handleMessage}
                 whileHover={{ scale: 1.05 }}

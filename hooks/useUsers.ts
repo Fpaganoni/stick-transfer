@@ -11,10 +11,7 @@ import {
   UPLOAD_CV,
   DELETE_CV,
   UPDATE_USER,
-  FOLLOW_USER,
-  UNFOLLOW_USER,
 } from "@/graphql/user/mutations";
-import { GET_FOLLOWERS, GET_FOLLOWING } from "@/graphql/user/queries";
 import {
   LoginVariables,
   LoginResponse,
@@ -28,12 +25,7 @@ import {
 } from "@/types/models/user";
 import {
   User,
-  FollowUserResponse,
-  FollowMutationVariables,
-  FollowingUserResponse,
 } from "@/types/models/user";
-
-// Define Follow mutation variables if not in types/models/user
 
 
 /**
@@ -126,59 +118,7 @@ export function useUpdateUser() {
  * }
  */
 
-// ==================
-// FOLLOW USER
-// ==================
 
-export function useFollowUser(entityType: string, entityId: string) {
-  return useQuery<FollowUserResponse, Error>({
-    queryKey: ["followers", entityType, entityId],
-    queryFn: async () =>
-      graphqlClient.request(GET_FOLLOWERS, { entityType, entityId }),
-    enabled: !!entityId,
-  });
-}
-
-// ==================
-// FOLLOWING USER
-// ==================
-
-export function useFollowingUser(entityType: string, entityId: string) {
-  return useQuery<FollowingUserResponse, Error>({
-    queryKey: ["following", entityType, entityId],
-    queryFn: async () =>
-      graphqlClient.request(GET_FOLLOWING, { entityType, entityId }),
-  });
-}
-
-// ==================
-// FOLLOW MUTATIONS
-// ==================
-
-export function useFollowMutation() {
-  const queryClient = useQueryClient();
-  return useMutation<{ follow: any }, Error, FollowMutationVariables>({
-    mutationFn: async (variables) =>
-      graphqlClient.request(FOLLOW_USER, variables),
-    onSuccess: () => {
-      // Invalidate both follow queries for any entity
-      queryClient.invalidateQueries({ queryKey: ["followers"] });
-      queryClient.invalidateQueries({ queryKey: ["following"] });
-    },
-  });
-}
-
-export function useUnfollowMutation() {
-  const queryClient = useQueryClient();
-  return useMutation<{ unfollow: any }, Error, FollowMutationVariables>({
-    mutationFn: async (variables) =>
-      graphqlClient.request(UNFOLLOW_USER, variables),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["followers"] });
-      queryClient.invalidateQueries({ queryKey: ["following"] });
-    },
-  });
-}
 
 // ==================
 // CV

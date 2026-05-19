@@ -1,6 +1,5 @@
 import { Role, Position, Level } from "../enums";
 import { Club } from "./club";
-import { Post } from "./post";
 
 // Tipos relacionados con User
 export interface UserStats {
@@ -48,7 +47,6 @@ export interface User {
   club?: Club;
   statistics?: UserStats;
   trajectories?: TrajectoryItem[];
-  posts?: Post[];
 
   // Metadata (opcional)
   createdAt?: string;
@@ -85,16 +83,7 @@ export type ExploreUser = Pick<
 export type CreateUserInput = Omit<User, "id" | "createdAt" | "updatedAt">;
 export type UpdateUserInput = Partial<Omit<User, "id" | "email" | "role">>;
 
-// ============================================
-// TYPE DEFINITIONS FOR MUTATION VARIABLES
-// ===========================================
 
-export interface FollowMutationVariables {
-  followerType: string;
-  followerId: string;
-  followingType: string;
-  followingId: string;
-}
 
 export interface UpdateUserVariables {
   id: string;
@@ -157,36 +146,4 @@ export interface RegisterResponse {
   register: string;
 }
 
-// ============================================
-// TYPE DEFINITIONS FOR QUERY VARIABLES
-// ============================================
 
-type Followers = {
-  id: string;
-  followerType: string;
-  followerId: string;
-  followingType: string;
-  followingId: string;
-  createdAt: string;
-};
-export interface FollowUserResponse {
-  followers: Followers[];
-}
-
-type Following = {
-  id: string;
-  followingType: string;
-  followingId: string;
-  followerType: string;
-  followerId: string;
-  createdAt: string;
-};
-
-export interface FollowingUserResponse {
-  following: Following[];
-}
-
-export interface FollowQueryVariables {
-  entityType: string;
-  entityId: string;
-}

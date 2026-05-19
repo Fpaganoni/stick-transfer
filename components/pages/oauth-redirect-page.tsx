@@ -42,8 +42,8 @@ export function OAuthRedirectPage() {
         // Save user in auth store (persisted via Zustand)
         login(fullUser);
 
-        // Redirect to the main feed
-        router.replace("/feed");
+        // Redirect to the main page
+        router.replace("/");
       } catch (err) {
         console.error("OAuth redirect error:", err);
         setError("Authentication failed. Please try again.");

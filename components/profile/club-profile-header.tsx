@@ -2,23 +2,13 @@
 
 import {
   Edit,
-  UserPlus,
-  UserCheck,
   MessageCircle,
-  Loader2,
   CheckCircle,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { User } from "@/types/models/user";
 import { Badge } from "../ui/badge";
 import { useAuthStore } from "@/stores/useAuthStore";
-import {
-  useFollowUser,
-  useFollowMutation,
-  useUnfollowMutation,
-} from "@/hooks/useUsers";
-import { mapRoleToEntityType } from "@/lib/utils/entity-type";
-import { ProfileStats } from "./profile-stats";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import Link from "next/link";
@@ -49,45 +39,6 @@ export function ClubProfileHeader({
   const t = useTranslations("clubProfile");
   const { user: currentUser } = useAuthStore();
   const router = useRouter();
-
-  const entityType = mapRoleToEntityType(role);
-  const { data: followersData } = useFollowUser(entityType, id);
-  const isFollowing = followersData?.followers?.some(
-    (f: any) => f.followerId === currentUser?.id,
-  );
-
-  const followMutation = useFollowMutation();
-  const unfollowMutation = useUnfollowMutation();
-
-  const handleToggleFollow = () => {
-    if (!currentUser) {
-      toast.error("You must be logged in to follow clubs");
-      return;
-    }
-
-    const followerId = currentUser.id;
-    const followerType = mapRoleToEntityType(currentUser.role);
-    const followingId = id;
-    const followingType = entityType;
-
-    if (isFollowing) {
-      unfollowMutation.mutate(
-        { followerId, followerType, followingId, followingType },
-        {
-          onSuccess: () => toast.success(`Unfollowed ${name}`),
-          onError: () => toast.error("Failed to unfollow"),
-        },
-      );
-    } else {
-      followMutation.mutate(
-        { followerId, followerType, followingId, followingType },
-        {
-          onSuccess: () => toast.success(`Now following ${name}`),
-          onError: () => toast.error("Failed to follow"),
-        },
-      );
-    }
-  };
 
   const handleMessage = () => {
     router.push(`/messages?userId=${id}&name=${encodeURIComponent(name)}`);
@@ -141,10 +92,6 @@ export function ClubProfileHeader({
                 </p>
               )}
 
-              <div className="mt-2">
-                <ProfileStats userId={id} userRole={role} />
-              </div>
-
               <p className="text-foreground-muted text-sm text-center mb-2 leading-relaxed mt-2">
                 {bio || t("noBio")}
               </p>
@@ -167,29 +114,6 @@ export function ClubProfileHeader({
             </Link>
           ) : (
             <div className="flex gap-4 justify-start ml-40">
-              <motion.button
-                onClick={handleToggleFollow}
-                disabled={
-                  followMutation.isPending || unfollowMutation.isPending
-                }
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className={`p-3 rounded-full border-2 transition-colors flex items-center justify-center shadow-sm ${
-                  isFollowing
-                    ? "bg-primary text-foreground border-2 border-primary"
-                    : "text-foreground border-primary hover:bg-primary-hover"
-                }`}
-                title={isFollowing ? "Unfollow" : "Follow"}
-              >
-                {followMutation.isPending || unfollowMutation.isPending ? (
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                ) : isFollowing ? (
-                  <UserCheck className="w-5 h-5" />
-                ) : (
-                  <UserPlus className="w-5 h-5" />
-                )}
-              </motion.button>
-
               <motion.button
                 onClick={handleMessage}
                 whileHover={{ scale: 1.05 }}

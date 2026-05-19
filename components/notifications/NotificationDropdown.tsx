@@ -4,9 +4,6 @@ import { useEffect, useRef } from "react";
 import { useInView } from "react-intersection-observer";
 import { AnimatePresence, motion } from "framer-motion";
 import {
-  Heart,
-  MessageCircle,
-  UserPlus,
   Bell,
   Briefcase,
   CheckCheck,
@@ -30,17 +27,6 @@ import { Notification, NotificationType } from "@/types/models/notification";
 import { formatRelativeTime } from "@/lib/date-utils";
 
 const TYPE_ICON: Record<NotificationType, React.ReactNode> = {
-  [NotificationType.LIKE_POST]: <Heart size={12} className="text-error" />,
-  [NotificationType.LIKE_COMMENT]: <Heart size={12} className="text-error" />,
-  [NotificationType.COMMENT_POST]: (
-    <MessageCircle size={12} className="text-primary" />
-  ),
-  [NotificationType.REPLY_COMMENT]: (
-    <MessageCircle size={12} className="text-primary" />
-  ),
-  [NotificationType.FOLLOW_USER]: (
-    <UserPlus size={12} className="text-success" />
-  ),
   [NotificationType.CLUB_INVITE]: (
     <Briefcase size={12} className="text-warning" />
   ),
@@ -56,22 +42,7 @@ function resolveNotificationHref(
   notification: Notification,
   locale: string,
 ): string | null {
-  const { type, postId, actor } = notification;
-
-  if (
-    type === NotificationType.LIKE_POST ||
-    type === NotificationType.COMMENT_POST ||
-    type === NotificationType.LIKE_COMMENT ||
-    type === NotificationType.REPLY_COMMENT
-  ) {
-    return postId ? `/${locale}/post/${postId}` : null;
-  }
-
-  if (type === NotificationType.FOLLOW_USER) {
-    return actor?.username
-      ? `/${locale}/profile/${actor.username.replace(/\./g, "/")}`
-      : null;
-  }
+  const { type } = notification;
 
   if (
     type === NotificationType.CLUB_INVITE ||

@@ -12,7 +12,7 @@ interface UserProfilePageProps {
 export function UserProfilePage({
   isOwnProfile = false,
 }: UserProfilePageProps) {
-  const [activeTab, setActiveTab] = useState("posts");
+  const [activeTab, setActiveTab] = useState("trajectory");
   const { user } = useAuthStore();
 
   if (!user) {

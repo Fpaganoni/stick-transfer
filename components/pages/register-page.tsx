@@ -112,7 +112,7 @@ export const RegisterPage = () => {
 
           const fullUser = response.user;
           login(fullUser, token);
-          router.push("/feed");
+          router.push("/");
         },
         onError: (error) => {
           const errorMsj =
