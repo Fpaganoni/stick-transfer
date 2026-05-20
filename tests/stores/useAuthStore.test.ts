@@ -24,7 +24,7 @@ describe("useAuthStore", () => {
   });
 
   it("login() sets user and flips isLoggedIn", () => {
-    act(() => useAuthStore.getState().login(mockUser));
+    act(() => useAuthStore.getState().login(mockUser, "mock-token"));
     const { user, isLoggedIn } = useAuthStore.getState();
     expect(user).toMatchObject({ id: "user-1", email: "franco@test.com" });
     expect(isLoggedIn).toBe(true);
@@ -32,7 +32,7 @@ describe("useAuthStore", () => {
 
   it("logout() clears user and resets isLoggedIn", () => {
     act(() => {
-      useAuthStore.getState().login(mockUser);
+      useAuthStore.getState().login(mockUser, "mock-token");
       useAuthStore.getState().logout();
     });
     const { user, isLoggedIn } = useAuthStore.getState();
@@ -42,7 +42,7 @@ describe("useAuthStore", () => {
 
   it("updateUser() merges partial data without overwriting unrelated fields", () => {
     act(() => {
-      useAuthStore.getState().login(mockUser);
+      useAuthStore.getState().login(mockUser, "mock-token");
       useAuthStore.getState().updateUser({ bio: "Plays left wing" });
     });
     const { user } = useAuthStore.getState();
@@ -57,7 +57,7 @@ describe("useAuthStore", () => {
   });
 
   it("register() sets user without marking isLoggedIn (registration ≠ login)", () => {
-    act(() => useAuthStore.getState().register(mockUser));
+    act(() => useAuthStore.getState().register(mockUser, "mock-token"));
     const { user, isLoggedIn } = useAuthStore.getState();
     expect(user).toMatchObject({ id: "user-1" });
     // Registration alone should not grant a session

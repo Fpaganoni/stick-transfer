@@ -7,6 +7,7 @@ import { useAuthStore } from "@/stores/useAuthStore";
 import { UserProfilePage } from "@/components/pages/user-profile-page";
 import { ClubProfilePage } from "@/components/pages/club-profile-page";
 import { useUserByUsername } from "@/hooks/useUsers";
+import { Role } from "@/types/enums";
 
 interface ProfileSlugWrapperProps {
   username: string;
@@ -20,12 +21,12 @@ export function ProfileSlugWrapper({ username }: ProfileSlugWrapperProps) {
   return (
     <AppShell title={isOwnProfile ? "My Profile" : username}>
       {isOwnProfile ? (
-        currentUser?.role === "club" ? (
+        currentUser?.role === Role.CLUB_ADMIN ? (
           <ClubProfilePage isOwnProfile={true} />
         ) : (
           <UserProfilePage isOwnProfile={true} />
         )
-      ) : data?.getUserByUsername?.role === "club" ? (
+      ) : data?.getUserByUsername?.role === Role.CLUB_ADMIN ? (
         <PublicClubProfilePage username={username} />
       ) : (
         <PublicUserProfilePage username={username} />

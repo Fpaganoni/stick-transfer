@@ -24,7 +24,7 @@ export default async function ClubsRoute() {
       <Suspense
         fallback={
           <div className="flex justify-center p-8">
-            <Loader className="animate-spin text-primary" />
+            <Loader />
           </div>
         }
       >

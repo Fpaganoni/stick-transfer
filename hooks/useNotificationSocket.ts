@@ -9,15 +9,10 @@ import { notificationsQueryKey, notificationsCountQueryKey } from "@/hooks/useNo
 import { Notification, NotificationsPage, UnreadCountResponse } from "@/types/models/notification";
 
 function getToastIcon(type: Notification["type"]): string {
-  const icons: Record<Notification["type"], string> = {
-    LIKE_POST: "❤️",
-    LIKE_COMMENT: "❤️",
-    COMMENT_POST: "💬",
-    REPLY_COMMENT: "↩️",
-    FOLLOW_USER: "👤",
-    CLUB_INVITE: "🏑",
-    CLUB_ACCEPT: "✅",
-    JOB_APPLICATION_UPDATE: "💼",
+  const icons: Record<NotificationType, string> = {
+    [NotificationType.CLUB_INVITE]: "🏑",
+    [NotificationType.CLUB_ACCEPT]: "✅",
+    [NotificationType.JOB_APPLICATION_UPDATE]: "💼",
   };
   return icons[type] ?? "🔔";
 }
@@ -33,7 +28,7 @@ export function useNotificationSocket() {
     const socket = getSocket();
 
     function handleNotification(notification: Notification) {
-      toast(`${getToastIcon(notification.type)} ${notification.message}`, {
+      toast(`${getToastIcon(notification.type)} ${notification.type}`, {
         duration: 4000,
       });
 
