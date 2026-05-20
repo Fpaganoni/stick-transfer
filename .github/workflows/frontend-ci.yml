@@ -1,4 +1,4 @@
-name: Scordd Frontend CI
+name: Stick Transfer Frontend CI
 
 on:
   push:
