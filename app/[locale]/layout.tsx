@@ -11,7 +11,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { locales } from "@/i18n/request";
 
 export const metadata: Metadata = {
-  title: "Scordd - Hockey Job Board",
+  title: "Stick Transfer - Hockey Job Board",
   description:
     "Connecting hockey talent with opportunities. Find jobs, trials, and clubs worldwide.",
   generator: "v0.app",

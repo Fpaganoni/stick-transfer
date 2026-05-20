@@ -7,6 +7,7 @@ import {
   Move,
   Check,
   X,
+  Loader2,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { useState, useRef, useCallback, useEffect } from "react";
@@ -118,8 +119,6 @@ export function ProfileHeader({
     setCoverPos(savedPos);
     setIsRepositioning(false);
   };
-
-
 
   const handleMessage = () => {
     router.push(`/messages?userId=${id}&name=${encodeURIComponent(name)}`);
