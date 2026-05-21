@@ -12,7 +12,7 @@ test.describe("Job Application Flow", () => {
 
   test("user can log in", async ({ page }) => {
     await page.getByLabel(/email/i).fill(TEST_USER.email);
-    await page.getByLabel(/password/i).fill(TEST_USER.password);
+    await page.getByRole("textbox", { name: /password/i }).fill(TEST_USER.password);
     await page.getByRole("button", { name: /login|sign in|iniciar/i }).click();
 
     await expect(page).toHaveURL(/opportunities|feed/, { timeout: 10_000 });
@@ -85,7 +85,7 @@ test.describe("Job Application Flow", () => {
 async function loginUser(page: import("@playwright/test").Page) {
   await page.goto("/en/login");
   await page.getByLabel(/email/i).fill(TEST_USER.email);
-  await page.getByLabel(/password/i).fill(TEST_USER.password);
+  await page.getByRole("textbox", { name: /password/i }).fill(TEST_USER.password);
   await page.getByRole("button", { name: /login|sign in|iniciar/i }).click();
   await page.waitForURL(/opportunities|feed/, { timeout: 10_000 });
 }
