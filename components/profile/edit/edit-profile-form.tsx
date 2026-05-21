@@ -2,11 +2,13 @@
 
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import type { Control, FieldValues } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useUpdateUser, useUploadCv, useDeleteCv } from "@/hooks/useUsers";
 import { TrajectoryItem } from "@/types/models/user";
+import { Position } from "@/types/enums";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useRef } from "react";
@@ -224,14 +226,18 @@ export function EditProfileForm() {
         avatar: data.avatar,
         coverImage: data.coverImage,
         bio: data.bio,
-        position: data.position as string,
+        position: data.position as Position | undefined,
         yearsOfExperience: data.yearsOfExperience,
         country: data.country,
         city: data.city,
         cvUrl: finalCvUrl,
         trajectories: data.trajectories as TrajectoryItem[],
         multimedia: multimediaUrls,
-        statistics: data.statistics as { gamesPlayed?: number; goals?: number; assists?: number },
+        statistics: data.statistics ? {
+          gamesPlayed: data.statistics.gamesPlayed ?? 0,
+          goals: data.statistics.goals ?? 0,
+          assists: data.statistics.assists ?? 0,
+        } : undefined,
       });
 
       toast.success(t("editSuccess") || "Profile updated successfully!");
@@ -598,7 +604,7 @@ export function EditProfileForm() {
             <CardDescription>{t("editForm.trajectoriesDesc")}</CardDescription>
           </CardHeader>
           <CardContent>
-            <TrajectoryFieldArray control={form.control} t={t} />
+            <TrajectoryFieldArray control={form.control as unknown as Control<FieldValues>} t={t} />
           </CardContent>
         </Card>
 
@@ -609,7 +615,7 @@ export function EditProfileForm() {
             <CardDescription>{t("editForm.multimediaDesc")}</CardDescription>
           </CardHeader>
           <CardContent>
-            <MultimediaFieldArray control={form.control} t={t} />
+            <MultimediaFieldArray control={form.control as unknown as Control<FieldValues>} t={t} />
           </CardContent>
         </Card>
 

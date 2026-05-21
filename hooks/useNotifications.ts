@@ -85,7 +85,7 @@ export function useMarkNotificationAsRead() {
   const queryClient = useQueryClient();
   const { user } = useAuthStore();
 
-  return useMutation<MarkAsReadResponse, Error, MarkAsReadVariables>({
+  return useMutation<MarkAsReadResponse, Error, MarkAsReadVariables, NotificationMutationContext | undefined>({
     mutationFn: (variables) =>
       graphqlClient.request(MARK_NOTIFICATION_AS_READ, variables),
 
@@ -141,7 +141,7 @@ export function useMarkAllNotificationsAsRead() {
   const queryClient = useQueryClient();
   const { user } = useAuthStore();
 
-  return useMutation<MarkAllAsReadResponse, Error, MarkAllAsReadVariables>({
+  return useMutation<MarkAllAsReadResponse, Error, MarkAllAsReadVariables, NotificationMutationContext | undefined>({
     mutationFn: (variables) =>
       graphqlClient.request(MARK_ALL_NOTIFICATIONS_AS_READ, variables),
 
@@ -192,7 +192,7 @@ export function useRemoveNotification() {
   const queryClient = useQueryClient();
   const { user } = useAuthStore();
 
-  return useMutation<RemoveNotificationResponse, Error, RemoveNotificationVariables>({
+  return useMutation<RemoveNotificationResponse, Error, RemoveNotificationVariables, NotificationMutationContext | undefined>({
     mutationFn: (variables) =>
       graphqlClient.request(REMOVE_NOTIFICATION, variables),
 
@@ -254,7 +254,7 @@ export function useClearAllNotifications() {
   const queryClient = useQueryClient();
   const { user } = useAuthStore();
 
-  return useMutation<ClearAllNotificationsResponse, Error, ClearAllNotificationsVariables>({
+  return useMutation<ClearAllNotificationsResponse, Error, ClearAllNotificationsVariables, NotificationMutationContext | undefined>({
     mutationFn: (variables) =>
       graphqlClient.request(CLEAR_ALL_NOTIFICATIONS, variables),
 
