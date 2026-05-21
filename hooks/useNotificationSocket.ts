@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { connectSocket, disconnectSocket, getSocket } from "@/lib/socket-client";
 import { notificationsQueryKey, notificationsCountQueryKey } from "@/hooks/useNotifications";
-import { Notification, NotificationsPage, UnreadCountResponse } from "@/types/models/notification";
+import { Notification, NotificationsPage, UnreadCountResponse, NotificationType } from "@/types/models/notification";
 
 function getToastIcon(type: Notification["type"]): string {
   const icons: Record<NotificationType, string> = {
