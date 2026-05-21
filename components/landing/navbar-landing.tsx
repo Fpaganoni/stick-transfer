@@ -27,6 +27,7 @@ export function NavbarLanding() {
   const locale = useLocale();
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
   }, []);
 

@@ -14,7 +14,7 @@ export async function generateMetadata({ params }: PublicProfileRouteProps): Pro
   const username = slug.join(".");
 
   try {
-    const data: any = await graphqlClient.request(GET_USER_BY_USERNAME, { username });
+    const data: { getUserByUsername?: { name: string; bio?: string; avatar?: string } | null } = await graphqlClient.request(GET_USER_BY_USERNAME, { username });
     if (data?.getUserByUsername) {
       const user = data.getUserByUsername;
       return {

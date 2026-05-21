@@ -65,5 +65,5 @@ export function useNotificationSocket() {
       socket.off("notification", handleNotification);
       disconnectSocket();
     };
-  }, [user?.id, queryClient]);
+  }, [user, queryClient]);
 }

@@ -1,17 +1,12 @@
 "use client";
 
-import { Filter } from "lucide-react";
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { JobOpportunities } from "@/components/opportunities/job-opportunities";
 import { useTranslations } from "next-intl";
 import { JobOpportunity } from "@/types/models/job-opportunity";
 
 interface OpportunitiesPageProps {
-  initialData?: { jobOpportunities: JobOpportunity[] } | any;
+  initialData?: { jobOpportunities: JobOpportunity[] };
 }
-
-import { useRouter, useSearchParams, usePathname } from "next/navigation";
 
 export function OpportunitiesPage({ initialData }: OpportunitiesPageProps) {
   const t = useTranslations("opportunities");

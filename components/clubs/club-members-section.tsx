@@ -11,8 +11,6 @@ interface ClubMembersSectionProps {
 
 export function ClubMembersSection({ club }: ClubMembersSectionProps) {
   const t = useTranslations("clubs.detail");
-  const tRoles = useTranslations("clubs.roles");
-  const tStatus = useTranslations("clubs.status");
 
   if (!club.members || club.members.length === 0) return null;
 

@@ -18,31 +18,30 @@ interface ChatConversationProps {
   onBack: () => void;
 }
 
-export function ChatConversation({
-  conversationId,
-  onBack,
-}: ChatConversationProps) {
+const INITIAL_MESSAGES: ChatMessage[] = [
+  {
+    id: 1,
+    sender: "other",
+    text: "Hey! How are you doing?",
+    timestamp: new Date("2024-01-01T09:50:00Z"),
+  },
+  {
+    id: 2,
+    sender: "user",
+    text: "Great! Just finished training",
+    timestamp: new Date("2024-01-01T09:52:00Z"),
+  },
+  {
+    id: 3,
+    sender: "other",
+    text: "That sounds great! See you tomorrow at 8am",
+    timestamp: new Date("2024-01-01T09:55:00Z"),
+  },
+];
+
+export function ChatConversation({ onBack }: ChatConversationProps) {
   const t = useTranslations("messages");
-  const [messages, setMessages] = useState<ChatMessage[]>([
-    {
-      id: 1,
-      sender: "other",
-      text: "Hey! How are you doing?",
-      timestamp: new Date(Date.now() - 10 * 60000),
-    },
-    {
-      id: 2,
-      sender: "user",
-      text: "Great! Just finished training",
-      timestamp: new Date(Date.now() - 8 * 60000),
-    },
-    {
-      id: 3,
-      sender: "other",
-      text: "That sounds great! See you tomorrow at 8am",
-      timestamp: new Date(Date.now() - 5 * 60000),
-    },
-  ]);
+  const [messages, setMessages] = useState<ChatMessage[]>(INITIAL_MESSAGES);
   const [newMessage, setNewMessage] = useState("");
 
   const handleSend = () => {

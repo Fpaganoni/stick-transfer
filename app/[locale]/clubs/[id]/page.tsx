@@ -8,11 +8,7 @@ interface ClubDetailRouteProps {
   }>;
 }
 
-export async function generateMetadata({
-  params,
-}: ClubDetailRouteProps): Promise<Metadata> {
-  const { id } = await params;
-
+export async function generateMetadata(): Promise<Metadata> {
   return {
     title: `Club | Hockey Social`,
     description: "View club details and members",

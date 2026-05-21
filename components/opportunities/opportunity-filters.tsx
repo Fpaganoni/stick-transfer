@@ -126,7 +126,7 @@ export function OpportunityFilters({
         <div className="flex flex-wrap gap-2 pt-2">
           {searchQuery && (
             <div className="px-3 py-1 rounded-full bg-accent/20 text-accent text-xs font-medium flex items-center gap-2">
-              "{searchQuery}"
+              &quot;{searchQuery}&quot;
               <X
                 size={14}
                 className="cursor-pointer hover:opacity-70"

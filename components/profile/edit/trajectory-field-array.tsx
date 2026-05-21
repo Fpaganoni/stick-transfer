@@ -1,6 +1,6 @@
 "use client";
 
-import { useFieldArray, Control } from "react-hook-form";
+import { useFieldArray, Control, FieldValues } from "react-hook-form";
 import { Plus, Trash2 } from "lucide-react";
 import {
   FormField,
@@ -14,8 +14,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 
 interface TrajectoryFieldArrayProps {
-  control: Control<any>;
-  t: any;
+  control: Control<FieldValues>;
+  t: (key: string) => string;
 }
 
 export function TrajectoryFieldArray({

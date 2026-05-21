@@ -1,11 +1,10 @@
 "use client";
 
-import { useFieldArray, Control } from "react-hook-form";
+import { useFieldArray, Control, FieldValues } from "react-hook-form";
 import { Plus, Trash2, Youtube } from "lucide-react";
 import {
   FormField,
   FormItem,
-  FormLabel,
   FormControl,
   FormMessage,
 } from "@/components/ui/form";
@@ -13,8 +12,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 interface MultimediaFieldArrayProps {
-  control: Control<any>;
-  t: any;
+  control: Control<FieldValues>;
+  t: (key: string) => string;
 }
 
 export function MultimediaFieldArray({

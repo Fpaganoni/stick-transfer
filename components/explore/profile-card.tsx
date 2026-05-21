@@ -25,7 +25,6 @@ type ProfileCardProps = Pick<
 >;
 
 export function ProfileCard({
-  id,
   name,
   username,
   role,

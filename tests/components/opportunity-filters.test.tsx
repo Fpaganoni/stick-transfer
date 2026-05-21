@@ -6,7 +6,7 @@
  *      correctamente (searchQuery, level, status, country) y que el botón de
  *      reset limpie todos los filtros.
  */
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, beforeEach } from "vitest";
 import { render, screen, fireEvent, act, waitFor } from "@testing-library/react";
 import { OpportunityFilters } from "@/components/opportunities/opportunity-filters";
 import { useOpportunitiesStore } from "@/stores/useOpportunitiesStore";

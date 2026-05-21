@@ -26,7 +26,7 @@ export function ClubsPage({ initialData }: ClubsPageProps) {
         club.city?.toLowerCase().includes(query) ||
         club.country?.toLowerCase().includes(query)
     );
-  }, [data?.clubs, searchQuery]);
+  }, [data, searchQuery]);
 
   if (isLoading && !initialData) {
     return (

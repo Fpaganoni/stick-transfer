@@ -22,7 +22,6 @@ export function VerificationBanner({
   }
 
   const isPending = status === "PENDING";
-  const isRejected = status === "REJECTED";
 
   return (
     <div

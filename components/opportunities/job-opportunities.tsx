@@ -28,7 +28,7 @@ export function JobOpportunities({ initialData }: JobOpportunitiesProps) {
     if (!data?.jobOpportunities) return [];
     const countries = new Set(data.jobOpportunities.map((opp) => opp.country));
     return Array.from(countries).sort();
-  }, [data?.jobOpportunities]);
+  }, [data]);
 
   // Filter opportunities based on search and filters
   const filteredOpportunities = useMemo(() => {
@@ -70,10 +70,10 @@ export function JobOpportunities({ initialData }: JobOpportunitiesProps) {
 
       return true;
     });
-  }, [data?.jobOpportunities, searchQuery, filters]);
+  }, [data, searchQuery, filters]);
 
   if (isLoading) {
-    return <Loader children={t("loading")} />;
+    return <Loader>{t("loading")}</Loader>;
   }
 
   if (error) {

@@ -38,7 +38,7 @@ const MockNextIntlClientProvider = ({
  * contexto (si hay un Provider activo). Si no hay contexto, devuelve la clave
  * literal — mismo comportamiento que usaban los tests anteriores.
  */
-const mockUseTranslations = (namespace?: string) => {
+const useMockTranslations = (namespace?: string) => {
   const context = useContext(IntlContext);
   return (key: string) => {
     if (!context?.messages) return key;
@@ -59,7 +59,7 @@ const mockUseTranslations = (namespace?: string) => {
 
 vi.mock("next-intl", () => ({
   NextIntlClientProvider: MockNextIntlClientProvider,
-  useTranslations: mockUseTranslations,
+  useTranslations: useMockTranslations,
 }));
 
 // ── localStorage (zustand persist) ───────────────────────────────────────────

@@ -4,6 +4,7 @@ import { formatDistanceToNowLocalized } from "@/lib/date-utils";
 import { Trash2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { useTranslations, useLocale } from "next-intl";
+import Image from "next/image";
 
 interface Conversation {
   id: number;
@@ -20,6 +21,45 @@ interface ConversationListProps {
   onSelectChat: (id: number) => void;
 }
 
+const MOCK_CONVERSATIONS: Conversation[] = [
+  {
+    id: 1,
+    name: "Sarah Mitchell",
+    avatar: "/user.png",
+    lastMessage: "That sounds great! See you tomorrow at 8am",
+    lastMessageTime: new Date("2024-01-01T09:55:00Z"),
+    unread: false,
+    unreadCount: 0,
+  },
+  {
+    id: 2,
+    name: "HC Amsterdam Recruiting",
+    avatar: "/user.png",
+    lastMessage: "We received your application! Thanks for your interest.",
+    lastMessageTime: new Date("2024-01-01T08:00:00Z"),
+    unread: true,
+    unreadCount: 2,
+  },
+  {
+    id: 3,
+    name: "Coach Mike",
+    avatar: "/user.png",
+    lastMessage: "Great performance in the last match!",
+    lastMessageTime: new Date("2024-01-01T00:00:00Z"),
+    unread: false,
+    unreadCount: 0,
+  },
+  {
+    id: 4,
+    name: "Team Netherlands Players",
+    avatar: "/user.png",
+    lastMessage: "Practice moved to 7pm next Tuesday",
+    lastMessageTime: new Date("2023-12-31T00:00:00Z"),
+    unread: false,
+    unreadCount: 0,
+  },
+];
+
 export function ConversationList({
   searchQuery,
   onSelectChat,
@@ -27,44 +67,7 @@ export function ConversationList({
   const t = useTranslations("messages");
   const locale = useLocale() as "en" | "es" | "fr";
 
-  const conversations: Conversation[] = [
-    {
-      id: 1,
-      name: "Sarah Mitchell",
-      avatar: "/user.png",
-      lastMessage: "That sounds great! See you tomorrow at 8am",
-      lastMessageTime: new Date(Date.now() - 5 * 60000),
-      unread: false,
-      unreadCount: 0,
-    },
-    {
-      id: 2,
-      name: "HC Amsterdam Recruiting",
-      avatar: "/user.png",
-      lastMessage: "We received your application! Thanks for your interest.",
-      lastMessageTime: new Date(Date.now() - 2 * 60 * 60000),
-      unread: true,
-      unreadCount: 2,
-    },
-    {
-      id: 3,
-      name: "Coach Mike",
-      avatar: "/user.png",
-      lastMessage: "Great performance in the last match!",
-      lastMessageTime: new Date(Date.now() - 24 * 60 * 60000),
-      unread: false,
-      unreadCount: 0,
-    },
-    {
-      id: 4,
-      name: "Team Netherlands Players",
-      avatar: "/user.png",
-      lastMessage: "Practice moved to 7pm next Tuesday",
-      lastMessageTime: new Date(Date.now() - 2 * 24 * 60 * 60000),
-      unread: false,
-      unreadCount: 0,
-    },
-  ];
+  const conversations = MOCK_CONVERSATIONS;
 
   const filtered = conversations.filter((conv) =>
     conv.name.toLowerCase().includes(searchQuery.toLowerCase()),
@@ -81,9 +84,11 @@ export function ConversationList({
               onClick={() => onSelectChat(conversation.id)}
               className="w-full px-4 py-3 bg-background backdrop-blur-md hover:bg-input transition-colors duration-300 text-left flex items-center gap-3 border-b border-border last:border-b-0 cursor-pointer group"
             >
-              <img
+              <Image
                 src={conversation.avatar || "/placeholder.svg"}
                 alt={conversation.name}
+                width={48}
+                height={48}
                 className="w-12 h-12 rounded-full object-cover shrink-0"
               />
               <div className="flex-1 min-w-0">

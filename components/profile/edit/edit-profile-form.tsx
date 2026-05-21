@@ -1,11 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { useForm, useFieldArray } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useUpdateUser, useUploadCv, useDeleteCv } from "@/hooks/useUsers";
+import { TrajectoryItem } from "@/types/models/user";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useRef } from "react";
@@ -44,7 +45,7 @@ import { MultimediaFieldArray } from "./multimedia-field-array";
 import { toast } from "sonner";
 
 // We'll move validation translations inside the component to use the hook
-const createProfileFormSchema = (t: any) =>
+const createProfileFormSchema = (t: (key: string) => string) =>
   z.object({
     name: z.string().min(2, { message: t("editForm.validation.nameMin") }),
     username: z
@@ -223,14 +224,14 @@ export function EditProfileForm() {
         avatar: data.avatar,
         coverImage: data.coverImage,
         bio: data.bio,
-        position: data.position as any,
+        position: data.position as string,
         yearsOfExperience: data.yearsOfExperience,
         country: data.country,
         city: data.city,
         cvUrl: finalCvUrl,
-        trajectories: data.trajectories as any,
+        trajectories: data.trajectories as TrajectoryItem[],
         multimedia: multimediaUrls,
-        statistics: data.statistics as any,
+        statistics: data.statistics as { gamesPlayed?: number; goals?: number; assists?: number },
       });
 
       toast.success(t("editSuccess") || "Profile updated successfully!");

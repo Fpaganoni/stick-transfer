@@ -28,7 +28,7 @@ export function ClubProfilePage({
     bio: user.bio,
     city: user.city,
     country: user.country,
-    isVerified: (user as any).isVerified,
+    isVerified: (user as unknown as { isVerified?: boolean }).isVerified,
   };
 
   return (

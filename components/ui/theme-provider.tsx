@@ -4,11 +4,11 @@ import { useEffect, useState, useCallback } from "react";
 import { ThemeToggleButton, useThemeTransition } from "./toggleThemeRight";
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<"light" | "dark">("light");
+  const [, setTheme] = useState<"light" | "dark">("light");
   const [mounted, setMounted] = useState(false);
-  const { startTransition } = useThemeTransition();
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
 
     const savedTheme = localStorage.getItem("theme") as "light" | "dark";
@@ -39,6 +39,7 @@ export function useThemeControl() {
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme") as "light" | "dark";
     if (savedTheme) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setTheme(savedTheme);
     }
   }, []);

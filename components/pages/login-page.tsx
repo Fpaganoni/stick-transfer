@@ -3,8 +3,8 @@
 import { useState } from "react";
 import { Mail, Lock, Eye, EyeOff, ArrowUpIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
-import Link from "next/link";
 import { motion } from "framer-motion";
+import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuthStore } from "@/stores/useAuthStore";
@@ -38,7 +38,7 @@ export function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const { login } = useAuthStore();
-  const { mutate: loginUser, isPending, error: loginError } = useUserLogin();
+  const { mutate: loginUser, isPending } = useUserLogin();
   const router = useRouter();
 
   const {
@@ -197,7 +197,7 @@ export function LoginPage() {
             }}
             className="w-full h-(var(--input-button-height)) px-4 py-2 border-2 border-border-strong rounded-lg text-foreground hover:text-white-black hover:bg-foreground transition-colors cursor-pointer flex items-center justify-center gap-2"
           >
-            <img
+            <Image
               src={"/google-icon.svg"}
               alt="Google Icon"
               width={26}
@@ -212,7 +212,7 @@ export function LoginPage() {
             transition={{ duration: 0.2, ease: "easeInOut" }}
             className="w-full h-(--input-button-height) px-4 py-2 border-2 border-border-strong rounded-lg text-foreground hover:text-white-black hover:bg-foreground transition-colors cursor-pointer flex items-center justify-center gap-2"
           >
-            <img
+            <Image
               src={"/apple-icon.svg"}
               className="bg-bg-apple rounded-full"
               alt="Apple"

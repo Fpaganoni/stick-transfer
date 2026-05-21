@@ -7,7 +7,6 @@ import {
   Eye,
   EyeOff,
   User,
-  LogIn,
   ClipboardList,
   UserPlus,
   ArrowUpIcon,

@@ -12,19 +12,19 @@ export interface GraphQLErrorResponse {
   path?: string[];
   extensions?: {
     code?: string;
-    [key: string]: any;
+    [key: string]: unknown;
   };
 }
 
 export interface GraphQLError extends Error {
   response?: {
     errors?: GraphQLErrorResponse[];
-    data?: any;
+    data?: unknown;
     status?: number;
   };
   request?: {
     query?: string;
-    variables?: any;
+    variables?: unknown;
   };
 }
 
@@ -36,7 +36,7 @@ export function isGraphQLError(error: unknown): error is GraphQLError {
     typeof error === "object" &&
     error !== null &&
     "response" in error &&
-    typeof (error as any).response === "object"
+    typeof (error as Record<string, unknown>).response === "object"
   );
 }
 

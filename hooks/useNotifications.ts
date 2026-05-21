@@ -17,7 +17,6 @@ import {
   CLEAR_ALL_NOTIFICATIONS,
 } from "@/graphql/notification/mutations";
 import {
-  Notification,
   NotificationsPage,
   UnreadCountResponse,
   MarkAsReadResponse,
@@ -30,6 +29,11 @@ import {
   ClearAllNotificationsVariables,
 } from "@/types/models/notification";
 import { useAuthStore } from "@/stores/useAuthStore";
+
+type NotificationMutationContext = {
+  previousList: InfiniteData<NotificationsPage> | undefined;
+  previousCount: UnreadCountResponse | undefined;
+};
 
 const PAGE_SIZE = 20;
 
@@ -117,7 +121,7 @@ export function useMarkNotificationAsRead() {
       return { previousList, previousCount };
     },
 
-    onError: (_err, _vars, context: any) => {
+    onError: (_err, _vars, context: NotificationMutationContext | undefined) => {
       if (context?.previousList) {
         queryClient.setQueryData(notificationsQueryKey(user?.id), context.previousList);
       }
@@ -168,7 +172,7 @@ export function useMarkAllNotificationsAsRead() {
       return { previousList, previousCount };
     },
 
-    onError: (_err, _vars, context: any) => {
+    onError: (_err, _vars, context: NotificationMutationContext | undefined) => {
       if (context?.previousList) {
         queryClient.setQueryData(notificationsQueryKey(user?.id), context.previousList);
       }
@@ -230,7 +234,7 @@ export function useRemoveNotification() {
       return { previousList, previousCount };
     },
 
-    onError: (_err, _vars, context: any) => {
+    onError: (_err, _vars, context: NotificationMutationContext | undefined) => {
       if (context?.previousList) {
         queryClient.setQueryData(notificationsQueryKey(user?.id), context.previousList);
       }
@@ -276,7 +280,7 @@ export function useClearAllNotifications() {
       return { previousList, previousCount };
     },
 
-    onError: (_err, _vars, context: any) => {
+    onError: (_err, _vars, context: NotificationMutationContext | undefined) => {
       if (context?.previousList) {
         queryClient.setQueryData(notificationsQueryKey(user?.id), context.previousList);
       }

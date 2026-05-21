@@ -7,7 +7,7 @@ interface Step3Props {
   onNext: () => void
 }
 
-export function OnboardingStep3({ onNext }: Step3Props) {
+export function OnboardingStep3({ }: Step3Props) {
   const router = useRouter()
 
   const roles = [

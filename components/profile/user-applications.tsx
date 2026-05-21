@@ -28,7 +28,7 @@ export function UserApplications() {
         opportunity: opportunitiesMap.get(app.jobOpportunityId),
       }))
       .filter((app) => app.opportunity);
-  }, [applications, opportunitiesData?.jobOpportunities]);
+  }, [applications, opportunitiesData]);
 
   const getStatusColor = (status: string) => {
     const normalized = status.toLowerCase();

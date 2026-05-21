@@ -13,7 +13,6 @@ import { motion } from "framer-motion";
 import { useState, useRef, useCallback, useEffect } from "react";
 import { Badge } from "../ui/badge";
 import { User } from "@/types/models/user";
-import { useAuthStore } from "@/stores/useAuthStore";
 import { useUpdateUser } from "@/hooks/useUsers";
 import { CvSection } from "./cv-section";
 import { useTranslations } from "next-intl";
@@ -52,7 +51,6 @@ export function ProfileHeader({
   isOwnProfile = false,
 }: ProfileHeaderProps) {
   const t = useTranslations("profile");
-  const { user: currentUser } = useAuthStore();
   const router = useRouter();
 
   const [isHoveringCover, setIsHoveringCover] = useState(false);
@@ -69,6 +67,7 @@ export function ProfileHeader({
 
   useEffect(() => {
     const pos = coverImagePosition ? parseFloat(coverImagePosition) : 50;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setCoverPos(pos);
     setSavedPos(pos);
   }, [coverImagePosition]);

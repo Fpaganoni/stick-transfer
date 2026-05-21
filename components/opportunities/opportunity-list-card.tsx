@@ -20,14 +20,12 @@ export function OpportunityListCard(opportunity: OpportunityListCardProps) {
     id,
     title,
     description,
-    positionType,
     club,
     country,
     city,
     status,
     salary,
     currency,
-    benefits,
     createdAt,
     level,
   } = opportunity;
@@ -40,17 +38,6 @@ export function OpportunityListCard(opportunity: OpportunityListCardProps) {
   // Normalize status to lowercase for comparison
   const normalizedStatus = status.toLowerCase() as "open" | "closed" | "filled";
   const userAlreadyApplied = hasAppliedTo(id);
-
-  const tagColorMap: Record<string, string> = {
-    Professional: "bg-info/30 text-foreground border-info/40",
-    Amateur: "bg-warning/30 text-foreground border-warning/40",
-    Elite: "bg-success/30 text-foreground border-success/40",
-    "Contract 1 Year":
-      "bg-accent-bright/20 text-foreground border-foreground/30",
-    "Contract 2 Years":
-      "bg-accent-bright/20 text-foreground border-foreground/30",
-    EU: "bg-foreground/20 text-foreground border-foreground/30",
-  };
 
   return (
     <div

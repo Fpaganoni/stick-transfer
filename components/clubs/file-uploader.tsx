@@ -59,7 +59,7 @@ export function FileUploader({
       const data = await response.json();
       onFileSelect(data.url);
       setIsUploading(false);
-    } catch (err) {
+    } catch {
       setError(t("uploadFailed"));
       setUploadedFile(null);
       setIsUploading(false);

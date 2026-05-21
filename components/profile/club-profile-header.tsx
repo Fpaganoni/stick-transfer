@@ -8,12 +8,10 @@ import {
 import { motion } from "framer-motion";
 import { User } from "@/types/models/user";
 import { Badge } from "../ui/badge";
-import { useAuthStore } from "@/stores/useAuthStore";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { toast } from "sonner";
 
 type ClubProfileHeaderProps = Pick<
   User,
@@ -37,7 +35,6 @@ export function ClubProfileHeader({
   isOwnProfile = false,
 }: ClubProfileHeaderProps) {
   const t = useTranslations("clubProfile");
-  const { user: currentUser } = useAuthStore();
   const router = useRouter();
 
   const handleMessage = () => {

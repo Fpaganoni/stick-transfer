@@ -5,13 +5,14 @@ import { graphqlClient } from "@/lib/graphql-client";
 import { GET_JOB_OPPORTUNITIES } from "@/graphql/opportunity/queries";
 import { getTranslations } from "next-intl/server";
 import { Loader } from "lucide-react";
+import { JobOpportunity } from "@/types/models/job-opportunity";
 
 export default async function OpportunitiesRoute() {
   const t = await getTranslations("opportunities");
-  
-  let initialData = { jobOpportunities: [] };
+
+  let initialData: { jobOpportunities: JobOpportunity[] } = { jobOpportunities: [] };
   try {
-    const data: any = await graphqlClient.request(GET_JOB_OPPORTUNITIES);
+    const data: { jobOpportunities: JobOpportunity[] } = await graphqlClient.request(GET_JOB_OPPORTUNITIES);
     if (data) initialData = data;
   } catch (error) {
     console.error("Failed to fetch opportunities Server Side", error);
