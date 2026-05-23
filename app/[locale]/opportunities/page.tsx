@@ -10,7 +10,7 @@ import { JobOpportunity } from "@/types/models/job-opportunity";
 export default async function OpportunitiesRoute() {
   const t = await getTranslations("opportunities");
 
-  let initialData: { jobOpportunities: JobOpportunity[] } = { jobOpportunities: [] };
+  let initialData: { jobOpportunities: JobOpportunity[] } | undefined = undefined;
   try {
     const data: { jobOpportunities: JobOpportunity[] } = await graphqlClient.request(GET_JOB_OPPORTUNITIES);
     if (data) initialData = data;

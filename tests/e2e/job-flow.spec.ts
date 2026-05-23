@@ -138,7 +138,7 @@ test.describe("Job Application Flow", () => {
 
     await page.goto("/en/opportunities");
     await expect(
-      page.getByRole("heading", { name: /available positions|positions/i })
+      page.getByRole("heading", { name: /available positions|positions/i }).first()
     ).toBeVisible({ timeout: 10_000 });
 
     const jobCards = page.locator('[class*="rounded-xl"][class*="border-l-4"]');
