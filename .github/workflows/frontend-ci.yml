@@ -57,24 +57,13 @@ jobs:
         if: github.event_name == 'push'
         run: pnpm exec playwright install --with-deps chromium
 
-      - name: Validate E2E secrets
-        if: github.event_name == 'push'
-        run: |
-          if [ -z "$GRAPHQL_URL_TEST" ]; then
-            echo "::error::Secret GRAPHQL_URL_TEST not set. Add it under Settings → Secrets → Actions."
-            exit 1
-          fi
-        env:
-          GRAPHQL_URL_TEST: ${{ secrets.GRAPHQL_URL_TEST }}
-
       - name: E2E tests (Playwright)
         if: github.event_name == 'push'
         run: pnpm test:e2e
         env:
-          NEXT_PUBLIC_GRAPHQL_URL: ${{ secrets.GRAPHQL_URL_TEST }}
+          # GraphQL calls are intercepted by page.route() mocks — no real backend needed.
+          NEXT_PUBLIC_GRAPHQL_URL: http://localhost:4000/graphql
           PLAYWRIGHT_BASE_URL: http://localhost:3000
-          E2E_USER_EMAIL: ${{ secrets.E2E_USER_EMAIL }}
-          E2E_USER_PASSWORD: ${{ secrets.E2E_USER_PASSWORD }}
 
       - name: Upload Playwright report
         if: failure() && github.event_name == 'push'

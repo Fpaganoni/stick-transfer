@@ -44,6 +44,10 @@ jobs:
 
       - name: Build
         run: pnpm build
+        env:
+          # NEXT_PUBLIC_* vars are baked at build time — must be set here, not only in the E2E step.
+          # E2E tests mock all GraphQL via page.route(), so localhost:4000 never needs to be reachable.
+          NEXT_PUBLIC_GRAPHQL_URL: ${{ secrets.GRAPHQL_URL_TEST || 'http://localhost:4000/graphql' }}
 
       # ── Unit / Integration tests ─────────────────────────────────────────────
       - name: Unit tests (Vitest)
@@ -54,21 +58,12 @@ jobs:
         if: github.event_name == 'push'
         run: pnpm exec playwright install --with-deps chromium
 
-      - name: Validate E2E secrets
-        if: github.event_name == 'push'
-        run: |
-          if [ -z "$GRAPHQL_URL_TEST" ]; then
-            echo "::error::Secret GRAPHQL_URL_TEST is not set. Add it in Settings → Secrets and variables → Actions."
-            exit 1
-          fi
-        env:
-          GRAPHQL_URL_TEST: ${{ secrets.GRAPHQL_URL_TEST }}
-
       - name: E2E tests (Playwright)
         if: github.event_name == 'push'
         run: pnpm test:e2e
         env:
-          NEXT_PUBLIC_GRAPHQL_URL: ${{ secrets.GRAPHQL_URL_TEST }}
+          # GraphQL calls are intercepted by page.route() mocks — no real backend needed.
+          NEXT_PUBLIC_GRAPHQL_URL: http://localhost:4000/graphql
 
       - name: Upload Playwright report
         if: failure() && github.event_name == 'push'

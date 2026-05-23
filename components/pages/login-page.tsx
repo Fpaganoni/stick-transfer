@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Mail, Lock, Eye, EyeOff, ArrowUpIcon } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
@@ -20,6 +20,7 @@ import { GraphQLError } from "@/types/graphql-error";
 
 export function LoginPage() {
   const t = useTranslations("auth");
+  const locale = useLocale();
 
   const loginSchema = z.object({
     email: z
@@ -64,7 +65,7 @@ export function LoginPage() {
           });
           const fullUser = response.user;
           login(fullUser, token);
-          router.push("/");
+          router.push(`/${locale}/opportunities`);
         },
         onError: (error) => {
           const errorMsj =
