@@ -30,6 +30,7 @@ export function AboutSection() {
                 height={500}
                 alt="Hockey players in a match situation"
                 className="rounded-2xl"
+                unoptimized
               />
             </figure>
 
