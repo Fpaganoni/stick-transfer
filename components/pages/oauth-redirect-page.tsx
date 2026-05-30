@@ -6,9 +6,11 @@ import { jwtDecode } from "jwt-decode";
 import { graphqlClient } from "@/lib/graphql-client";
 import { GET_USER_FOR_LOGIN } from "@/graphql/user/queries";
 import { useAuthStore } from "@/stores/useAuthStore";
+import { useUIStore } from "@/stores/useUIStore";
 
 export function OAuthRedirectPage() {
   const router = useRouter();
+  const { openLoginModal } = useUIStore();
   const { login } = useAuthStore();
   const [error, setError] = useState("");
 
@@ -58,10 +60,13 @@ export function OAuthRedirectPage() {
       <div className="min-h-screen flex flex-col items-center justify-center gap-4">
         <p className="text-error font-semibold">{error}</p>
         <button
-          onClick={() => router.replace("/login")}
+          onClick={() => {
+            router.replace("/");
+            openLoginModal();
+          }}
           className="text-sm text-foreground/70 underline hover:text-foreground transition-colors"
         >
-          Back to Login
+          Back to Home
         </button>
       </div>
     );

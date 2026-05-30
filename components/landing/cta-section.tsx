@@ -5,9 +5,11 @@ import { motion } from "framer-motion";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
+import { useUIStore } from "@/stores/useUIStore";
 
 export function CtaSection() {
   const t = useTranslations("landing.cta");
+  const { openRegisterModal } = useUIStore();
 
   return (
     <section
@@ -68,15 +70,17 @@ export function CtaSection() {
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Link href="/register">
-              <Button size="lg" className="group px-10 py-6 text-pure-white">
-                {t("createAccount")}
-                <ArrowRight
-                  size={20}
-                  className="ml-2 group-hover:translate-x-1 transition-transform"
-                />
-              </Button>
-            </Link>
+            <Button
+              size="lg"
+              className="group px-10 py-6 text-pure-white"
+              onClick={openRegisterModal}
+            >
+              {t("createAccount")}
+              <ArrowRight
+                size={20}
+                className="ml-2 group-hover:translate-x-1 transition-transform"
+              />
+            </Button>
             <Link href="/explore">
               <Button
                 variant="outline"

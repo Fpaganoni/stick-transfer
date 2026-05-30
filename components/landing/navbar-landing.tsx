@@ -17,11 +17,18 @@ import {
 } from "@/components/ui/dialog";
 import { LoginPage } from "@/components/pages/login-page";
 import { RegisterPage } from "@/components/pages/register-page";
+import { useUIStore } from "@/stores/useUIStore";
 
 export function NavbarLanding() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [loginOpen, setLoginOpen] = useState(false);
-  const [registerOpen, setRegisterOpen] = useState(false);
+  const {
+    isLoginOpen,
+    isRegisterOpen,
+    openLoginModal,
+    closeLoginModal,
+    openRegisterModal,
+    closeRegisterModal,
+  } = useUIStore();
   const [mounted, setMounted] = useState(false);
   const t = useTranslations("landingNav");
   const locale = useLocale();
@@ -98,7 +105,12 @@ export function NavbarLanding() {
             </>
           ) : (
             <>
-              <Dialog open={loginOpen} onOpenChange={setLoginOpen}>
+              <Dialog
+                open={isLoginOpen}
+                onOpenChange={(open) =>
+                  open ? openLoginModal() : closeLoginModal()
+                }
+              >
                 <DialogTrigger asChild>
                   <Button
                     variant="ghost"
@@ -117,7 +129,12 @@ export function NavbarLanding() {
                 </DialogContent>
               </Dialog>
 
-              <Dialog open={registerOpen} onOpenChange={setRegisterOpen}>
+              <Dialog
+                open={isRegisterOpen}
+                onOpenChange={(open) =>
+                  open ? openRegisterModal() : closeRegisterModal()
+                }
+              >
                 <DialogTrigger asChild>
                   <Button
                     variant="ghost"
@@ -196,7 +213,12 @@ export function NavbarLanding() {
                   </>
                 ) : (
                   <>
-                    <Dialog open={loginOpen} onOpenChange={setLoginOpen}>
+                    <Dialog
+                      open={isLoginOpen}
+                      onOpenChange={(open) =>
+                        open ? openLoginModal() : closeLoginModal()
+                      }
+                    >
                       <DialogTrigger asChild>
                         <Button
                           variant="ghost"
@@ -216,7 +238,12 @@ export function NavbarLanding() {
                       </DialogContent>
                     </Dialog>
 
-                    <Dialog open={registerOpen} onOpenChange={setRegisterOpen}>
+                    <Dialog
+                      open={isRegisterOpen}
+                      onOpenChange={(open) =>
+                        open ? openRegisterModal() : closeRegisterModal()
+                      }
+                    >
                       <DialogTrigger asChild>
                         <Button
                           variant="default"

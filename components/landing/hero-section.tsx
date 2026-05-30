@@ -6,9 +6,11 @@ import { ArrowRight, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
+import { useUIStore } from "@/stores/useUIStore";
 
 export function HeroSection() {
   const t = useTranslations("landing.hero");
+  const { openRegisterModal } = useUIStore();
 
   return (
     <section
@@ -47,15 +49,17 @@ export function HeroSection() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-            <Link href="/register">
-              <Button size="lg" className="group text-pure-white px-8">
-                {t("getStarted")}
-                <ArrowRight
-                  size={20}
-                  className="ml-2 group-hover:translate-x-1 transition-transform duration-1000"
-                />
-              </Button>
-            </Link>
+            <Button
+              size="lg"
+              className="group text-pure-white px-8"
+              onClick={openRegisterModal}
+            >
+              {t("getStarted")}
+              <ArrowRight
+                size={20}
+                className="ml-2 group-hover:translate-x-1 transition-transform duration-1000"
+              />
+            </Button>
             <Link href="/explore">
               <Button
                 variant="outline"

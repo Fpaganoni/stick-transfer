@@ -208,10 +208,7 @@ export function LoginPage() {
           </motion.button>
           <motion.button
             type="button"
-            whileHover={{ scale: 1.04 }}
-            whileTap={{ scale: 0.95 }}
-            transition={{ duration: 0.2, ease: "easeInOut" }}
-            className="w-full h-(--input-button-height) px-4 py-2 border-2 border-border-strong rounded-lg text-foreground hover:text-white-black hover:bg-foreground transition-colors cursor-pointer flex items-center justify-center gap-2"
+            className="w-full h-(--input-button-height) px-4 py-2 border-2 border-border-strong rounded-lg text-foreground transition-colors !cursor-not-allowed opacity-50 flex items-center justify-center gap-2"
           >
             <Image
               src={"/apple-icon.svg"}

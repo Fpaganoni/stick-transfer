@@ -132,13 +132,14 @@ async function setupGraphQLMocks(page: Page) {
 test.describe("Job Application Flow", () => {
   test.beforeEach(async ({ page }) => {
     await setupGraphQLMocks(page);
-    await page.goto("/en/login");
+    await page.goto("/en");
   });
 
   test("user can log in", async ({ page }) => {
+    await page.getByRole("button", { name: /sign in|iniciar/i }).first().click();
     await page.getByLabel(/email/i).fill("test@sticktransfer.com");
     await page.getByRole("textbox", { name: /password/i }).fill("Test1234!");
-    await page.getByRole("button", { name: /login|sign in|iniciar/i }).click();
+    await page.getByRole("button", { name: /login|sign in|iniciar/i }).last().click();
 
     await expect(page).toHaveURL(/opportunities|feed/, { timeout: 15_000 });
   });
@@ -211,9 +212,10 @@ test.describe("Job Application Flow", () => {
 });
 
 async function loginUser(page: Page) {
-  await page.goto("/en/login");
+  await page.goto("/en");
+  await page.getByRole("button", { name: /sign in|iniciar/i }).first().click();
   await page.getByLabel(/email/i).fill("test@sticktransfer.com");
   await page.getByRole("textbox", { name: /password/i }).fill("Test1234!");
-  await page.getByRole("button", { name: /login|sign in|iniciar/i }).click();
+  await page.getByRole("button", { name: /login|sign in|iniciar/i }).last().click();
   await page.waitForURL(/opportunities|feed/, { timeout: 15_000 });
 }
