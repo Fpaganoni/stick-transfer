@@ -28,9 +28,9 @@
 
 ## 🎯 About
 
-**Scordd** is a professional platform designed for clubs, trainers, and coaches worldwide. Our mission is to provide a seamless user experience that connects sports professionals with exciting job opportunities across the globe.
+**Stick Transfer** is a professional platform designed for clubs, trainers, and coaches worldwide. Our mission is to provide a seamless user experience that connects sports professionals with exciting job opportunities across the globe.
 
-Whether you're a coach looking for your next challenge or a club searching for top talent, Scordd bridges the gap and makes it easy to find the perfect match.
+Whether you're a coach looking for your next challenge or a club searching for top talent, Stick Transfer bridges the gap and makes it easy to find the perfect match.
 
 ---
 

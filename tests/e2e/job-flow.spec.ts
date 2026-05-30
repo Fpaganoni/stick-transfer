@@ -7,7 +7,7 @@ const MOCK_JWT =
 
 const MOCK_USER = {
   id: "1234567890",
-  email: "test@scordd.com",
+  email: "test@sticktransfer.com",
   name: "Test User",
   username: "testuser",
   avatar: null,
@@ -31,7 +31,12 @@ const MOCK_OPPORTUNITIES = [
     title: "Forward Player Needed",
     description: "Looking for an experienced forward player.",
     positionType: "Forward",
-    club: { name: "Test Club", city: "Buenos Aires", country: "AR", isVerified: true },
+    club: {
+      name: "Test Club",
+      city: "Buenos Aires",
+      country: "AR",
+      isVerified: true,
+    },
     level: "Professional",
     country: "AR",
     city: "Buenos Aires",
@@ -70,7 +75,10 @@ async function setupGraphQLMocks(page: Page) {
       return;
     }
 
-    if (q.includes("GetUserForLogin") || (q.includes("user(id:") && !q.includes("users"))) {
+    if (
+      q.includes("GetUserForLogin") ||
+      (q.includes("user(id:") && !q.includes("users"))
+    ) {
       route.fulfill({
         status: 200,
         contentType: "application/json",
@@ -83,7 +91,9 @@ async function setupGraphQLMocks(page: Page) {
       route.fulfill({
         status: 200,
         contentType: "application/json",
-        body: JSON.stringify({ data: { jobOpportunities: MOCK_OPPORTUNITIES } }),
+        body: JSON.stringify({
+          data: { jobOpportunities: MOCK_OPPORTUNITIES },
+        }),
       });
       return;
     }
@@ -126,7 +136,7 @@ test.describe("Job Application Flow", () => {
   });
 
   test("user can log in", async ({ page }) => {
-    await page.getByLabel(/email/i).fill("test@scordd.com");
+    await page.getByLabel(/email/i).fill("test@sticktransfer.com");
     await page.getByRole("textbox", { name: /password/i }).fill("Test1234!");
     await page.getByRole("button", { name: /login|sign in|iniciar/i }).click();
 
@@ -138,7 +148,9 @@ test.describe("Job Application Flow", () => {
 
     await page.goto("/en/opportunities");
     await expect(
-      page.getByRole("heading", { name: /available positions|positions/i }).first()
+      page
+        .getByRole("heading", { name: /available positions|positions/i })
+        .first(),
     ).toBeVisible({ timeout: 10_000 });
 
     const jobCards = page.locator('[class*="rounded-xl"][class*="border-l-4"]');
@@ -186,11 +198,13 @@ test.describe("Job Application Flow", () => {
       await applyButton.click();
 
       await expect(
-        page.getByText(/application submitted|solicitud enviada|demande soumise/i)
+        page.getByText(
+          /application submitted|solicitud enviada|demande soumise/i,
+        ),
       ).toBeVisible({ timeout: 8_000 });
     } else {
       await expect(
-        dialog.getByText(/already applied|ya aplicaste|déjà postulé/i)
+        dialog.getByText(/already applied|ya aplicaste|déjà postulé/i),
       ).toBeVisible();
     }
   });
@@ -198,7 +212,7 @@ test.describe("Job Application Flow", () => {
 
 async function loginUser(page: Page) {
   await page.goto("/en/login");
-  await page.getByLabel(/email/i).fill("test@scordd.com");
+  await page.getByLabel(/email/i).fill("test@sticktransfer.com");
   await page.getByRole("textbox", { name: /password/i }).fill("Test1234!");
   await page.getByRole("button", { name: /login|sign in|iniciar/i }).click();
   await page.waitForURL(/opportunities|feed/, { timeout: 15_000 });
