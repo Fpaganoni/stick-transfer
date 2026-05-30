@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from "next";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import { notFound } from "next/navigation";
+import { Analytics } from "@vercel/analytics/react";
 import "../globals.css";
 import { ThemeProvider } from "@/components/ui/theme-provider";
 import { QueryProvider } from "@/lib/query-client";
@@ -53,6 +54,7 @@ export default async function LocaleLayout({
             <AuthInitializer />
             <ThemeProvider>{children}</ThemeProvider>
             <Toaster />
+            <Analytics />
           </QueryProvider>
         </NextIntlClientProvider>
       </body>
