@@ -5,7 +5,6 @@ import { getMessages } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import "../globals.css";
 import { ThemeProvider } from "@/components/ui/theme-provider";
 import { QueryProvider } from "@/lib/query-client";
 import { AuthInitializer } from "@/components/auth/auth-initializer";
