@@ -89,7 +89,7 @@
     "home": "Home",
     "features": "Features",
     "about": "About Us",
-    "stats": "Stats",
+    "stats": "Why Us",
     "joinUs": "Join Us",
     "signIn": "Sign In",
     "signUp": "Sign Up"
@@ -102,9 +102,9 @@
       "subtitle": "The professional platform for players, coaches, and clubs. Build your profile, discover job opportunities, and advance your hockey career.",
       "getStarted": "Create Profile",
       "explore": "Browse Jobs",
-      "statsPlayers": "Players",
-      "statsClubs": "Clubs",
-      "statsCountries": "Countries"
+      "statsPlayers": "Always free to join",
+      "statsClubs": "Opportunities worldwide",
+      "statsCountries": "Early access — join now"
     },
     "features": {
       "title": "Everything you need in one place",
@@ -137,47 +137,47 @@
       }
     },
     "about": {
-      "badge": "About Us",
-      "title": "The platform revolutionizing",
+      "badge": "Our Mission",
+      "title": "The platform built to transform",
       "titleHighlight": "field hockey",
-      "description1": "Hockey Connect was born from a passion for field hockey and the need to create a space where players, clubs, and coaches can connect without barriers.",
-      "description2": "Our mission is to democratize access to professional opportunities and create a global community where talent is recognized regardless of geographic location.",
+      "description1": "Stick Transfer was born from a passion for field hockey and the need to create a dedicated space where players, clubs, and coaches can connect without barriers.",
+      "description2": "Our mission is to make professional opportunities accessible to every hockey player — regardless of their geography, league, or background.",
       "benefits": {
-        "network": "Exclusive professional field hockey network",
-        "verified": "Verified opportunities from recognized clubs",
-        "tools": "Tools to boost your sports career",
-        "community": "Active and committed global community"
+        "network": "A dedicated network built exclusively for hockey",
+        "verified": "Every club and opportunity manually reviewed",
+        "tools": "Tools built to grow your sports career",
+        "community": "A community you help shape from day one"
       },
-      "badgeMembers": "Active Members"
+      "badgeMembers": "Launching Now"
     },
     "stats": {
-      "title": "Our community in numbers",
-      "subtitle": "Thousands of players and clubs already trust us",
+      "title": "What we stand for",
+      "subtitle": "Built with purpose, transparency, and a genuine passion for the game.",
       "items": {
         "players": {
-          "label": "Registered Players",
-          "description": "Athletes of all levels"
+          "label": "Always Free",
+          "description": "Create your profile, browse opportunities, and apply — at zero cost."
         },
         "clubs": {
-          "label": "Active Clubs",
-          "description": "From around the world"
+          "label": "Direct Access",
+          "description": "Connect directly with clubs and coaches — no middlemen, no fees."
         },
         "countries": {
-          "label": "Countries Represented",
-          "description": "Global community"
+          "label": "Global Network",
+          "description": "Players and opportunities from across every continent and league."
         },
         "opportunities": {
-          "label": "Posted Opportunities",
-          "description": "Verified offers"
+          "label": "Vetted Listings",
+          "description": "Every opportunity reviewed before it goes live — no spam, no fake posts."
         }
       },
-      "connectionsLabel": "connections",
-      "connectionsTime": "made this month"
+      "launchHighlight": "Early access is open —",
+      "launchMessage": "be among the first to join."
     },
     "cta": {
-      "badge": "Join the hockey revolution",
+      "badge": "Be a founding member",
       "title": "Ready to take the next step in your career?",
-      "description": "Join thousands of players, clubs, and coaches who are already connecting and growing together on Hockey Connect.",
+      "description": "Be among the first players, clubs, and coaches to join Stick Transfer — the hockey job board built for professionals.",
       "createAccount": "Create Free Account",
       "viewProfiles": "View Profiles",
       "trust1": "Free forever",

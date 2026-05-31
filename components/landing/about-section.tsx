@@ -42,7 +42,7 @@ export function AboutSection() {
               transition={{ duration: 0.5, delay: 0.3 }}
               className="absolute -bottom-6 -right-6 bg-primary text-white-black px-6 py-4 rounded-xl shadow-lg border-2 border-border"
             >
-              <p className="text-3xl font-bold">5000+</p>
+              <p className="text-3xl font-bold">2025</p>
               <p className="text-sm">{t("badgeMembers")}</p>
             </motion.div>
           </motion.div>

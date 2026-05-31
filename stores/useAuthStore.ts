@@ -28,10 +28,16 @@ export const useAuthStore = create<AuthState>()(
       //ACTIONS
 
       login: (user: User, token: string) => {
+        if (typeof document !== "undefined") {
+          document.cookie = "st-auth=1; path=/; max-age=2592000; SameSite=Lax";
+        }
         set({ user, token, isLoggedIn: true });
       },
 
       logout: () => {
+        if (typeof document !== "undefined") {
+          document.cookie = "st-auth=; path=/; max-age=0";
+        }
         set({ user: null, token: null, isLoggedIn: false });
       },
 

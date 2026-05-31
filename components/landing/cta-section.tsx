@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -9,7 +8,7 @@ import { useUIStore } from "@/stores/useUIStore";
 
 export function CtaSection() {
   const t = useTranslations("landing.cta");
-  const { openRegisterModal } = useUIStore();
+  const { openRegisterModal, openLoginModal } = useUIStore();
 
   return (
     <section
@@ -81,15 +80,14 @@ export function CtaSection() {
                 className="ml-2 group-hover:translate-x-1 transition-transform"
               />
             </Button>
-            <Link href="/explore">
-              <Button
-                variant="outline"
-                size="lg"
-                className="px-10 py-6 hover:text-foreground"
-              >
-                {t("viewProfiles")}
-              </Button>
-            </Link>
+            <Button
+              variant="outline"
+              size="lg"
+              className="px-10 py-6 hover:text-foreground"
+              onClick={openLoginModal}
+            >
+              {t("viewProfiles")}
+            </Button>
           </div>
 
           {/* Trust Indicators */}

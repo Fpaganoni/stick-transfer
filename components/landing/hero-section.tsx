@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -10,7 +9,7 @@ import { useUIStore } from "@/stores/useUIStore";
 
 export function HeroSection() {
   const t = useTranslations("landing.hero");
-  const { openRegisterModal } = useUIStore();
+  const { openRegisterModal, openLoginModal } = useUIStore();
 
   return (
     <section
@@ -60,16 +59,15 @@ export function HeroSection() {
                 className="ml-2 group-hover:translate-x-1 transition-transform duration-1000"
               />
             </Button>
-            <Link href="/explore">
-              <Button
-                variant="outline"
-                size="lg"
-                className="text-base px-8 hover:text-foreground"
-              >
-                {t("explore")}
-                <Play size={18} className="ml-2" />
-              </Button>
-            </Link>
+            <Button
+              variant="outline"
+              size="lg"
+              className="text-base px-8 hover:text-foreground"
+              onClick={openLoginModal}
+            >
+              {t("explore")}
+              <Play size={18} className="ml-2" />
+            </Button>
           </div>
 
           {/* Stats */}
@@ -80,19 +78,19 @@ export function HeroSection() {
             className="grid grid-cols-3 gap-6 mt-12 pt-8 border-t border-border max-w-md mx-auto lg:mx-0"
           >
             <div className="text-center lg:text-left">
-              <p className="text-2xl md:text-3xl font-bold text-primary">5K+</p>
+              <p className="text-2xl md:text-3xl font-bold text-primary">Free</p>
               <p className="text-sm text-foreground-muted">
                 {t("statsPlayers")}
               </p>
             </div>
             <div className="text-center lg:text-left">
               <p className="text-2xl md:text-3xl font-bold text-primary">
-                200+
+                Global
               </p>
               <p className="text-sm text-foreground-muted">{t("statsClubs")}</p>
             </div>
             <div className="text-center lg:text-left">
-              <p className="text-2xl md:text-3xl font-bold text-primary">30+</p>
+              <p className="text-2xl md:text-3xl font-bold text-primary">Beta</p>
               <p className="text-sm text-foreground-muted">
                 {t("statsCountries")}
               </p>

@@ -208,7 +208,7 @@ export function LoginPage() {
           </motion.button>
           <motion.button
             type="button"
-            className="w-full h-(--input-button-height) px-4 py-2 border-2 border-border-strong rounded-lg text-foreground transition-colors !cursor-not-allowed opacity-50 flex items-center justify-center gap-2"
+            className="w-full h-(--input-button-height) px-4 py-2 border-2 border-border-strong rounded-lg text-foreground transition-colors cursor-not-allowed! opacity-50 flex items-center justify-center gap-2"
           >
             <Image
               src={"/apple-icon.svg"}
