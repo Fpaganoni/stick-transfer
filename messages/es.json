@@ -81,8 +81,8 @@
     },
     "roles": {
       "player": "Jugador",
-      "club": "Club",
-      "coach": "Entrenador"
+      "coach": "Entrenador",
+      "club": "Admin de Club"
     }
   },
   "landingNav": {

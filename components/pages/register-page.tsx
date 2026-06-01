@@ -164,8 +164,8 @@ export const RegisterPage = () => {
                   {t("placeholders.role")}
                 </option>
                 <option value="player">{t("roles.player")}</option>
-                <option value="club">{t("roles.club")}</option>
                 <option value="coach">{t("roles.coach")}</option>
+                <option value="club">{t("roles.club")}</option>
               </select>
             </div>
             {errors.role && (
