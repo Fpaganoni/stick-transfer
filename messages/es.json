@@ -57,7 +57,7 @@
       "username": "nombre_usuario",
       "email": "tucorreo@email.com",
       "password": "••••••••",
-      "role": "Jugador | Entrenador | DT"
+      "role": "Jugador | Entrenador | Club"
     },
     "submitButton": "Registrarse",
     "submitting": "Registrando...",
@@ -82,7 +82,7 @@
     "roles": {
       "player": "Jugador",
       "coach": "Entrenador",
-      "club": "Admin de Club"
+      "club": "Club"
     }
   },
   "landingNav": {
