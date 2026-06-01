@@ -143,7 +143,7 @@ export function FooterLanding() {
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-border">
           <p className="text-center text-foreground-muted text-sm">
-            © {currentYear} Hockey Connect. {t("copyright")}
+            © {currentYear} Stick Transfer. {t("copyright")}
           </p>
         </div>
       </div>

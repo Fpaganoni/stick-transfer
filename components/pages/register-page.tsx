@@ -93,11 +93,17 @@ export const RegisterPage = () => {
 
   const selectedRole = watch("role");
 
+  const roleMap: Record<RegisterData["role"], string> = {
+    player: "PLAYER",
+    coach: "COACH",
+    club: "CLUB_ADMIN",
+  };
+
   const onSubmit: SubmitHandler<RegisterData> = (data) => {
     const { email, name, username, password, role } = data;
 
     registerUser(
-      { email, name, username, password, role },
+      { email, name, username, password, role: roleMap[role] },
       {
         onSuccess: async (responseData) => {
           const token = responseData.register;
@@ -158,8 +164,8 @@ export const RegisterPage = () => {
                   {t("placeholders.role")}
                 </option>
                 <option value="player">{t("roles.player")}</option>
-                <option value="club">{t("roles.club")}</option>
                 <option value="coach">{t("roles.coach")}</option>
+                <option value="club">{t("roles.club")}</option>
               </select>
             </div>
             {errors.role && (

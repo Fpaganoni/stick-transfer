@@ -57,7 +57,7 @@
       "username": "nombre_usuario",
       "email": "tucorreo@email.com",
       "password": "••••••••",
-      "role": "Jugador | Entrenador | DT"
+      "role": "Jugador | Entrenador | Club"
     },
     "submitButton": "Registrarse",
     "submitting": "Registrando...",
@@ -81,15 +81,15 @@
     },
     "roles": {
       "player": "Jugador",
-      "club": "Club",
-      "coach": "Entrenador"
+      "coach": "Entrenador",
+      "club": "Club"
     }
   },
   "landingNav": {
     "home": "Inicio",
     "features": "Características",
     "about": "Sobre Nosotros",
-    "stats": "Estadísticas",
+    "stats": "Por Qué Nosotros",
     "joinUs": "Únete",
     "signIn": "Iniciar Sesión",
     "signUp": "Registrarse"
@@ -102,9 +102,9 @@
       "subtitle": "La plataforma profesional para jugadores, entrenadores y clubes. Crea tu perfil, descubre oportunidades de trabajo y avanza en tu carrera de hockey.",
       "getStarted": "Crear Perfil",
       "explore": "Ver Empleos",
-      "statsPlayers": "Jugadores",
-      "statsClubs": "Clubes",
-      "statsCountries": "Países"
+      "statsPlayers": "Siempre gratis",
+      "statsClubs": "Oportunidades mundiales",
+      "statsCountries": "Acceso anticipado — únete ahora"
     },
     "features": {
       "title": "Todo lo que necesitas en un solo lugar",
@@ -137,47 +137,47 @@
       }
     },
     "about": {
-      "badge": "Sobre Nosotros",
-      "title": "La plataforma que revoluciona el",
+      "badge": "Nuestra Misión",
+      "title": "La plataforma que busca transformar el",
       "titleHighlight": "hockey sobre césped",
-      "description1": "Hockey Connect nació de la pasión por el hockey sobre césped y la necesidad de crear un espacio donde jugadores, clubes y entrenadores puedan conectarse sin barreras.",
-      "description2": "Nuestra misión es democratizar el acceso a oportunidades profesionales y crear una comunidad global donde el talento sea reconocido sin importar la ubicación geográfica.",
+      "description1": "Stick Transfer nació de la pasión por el hockey sobre césped y la necesidad de crear un espacio dedicado donde jugadores, clubes y entrenadores puedan conectarse sin barreras.",
+      "description2": "Nuestra misión es hacer que las oportunidades profesionales sean accesibles para cada jugador de hockey, sin importar su geografía, liga o historial.",
       "benefits": {
-        "network": "Red profesional exclusiva de hockey sobre césped",
-        "verified": "Oportunidades verificadas de clubes reconocidos",
-        "tools": "Herramientas para impulsar tu carrera deportiva",
-        "community": "Comunidad global activa y comprometida"
+        "network": "Una red dedicada y construida exclusivamente para el hockey",
+        "verified": "Cada club y oportunidad revisada manualmente",
+        "tools": "Herramientas diseñadas para hacer crecer tu carrera deportiva",
+        "community": "Una comunidad que ayudas a construir desde el primer día"
       },
-      "badgeMembers": "Miembros Activos"
+      "badgeMembers": "Lanzando Ahora"
     },
     "stats": {
-      "title": "Nuestra comunidad en números",
-      "subtitle": "Miles de jugadores y clubes ya confían en nosotros",
+      "title": "En qué creemos",
+      "subtitle": "Construida con propósito, transparencia y una genuina pasión por el juego.",
       "items": {
         "players": {
-          "label": "Jugadores Registrados",
-          "description": "Atletas de todos los niveles"
+          "label": "Siempre Gratis",
+          "description": "Crea tu perfil, explora oportunidades y postúlate — sin ningún costo."
         },
         "clubs": {
-          "label": "Clubes Activos",
-          "description": "De todo el mundo"
+          "label": "Acceso Directo",
+          "description": "Conéctate directamente con clubes y entrenadores — sin intermediarios ni comisiones."
         },
         "countries": {
-          "label": "Países Representados",
-          "description": "Comunidad global"
+          "label": "Red Global",
+          "description": "Jugadores y oportunidades de todos los continentes y ligas."
         },
         "opportunities": {
-          "label": "Oportunidades Publicadas",
-          "description": "Ofertas verificadas"
+          "label": "Publicaciones Verificadas",
+          "description": "Cada oportunidad es revisada antes de publicarse — sin spam, sin ofertas falsas."
         }
       },
-      "connectionsLabel": "conexiones",
-      "connectionsTime": "realizadas este mes"
+      "launchHighlight": "El acceso anticipado está abierto —",
+      "launchMessage": "sé de los primeros en unirte."
     },
     "cta": {
-      "badge": "Únete a la revolución del hockey",
+      "badge": "Sé un miembro fundador",
       "title": "¿Listo para dar el siguiente paso en tu carrera?",
-      "description": "Únete a miles de jugadores, clubes y entrenadores que ya están conectándose y creciendo juntos en Hockey Connect.",
+      "description": "Sé de los primeros jugadores, clubes y entrenadores en unirse a Stick Transfer — el job board de hockey construido para profesionales.",
       "createAccount": "Crear Cuenta Gratis",
       "viewProfiles": "Ver Perfiles",
       "trust1": "Gratis para siempre",

@@ -40,9 +40,9 @@ export function AboutSection() {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.3 }}
-              className="absolute -bottom-6 -right-6 bg-primary text-white-black px-6 py-4 rounded-xl shadow-lg border-2 border-border"
+              className="absolute -bottom-6 -right-4 bg-primary text-white-black px-6 py-4 rounded-xl shadow-lg border-2 border-border"
             >
-              <p className="text-3xl font-bold">5000+</p>
+              <p className="text-3xl font-bold">2026</p>
               <p className="text-sm">{t("badgeMembers")}</p>
             </motion.div>
           </motion.div>

@@ -11,28 +11,28 @@ export function StatsSection() {
   const stats = [
     {
       icon: Users,
-      value: "5,000+",
+      value: "Free",
       key: "players",
       color: "text-primary",
       bgColor: "bg-primary/10",
     },
     {
       icon: Building2,
-      value: "200+",
+      value: "Direct",
       key: "clubs",
       color: "text-accent",
       bgColor: "bg-accent/10",
     },
     {
       icon: Globe2,
-      value: "30+",
+      value: "Global",
       key: "countries",
       color: "text-primary",
       bgColor: "bg-primary/10",
     },
     {
       icon: Briefcase,
-      value: "500+",
+      value: "Vetted",
       key: "opportunities",
       color: "text-accent",
       bgColor: "bg-accent/10",
@@ -109,9 +109,9 @@ export function StatsSection() {
         >
           <p className="text-foreground-muted">
             <span className="font-semibold text-primary">
-              +2,000 {t("connectionsLabel")}
+              {t("launchHighlight")}
             </span>{" "}
-            {t("connectionsTime")}
+            {t("launchMessage")}
           </p>
         </motion.div>
       </div>
