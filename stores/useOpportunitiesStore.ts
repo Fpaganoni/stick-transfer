@@ -9,6 +9,7 @@ interface OpportunitiesStore {
     level: string | null;
     status: string | null;
     country: string | null;
+    positionType: string | null;
   };
 
   setSelectedOpportunity: (opportunity: JobOpportunity | null) => void;
@@ -27,6 +28,7 @@ export const useOpportunitiesStore = create<OpportunitiesStore>((set) => ({
     level: null,
     status: null,
     country: null,
+    positionType: null,
   },
 
   setSelectedOpportunity: (opportunity) =>
@@ -44,6 +46,7 @@ export const useOpportunitiesStore = create<OpportunitiesStore>((set) => ({
         level: null,
         status: null,
         country: null,
+        positionType: null,
       },
     }),
   closeModal: () => set({ isModalOpen: false, selectedOpportunity: null }),

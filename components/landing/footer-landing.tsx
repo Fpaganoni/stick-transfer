@@ -7,6 +7,7 @@ import {
   FaLinkedin,
 } from "react-icons/fa6";
 import { HockeyXTicks } from "@/components/ui/hockey-xtick";
+import { LanguageSelector } from "@/components/ui/language-selector";
 import { useTranslations } from "next-intl";
 
 export function FooterLanding() {
@@ -56,7 +57,7 @@ export function FooterLanding() {
             <div className="flex items-center gap-2 mb-4">
               <HockeyXTicks size={32} className="text-primary" />
               <h3 className="text-xl font-bold text-foreground">
-                Hockey Connect
+                Stick Transfer
               </h3>
             </div>
             <p className="text-foreground-muted mb-6 max-w-sm">
@@ -142,9 +143,12 @@ export function FooterLanding() {
 
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-border">
-          <p className="text-center text-foreground-muted text-sm">
-            © {currentYear} Stick Transfer. {t("copyright")}
-          </p>
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p className="text-foreground-muted text-sm">
+              © {currentYear} Stick Transfer. {t("copyright")}
+            </p>
+            <LanguageSelector />
+          </div>
         </div>
       </div>
     </footer>

@@ -87,54 +87,83 @@
   },
   "landingNav": {
     "home": "Inicio",
+    "forYou": "Para Ti",
     "features": "Características",
-    "about": "Sobre Nosotros",
-    "stats": "Por Qué Nosotros",
+    "vacancies": "Vacantes",
     "joinUs": "Únete",
     "signIn": "Iniciar Sesión",
     "signUp": "Registrarse"
   },
   "landing": {
     "hero": {
-      "badge": "🏑 El Job Board del Hockey",
-      "title": "Conectando talento con",
-      "titleHighlight": "Oportunidades de Hockey",
-      "subtitle": "La plataforma profesional para jugadores, entrenadores y clubes. Crea tu perfil, descubre oportunidades de trabajo y avanza en tu carrera de hockey.",
-      "getStarted": "Crear Perfil",
-      "explore": "Ver Empleos",
-      "statsPlayers": "Siempre gratis",
-      "statsClubs": "Oportunidades mundiales",
-      "statsCountries": "Acceso anticipado — únete ahora"
+      "badge": "🏑 La Red del Hockey",
+      "title": "La red de hockey",
+      "titleHighlight": "líder mundial",
+      "subtitle": "Construye tu perfil, descubre oportunidades en clubes de élite y avanza en tu carrera de hockey.",
+      "login": "Iniciar Sesión",
+      "createProfile": "Crear Tu Perfil"
+    },
+    "statsBar": {
+      "players": { "value": "Lanzamiento 2026", "label": "Jugadores" },
+      "clubs": { "value": "Acceso Anticipado", "label": "Clubes" },
+      "countries": { "value": "Global", "label": "Países" },
+      "vacancies": { "value": "BETA", "label": "Vacantes Activas" }
+    },
+    "roleTabs": {
+      "title": "Para todos en el hockey",
+      "subtitle": "Ya seas jugador, entrenador, club o marca — aquí hay un lugar para ti.",
+      "cta": "Crear cuenta gratis",
+      "players": {
+        "tab": "Jugadores",
+        "description": "Crea tu CV digital de hockey. Muestra tus estadísticas, trayectoria y logros a clubes de todo el mundo.",
+        "bullet1": "Crea un perfil profesional de hockey",
+        "bullet2": "Sé descubierto por clubes y scouts",
+        "bullet3": "Aplica directamente a posiciones abiertas"
+      },
+      "coaches": {
+        "tab": "Entrenadores",
+        "description": "Encuentra posiciones de entrenador que se ajusten a tu experiencia. Conéctate con clubes que buscan tu expertise.",
+        "bullet1": "Explora vacantes de entrenador en todo el mundo",
+        "bullet2": "Muestra tu historial como entrenador",
+        "bullet3": "Aplica con un clic"
+      },
+      "clubs": {
+        "tab": "Clubes",
+        "description": "Publica posiciones abiertas y conéctate con jugadores y entrenadores cualificados.",
+        "bullet1": "Publica vacantes gratis",
+        "bullet2": "Explora perfiles de miles de jugadores",
+        "bullet3": "Gestiona solicitudes en un solo lugar"
+      },
+      "brands": {
+        "tab": "Marcas",
+        "description": "Conéctate con la comunidad global del hockey. Colabora con jugadores y clubes para hacer crecer tu marca.",
+        "bullet1": "Accede a una audiencia de hockey segmentada",
+        "bullet2": "Colabora con los mejores clubes y jugadores",
+        "bullet3": "Aumenta tu presencia en el deporte"
+      }
     },
     "features": {
-      "title": "Todo lo que necesitas en un solo lugar",
-      "subtitle": "Herramientas diseñadas específicamente para la comunidad de hockey sobre césped",
+      "title": "Cómo funciona Stick Transfer",
+      "subtitle": "Tres pilares que conectan la comunidad global del hockey",
       "items": {
         "connect": {
-          "title": "Conéctate con la Comunidad",
-          "description": "Encuentra y conéctate con jugadores, clubes y entrenadores de todo el mundo."
+          "title": "Conectar",
+          "description": "Encuentra y conéctate con jugadores, entrenadores y clubes de todo el mundo."
         },
-        "opportunities": {
-          "title": "Oportunidades Profesionales",
-          "description": "Descubre ofertas de trabajo, pruebas y oportunidades en clubes de élite."
+        "transfer": {
+          "title": "Transferir",
+          "description": "Descubre oportunidades, aplica a clubes y gestiona toda tu trayectoria en un solo lugar."
         },
-        "journey": {
-          "title": "Comparte tu Trayectoria",
-          "description": "Muestra tus logros, estadísticas y experiencia profesional al mundo."
-        },
-        "messaging": {
-          "title": "Mensajería en Tiempo Real",
-          "description": "Comunícate directamente con otros miembros de la comunidad."
-        },
-        "network": {
-          "title": "Red Global",
-          "description": "Accede a una comunidad internacional de hockey sobre césped."
-        },
-        "achievements": {
-          "title": "Destaca tus Logros",
-          "description": "Publica tus éxitos, partidos y momentos destacados de tu carrera."
+        "play": {
+          "title": "Jugar",
+          "description": "Muestra tu carrera, comparte tus logros y construye tu reputación profesional de hockey."
         }
       }
+    },
+    "vacancies": {
+      "title": "Vacantes de Hockey",
+      "subtitle": "Posiciones abiertas en clubes de todo el mundo",
+      "viewAll": "Ver todas las vacantes →"
     },
     "about": {
       "badge": "Nuestra Misión",
@@ -175,14 +204,13 @@
       "launchMessage": "sé de los primeros en unirte."
     },
     "cta": {
-      "badge": "Sé un miembro fundador",
-      "title": "¿Listo para dar el siguiente paso en tu carrera?",
-      "description": "Sé de los primeros jugadores, clubes y entrenadores en unirse a Stick Transfer — el job board de hockey construido para profesionales.",
-      "createAccount": "Crear Cuenta Gratis",
-      "viewProfiles": "Ver Perfiles",
-      "trust1": "Gratis para siempre",
-      "trust2": "No se requiere tarjeta de crédito",
-      "trust3": "Regístrate en 2 minutos"
+      "title": "Crea tu perfil de hockey (CV)",
+      "subtitle": "Únete a la red global de hockey — siempre gratis.",
+      "bullet1": "Encuentra tu club soñado",
+      "bullet2": "Aplica para posiciones de entrenador",
+      "bullet3": "Regístrate como fan, marca o árbitro",
+      "bullet4": "Expande tu red de contactos",
+      "joinNow": "Unirse a Stick Transfer"
     },
     "footer": {
       "description": "La plataforma definitiva para conectar jugadores, clubes y entrenadores de hockey sobre césped de todo el mundo.",
@@ -413,7 +441,15 @@
     "applicationSubmittedDescription": "Tu solicitud ha sido enviada exitosamente",
     "alreadyApplied": "Ya aplicaste",
     "opportunityNotFound": "Esta oportunidad ya no está disponible",
-    "applicationFailed": "Error al enviar la solicitud"
+    "applicationFailed": "Error al enviar la solicitud",
+    "visitor": "Visitante",
+    "createYourProfile": "Crear Tu Perfil",
+    "itsFree": "¡ES GRATIS!",
+    "allVacanciesLabel": "Todas las Vacantes en Stick Transfer",
+    "seeMore": "Ver más",
+    "filterVacancies": "Filtrar vacantes",
+    "positionFilter": "Posición",
+    "applyFilters": "Aplicar Filtros"
   },
   "clubs": {
     "title": "Clubes",

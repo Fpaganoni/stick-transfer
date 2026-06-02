@@ -87,54 +87,83 @@
   },
   "landingNav": {
     "home": "Home",
+    "forYou": "For You",
     "features": "Features",
-    "about": "About Us",
-    "stats": "Why Us",
+    "vacancies": "Vacancies",
     "joinUs": "Join Us",
     "signIn": "Sign In",
     "signUp": "Sign Up"
   },
   "landing": {
     "hero": {
-      "badge": "🏑 The Hockey Job Board",
-      "title": "Connecting talent with",
-      "titleHighlight": "Hockey Opportunities",
-      "subtitle": "The professional platform for players, coaches, and clubs. Build your profile, discover job opportunities, and advance your hockey career.",
-      "getStarted": "Create Profile",
-      "explore": "Browse Jobs",
-      "statsPlayers": "Always free to join",
-      "statsClubs": "Opportunities worldwide",
-      "statsCountries": "Early access — join now"
+      "badge": "🏑 The Hockey Network",
+      "title": "The leading",
+      "titleHighlight": "hockey network",
+      "subtitle": "Build your profile, discover opportunities at elite clubs worldwide, and advance your hockey career.",
+      "login": "Log In",
+      "createProfile": "Create Your Profile"
+    },
+    "statsBar": {
+      "players": { "value": "Launching 2026", "label": "Players" },
+      "clubs": { "value": "Early Access", "label": "Clubs" },
+      "countries": { "value": "Global", "label": "Countries" },
+      "vacancies": { "value": "BETA", "label": "Active Vacancies" }
+    },
+    "roleTabs": {
+      "title": "Built for everyone in hockey",
+      "subtitle": "Whether you play, coach, manage a club, or support the game — there is a place for you.",
+      "cta": "Create free account",
+      "players": {
+        "tab": "Players",
+        "description": "Build your digital hockey CV. Showcase your stats, trajectory, and achievements to clubs around the world.",
+        "bullet1": "Create a professional hockey profile",
+        "bullet2": "Get discovered by clubs and scouts",
+        "bullet3": "Apply directly to open positions"
+      },
+      "coaches": {
+        "tab": "Coaches",
+        "description": "Find coaching positions that match your experience and ambitions. Connect with clubs seeking your expertise.",
+        "bullet1": "Browse coaching vacancies worldwide",
+        "bullet2": "Showcase your coaching history",
+        "bullet3": "Apply with one click"
+      },
+      "clubs": {
+        "tab": "Clubs",
+        "description": "Post open positions and connect with qualified players and coaches. Build your squad efficiently.",
+        "bullet1": "Post vacancies for free",
+        "bullet2": "Browse profiles of thousands of players",
+        "bullet3": "Manage applications in one place"
+      },
+      "brands": {
+        "tab": "Brands",
+        "description": "Connect with the global hockey community. Partner with players and clubs to grow your brand.",
+        "bullet1": "Access a targeted hockey audience",
+        "bullet2": "Partner with top clubs and players",
+        "bullet3": "Grow your presence in the sport"
+      }
     },
     "features": {
-      "title": "Everything you need in one place",
-      "subtitle": "Tools designed specifically for the field hockey community",
+      "title": "How Stick Transfer works",
+      "subtitle": "Three pillars connecting the global hockey community",
       "items": {
         "connect": {
-          "title": "Connect with the Community",
-          "description": "Find and connect with players, clubs, and coaches from around the world."
+          "title": "Connect",
+          "description": "Find and connect with players, coaches, and clubs from every corner of the world."
         },
-        "opportunities": {
-          "title": "Professional Opportunities",
-          "description": "Discover job offers, trials, and opportunities at elite clubs."
+        "transfer": {
+          "title": "Transfer",
+          "description": "Discover opportunities, apply to clubs, and manage your entire transfer journey in one place."
         },
-        "journey": {
-          "title": "Share Your Journey",
-          "description": "Showcase your achievements, statistics, and professional experience to the world."
-        },
-        "messaging": {
-          "title": "Real-Time Messaging",
-          "description": "Communicate directly with other members of the community."
-        },
-        "network": {
-          "title": "Global Network",
-          "description": "Access an international field hockey community."
-        },
-        "achievements": {
-          "title": "Highlight Your Achievements",
-          "description": "Post your successes, matches, and career highlights."
+        "play": {
+          "title": "Play",
+          "description": "Showcase your career, share your achievements, and build your professional hockey reputation."
         }
       }
+    },
+    "vacancies": {
+      "title": "Hockey Vacancies",
+      "subtitle": "Open positions at clubs around the world",
+      "viewAll": "Check all vacancies →"
     },
     "about": {
       "badge": "Our Mission",
@@ -175,14 +204,13 @@
       "launchMessage": "be among the first to join."
     },
     "cta": {
-      "badge": "Be a founding member",
-      "title": "Ready to take the next step in your career?",
-      "description": "Be among the first players, clubs, and coaches to join Stick Transfer — the hockey job board built for professionals.",
-      "createAccount": "Create Free Account",
-      "viewProfiles": "View Profiles",
-      "trust1": "Free forever",
-      "trust2": "No credit card required",
-      "trust3": "Sign up in 2 minutes"
+      "title": "Make your hockey profile (CV)",
+      "subtitle": "Join the global hockey network — free forever.",
+      "bullet1": "Find your dream club",
+      "bullet2": "Apply for coaching positions",
+      "bullet3": "Sign up as fan, brand, or umpire",
+      "bullet4": "Expand your network",
+      "joinNow": "Join Stick Transfer Now"
     },
     "footer": {
       "description": "The ultimate platform to connect field hockey players, clubs, and coaches around the world.",
@@ -413,7 +441,15 @@
     "applicationSubmittedDescription": "Your application has been sent successfully",
     "alreadyApplied": "You already applied",
     "opportunityNotFound": "This opportunity is no longer available",
-    "applicationFailed": "Failed to submit application"
+    "applicationFailed": "Failed to submit application",
+    "visitor": "Visitor",
+    "createYourProfile": "Create Your Profile",
+    "itsFree": "IT'S FREE!",
+    "allVacanciesLabel": "All Vacancies on Stick Transfer",
+    "seeMore": "See more",
+    "filterVacancies": "Vacancy filters",
+    "positionFilter": "Position",
+    "applyFilters": "Apply Filters"
   },
   "clubs": {
     "title": "Clubs",
