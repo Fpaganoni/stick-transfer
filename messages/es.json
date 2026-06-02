@@ -453,6 +453,12 @@
   },
   "clubs": {
     "title": "Clubes",
+    "pageTitle": "Encuentra tu próximo clubhouse",
+    "pageSubtitle": "Descubre clubes de hockey de élite en todo el mundo. Encuentra tu comunidad, conecta con entrenadores y lleva tu juego al siguiente nivel.",
+    "allClubhouses": "Todos los clubhouses",
+    "myClubhouses": "Mis clubhouses",
+    "newBadge": "NUEVO",
+    "noClubsDescription": "Ningún club coincide con tu búsqueda. Intenta con otro término.",
     "searchPlaceholder": "Buscar clubes...",
     "noClubs": "No se encontraron clubes",
     "members": "Miembros",

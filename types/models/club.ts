@@ -22,6 +22,8 @@ export interface Club {
   city?: string;
   country?: string;
   league?: string;
+  type?: "Team" | "Organization" | "Brand";
+  createdAt?: string;
   isVerified?: boolean;
   verificationStatus?: "UNVERIFIED" | "PENDING" | "VERIFIED" | "REJECTED";
   verificationDoc?: string;

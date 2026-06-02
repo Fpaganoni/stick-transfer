@@ -2,78 +2,91 @@
 
 import { useRouter } from "next/navigation";
 import { useLocale } from "next-intl";
-import { MapPin, BadgeCheck } from "lucide-react";
-import { Club } from "@/types/models/club";
+import { ChevronRight } from "lucide-react";
 import Image from "next/image";
+import { Club } from "@/types/models/club";
+import { cn } from "@/lib/utils";
 
-export function ClubListCard(club: Club) {
+const TYPE_STYLES: Record<NonNullable<Club["type"]>, string> = {
+  Team: "bg-info/10 text-info",
+  Organization: "bg-accent/10 text-accent",
+  Brand: "bg-primary/10 text-primary",
+};
+
+function countryFlag(country?: string): string | null {
+  if (!country || country.length !== 2) return null;
+  return String.fromCodePoint(
+    ...[...country.toUpperCase()].map((c) => 0x1f1e6 + c.charCodeAt(0) - 65)
+  );
+}
+
+function isNew(createdAt?: string): boolean {
+  if (!createdAt) return false;
+  return Date.now() - new Date(createdAt).getTime() < 30 * 24 * 60 * 60 * 1000;
+}
+
+interface ClubListCardProps extends Club {}
+
+export function ClubListCard(club: ClubListCardProps) {
   const router = useRouter();
   const locale = useLocale();
-
-  const handleClick = () => {
-    router.push(`/${locale}/clubs/${club.id}`);
-  };
+  const flag = countryFlag(club.country);
+  const initials = club.name.slice(0, 2).toUpperCase();
+  const typeStyle = club.type ? TYPE_STYLES[club.type] : null;
+  const showNew = isNew(club.createdAt);
 
   return (
     <div
-      onClick={handleClick}
-      className="bg-background rounded-xl overflow-hidden shadow-md hover:shadow-lg border border-border hover:border-accent-bright hover:-translate-y-0.5 transition-all duration-200 cursor-pointer"
+      onClick={() => router.push(`/${locale}/clubs/${club.id}`)}
+      className="relative flex flex-col items-center w-40 h-[200px] bg-surface border border-border rounded-xl p-3 cursor-pointer hover:border-primary/50 hover:shadow-md hover:scale-[1.02] transition-all duration-200"
     >
-      {/* Cover Image Banner */}
-      <div className="relative h-24 w-full bg-accent/20">
-        {club.coverImage ? (
+      {showNew && (
+        <span className="absolute top-2 left-2 text-[10px] font-bold bg-error text-white px-1.5 py-0.5 rounded-full leading-none">
+          NEW
+        </span>
+      )}
+
+      <ChevronRight
+        size={14}
+        className="absolute top-2 right-2 text-foreground-muted"
+      />
+
+      <div className="mt-4 mb-2 w-20 h-20 rounded-full border-2 border-border overflow-hidden flex items-center justify-center bg-primary/10 shrink-0">
+        {club.logo ? (
           <Image
-            src={club.coverImage}
-            alt={`${club.name} cover`}
-            fill
-            className="object-cover"
+            src={club.logo}
+            alt={club.name}
+            width={80}
+            height={80}
+            className="object-cover w-full h-full"
           />
         ) : (
-          <div className="absolute inset-0 bg-linear-to-br from-accent/30 to-accent-bright/10" />
-        )}
-
-        {club.logo && (
-          <div className="absolute -bottom-5 left-4">
-            <Image
-              src={club.logo}
-              alt={club.name}
-              width={44}
-              height={44}
-              className="w-11 h-11 rounded-lg object-cover border-2 border-background shadow"
-            />
-          </div>
-        )}
-      </div>
-
-      <div className="p-4 pt-7">
-        <div className="flex items-start justify-between gap-2 mb-2">
-          <h3 className="text-base font-semibold text-foreground truncate leading-tight">
-            {club.name}
-          </h3>
-          {club.isVerified && (
-            <BadgeCheck size={16} className="text-accent shrink-0 mt-0.5" />
-          )}
-        </div>
-
-        {(club.city || club.country) && (
-          <div className="flex items-center gap-1 text-xs text-foreground/60 mb-2">
-            <MapPin size={12} />
-            <span>{[club.city, club.country].filter(Boolean).join(", ")}</span>
-          </div>
-        )}
-
-        {club.league && (
-          <span className="inline-block text-xs bg-accent/10 text-accent px-2 py-0.5 rounded-full mb-2">
-            {club.league}
+          <span className="text-primary font-bold text-lg select-none">
+            {initials}
           </span>
         )}
-
-        {club.description && (
-          <p className="text-xs text-foreground/70 line-clamp-2 mt-1">
-            {club.description}
-          </p>
-        )}
       </div>
+
+      <p className="text-foreground font-semibold text-sm text-center line-clamp-2 leading-tight w-full">
+        {club.name}
+      </p>
+
+      {typeStyle && club.type && (
+        <span
+          className={cn(
+            "mt-1 text-[10px] font-medium px-2 py-0.5 rounded-full shrink-0",
+            typeStyle
+          )}
+        >
+          {club.type}
+        </span>
+      )}
+
+      {(flag ?? club.country) && (
+        <div className="mt-auto pt-1 text-sm text-foreground-muted">
+          {flag ?? club.country}
+        </div>
+      )}
     </div>
   );
 }
