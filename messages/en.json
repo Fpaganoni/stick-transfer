@@ -384,10 +384,51 @@
     "editProfile": "Edit Profile",
     "noBio": "No description available.",
     "tabs": {
+      "profile": "Profile",
       "posts": "Posts",
+      "vacancies": "Vacancies",
+      "videos": "Videos",
       "squad": "Squad",
       "opportunities": "Opportunities",
       "about": "About"
+    },
+    "header": {
+      "follow": "Follow",
+      "share": "Share",
+      "contact": "Contact",
+      "report": "Report",
+      "members": "members"
+    },
+    "profile": {
+      "category": "Category",
+      "founded": "Founded",
+      "website": "Website",
+      "email": "Email",
+      "description": "Description"
+    },
+    "posts": {
+      "noPosts": "No posts yet."
+    },
+    "vacancies": {
+      "noVacancies": "No open positions at the moment."
+    },
+    "videos": {
+      "noVideos": "No videos yet",
+      "addVideo": "Add Video",
+      "addVideoTitle": "Add YouTube Video",
+      "videoUrlPlaceholder": "YouTube URL",
+      "save": "Save",
+      "cancel": "Cancel"
+    },
+    "visitor": {
+      "title": "{name} is a member of Stick Transfer",
+      "subtitle": "Join the community to connect with clubs, find opportunities, and grow your game.",
+      "item1": "Follow clubs and discover new opportunities",
+      "item2": "Apply to open positions worldwide",
+      "item3": "Connect with coaches and players",
+      "item4": "Manage your professional profile",
+      "createAccount": "Create free account",
+      "logIn": "Log In"
     },
     "squad": {
       "title": "Squad",

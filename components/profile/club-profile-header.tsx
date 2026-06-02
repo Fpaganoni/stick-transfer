@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  Edit,
-  MessageCircle,
-  CheckCircle,
-} from "lucide-react";
+import { Edit, BadgeCheck, MoreHorizontal } from "lucide-react";
 import { motion } from "framer-motion";
 import { User } from "@/types/models/user";
 import { Badge } from "../ui/badge";
@@ -12,6 +8,13 @@ import { useTranslations } from "next-intl";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
 
 type ClubProfileHeaderProps = Pick<
   User,
@@ -20,6 +23,7 @@ type ClubProfileHeaderProps = Pick<
   city?: string;
   isVerified?: boolean;
   isOwnProfile?: boolean;
+  memberCount?: number;
 };
 
 export function ClubProfileHeader({
@@ -33,12 +37,21 @@ export function ClubProfileHeader({
   country,
   isVerified = false,
   isOwnProfile = false,
+  memberCount,
 }: ClubProfileHeaderProps) {
   const t = useTranslations("clubProfile");
   const router = useRouter();
 
   const handleMessage = () => {
     router.push(`/messages?userId=${id}&name=${encodeURIComponent(name)}`);
+  };
+
+  const handleShare = () => {
+    if (typeof navigator !== "undefined" && navigator.share) {
+      navigator.share({ title: name, url: window.location.href });
+    } else if (typeof navigator !== "undefined" && navigator.clipboard) {
+      navigator.clipboard.writeText(window.location.href);
+    }
   };
 
   return (
@@ -62,7 +75,7 @@ export function ClubProfileHeader({
               <motion.div
                 whileHover={{ scale: 1.05 }}
                 transition={{ duration: 0.2, ease: "easeInOut" }}
-                className="w-32 h-32 rounded-full border-2 border-background shadow-lg relative overflow-hidden bg-muted"
+                className="w-32 h-32 rounded-full border-4 border-border shadow-lg relative overflow-hidden bg-muted"
               >
                 <Image
                   src={avatar || "/hockey-stadium.jpg"}
@@ -77,18 +90,26 @@ export function ClubProfileHeader({
             <div className="pt-6">
               <div className="flex items-center gap-2 flex-wrap">
                 <h1 className="text-2xl font-bold text-foreground">{name}</h1>
-                {isVerified && <CheckCircle className="w-6 h-6 text-success" />}
+                {isVerified && (
+                  <BadgeCheck
+                    className="w-6 h-6 text-accent"
+                    data-testid="verified-badge"
+                  />
+                )}
               </div>
               <div className="flex items-center gap-2 mt-1">
                 <Badge variant="club">{role}</Badge>
               </div>
-
+              {memberCount !== undefined && (
+                <p className="text-foreground-muted text-sm font-medium mt-1">
+                  {memberCount} {t("header.members")}
+                </p>
+              )}
               {(city || country) && (
                 <p className="text-foreground-muted text-sm font-medium mt-1">
                   {[city, country].filter(Boolean).join(", ") || "🌍"}
                 </p>
               )}
-
               <p className="text-foreground-muted text-sm text-center mb-2 leading-relaxed mt-2">
                 {bio || t("noBio")}
               </p>
@@ -110,16 +131,31 @@ export function ClubProfileHeader({
               </motion.button>
             </Link>
           ) : (
-            <div className="flex gap-4 justify-start ml-40">
-              <motion.button
-                onClick={handleMessage}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="p-3 rounded-full border-2 border-primary text-foreground hover:bg-primary transition-colors flex items-center justify-center shadow-sm"
-                title="Message"
-              >
-                <MessageCircle className="w-5 h-5" />
-              </motion.button>
+            <div className="flex gap-3 justify-start ml-40">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="p-3 rounded-full border-2 border-border text-foreground hover:bg-surface-elevated transition-colors flex items-center justify-center shadow-sm"
+                  >
+                    <MoreHorizontal className="w-5 h-5" />
+                  </motion.button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start">
+                  <DropdownMenuItem>{t("header.follow")}</DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleShare}>
+                    {t("header.share")}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleMessage}>
+                    {t("header.contact")}
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem className="text-error">
+                    {t("header.report")}
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           )}
         </div>

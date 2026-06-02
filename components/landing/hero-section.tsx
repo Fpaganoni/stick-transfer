@@ -87,7 +87,7 @@ export function HeroSection() {
         >
           <div className="relative w-full h-[500px] rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
             <Image
-              src="/hero-field-hockey-players.avif"
+              src="/hockey-collection.avif"
               alt="Hockey Network"
               fill
               className="object-cover"

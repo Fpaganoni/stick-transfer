@@ -384,10 +384,51 @@
     "editProfile": "Éditer le Profil",
     "noBio": "Pas de description disponible.",
     "tabs": {
+      "profile": "Profil",
       "posts": "Publications",
+      "vacancies": "Postes",
+      "videos": "Vidéos",
       "squad": "Équipe",
       "opportunities": "Opportunités",
       "about": "À Propos"
+    },
+    "header": {
+      "follow": "Suivre",
+      "share": "Partager",
+      "contact": "Contacter",
+      "report": "Signaler",
+      "members": "membres"
+    },
+    "profile": {
+      "category": "Catégorie",
+      "founded": "Fondé en",
+      "website": "Site web",
+      "email": "Email",
+      "description": "Description"
+    },
+    "posts": {
+      "noPosts": "Pas encore de publications."
+    },
+    "vacancies": {
+      "noVacancies": "Aucun poste ouvert pour le moment."
+    },
+    "videos": {
+      "noVideos": "Pas encore de vidéos",
+      "addVideo": "Ajouter une vidéo",
+      "addVideoTitle": "Ajouter une vidéo YouTube",
+      "videoUrlPlaceholder": "URL YouTube",
+      "save": "Enregistrer",
+      "cancel": "Annuler"
+    },
+    "visitor": {
+      "title": "{name} est membre de Stick Transfer",
+      "subtitle": "Rejoignez la communauté pour vous connecter avec des clubs, trouver des opportunités et améliorer votre jeu.",
+      "item1": "Suivez des clubs et découvrez de nouvelles opportunités",
+      "item2": "Postulez à des postes ouverts dans le monde entier",
+      "item3": "Connectez-vous avec des entraîneurs et des joueurs",
+      "item4": "Gérez votre profil professionnel",
+      "createAccount": "Créer un compte gratuit",
+      "logIn": "Se connecter"
     },
     "squad": {
       "title": "Équipe",

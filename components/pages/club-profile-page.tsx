@@ -12,12 +12,14 @@ interface ClubProfilePageProps {
 export function ClubProfilePage({
   isOwnProfile = false,
 }: ClubProfilePageProps) {
-  const [activeTab, setActiveTab] = useState("posts");
+  const [activeTab, setActiveTab] = useState("profile");
   const { user } = useAuthStore();
 
   if (!user) {
     return <div>PLEASE LOGIN</div>;
   }
+
+  const anyUser = user as unknown as Record<string, unknown>;
 
   const clubData = {
     id: user.id,
@@ -28,7 +30,15 @@ export function ClubProfilePage({
     bio: user.bio,
     city: user.city,
     country: user.country,
-    isVerified: (user as unknown as { isVerified?: boolean }).isVerified,
+    isVerified: anyUser.isVerified as boolean | undefined,
+    memberCount: (anyUser.memberCount as number | undefined),
+    website: anyUser.website as string | undefined,
+    email: user.email,
+    league: anyUser.league as string | undefined,
+    type: anyUser.type as string | undefined,
+    createdAt: user.createdAt,
+    videos: anyUser.videos as string[] | undefined,
+    isAdmin: isOwnProfile,
   };
 
   return (
@@ -44,6 +54,7 @@ export function ClubProfilePage({
         country={clubData.country}
         isVerified={clubData.isVerified}
         isOwnProfile={isOwnProfile}
+        memberCount={clubData.memberCount}
       />
       <ClubProfileTabs
         activeTab={activeTab}
@@ -53,6 +64,13 @@ export function ClubProfilePage({
           bio: clubData.bio,
           city: clubData.city,
           country: clubData.country,
+          website: clubData.website,
+          email: clubData.email,
+          league: clubData.league,
+          type: clubData.type,
+          createdAt: clubData.createdAt,
+          videos: clubData.videos,
+          isAdmin: clubData.isAdmin,
         }}
       />
     </main>

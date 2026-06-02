@@ -22,18 +22,18 @@ export function CtaSection() {
           transition={{ duration: 0.6 }}
           className="text-center"
         >
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white-black mb-4">
             {t("title")}
           </h2>
-          <p className="text-white/80 text-lg mb-10">{t("subtitle")}</p>
+          <p className="text-white-black/80 text-lg mb-10">{t("subtitle")}</p>
 
           <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10 max-w-xl mx-auto text-left">
             {BULLETS.map((b) => (
               <li key={b} className="flex items-center gap-3">
-                <div className="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center shrink-0">
-                  <Check size={12} className="text-white" />
+                <div className="w-5 h-5 rounded-full bg-white-black/20 flex items-center justify-center shrink-0">
+                  <Check size={12} className="text-white-black" />
                 </div>
-                <span className="text-white">
+                <span className="text-white-black">
                   {t(b as Parameters<typeof t>[0])}
                 </span>
               </li>

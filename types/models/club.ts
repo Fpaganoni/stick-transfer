@@ -35,6 +35,8 @@ export interface Club {
   facebook?: string;
   tiktok?: string;
   members?: ClubMember[];
+  // TODO: add videos to GraphQL schema when backend supports it
+  videos?: string[];
   admin?: {
     avatar?: string;
   };
