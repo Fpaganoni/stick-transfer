@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight, LogIn } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
@@ -9,13 +9,17 @@ import { useUIStore } from "@/stores/useUIStore";
 
 export function HeroSection() {
   const t = useTranslations("landing.hero");
+  const tNav = useTranslations("landingNav");
   const { openRegisterModal, openLoginModal } = useUIStore();
 
   return (
     <section
       id="home"
       className="relative min-h-[90vh] flex items-center justify-center px-4 py-20 overflow-hidden"
-      style={{ background: "linear-gradient(135deg, #0d1b2e 0%, #162544 50%, #0d1b2e 100%)" }}
+      style={{
+        background:
+          "linear-gradient(135deg, #0d1b2e 0%, #162544 50%, #0d1b2e 100%)",
+      }}
     >
       {/* Subtle background image overlay */}
       <div
@@ -64,13 +68,12 @@ export function HeroSection() {
               />
             </Button>
             <Button
-              variant="outline"
+              variant="ghost"
               size="lg"
-              className="px-8 border-white/30 text-white bg-white/5 hover:bg-white/15 hover:text-white hover:border-white/50"
+              className="px-8 bg-input/30 hover:bg-input/80 text-foreground"
               onClick={openLoginModal}
             >
-              <LogIn size={18} className="mr-2" />
-              {t("login")}
+              {tNav("signIn")}
             </Button>
           </div>
         </motion.div>
@@ -90,7 +93,7 @@ export function HeroSection() {
               className="object-cover"
               priority
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#0d1b2e]/50 to-transparent" />
+            <div className="absolute inset-0 bg-linear-to-t from-[#0d1b2e]/50 to-transparent" />
           </div>
 
           {/* Decorative blobs */}

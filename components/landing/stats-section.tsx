@@ -40,7 +40,14 @@ export function StatsSection() {
   ];
 
   return (
-    <section id="stats" className="py-20 px-4 bg-surface-elevated/30">
+    <section
+      id="stats"
+      className="py-28 px-4 bg-surface-elevated/30"
+      style={{
+        boxShadow:
+          "0 8px 32px 0 rgba(0,0,0,0.18), 0 -8px 32px 0 rgba(0,0,0,0.18)",
+      }}
+    >
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
         <motion.div

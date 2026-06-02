@@ -12,7 +12,7 @@ export function StatsBar() {
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-2 lg:grid-cols-4 divide-y lg:divide-y-0 lg:divide-x divide-border">
           {STATS.map((key) => (
-            <div key={key} className="text-center px-6 py-5">
+            <div key={key} className="text-center px-6 py-10">
               <p className="text-2xl md:text-3xl font-extrabold text-primary">
                 {t(`${key}.value` as Parameters<typeof t>[0])}
               </p>
