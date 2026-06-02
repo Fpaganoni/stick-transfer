@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { Check } from "lucide-react";
 import { useTranslations } from "next-intl";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { useUIStore } from "@/stores/useUIStore";
@@ -75,8 +76,13 @@ export function RoleTabsSection() {
                 </div>
 
                 <div className="hidden lg:flex items-center justify-center">
-                  <div className="w-full h-64 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center">
-                    <span className="text-7xl">🏑</span>
+                  <div className="relative w-full h-64 rounded-2xl overflow-hidden border border-primary/20">
+                    <Image
+                      src={`/${role}.webp`}
+                      alt={role}
+                      fill
+                      className="object-cover"
+                    />
                   </div>
                 </div>
               </motion.div>
