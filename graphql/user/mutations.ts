@@ -44,7 +44,6 @@ export const UPDATE_USER = gql`
     $country: String
     $city: String
     $yearsOfExperience: Int
-    $statistics: StatisticsInput
     $trajectories: [TrajectoryInput!]
   ) {
     updateUser(
@@ -62,7 +61,6 @@ export const UPDATE_USER = gql`
       country: $country
       city: $city
       yearsOfExperience: $yearsOfExperience
-      statistics: $statistics
       trajectories: $trajectories
     ) {
       id
@@ -86,11 +84,6 @@ export const UPDATE_USER = gql`
         startDate
         endDate
         isCurrent
-      }
-      statistics {
-        gamesPlayed
-        goals
-        assists
       }
     }
   }

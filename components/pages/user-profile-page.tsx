@@ -30,7 +30,6 @@ export function UserProfilePage({
     bio: user.bio,
     cvUrl: user.cvUrl,
     coverImagePosition: user.coverImagePosition || "50%",
-    stats: user.statistics || { gamesPlayed: 0, goals: 0, assists: 0 },
     trajectories:
       user.trajectories?.map((t) => ({
         club: t.club,

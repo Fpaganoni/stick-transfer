@@ -302,8 +302,6 @@
       "trajectoriesDesc": "Añade tus clubes actuales y pasados o roles.",
       "multimedia": "Multimedia",
       "multimediaDesc": "Añade enlaces de YouTube para mostrar tus mejores momentos.",
-      "statistics": "Estadísticas",
-      "statisticsDesc": "Actualiza tus estadísticas de hockey.",
       "addYoutubeUrl": "Añadir URL de YouTube",
       "addTrajectory": "Añadir Trayectoria",
       "trajectoryFields": {
@@ -345,15 +343,10 @@
       "posts": "Publicaciones",
       "trajectory": "Trayectoria",
       "multimedia": "Multimedia",
-      "statistics": "Estadísticas",
       "applications": "Mis Solicitudes"
     },
     "noPosts": "Aún no hay publicaciones",
-    "stats": {
-      "gamesPlayed": "Partidos Jugados",
-      "goals": "Goles",
-      "assists": "Asistencias"
-    },
+    "noTrajectory": "Aún no hay trayectoria",
     "media": "Multimedia",
     "cv": {
       "label": "CV:",
