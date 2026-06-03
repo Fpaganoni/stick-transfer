@@ -356,7 +356,8 @@
       "trajectory": "Trajectory",
       "multimedia": "Multimedia",
       "applications": "My Applications",
-      "savedJobs": "Saved Jobs"
+      "savedJobs": "Saved Jobs",
+      "cv": "CV"
     },
     "noPosts": "No posts yet",
     "noTrajectory": "No trajectory added yet",
@@ -371,7 +372,8 @@
       "uploadError": "Error uploading CV",
       "removeSuccess": "CV removed",
       "fileTooLarge": "File exceeds 5 MB",
-      "invalidType": "Only PDF files accepted"
+      "invalidType": "Only PDF files accepted",
+      "noCv": "No CV uploaded yet."
     },
     "applications": {
       "noApplications": "No applications yet. Start applying to job opportunities!",

@@ -14,7 +14,6 @@ import { useState, useRef, useCallback, useEffect } from "react";
 import { Badge } from "../ui/badge";
 import { User } from "@/types/models/user";
 import { useUpdateUser } from "@/hooks/useUsers";
-import { CvSection } from "./cv-section";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import Link from "next/link";
@@ -206,7 +205,7 @@ export function ProfileHeader({
               <motion.div
                 whileHover={{ scale: 1.05 }}
                 transition={{ duration: 0.2, ease: "easeInOut" }}
-                className="w-32 h-32 rounded-full border-2 border-background shadow-lg relative overflow-hidden bg-muted"
+                className="w-48 h-48 rounded-full border-2 border-background shadow-lg relative overflow-hidden bg-muted"
               >
                 <Image
                   src={avatar || "/hockey-stadium.jpg"}
@@ -232,14 +231,7 @@ export function ProfileHeader({
                 </span>
               </div>
 
-              <CvSection
-                userId={id}
-                role={role}
-                cvUrl={cvUrl}
-                isOwnProfile={isOwnProfile}
-              />
-
-              <p className="text-foreground-muted text-sm text-center mb-2 leading-relaxed">
+              <p className="text-foreground-muted text-sm text-start my-2 leading-relaxed">
                 {bio || t("noBio")}
               </p>
             </div>

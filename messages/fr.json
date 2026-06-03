@@ -356,7 +356,8 @@
       "trajectory": "Trajectoire",
       "multimedia": "Multimédia",
       "applications": "Mes Candidatures",
-      "savedJobs": "Offres Sauvegardées"
+      "savedJobs": "Offres Sauvegardées",
+      "cv": "CV"
     },
     "noPosts": "Pas encore de publications",
     "noTrajectory": "Aucune trajectoire ajoutée",
@@ -371,7 +372,8 @@
       "uploadError": "Erreur lors du téléversement",
       "removeSuccess": "CV supprimé",
       "fileTooLarge": "Fichier dépasse 5 Mo",
-      "invalidType": "Seuls les PDF sont acceptés"
+      "invalidType": "Seuls les PDF sont acceptés",
+      "noCv": "Aucun CV téléchargé pour le moment."
     },
     "applications": {
       "noApplications": "Aucune candidature pour le moment. Commencez à postuler aux opportunités d'emploi !",

@@ -6,9 +6,12 @@ import { useTranslations } from "next-intl";
 import { YoutubeWidget } from "@/components/ui/youtube-widget";
 import { UserApplications } from "./user-applications";
 import { UserSavedJobs } from "./user-saved-jobs";
+import { Download, FileText } from "lucide-react";
 
 interface UserData {
   id: string;
+  role?: string;
+  cvUrl?: string;
   trajectories: TrajectoryItem[];
   multimedia?: string[];
 }
@@ -28,9 +31,14 @@ export function ProfileTabs({
 }: ProfileTabsProps) {
   const t = useTranslations("profile");
 
+  const showCvTab =
+    userData.role?.toUpperCase() === "PLAYER" ||
+    userData.role?.toUpperCase() === "COACH";
+
   const tabs = [
     { id: "trajectory", label: t("tabs.trajectory") },
     { id: "multimedia", label: t("tabs.multimedia") },
+    ...(showCvTab ? [{ id: "cv", label: t("tabs.cv") }] : []),
     ...(isOwnProfile
       ? [
           { id: "applications", label: t("tabs.applications") },
@@ -103,6 +111,40 @@ export function ProfileTabs({
               <div className="col-span-full py-8 text-center border-2 border-dashed border-border rounded-xl">
                 <p className="text-foreground-muted font-medium">
                   No multimedia available
+                </p>
+              </div>
+            )}
+          </div>
+        )}
+
+        {activeTab === "cv" && (
+          <div className="space-y-4">
+            {userData.cvUrl ? (
+              <>
+                <iframe
+                  src={`${userData.cvUrl}#zoom=75`}
+                  className="w-full h-screen p-10 rounded-xl border border-border"
+                  title="CV Preview"
+                />
+                <a
+                  href={userData.cvUrl}
+                  download
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-2 w-full py-2.5 rounded-lg bg-primary/10 hover:bg-primary/20 border border-border text-primary font-semibold transition-colors duration-200"
+                >
+                  <Download size={16} />
+                  {t("cv.download")}
+                </a>
+              </>
+            ) : (
+              <div className="py-8 text-center border-2 border-dashed border-border rounded-xl">
+                <FileText
+                  size={32}
+                  className="mx-auto mb-3 text-foreground-muted opacity-40"
+                />
+                <p className="text-foreground-muted font-medium">
+                  {t("cv.noCv")}
                 </p>
               </div>
             )}
