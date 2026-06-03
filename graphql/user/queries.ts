@@ -41,11 +41,6 @@ export const GET_USER_FOR_LOGIN = gql`
         name
         logo
       }
-      statistics {
-        gamesPlayed
-        goals
-        assists
-      }
       trajectories {
         title
         organization

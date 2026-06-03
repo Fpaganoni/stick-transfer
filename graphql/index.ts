@@ -21,6 +21,9 @@ export { GET_JOB_OPPORTUNITIES, GET_USER_APPLICATIONS } from "./opportunity/quer
 
 export { APPLY_FOR_JOB } from "./opportunity/mutations";
 
+// NEWS
+export { GET_NEWS, GET_NEWS_ARTICLE } from "./news/queries";
+
 // NOTIFICATION
 export {
   GET_NOTIFICATIONS,

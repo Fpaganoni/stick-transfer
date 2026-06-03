@@ -381,7 +381,6 @@
       "posts": "Publications",
       "vacancies": "Postes",
       "videos": "Vidéos",
-      "squad": "Équipe",
       "opportunities": "Opportunités",
       "about": "À Propos"
     },
@@ -422,10 +421,6 @@
       "item4": "Gérez votre profil professionnel",
       "createAccount": "Créer un compte gratuit",
       "logIn": "Se connecter"
-    },
-    "squad": {
-      "title": "Équipe",
-      "noMembers": "Pas encore de membres. L'équipe apparaîtra ici."
     },
     "opportunities": {
       "title": "Postes Ouverts",
@@ -501,9 +496,7 @@
     "detail": {
       "contactAndSocial": "Contact et Réseaux",
       "contactInfo": "Informations de Contact",
-      "followUs": "Suivez-nous",
-      "squad": "Équipe",
-      "joinedSince": "Rejoint depuis"
+      "followUs": "Suivez-nous"
     },
     "roles": {
       "coach": "Entraîneur",
@@ -541,6 +534,28 @@
       "alreadyPending": "Une demande de vérification est déjà en attente. Veuillez attendre que notre équipe l'examine.",
       "clubNotFound": "Erreur interne: Club non trouvé."
     }
+  },
+  "news": {
+    "pageTitle": "Actualités Hockey",
+    "pageSubtitle": "Restez informé des dernières actualités du hockey mondial",
+    "loadMore": "Charger plus",
+    "categories": {
+      "all": "Toutes",
+      "international": "International",
+      "national": "National",
+      "transfers": "Transferts",
+      "equipment": "Équipement",
+      "results": "Résultats"
+    },
+    "card": {
+      "readMore": "Lire la suite",
+      "minRead": "min de lecture"
+    },
+    "detail": {
+      "relatedArticles": "Articles Connexes",
+      "backToNews": "Retour aux Actualités"
+    },
+    "empty": "Aucun article trouvé"
   },
   "Notifications": {
     "LIKE_POST": "{actorName} a aimÃ© votre publication.",

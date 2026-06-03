@@ -381,7 +381,6 @@
       "posts": "Posts",
       "vacancies": "Vacancies",
       "videos": "Videos",
-      "squad": "Squad",
       "opportunities": "Opportunities",
       "about": "About"
     },
@@ -422,10 +421,6 @@
       "item4": "Manage your professional profile",
       "createAccount": "Create free account",
       "logIn": "Log In"
-    },
-    "squad": {
-      "title": "Squad",
-      "noMembers": "No members yet. Squad will appear here."
     },
     "opportunities": {
       "title": "Open Positions",
@@ -501,9 +496,7 @@
     "detail": {
       "contactAndSocial": "Contact & Social",
       "contactInfo": "Contact Information",
-      "followUs": "Follow Us",
-      "squad": "Squad",
-      "joinedSince": "Joined since"
+      "followUs": "Follow Us"
     },
     "roles": {
       "coach": "Coach",
@@ -541,6 +534,28 @@
       "alreadyPending": "A verification request is already pending. Please wait for our team to review it.",
       "clubNotFound": "Internal error: Club not found."
     }
+  },
+  "news": {
+    "pageTitle": "Hockey News",
+    "pageSubtitle": "Stay updated with the latest hockey news worldwide",
+    "loadMore": "Load more",
+    "categories": {
+      "all": "All",
+      "international": "International",
+      "national": "National",
+      "transfers": "Transfers",
+      "equipment": "Equipment",
+      "results": "Results"
+    },
+    "card": {
+      "readMore": "Read more",
+      "minRead": "min read"
+    },
+    "detail": {
+      "relatedArticles": "Related Articles",
+      "backToNews": "Back to News"
+    },
+    "empty": "No articles found"
   },
   "Notifications": {
     "LIKE_POST": "{actorName} liked your post.",
