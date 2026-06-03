@@ -104,10 +104,22 @@
       "createProfile": "Crear Tu Perfil"
     },
     "statsBar": {
-      "players": { "value": "Lanzamiento 2026", "label": "Jugadores" },
-      "clubs": { "value": "Acceso Anticipado", "label": "Clubes" },
-      "countries": { "value": "Global", "label": "Países" },
-      "vacancies": { "value": "BETA", "label": "Vacantes Activas" }
+      "players": {
+        "value": "Lanzamiento 2026",
+        "label": "Jugadores"
+      },
+      "clubs": {
+        "value": "Acceso Anticipado",
+        "label": "Clubes"
+      },
+      "countries": {
+        "value": "Global",
+        "label": "Países"
+      },
+      "vacancies": {
+        "value": "BETA",
+        "label": "Vacantes Activas"
+      }
     },
     "roleTabs": {
       "title": "Para todos en el hockey",
@@ -343,7 +355,8 @@
       "posts": "Publicaciones",
       "trajectory": "Trayectoria",
       "multimedia": "Multimedia",
-      "applications": "Mis Solicitudes"
+      "applications": "Mis Solicitudes",
+      "savedJobs": "Empleos Guardados"
     },
     "noPosts": "Aún no hay publicaciones",
     "noTrajectory": "Aún no hay trayectoria",
@@ -371,7 +384,12 @@
     "coverPositionSaved": "Posición de portada guardada",
     "coverPositionError": "Error al guardar la posición",
     "cancel": "Cancelar",
-    "save": "Guardar"
+    "save": "Guardar",
+    "savedJobs": {
+      "noSavedJobs": "No hay empleos guardados aún",
+      "noSavedJobsHint": "Guarda vacantes mientras navegas para encontrarlas aquí más tarde.",
+      "viewClub": "Ver club"
+    }
   },
   "clubProfile": {
     "editProfile": "Editar Perfil",

@@ -104,10 +104,22 @@
       "createProfile": "Create Your Profile"
     },
     "statsBar": {
-      "players": { "value": "Launching 2026", "label": "Players" },
-      "clubs": { "value": "Early Access", "label": "Clubs" },
-      "countries": { "value": "Global", "label": "Countries" },
-      "vacancies": { "value": "BETA", "label": "Active Vacancies" }
+      "players": {
+        "value": "Launching 2026",
+        "label": "Players"
+      },
+      "clubs": {
+        "value": "Early Access",
+        "label": "Clubs"
+      },
+      "countries": {
+        "value": "Global",
+        "label": "Countries"
+      },
+      "vacancies": {
+        "value": "BETA",
+        "label": "Active Vacancies"
+      }
     },
     "roleTabs": {
       "title": "Built for everyone in hockey",
@@ -343,7 +355,8 @@
       "posts": "Posts",
       "trajectory": "Trajectory",
       "multimedia": "Multimedia",
-      "applications": "My Applications"
+      "applications": "My Applications",
+      "savedJobs": "Saved Jobs"
     },
     "noPosts": "No posts yet",
     "noTrajectory": "No trajectory added yet",
@@ -371,7 +384,12 @@
     "coverPositionSaved": "Cover position saved",
     "coverPositionError": "Failed to save position",
     "cancel": "Cancel",
-    "save": "Save"
+    "save": "Save",
+    "savedJobs": {
+      "noSavedJobs": "No saved jobs yet",
+      "noSavedJobsHint": "Bookmark vacancies while browsing to find them here later.",
+      "viewClub": "View club"
+    }
   },
   "clubProfile": {
     "editProfile": "Edit Profile",

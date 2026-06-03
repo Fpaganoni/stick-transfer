@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Bookmark, ChevronRight } from "lucide-react";
@@ -10,8 +9,7 @@ import { formatRelativeTime } from "@/lib/date-utils";
 import { useTranslations, useLocale } from "next-intl";
 import { useOpportunitiesStore } from "@/stores/useOpportunitiesStore";
 import { useUserApplications } from "@/hooks/useJobApplications";
-import { useAuthStore } from "@/stores/useAuthStore";
-import { useUIStore } from "@/stores/useUIStore";
+import { useSavedJobsStore } from "@/stores/useSavedJobsStore";
 
 type OpportunityListCardProps = JobOpportunity;
 
@@ -20,12 +18,12 @@ export function OpportunityListCard(opportunity: OpportunityListCardProps) {
   const locale = useLocale() as "en" | "es" | "fr";
   const { setSelectedOpportunity, setIsModalOpen } = useOpportunitiesStore();
   const { hasAppliedTo } = useUserApplications();
-  const { isLoggedIn } = useAuthStore();
-  const { openLoginModal } = useUIStore();
-  const [isSaved, setIsSaved] = useState(false);
+  const { toggleSave, isSaved } = useSavedJobsStore();
 
   const { id, title, club, country, positionType, status, level, createdAt } =
     opportunity;
+
+  const saved = isSaved(id);
 
   const handleOpenModal = () => {
     setSelectedOpportunity(opportunity);
@@ -34,11 +32,7 @@ export function OpportunityListCard(opportunity: OpportunityListCardProps) {
 
   const handleBookmark = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!isLoggedIn) {
-      openLoginModal();
-      return;
-    }
-    setIsSaved((prev) => !prev);
+    toggleSave(id);
   };
 
   const normalizedStatus = status.toLowerCase() as "open" | "closed" | "filled";
@@ -86,11 +80,11 @@ export function OpportunityListCard(opportunity: OpportunityListCardProps) {
               <button
                 onClick={handleBookmark}
                 className={`shrink-0 p-1 rounded hover:bg-foreground/10 transition-colors ${
-                  isSaved ? "text-primary" : "text-foreground-muted"
+                  saved ? "text-primary" : "text-foreground-muted"
                 }`}
                 aria-label="Bookmark"
               >
-                <Bookmark size={16} fill={isSaved ? "currentColor" : "none"} />
+                <Bookmark size={16} fill={saved ? "currentColor" : "none"} />
               </button>
             </div>
 

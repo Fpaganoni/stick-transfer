@@ -6,6 +6,7 @@ import { useOpportunitiesStore } from "@/stores/useOpportunitiesStore";
 import { useTranslations, useLocale } from "next-intl";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useApplyForJob, useUserApplications } from "@/hooks/useJobApplications";
+import { useSavedJobsStore } from "@/stores/useSavedJobsStore";
 import {
   Dialog,
   DialogContent,
@@ -20,6 +21,7 @@ import {
   Globe,
   CheckCircle,
   Loader,
+  Bookmark,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { formatRelativeTime } from "@/lib/date-utils";
@@ -50,6 +52,7 @@ export function OpportunityDetailModal() {
   const { mutate: applyForJob, isPending } = useApplyForJob();
   const { hasAppliedTo, isLoading: isLoadingApplications } =
     useUserApplications();
+  const { toggleSave, isSaved } = useSavedJobsStore();
   const [hasAppliedLocalState, setHasAppliedLocalState] = useState(false);
 
   if (!selectedOpportunity) {
@@ -95,7 +98,7 @@ export function OpportunityDetailModal() {
 
   return (
     <Dialog open={isModalOpen} onOpenChange={(open) => !open && closeModal()}>
-      <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+      <DialogContent className="max-w-2xl">
         <DialogHeader className="pb-4">
           <DialogTitle className="text-2xl font-bold pr-6">
             {opportunity.title}
@@ -253,6 +256,20 @@ export function OpportunityDetailModal() {
                 )}
               </button>
             )}
+            <button
+              onClick={() => toggleSave(opportunity.id)}
+              className={`px-4 py-2 rounded-lg border transition-colors duration-200 flex items-center gap-2 font-semibold ${
+                isSaved(opportunity.id)
+                  ? "bg-primary/10 border-primary text-primary"
+                  : "bg-foreground/10 border-border text-foreground hover:bg-foreground/20"
+              }`}
+              aria-label="Bookmark"
+            >
+              <Bookmark
+                size={18}
+                fill={isSaved(opportunity.id) ? "currentColor" : "none"}
+              />
+            </button>
             <button
               onClick={closeModal}
               className="px-6 py-2 rounded-lg bg-foreground/10 hover:bg-foreground/20 text-foreground font-semibold transition-colors duration-300"

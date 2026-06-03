@@ -104,10 +104,22 @@
       "createProfile": "Créer Votre Profil"
     },
     "statsBar": {
-      "players": { "value": "Lancement 2026", "label": "Joueurs" },
-      "clubs": { "value": "Accès Anticipé", "label": "Clubs" },
-      "countries": { "value": "Mondial", "label": "Pays" },
-      "vacancies": { "value": "BETA", "label": "Postes Actifs" }
+      "players": {
+        "value": "Lancement 2026",
+        "label": "Joueurs"
+      },
+      "clubs": {
+        "value": "Accès Anticipé",
+        "label": "Clubs"
+      },
+      "countries": {
+        "value": "Mondial",
+        "label": "Pays"
+      },
+      "vacancies": {
+        "value": "BETA",
+        "label": "Postes Actifs"
+      }
     },
     "roleTabs": {
       "title": "Fait pour tous dans le hockey",
@@ -343,7 +355,8 @@
       "posts": "Publications",
       "trajectory": "Trajectoire",
       "multimedia": "Multimédia",
-      "applications": "Mes Candidatures"
+      "applications": "Mes Candidatures",
+      "savedJobs": "Offres Sauvegardées"
     },
     "noPosts": "Pas encore de publications",
     "noTrajectory": "Aucune trajectoire ajoutée",
@@ -371,7 +384,12 @@
     "coverPositionSaved": "Position de couverture sauvegardée",
     "coverPositionError": "Échec de la sauvegarde",
     "cancel": "Annuler",
-    "save": "Sauvegarder"
+    "save": "Sauvegarder",
+    "savedJobs": {
+      "noSavedJobs": "Aucune offre sauvegardée",
+      "noSavedJobsHint": "Sauvegardez des offres en naviguant pour les retrouver ici plus tard.",
+      "viewClub": "Voir le club"
+    }
   },
   "clubProfile": {
     "editProfile": "Éditer le Profil",

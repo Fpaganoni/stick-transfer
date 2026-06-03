@@ -5,6 +5,7 @@ import { TrajectoryItem } from "@/types/models/user";
 import { useTranslations } from "next-intl";
 import { YoutubeWidget } from "@/components/ui/youtube-widget";
 import { UserApplications } from "./user-applications";
+import { UserSavedJobs } from "./user-saved-jobs";
 
 interface UserData {
   id: string;
@@ -31,7 +32,10 @@ export function ProfileTabs({
     { id: "trajectory", label: t("tabs.trajectory") },
     { id: "multimedia", label: t("tabs.multimedia") },
     ...(isOwnProfile
-      ? [{ id: "applications", label: t("tabs.applications") }]
+      ? [
+          { id: "applications", label: t("tabs.applications") },
+          { id: "savedJobs", label: t("tabs.savedJobs") },
+        ]
       : []),
   ];
 
@@ -106,6 +110,8 @@ export function ProfileTabs({
         )}
 
         {activeTab === "applications" && <UserApplications />}
+
+        {activeTab === "savedJobs" && <UserSavedJobs />}
       </div>
     </>
   );
