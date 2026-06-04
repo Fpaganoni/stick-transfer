@@ -60,7 +60,6 @@ export const mockJobOpportunity: JobOpportunity = {
   currency: "CAD",
   benefits: ["health", "housing"],
   status: "open",
-  clubId: "club-1",
   club: { id: "club-1", name: "Toronto HC" },
   createdAt: "2024-01-01T00:00:00Z",
 };

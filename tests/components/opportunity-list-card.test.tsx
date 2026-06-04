@@ -67,7 +67,6 @@ const baseOpportunity: JobOpportunity = {
   currency: "EUR",
   benefits: ["Housing provided"],
   createdAt: "2026-05-01T00:00:00Z",
-  clubId: "club-1",
   club: {
     id: "club-1",
     name: "HC Barcelona",

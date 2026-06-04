@@ -1,3 +1,4 @@
+import React from "react";
 import { describe, it, expect, vi } from "vitest";
 import { render } from "@testing-library/react";
 import { LandingPage } from "@/components/pages/landing-page";
@@ -42,10 +43,12 @@ vi.mock("framer-motion", () => ({
     {},
     {
       get: (_target, prop) =>
-        ({ children, ...rest }: React.HTMLAttributes<HTMLElement>) => {
-          const El = prop as keyof JSX.IntrinsicElements;
-          return <El {...rest}>{children}</El>;
-        },
+        ({ children, ...rest }: React.HTMLAttributes<HTMLElement>) =>
+          React.createElement(
+            prop as keyof React.JSX.IntrinsicElements,
+            rest,
+            children,
+          ),
     },
   ),
   AnimatePresence: ({ children }: { children: React.ReactNode }) => (

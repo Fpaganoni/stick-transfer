@@ -3,7 +3,7 @@
 import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Target, Compass, Building2, MessageSquare, User } from "lucide-react";
+import { Target, Compass, Building2, Newspaper, MessageSquare, User } from "lucide-react";
 import { HockeyXTicks } from "../ui/hockey-xtick";
 import { motion } from "framer-motion";
 
@@ -16,6 +16,7 @@ export function SideNavigation() {
     { href: "/opportunities", label: t("opportunities"), icon: Target },
     { href: "/explore", label: t("players"), icon: Compass },
     { href: "/clubs", label: t("clubs"), icon: Building2 },
+    { href: "/news", label: t("news"), icon: Newspaper },
     { href: "/messages", label: t("messages"), icon: MessageSquare },
     { href: "/profile", label: t("profile"), icon: User },
   ];
