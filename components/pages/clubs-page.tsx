@@ -36,7 +36,7 @@ export function ClubsPage({ initialData }: ClubsPageProps) {
   const { data, isLoading, error } = useClubs(initialData);
   const user = useAuthStore((s) => s.user);
 
-  const allClubs = data?.clubs ?? [];
+  const allClubs = useMemo(() => data?.clubs ?? [], [data?.clubs]);
 
   const myClubs = useMemo(
     () =>
@@ -88,10 +88,10 @@ export function ClubsPage({ initialData }: ClubsPageProps) {
         </TabsList>
 
         <TabsContent value="all">
-          <ClubGrid clubs={activeClubs} isLoading={isLoading && !initialData} t={t} />
+          <ClubGrid clubs={activeClubs} isLoading={isLoading && !initialData} />
         </TabsContent>
         <TabsContent value="my">
-          <ClubGrid clubs={myClubs} isLoading={false} t={t} />
+          <ClubGrid clubs={myClubs} isLoading={false} />
         </TabsContent>
       </Tabs>
     </main>
@@ -101,12 +101,11 @@ export function ClubsPage({ initialData }: ClubsPageProps) {
 function ClubGrid({
   clubs,
   isLoading,
-  t,
 }: {
   clubs: Club[];
   isLoading: boolean;
-  t: ReturnType<typeof useTranslations>;
 }) {
+  const t = useTranslations("clubs");
   if (isLoading) {
     return (
       <div className="flex flex-wrap gap-4">

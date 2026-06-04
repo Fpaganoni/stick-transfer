@@ -7,7 +7,6 @@ import { Loader } from "lucide-react";
 import { useNewsArticleQuery } from "@/hooks/useNews";
 import type { NewsCategory } from "@/hooks/useNews";
 import { formatDate } from "@/lib/date-utils";
-import { NewsCard } from "@/components/news/news-card";
 
 const categoryStyles: Record<NewsCategory, string> = {
   INTERNATIONAL: "bg-info/10 text-info",
@@ -48,11 +47,16 @@ export function NewsDetailPage({ slug }: NewsDetailPageProps) {
   return (
     <div className="max-w-4xl mx-auto px-4 py-8 flex flex-col gap-6">
       <nav className="flex items-center gap-2 text-sm text-foreground-muted">
-        <Link href={`/${locale}/news`} className="hover:text-foreground transition-colors">
+        <Link
+          href={`/${locale}/news`}
+          className="hover:text-foreground transition-colors"
+        >
           {t("detail.backToNews")}
         </Link>
         <span>›</span>
-        <span className="truncate max-w-[200px] text-foreground">{article.title}</span>
+        <span className="truncate max-w-[200px] text-foreground">
+          {article.title}
+        </span>
       </nav>
 
       <div className="flex flex-col gap-4">
@@ -69,7 +73,9 @@ export function NewsDetailPage({ slug }: NewsDetailPageProps) {
         <div className="flex items-center gap-2 text-sm text-foreground-muted">
           <span>{article.author.name}</span>
           <span>·</span>
-          <span>{formatDate(article.publishedAt, locale as "en" | "es" | "fr")}</span>
+          <span>
+            {formatDate(article.publishedAt, locale as "en" | "es" | "fr")}
+          </span>
           <span>·</span>
           <span>
             {article.readingTimeMinutes} {t("card.minRead")}
@@ -77,7 +83,7 @@ export function NewsDetailPage({ slug }: NewsDetailPageProps) {
         </div>
       </div>
 
-      <div className="relative w-full max-h-[400px] aspect-[16/7] overflow-hidden rounded-xl">
+      <div className="relative w-full max-h-[400px] aspect-16/7 overflow-hidden rounded-xl">
         <Image
           src={article.coverImage}
           alt={article.title}
@@ -95,7 +101,9 @@ export function NewsDetailPage({ slug }: NewsDetailPageProps) {
 
       {article.relatedArticles.length > 0 && (
         <section className="flex flex-col gap-4 pt-4 border-t border-border">
-          <h2 className="text-foreground font-bold text-xl">{t("detail.relatedArticles")}</h2>
+          <h2 className="text-foreground font-bold text-xl">
+            {t("detail.relatedArticles")}
+          </h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {article.relatedArticles.map((related) => (
               <Link
@@ -118,7 +126,10 @@ export function NewsDetailPage({ slug }: NewsDetailPageProps) {
                       {related.title}
                     </p>
                     <p className="text-xs text-foreground-muted mt-1">
-                      {formatDate(related.publishedAt, locale as "en" | "es" | "fr")}
+                      {formatDate(
+                        related.publishedAt,
+                        locale as "en" | "es" | "fr",
+                      )}
                     </p>
                   </div>
                 </div>

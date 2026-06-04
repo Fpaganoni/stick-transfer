@@ -11,7 +11,7 @@ import {
   UserPlus,
   ArrowUpIcon,
 } from "lucide-react";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, useWatch, SubmitHandler } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
@@ -85,13 +85,13 @@ export const RegisterPage = () => {
   const {
     register,
     handleSubmit,
-    watch,
+    control,
     formState: { errors },
   } = useForm<RegisterData>({
     resolver: zodResolver(registerSchema),
   });
 
-  const selectedRole = watch("role");
+  const selectedRole = useWatch({ control, name: "role" });
 
   const roleMap: Record<RegisterData["role"], string> = {
     player: "PLAYER",

@@ -97,6 +97,7 @@
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^4.3.0",
     "@vitest/coverage-v8": "^2.0.0",
+    "baseline-browser-mapping": "^2.10.33",
     "eslint": "^9.0.0",
     "eslint-config-next": "16.0.7",
     "jsdom": "^24.1.0",

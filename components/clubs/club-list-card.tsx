@@ -25,9 +25,7 @@ function isNew(createdAt?: string): boolean {
   return Date.now() - new Date(createdAt).getTime() < 30 * 24 * 60 * 60 * 1000;
 }
 
-interface ClubListCardProps extends Club {}
-
-export function ClubListCard(club: ClubListCardProps) {
+export function ClubListCard(club: Club) {
   const router = useRouter();
   const locale = useLocale();
   const flag = countryFlag(club.country);
