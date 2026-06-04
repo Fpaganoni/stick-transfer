@@ -24,6 +24,37 @@ interface JobOpportunitiesProps {
   initialData?: { jobOpportunities: JobOpportunity[] };
 }
 
+const HOCKEY_COUNTRIES = [
+  "Argentina",
+  "Australia",
+  "Austria",
+  "Belgium",
+  "Canada",
+  "Chile",
+  "China",
+  "Egypt",
+  "England",
+  "France",
+  "Germany",
+  "India",
+  "Ireland",
+  "Italy",
+  "Japan",
+  "Malaysia",
+  "Netherlands",
+  "New Zealand",
+  "Pakistan",
+  "Portugal",
+  "Scotland",
+  "South Africa",
+  "South Korea",
+  "Spain",
+  "Switzerland",
+  "United States",
+  "Uruguay",
+  "Wales",
+];
+
 export function JobOpportunities({ initialData }: JobOpportunitiesProps) {
   const t = useTranslations("opportunities");
   const { data, isLoading, error } = useJobOpportunities(undefined, initialData);
@@ -39,9 +70,9 @@ export function JobOpportunities({ initialData }: JobOpportunitiesProps) {
   }, [localSearch, setSearchQuery]);
 
   const availableCountries = useMemo(() => {
-    if (!data?.jobOpportunities) return [];
-    const countries = new Set(data.jobOpportunities.map((opp) => opp.country));
-    return Array.from(countries).sort();
+    const apiCountries = data?.jobOpportunities?.map((opp) => opp.country) ?? [];
+    const merged = new Set([...apiCountries, ...HOCKEY_COUNTRIES]);
+    return Array.from(merged).sort();
   }, [data]);
 
   const filteredOpportunities = useMemo(() => {

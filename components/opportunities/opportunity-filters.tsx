@@ -36,7 +36,7 @@ export function OpportunityFilters({
   };
 
   const selectClass =
-    "w-full px-3 py-2 rounded-lg bg-foreground/5 border border-border text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all";
+    "w-full px-3 py-2 rounded-lg bg-input border border-border text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 hover:border-border-strong transition-all cursor-pointer";
 
   return (
     <div className="flex flex-col gap-5 p-4 pt-6">
@@ -50,9 +50,18 @@ export function OpportunityFilters({
           onChange={(e) => setFilters({ level: e.target.value || null })}
           className={selectClass}
         >
-          <option value="">{t("filters.experience")}</option>
-          <option value="PROFESSIONAL">Professional</option>
-          <option value="AMATEUR">Amateur</option>
+          <option className="bg-surface text-foreground" value="">
+            {t("filters.experience")}
+          </option>
+          <option
+            className="bg-surface text-foreground"
+            value="PROFESSIONAL"
+          >
+            Professional
+          </option>
+          <option className="bg-surface text-foreground" value="AMATEUR">
+            Amateur
+          </option>
         </select>
       </div>
 
@@ -66,10 +75,18 @@ export function OpportunityFilters({
           onChange={(e) => setFilters({ status: e.target.value || null })}
           className={selectClass}
         >
-          <option value="">All</option>
-          <option value="open">{t("open")}</option>
-          <option value="filled">{t("filled")}</option>
-          <option value="closed">{t("closed")}</option>
+          <option className="bg-surface text-foreground" value="">
+            All
+          </option>
+          <option className="bg-surface text-foreground" value="open">
+            {t("open")}
+          </option>
+          <option className="bg-surface text-foreground" value="filled">
+            {t("filled")}
+          </option>
+          <option className="bg-surface text-foreground" value="closed">
+            {t("closed")}
+          </option>
         </select>
       </div>
 
@@ -83,9 +100,15 @@ export function OpportunityFilters({
           onChange={(e) => setFilters({ country: e.target.value || null })}
           className={selectClass}
         >
-          <option value="">All Countries</option>
+          <option className="bg-surface text-foreground" value="">
+            All Countries
+          </option>
           {availableCountries.map((country) => (
-            <option key={country} value={country}>
+            <option
+              key={country}
+              value={country}
+              className="bg-surface text-foreground"
+            >
               {country}
             </option>
           ))}
@@ -102,9 +125,15 @@ export function OpportunityFilters({
           onChange={(e) => setFilters({ positionType: e.target.value || null })}
           className={selectClass}
         >
-          <option value="">All Positions</option>
+          <option className="bg-surface text-foreground" value="">
+            All Positions
+          </option>
           {POSITION_TYPES.map((pos) => (
-            <option key={pos} value={pos}>
+            <option
+              key={pos}
+              value={pos}
+              className="bg-surface text-foreground"
+            >
               {pos}
             </option>
           ))}
@@ -113,7 +142,7 @@ export function OpportunityFilters({
 
       {/* Actions */}
       <div className="flex flex-col gap-2 pt-2 border-t border-border">
-        <Button className="w-full text-white" onClick={handleApply}>
+        <Button className="w-full text-white-black" onClick={handleApply}>
           {t("applyFilters")}
         </Button>
         <Button variant="outline" className="w-full" onClick={handleReset}>

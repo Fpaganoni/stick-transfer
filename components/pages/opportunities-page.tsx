@@ -9,11 +9,7 @@ import { useUIStore } from "@/stores/useUIStore";
 import { useJobOpportunities } from "@/hooks/useJobOpportunities";
 import { JobOpportunity } from "@/types/models/job-opportunity";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { LoginPage } from "@/components/pages/login-page";
 import { RegisterPage } from "@/components/pages/register-page";
 
@@ -28,7 +24,6 @@ export function OpportunitiesPage({ initialData }: OpportunitiesPageProps) {
     openRegisterModal,
     isLoginOpen,
     isRegisterOpen,
-    openLoginModal,
     closeLoginModal,
     closeRegisterModal,
   } = useUIStore();
