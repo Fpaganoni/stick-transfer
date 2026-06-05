@@ -10,6 +10,8 @@ import { useTranslations, useLocale } from "next-intl";
 import { useOpportunitiesStore } from "@/stores/useOpportunitiesStore";
 import { useUserApplications } from "@/hooks/useJobApplications";
 import { useSavedJobsStore } from "@/stores/useSavedJobsStore";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { useUIStore } from "@/stores/useUIStore";
 
 type OpportunityListCardProps = JobOpportunity;
 
@@ -19,6 +21,8 @@ export function OpportunityListCard(opportunity: OpportunityListCardProps) {
   const { setSelectedOpportunity, setIsModalOpen } = useOpportunitiesStore();
   const { hasAppliedTo } = useUserApplications();
   const { toggleSave, isSaved } = useSavedJobsStore();
+  const { isLoggedIn } = useAuthStore();
+  const { openLoginModal } = useUIStore();
 
   const { id, title, club, country, positionType, status, level, createdAt } =
     opportunity;
@@ -32,6 +36,10 @@ export function OpportunityListCard(opportunity: OpportunityListCardProps) {
 
   const handleBookmark = (e: React.MouseEvent) => {
     e.stopPropagation();
+    if (!isLoggedIn) {
+      openLoginModal();
+      return;
+    }
     toggleSave(id);
   };
 

@@ -26,6 +26,10 @@ vi.mock("@/stores/useUIStore", () => ({
   useUIStore: () => ({ openLoginModal: mockOpenLoginModal }),
 }));
 
+vi.mock("@/stores/useSavedJobsStore", () => ({
+  useSavedJobsStore: () => ({ toggleSave: vi.fn(), isSaved: () => false }),
+}));
+
 vi.mock("next-intl", () => ({
   useTranslations: () => (key: string) => key,
   useLocale: () => "en",
