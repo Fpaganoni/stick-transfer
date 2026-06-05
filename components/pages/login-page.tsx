@@ -169,7 +169,7 @@ export function LoginPage() {
               style={{ backgroundColor: btn.bg }}
               className="w-full h-10 px-3 rounded-lg text-white font-medium text-sm flex items-center gap-2 cursor-pointer transition-opacity hover:opacity-90"
             >
-              <span className="flex-shrink-0">{btn.icon}</span>
+              <span className="shrink-0">{btn.icon}</span>
               <span className="truncate">{btn.label}</span>
             </motion.button>
           ))}
@@ -178,7 +178,7 @@ export function LoginPage() {
         {/* Center: OR divider */}
         <div className="flex sm:flex-col flex-row items-center gap-2 sm:px-1">
           <div className="sm:flex-1 flex-1 sm:w-px sm:h-auto h-px w-auto bg-border" />
-          <div className="rounded-full border border-border w-8 h-8 flex-shrink-0 flex items-center justify-center text-xs font-medium text-foreground/60">
+          <div className="rounded-full border border-border w-8 h-8 shrink-0 flex items-center justify-center text-xs font-medium text-foreground/60">
             {t("or").toUpperCase()}
           </div>
           <div className="sm:flex-1 flex-1 sm:w-px sm:h-auto h-px w-auto bg-border" />
@@ -186,7 +186,10 @@ export function LoginPage() {
 
         {/* Right: Email/password form */}
         <div className="flex-1">
-          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3">
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="flex flex-col gap-3"
+          >
             {/* Email */}
             <div>
               <Label htmlFor="email" className="mb-1 text-sm">

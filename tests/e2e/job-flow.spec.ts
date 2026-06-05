@@ -212,6 +212,7 @@ test.describe("Job Application Flow", () => {
 });
 
 async function loginUser(page: Page) {
+  await setupGraphQLMocks(page);
   await page.goto("/en");
   await page.getByRole("button", { name: /sign in|iniciar/i }).first().click();
   await page.getByLabel(/email/i).fill("test@sticktransfer.com");

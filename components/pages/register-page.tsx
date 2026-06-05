@@ -32,7 +32,13 @@ import { useUIStore } from "@/stores/useUIStore";
 // Role card definitions
 // ---------------------------------------------------------------------------
 
-type RoleCardId = "player" | "goalkeeper" | "coach" | "clubAdmin" | "scout" | "agent";
+type RoleCardId =
+  | "player"
+  | "goalkeeper"
+  | "coach"
+  | "clubAdmin"
+  | "scout"
+  | "agent";
 
 interface RoleCard {
   id: RoleCardId;
@@ -50,11 +56,34 @@ const ROLE_CARDS: RoleCard[] = [
 ];
 
 const HOCKEY_COUNTRIES = [
-  "Argentina", "Australia", "Austria", "Belgium", "Canada", "Chile",
-  "China", "Egypt", "England", "France", "Germany", "India", "Ireland",
-  "Italy", "Japan", "Malaysia", "Netherlands", "New Zealand", "Pakistan",
-  "Portugal", "Scotland", "South Africa", "South Korea", "Spain",
-  "Switzerland", "United States", "Uruguay", "Wales",
+  "Argentina",
+  "Australia",
+  "Austria",
+  "Belgium",
+  "Canada",
+  "Chile",
+  "China",
+  "Egypt",
+  "England",
+  "France",
+  "Germany",
+  "India",
+  "Ireland",
+  "Italy",
+  "Japan",
+  "Malaysia",
+  "Netherlands",
+  "New Zealand",
+  "Pakistan",
+  "Portugal",
+  "Scotland",
+  "South Africa",
+  "South Korea",
+  "Spain",
+  "Switzerland",
+  "United States",
+  "Uruguay",
+  "Wales",
 ];
 
 const POSITIONS = [
@@ -70,7 +99,11 @@ const POSITIONS = [
 
 function StepIndicator({ currentStep }: { currentStep: number }) {
   const t = useTranslations("register");
-  const labels = [t("stepRoleTitle"), t("stepBasicTitle"), t("stepRoleDataTitle")];
+  const labels = [
+    t("stepRoleTitle"),
+    t("stepBasicTitle"),
+    t("stepRoleDataTitle"),
+  ];
 
   return (
     <div className="flex items-center justify-center mb-6 gap-0">
@@ -98,7 +131,7 @@ function StepIndicator({ currentStep }: { currentStep: number }) {
           </div>
           {i < 2 && (
             <div
-              className={`h-px w-8 mx-1 mb-5 flex-shrink-0 transition-colors ${
+              className={`h-px w-8 mx-1 mb-5 shrink-0 transition-colors ${
                 currentStep > n ? "bg-primary/40" : "bg-border"
               }`}
             />
@@ -122,7 +155,7 @@ function FieldError({ message }: { message?: string }) {
       transition={{ duration: 0.2 }}
       className="flex gap-1 text-error bg-error/20 font-semibold p-1 text-xs mt-1"
     >
-      <ArrowUpIcon size={14} className="flex-shrink-0 mt-px" />
+      <ArrowUpIcon size={14} className="shrink-0 mt-px" />
       {message}
     </motion.p>
   );
@@ -194,9 +227,13 @@ export const RegisterPage = () => {
         .regex(/[A-Z]/, tValidation("passwordUppercase"))
         .regex(/[0-9]/, tValidation("passwordNumber"))
         .regex(/[@$!%*?&#]/, tValidation("passwordSpecial")),
-      confirmPassword: z.string().min(1, tValidation("confirmPasswordRequired")),
+      confirmPassword: z
+        .string()
+        .min(1, tValidation("confirmPasswordRequired")),
       country: z.string().min(1, tValidation("countryRequired")),
-      terms: z.boolean().refine((v) => v === true, tValidation("termsRequired")),
+      terms: z
+        .boolean()
+        .refine((v) => v === true, tValidation("termsRequired")),
     })
     .refine((d) => d.password === d.confirmPassword, {
       message: tValidation("passwordsNoMatch"),
@@ -270,7 +307,12 @@ export const RegisterPage = () => {
           login(fullUser, token);
 
           // Update extra profile fields from step 3
-          const extra: { id: string; country?: string; position?: string; city?: string } = { id: userId };
+          const extra: {
+            id: string;
+            country?: string;
+            position?: string;
+            city?: string;
+          } = { id: userId };
           if (step2Data.country) extra.country = step2Data.country;
           if ("position" in step3Data && step3Data.position)
             extra.position = step3Data.position;
@@ -334,7 +376,9 @@ export const RegisterPage = () => {
                 >
                   <span className="text-2xl">{card.icon}</span>
                   <span className="text-xs font-semibold text-foreground leading-tight">
-                    {t(`roles.${card.id === "clubAdmin" ? "clubAdmin" : card.id}`)}
+                    {t(
+                      `roles.${card.id === "clubAdmin" ? "clubAdmin" : card.id}`,
+                    )}
                   </span>
                   <span className="text-[10px] text-foreground/50 leading-tight">
                     {t(`roleDescriptions.${card.id}`)}
@@ -384,7 +428,10 @@ export const RegisterPage = () => {
                 {t("firstName")}
               </Label>
               <div className="relative">
-                <User className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground" size={16} />
+                <User
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground"
+                  size={16}
+                />
                 <Input
                   {...step2Form.register("firstName")}
                   id="firstName"
@@ -392,14 +439,19 @@ export const RegisterPage = () => {
                   className="pl-9 h-9 text-sm"
                 />
               </div>
-              <FieldError message={step2Form.formState.errors.firstName?.message} />
+              <FieldError
+                message={step2Form.formState.errors.firstName?.message}
+              />
             </div>
             <div>
               <Label htmlFor="lastName" className="mb-1 text-sm">
                 {t("lastName")}
               </Label>
               <div className="relative">
-                <User className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground" size={16} />
+                <User
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground"
+                  size={16}
+                />
                 <Input
                   {...step2Form.register("lastName")}
                   id="lastName"
@@ -407,7 +459,9 @@ export const RegisterPage = () => {
                   className="pl-9 h-9 text-sm"
                 />
               </div>
-              <FieldError message={step2Form.formState.errors.lastName?.message} />
+              <FieldError
+                message={step2Form.formState.errors.lastName?.message}
+              />
             </div>
           </div>
 
@@ -417,7 +471,10 @@ export const RegisterPage = () => {
               {t("username")}
             </Label>
             <div className="relative">
-              <User className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground" size={16} />
+              <User
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground"
+                size={16}
+              />
               <Input
                 {...step2Form.register("username")}
                 id="username"
@@ -425,7 +482,9 @@ export const RegisterPage = () => {
                 className="pl-9 h-9 text-sm"
               />
             </div>
-            <FieldError message={step2Form.formState.errors.username?.message} />
+            <FieldError
+              message={step2Form.formState.errors.username?.message}
+            />
           </div>
 
           {/* Email */}
@@ -434,7 +493,10 @@ export const RegisterPage = () => {
               {t("email")}
             </Label>
             <div className="relative">
-              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground" size={16} />
+              <Mail
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground"
+                size={16}
+              />
               <Input
                 {...step2Form.register("email")}
                 id="reg-email"
@@ -452,7 +514,10 @@ export const RegisterPage = () => {
               {t("password")}
             </Label>
             <div className="relative">
-              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground" size={16} />
+              <Lock
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground"
+                size={16}
+              />
               <Input
                 {...step2Form.register("password")}
                 id="reg-password"
@@ -468,7 +533,9 @@ export const RegisterPage = () => {
                 {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
             </div>
-            <FieldError message={step2Form.formState.errors.password?.message} />
+            <FieldError
+              message={step2Form.formState.errors.password?.message}
+            />
           </div>
 
           {/* Confirm password */}
@@ -477,7 +544,10 @@ export const RegisterPage = () => {
               {t("confirmPassword")}
             </Label>
             <div className="relative">
-              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground" size={16} />
+              <Lock
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground"
+                size={16}
+              />
               <Input
                 {...step2Form.register("confirmPassword")}
                 id="confirmPassword"
@@ -493,7 +563,9 @@ export const RegisterPage = () => {
                 {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
             </div>
-            <FieldError message={step2Form.formState.errors.confirmPassword?.message} />
+            <FieldError
+              message={step2Form.formState.errors.confirmPassword?.message}
+            />
           </div>
 
           {/* Country */}
@@ -527,7 +599,10 @@ export const RegisterPage = () => {
               type="checkbox"
               className="mt-0.5 accent-primary cursor-pointer"
             />
-            <Label htmlFor="terms" className="text-xs text-foreground/70 cursor-pointer leading-relaxed">
+            <Label
+              htmlFor="terms"
+              className="text-xs text-foreground/70 cursor-pointer leading-relaxed"
+            >
               {t("termsAndConditions")}
             </Label>
           </div>
@@ -586,7 +661,9 @@ export const RegisterPage = () => {
                   placeholder={t("placeholders.city")}
                   className="h-9 text-sm"
                 />
-                <FieldError message={step3ClubForm.formState.errors.city?.message} />
+                <FieldError
+                  message={step3ClubForm.formState.errors.city?.message}
+                />
               </div>
 
               <div className="flex gap-2 pt-2">
@@ -635,7 +712,9 @@ export const RegisterPage = () => {
                     </option>
                   ))}
                 </select>
-                <FieldError message={step3PlayerForm.formState.errors.position?.message} />
+                <FieldError
+                  message={step3PlayerForm.formState.errors.position?.message}
+                />
               </div>
 
               <div className="flex gap-2 pt-2">
