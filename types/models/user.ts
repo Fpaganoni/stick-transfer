@@ -2,12 +2,6 @@ import { Role, Position, Level } from "../enums";
 import { Club } from "./club";
 
 // Tipos relacionados con User
-export interface UserStats {
-  gamesPlayed: number;
-  goals: number;
-  assists: number;
-}
-
 export interface TrajectoryItem {
   id?: string;
   title: string;
@@ -45,7 +39,6 @@ export interface User {
   // Relations
   clubId?: string;
   club?: Club;
-  statistics?: UserStats;
   trajectories?: TrajectoryItem[];
 
   // Metadata (opcional)
@@ -100,11 +93,6 @@ export interface UpdateUserVariables {
   country?: string;
   city?: string;
   yearsOfExperience?: number;
-  statistics?: {
-    gamesPlayed?: number;
-    goals?: number;
-    assists?: number;
-  };
   trajectories?: TrajectoryItem[];
 }
 

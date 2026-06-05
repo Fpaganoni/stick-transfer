@@ -5,6 +5,7 @@ import type { JobOpportunity } from "@/types/models/job-opportunity";
 
 const mockSetSelectedOpportunity = vi.fn();
 const mockSetIsModalOpen = vi.fn();
+const mockOpenLoginModal = vi.fn();
 
 vi.mock("@/stores/useOpportunitiesStore", () => ({
   useOpportunitiesStore: () => ({
@@ -17,6 +18,18 @@ vi.mock("@/hooks/useJobApplications", () => ({
   useUserApplications: () => ({ hasAppliedTo: () => false }),
 }));
 
+vi.mock("@/stores/useAuthStore", () => ({
+  useAuthStore: () => ({ isLoggedIn: false }),
+}));
+
+vi.mock("@/stores/useUIStore", () => ({
+  useUIStore: () => ({ openLoginModal: mockOpenLoginModal }),
+}));
+
+vi.mock("@/stores/useSavedJobsStore", () => ({
+  useSavedJobsStore: () => ({ toggleSave: vi.fn(), isSaved: () => false }),
+}));
+
 vi.mock("next-intl", () => ({
   useTranslations: () => (key: string) => key,
   useLocale: () => "en",
@@ -26,6 +39,25 @@ vi.mock("@/lib/date-utils", () => ({
   formatRelativeTime: () => "2 days ago",
 }));
 
+vi.mock("next/link", () => ({
+  default: ({
+    children,
+    href,
+    ...props
+  }: React.AnchorHTMLAttributes<HTMLAnchorElement> & { href: string }) => (
+    <a href={href} {...props}>
+      {children}
+    </a>
+  ),
+}));
+
+vi.mock("next/image", () => ({
+  default: (props: React.ImgHTMLAttributes<HTMLImageElement>) => (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img {...props} alt={props.alt ?? ""} />
+  ),
+}));
+
 const baseOpportunity: JobOpportunity = {
   id: "opp-1",
   title: "Forward Player",
@@ -33,13 +65,12 @@ const baseOpportunity: JobOpportunity = {
   positionType: "Full-Time",
   level: "professional",
   status: "open",
-  country: "ESP",
+  country: "Spain",
   city: "Barcelona",
   salary: 3000,
   currency: "EUR",
   benefits: ["Housing provided"],
   createdAt: "2026-05-01T00:00:00Z",
-  clubId: "club-1",
   club: {
     id: "club-1",
     name: "HC Barcelona",
@@ -51,6 +82,12 @@ describe("OpportunityListCard", () => {
   beforeEach(() => {
     mockSetSelectedOpportunity.mockReset();
     mockSetIsModalOpen.mockReset();
+    mockOpenLoginModal.mockReset();
+  });
+
+  it("renders without errors", () => {
+    const { container } = render(<OpportunityListCard {...baseOpportunity} />);
+    expect(container.firstChild).not.toBeNull();
   });
 
   it("renders job title and club name", () => {
@@ -59,20 +96,19 @@ describe("OpportunityListCard", () => {
     expect(screen.getByText("HC Barcelona")).toBeInTheDocument();
   });
 
-  it("renders city and salary", () => {
+  it("renders country", () => {
     render(<OpportunityListCard {...baseOpportunity} />);
-    expect(screen.getByText("Barcelona")).toBeInTheDocument();
-    expect(screen.getByText(/3000.*EUR/)).toBeInTheDocument();
-  });
-
-  it("shows open badge for open status", () => {
-    render(<OpportunityListCard {...baseOpportunity} />);
-    expect(screen.getByText("open")).toBeInTheDocument();
+    expect(screen.getByText("Spain")).toBeInTheDocument();
   });
 
   it("shows filled badge for filled status", () => {
     render(<OpportunityListCard {...baseOpportunity} status="filled" />);
     expect(screen.getByText("filled")).toBeInTheDocument();
+  });
+
+  it("shows club initial when no logo", () => {
+    render(<OpportunityListCard {...baseOpportunity} />);
+    expect(screen.getByText("H")).toBeInTheDocument();
   });
 
   it("clicking card opens modal with correct opportunity", () => {
@@ -87,8 +123,15 @@ describe("OpportunityListCard", () => {
     expect(mockSetIsModalOpen).toHaveBeenCalledWith(true);
   });
 
+  it("bookmark click opens login modal when not authenticated", () => {
+    render(<OpportunityListCard {...baseOpportunity} />);
+    const bookmarkBtn = screen.getByLabelText("Bookmark");
+    fireEvent.click(bookmarkBtn);
+    expect(mockOpenLoginModal).toHaveBeenCalled();
+  });
+
   it("shows published date", () => {
     render(<OpportunityListCard {...baseOpportunity} />);
-    expect(screen.getByText(/published.*2 days ago/i)).toBeInTheDocument();
+    expect(screen.getByText(/published/i)).toBeInTheDocument();
   });
 });

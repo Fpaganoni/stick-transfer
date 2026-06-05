@@ -3,15 +3,23 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { useClub } from "@/hooks/useClubs";
+import { useJobOpportunities } from "@/hooks/useJobOpportunities";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { Loader } from "@/components/ui/loader";
 import { Error } from "@/components/ui/error";
 import { ClubContactSection } from "@/components/clubs/club-contact-section";
-import { ClubMembersSection } from "@/components/clubs/club-members-section";
 import { VerificationBanner } from "@/components/clubs/verification-banner";
 import { VerificationModal } from "@/components/clubs/verification-modal";
+import { OpportunityListCard } from "@/components/opportunities/opportunity-list-card";
+import { OpportunityDetailModal } from "@/components/opportunities/opportunity-detail-modal";
+import {
+  Empty,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty";
 import Image from "next/image";
-import { MapPin, CheckCircle } from "lucide-react";
+import { MapPin, CheckCircle, Briefcase } from "lucide-react";
 
 interface ClubDetailPageProps {
   clubId: string;
@@ -19,9 +27,16 @@ interface ClubDetailPageProps {
 
 export function ClubDetailPage({ clubId }: ClubDetailPageProps) {
   const t = useTranslations("clubs");
+  const tClubProfile = useTranslations("clubProfile");
   const { user } = useAuthStore();
   const { data, isLoading, error } = useClub(clubId);
   const [isVerificationModalOpen, setIsVerificationModalOpen] = useState(false);
+
+  const { data: vacanciesData, isLoading: vacanciesLoading } = useJobOpportunities(
+    { clubId },
+    undefined,
+  );
+  const vacancies = vacanciesData?.jobOpportunities ?? [];
 
   if (isLoading) {
     return (
@@ -43,14 +58,14 @@ export function ClubDetailPage({ clubId }: ClubDetailPageProps) {
 
   // Check if user is admin of this club
   const isClubAdmin = club.members?.some(
-    (m) => m.user.id === user?.id && m.role.toUpperCase() === "ADMIN"
+    (m) => m.user.id === user?.id && m.role.toUpperCase() === "ADMIN",
   );
 
   return (
     <>
       <main className="bg-overlay max-w-5xl mx-auto pb-24">
         {/* Cover image */}
-        <div className="relative h-80 bg-gradient-to-b from-primary/10 to-background overflow-hidden">
+        <div className="relative h-80 bg-linear-to-b from-primary/10 to-background overflow-hidden">
           {club.coverImage ? (
             <Image
               src={club.coverImage}
@@ -59,9 +74,9 @@ export function ClubDetailPage({ clubId }: ClubDetailPageProps) {
               className="w-full h-full object-cover"
             />
           ) : (
-            <div className="w-full h-full bg-gradient-to-br from-primary/20 to-primary/5" />
+            <div className="w-full h-full bg-linear-to-br from-primary/20 to-primary/5" />
           )}
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent" />
+          <div className="absolute inset-0 bg-linear-to-t from-background via-background/50 to-transparent" />
         </div>
 
         {/* Club info */}
@@ -70,13 +85,13 @@ export function ClubDetailPage({ clubId }: ClubDetailPageProps) {
           <div className="flex items-end gap-4 -mt-16 mb-8 relative z-10">
             {/* Logo */}
             {club.logo && (
-              <div className="flex-shrink-0">
+              <div className="shrink-0">
                 <Image
                   src={club.logo}
                   alt={club.name}
                   width={120}
                   height={120}
-                  className="w-32 h-32 rounded-lg object-cover border-4 border-background shadow-lg"
+                  className="h-46 w-46 rounded-full object-cover border-4 border-background shadow-lg"
                 />
               </div>
             )}
@@ -88,7 +103,7 @@ export function ClubDetailPage({ clubId }: ClubDetailPageProps) {
                   {club.name}
                 </h1>
                 {club.isVerified && (
-                  <CheckCircle className="w-7 h-7 text-primary flex-shrink-0" />
+                  <CheckCircle className="w-7 h-7 text-primary shrink-0" />
                 )}
               </div>
             </div>
@@ -105,7 +120,7 @@ export function ClubDetailPage({ clubId }: ClubDetailPageProps) {
           {/* Ubicación */}
           {(club.city || club.country) && (
             <div className="flex items-center gap-2 text-foreground/70 mb-6 text-base">
-              <MapPin className="w-5 h-5 flex-shrink-0" />
+              <MapPin className="w-5 h-5 shrink-0" />
               <span>
                 {[club.city, club.country].filter(Boolean).join(", ")}
               </span>
@@ -122,10 +137,44 @@ export function ClubDetailPage({ clubId }: ClubDetailPageProps) {
           {/* Contacto y Redes */}
           <ClubContactSection club={club} />
 
-          {/* Miembros */}
-          <ClubMembersSection club={club} />
+          {/* Vacantes */}
+          <section className="mt-12">
+            <h2 className="text-2xl font-bold text-foreground mb-6 font-sans">
+              {tClubProfile("opportunities.title")}
+            </h2>
+
+            {vacanciesLoading ? (
+              <div className="space-y-3">
+                {Array.from({ length: 3 }).map((_, i) => (
+                  <div
+                    key={i}
+                    className="h-24 rounded-xl bg-surface-elevated animate-pulse"
+                  />
+                ))}
+              </div>
+            ) : vacancies.length === 0 ? (
+              <Empty className="border border-dashed border-border">
+                <EmptyMedia variant="icon">
+                  <Briefcase />
+                </EmptyMedia>
+                <EmptyHeader>
+                  <EmptyTitle>
+                    {tClubProfile("opportunities.noOpportunities")}
+                  </EmptyTitle>
+                </EmptyHeader>
+              </Empty>
+            ) : (
+              <div className="space-y-3">
+                {vacancies.map((opportunity) => (
+                  <OpportunityListCard key={opportunity.id} {...opportunity} />
+                ))}
+              </div>
+            )}
+          </section>
         </div>
       </main>
+
+      <OpportunityDetailModal />
 
       {/* Verification Modal */}
       {isVerificationModalOpen && (

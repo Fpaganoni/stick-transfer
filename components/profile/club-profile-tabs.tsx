@@ -1,14 +1,37 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
-import { Users, Briefcase, MapPin } from "lucide-react";
+import { MapPin, Briefcase, Globe, Mail, Video, Plus, X } from "lucide-react";
+import { YoutubeWidget } from "@/components/ui/youtube-widget";
+import { OpportunityListCard } from "@/components/opportunities/opportunity-list-card";
+import { useJobOpportunities } from "@/hooks/useJobOpportunities";
+import {
+  Empty,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 interface ClubData {
   id: string;
   bio?: string;
   city?: string;
   country?: string;
+  website?: string;
+  email?: string;
+  league?: string;
+  type?: string;
+  createdAt?: string;
+  videos?: string[];
+  isAdmin?: boolean;
 }
 
 interface ClubProfileTabsProps {
@@ -23,12 +46,30 @@ export function ClubProfileTabs({
   clubData,
 }: ClubProfileTabsProps) {
   const t = useTranslations("clubProfile");
+  const [videos, setVideos] = useState<string[]>(clubData.videos ?? []);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [newVideoUrl, setNewVideoUrl] = useState("");
+
+  const { data: vacanciesData, isLoading: vacanciesLoading } =
+    useJobOpportunities({ clubId: clubData.id });
+
+  const vacancies = vacanciesData?.jobOpportunities ?? [];
 
   const tabs = [
-    { id: "squad", label: t("tabs.squad") },
-    { id: "opportunities", label: t("tabs.opportunities") },
-    { id: "about", label: t("tabs.about") },
+    { id: "profile", label: t("tabs.profile") },
+    { id: "posts", label: t("tabs.posts") },
+    { id: "vacancies", label: t("tabs.vacancies") },
+    { id: "videos", label: t("tabs.videos") },
   ];
+
+  const handleAddVideo = () => {
+    const trimmed = newVideoUrl.trim();
+    if (!trimmed) return;
+    // TODO: persist via GraphQL mutation when backend supports club.videos[]
+    setVideos((prev) => [...prev, trimmed]);
+    setNewVideoUrl("");
+    setIsAddModalOpen(false);
+  };
 
   return (
     <>
@@ -49,56 +90,21 @@ export function ClubProfileTabs({
       </div>
 
       <div className="px-4 py-6">
-        {activeTab === "squad" && (
-          <div className="py-12">
-            <motion.div
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
-              className="w-full text-center border-2 border-dashed border-border rounded-xl p-8"
-            >
-              <Users className="mx-auto mb-3 text-foreground-muted" size={40} />
-              <p className="text-foreground-muted font-medium">
-                {t("squad.noMembers")}
-              </p>
-            </motion.div>
-          </div>
-        )}
-
-        {activeTab === "opportunities" && (
-          <div className="py-12">
-            <motion.div
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
-              className="w-full text-center border-2 border-dashed border-border rounded-xl p-8"
-            >
-              <Briefcase
-                className="mx-auto mb-3 text-foreground-muted"
-                size={40}
-              />
-              <p className="text-foreground-muted font-medium">
-                {t("opportunities.noOpportunities")}
-              </p>
-            </motion.div>
-          </div>
-        )}
-
-        {activeTab === "about" && (
-          <div className="space-y-4 max-w-2xl">
-            <motion.div
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
-              className="bg-background rounded-xl p-6 border border-border"
-            >
+        {activeTab === "profile" && (
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+            className="space-y-4 max-w-2xl"
+          >
+            <div className="bg-background rounded-xl p-6 border border-border">
               <h3 className="font-bold text-foreground text-lg mb-4">
                 {t("about.title")}
               </h3>
 
               {(clubData.city || clubData.country) && (
                 <div className="flex items-start gap-3 mb-4">
-                  <MapPin className="w-5 h-5 text-primary flex-shrink-0 mt-1" />
+                  <MapPin className="w-5 h-5 text-primary shrink-0 mt-1" />
                   <div>
                     <p className="text-foreground-muted text-sm font-medium">
                       {t("about.location")}
@@ -112,10 +118,72 @@ export function ClubProfileTabs({
                 </div>
               )}
 
+              {clubData.league && (
+                <div className="flex items-start gap-3 mb-4">
+                  <Briefcase className="w-5 h-5 text-primary shrink-0 mt-1" />
+                  <div>
+                    <p className="text-foreground-muted text-sm font-medium">
+                      {t("profile.category")}
+                    </p>
+                    <p className="text-foreground text-sm">{clubData.league}</p>
+                  </div>
+                </div>
+              )}
+
+              {clubData.createdAt && (
+                <div className="flex items-start gap-3 mb-4">
+                  <Briefcase className="w-5 h-5 text-primary shrink-0 mt-1" />
+                  <div>
+                    <p className="text-foreground-muted text-sm font-medium">
+                      {t("profile.founded")}
+                    </p>
+                    <p className="text-foreground text-sm">
+                      {new Date(clubData.createdAt).getFullYear()}
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {clubData.website && (
+                <div className="flex items-start gap-3 mb-4">
+                  <Globe className="w-5 h-5 text-primary shrink-0 mt-1" />
+                  <div>
+                    <p className="text-foreground-muted text-sm font-medium">
+                      {t("profile.website")}
+                    </p>
+                    <a
+                      href={clubData.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-primary text-sm hover:underline"
+                    >
+                      {clubData.website}
+                    </a>
+                  </div>
+                </div>
+              )}
+
+              {clubData.email && (
+                <div className="flex items-start gap-3 mb-4">
+                  <Mail className="w-5 h-5 text-primary shrink-0 mt-1" />
+                  <div>
+                    <p className="text-foreground-muted text-sm font-medium">
+                      {t("profile.email")}
+                    </p>
+                    <a
+                      href={`mailto:${clubData.email}`}
+                      className="text-primary text-sm hover:underline"
+                    >
+                      {clubData.email}
+                    </a>
+                  </div>
+                </div>
+              )}
+
               {clubData.bio && (
                 <div className="border-t border-border pt-4">
                   <p className="text-foreground-muted text-sm font-medium mb-2">
-                    Description
+                    {t("profile.description")}
                   </p>
                   <p className="text-foreground text-sm leading-relaxed">
                     {clubData.bio}
@@ -123,15 +191,132 @@ export function ClubProfileTabs({
                 </div>
               )}
 
-              {!clubData.bio && !(clubData.city || clubData.country) && (
-                <p className="text-foreground-muted text-sm text-center py-4">
-                  {t("noBio")}
-                </p>
-              )}
-            </motion.div>
-          </div>
+              {!clubData.bio &&
+                !(clubData.city || clubData.country) &&
+                !clubData.website &&
+                !clubData.email && (
+                  <p className="text-foreground-muted text-sm text-center py-4">
+                    {t("noBio")}
+                  </p>
+                )}
+            </div>
+          </motion.div>
+        )}
+
+        {activeTab === "posts" && (
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+            className="bg-surface-elevated/30 rounded-xl p-8"
+          >
+            <p className="text-foreground-muted text-center text-sm">
+              {t("posts.noPosts")}
+            </p>
+          </motion.div>
+        )}
+
+        {activeTab === "vacancies" && (
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+            className="space-y-3"
+          >
+            {vacanciesLoading ? (
+              Array.from({ length: 3 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="h-24 rounded-xl bg-surface-elevated animate-pulse"
+                />
+              ))
+            ) : vacancies.length === 0 ? (
+              <Empty className="border border-dashed border-border">
+                <EmptyMedia variant="icon">
+                  <Briefcase />
+                </EmptyMedia>
+                <EmptyHeader>
+                  <EmptyTitle>{t("vacancies.noVacancies")}</EmptyTitle>
+                </EmptyHeader>
+              </Empty>
+            ) : (
+              vacancies.map((opportunity) => (
+                <OpportunityListCard key={opportunity.id} {...opportunity} />
+              ))
+            )}
+          </motion.div>
+        )}
+
+        {activeTab === "videos" && (
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            {clubData.isAdmin && (
+              <div className="flex justify-end mb-4">
+                <button
+                  onClick={() => setIsAddModalOpen(true)}
+                  className="flex items-center gap-2 px-4 py-2 bg-primary text-white-black font-semibold rounded-lg hover:bg-primary-hover transition-colors text-sm"
+                >
+                  <Plus size={16} />
+                  {t("videos.addVideo")}
+                </button>
+              </div>
+            )}
+
+            {videos.length === 0 ? (
+              <Empty className="border border-dashed border-border">
+                <EmptyMedia variant="icon">
+                  <Video />
+                </EmptyMedia>
+                <EmptyHeader>
+                  <EmptyTitle>{t("videos.noVideos")}</EmptyTitle>
+                </EmptyHeader>
+              </Empty>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {videos.map((url, i) => (
+                  <YoutubeWidget key={i} url={url} />
+                ))}
+              </div>
+            )}
+          </motion.div>
         )}
       </div>
+
+      <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{t("videos.addVideoTitle")}</DialogTitle>
+          </DialogHeader>
+          <div className="flex flex-col gap-4 mt-2">
+            <input
+              type="url"
+              value={newVideoUrl}
+              onChange={(e) => setNewVideoUrl(e.target.value)}
+              placeholder={t("videos.videoUrlPlaceholder")}
+              className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+              onKeyDown={(e) => e.key === "Enter" && handleAddVideo()}
+            />
+            <div className="flex gap-2 justify-end">
+              <button
+                onClick={() => setIsAddModalOpen(false)}
+                className="flex items-center gap-1 px-4 py-2 rounded-lg border border-border text-foreground text-sm hover:bg-surface-elevated transition-colors"
+              >
+                <X size={14} />
+                {t("videos.cancel")}
+              </button>
+              <button
+                onClick={handleAddVideo}
+                className="px-4 py-2 bg-primary text-white-black font-semibold rounded-lg hover:bg-primary-hover transition-colors text-sm"
+              >
+                {t("videos.save")}
+              </button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

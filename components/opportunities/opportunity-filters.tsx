@@ -2,172 +2,153 @@
 
 import { useOpportunitiesStore } from "@/stores/useOpportunitiesStore";
 import { useTranslations } from "next-intl";
-import { Search, X } from "lucide-react";
-import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
 
 interface OpportunityFiltersProps {
   availableCountries: string[];
+  onClose?: () => void;
 }
+
+const POSITION_TYPES = [
+  "Goalkeeper",
+  "Defender",
+  "Midfielder",
+  "Attacker",
+  "Coach",
+  "Umpire",
+  "Other",
+];
 
 export function OpportunityFilters({
   availableCountries,
+  onClose,
 }: OpportunityFiltersProps) {
   const t = useTranslations("opportunities");
-  const { searchQuery, filters, setSearchQuery, setFilters, resetFilters } =
-    useOpportunitiesStore();
+  const { filters, setFilters, resetFilters } = useOpportunitiesStore();
 
-  const [localSearch, setLocalSearch] = useState(searchQuery);
+  const handleApply = () => {
+    onClose?.();
+  };
 
-  // Debounce search query
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setSearchQuery(localSearch);
-    }, 300);
+  const handleReset = () => {
+    resetFilters();
+    onClose?.();
+  };
 
-    return () => clearTimeout(timer);
-  }, [localSearch, setSearchQuery]);
-
-  const hasActiveFilters =
-    searchQuery || filters.level || filters.status || filters.country;
+  const selectClass =
+    "w-full px-3 py-2 rounded-lg bg-input border border-border text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 hover:border-border-strong transition-all cursor-pointer";
 
   return (
-    <div className="px-4 py-6 bg-background border-b border-border space-y-4">
-      {/* Search Bar */}
-      <div className="relative">
-        <Search
-          size={18}
-          className="absolute left-3 top-1/2 transform -translate-y-1/2 text-foreground-muted"
-        />
-        <input
-          type="text"
-          placeholder={t("searchPlaceholder")}
-          value={localSearch}
-          onChange={(e) => setLocalSearch(e.target.value)}
-          className="w-full pl-10 pr-4 py-2 rounded-lg bg-foreground/5 border border-border text-foreground placeholder-foreground-muted focus:outline-none focus:ring-2 focus:ring-accent/50 transition-all duration-200"
-        />
-      </div>
-
-      {/* Filter Row */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        {/* Level Filter */}
+    <div className="flex flex-col gap-5 p-4 pt-6">
+      {/* Level / Division */}
+      <div className="flex flex-col gap-1.5">
+        <label className="text-xs font-semibold text-foreground-muted uppercase tracking-wide">
+          {t("filters.experience")}
+        </label>
         <select
           value={filters.level || ""}
           onChange={(e) => setFilters({ level: e.target.value || null })}
-          className="px-3 py-2 rounded-lg bg-foreground/5 border border-border text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-accent/50 transition-all duration-200"
+          className={selectClass}
         >
-          <option className="text-foreground bg-background/90" value="">
+          <option className="bg-surface text-foreground" value="">
             {t("filters.experience")}
           </option>
           <option
-            className="text-foreground bg-background/90"
+            className="bg-surface text-foreground"
             value="PROFESSIONAL"
           >
             Professional
           </option>
-          <option className="text-foreground bg-background/90" value="AMATEUR">
+          <option className="bg-surface text-foreground" value="AMATEUR">
             Amateur
           </option>
         </select>
+      </div>
 
-        {/* Status Filter */}
+      {/* Status */}
+      <div className="flex flex-col gap-1.5">
+        <label className="text-xs font-semibold text-foreground-muted uppercase tracking-wide">
+          {t("open")} / {t("filled")}
+        </label>
         <select
           value={filters.status || ""}
           onChange={(e) => setFilters({ status: e.target.value || null })}
-          className="px-3 py-2 rounded-lg bg-foreground/5 border border-border text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-accent/50 transition-all duration-200"
+          className={selectClass}
         >
-          <option className="text-foreground bg-background/90" value="">
-            {t("open")}/{t("filled")}
+          <option className="bg-surface text-foreground" value="">
+            All
           </option>
-          <option className="text-foreground bg-background/90" value="open">
+          <option className="bg-surface text-foreground" value="open">
             {t("open")}
           </option>
-          <option className="text-foreground bg-background/90" value="filled">
+          <option className="bg-surface text-foreground" value="filled">
             {t("filled")}
           </option>
-          <option className="text-foreground bg-background/90" value="closed">
+          <option className="bg-surface text-foreground" value="closed">
             {t("closed")}
           </option>
         </select>
+      </div>
 
-        {/* Country Filter */}
+      {/* Country */}
+      <div className="flex flex-col gap-1.5">
+        <label className="text-xs font-semibold text-foreground-muted uppercase tracking-wide">
+          {t("filters.location")}
+        </label>
         <select
           value={filters.country || ""}
           onChange={(e) => setFilters({ country: e.target.value || null })}
-          className="px-3 py-2 rounded-lg bg-foreground/5 border border-border text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-accent/50 transition-all duration-200"
+          className={selectClass}
         >
-          <option className="text-foreground bg-background/90" value="">
-            {t("filters.location")}
+          <option className="bg-surface text-foreground" value="">
+            All Countries
           </option>
           {availableCountries.map((country) => (
             <option
-              className="text-foreground bg-background/90"
               key={country}
               value={country}
+              className="bg-surface text-foreground"
             >
               {country}
             </option>
           ))}
         </select>
-
-        {/* Reset Button */}
-        {hasActiveFilters && (
-          <button
-            onClick={resetFilters}
-            className="px-3 py-2 rounded-lg bg-foreground/10 hover:bg-foreground/20 text-foreground text-sm font-medium transition-colors duration-200 flex items-center justify-center gap-2"
-          >
-            <X size={16} />
-            <span className="hidden sm:inline">{t("reset")}</span>
-          </button>
-        )}
       </div>
 
-      {/* Active Filters Summary */}
-      {hasActiveFilters && (
-        <div className="flex flex-wrap gap-2 pt-2">
-          {searchQuery && (
-            <div className="px-3 py-1 rounded-full bg-accent/20 text-accent text-xs font-medium flex items-center gap-2">
-              &quot;{searchQuery}&quot;
-              <X
-                size={14}
-                className="cursor-pointer hover:opacity-70"
-                onClick={() => setLocalSearch("")}
-              />
-            </div>
-          )}
-          {filters.level && (
-            <div className="px-3 py-1 rounded-full bg-info/20 text-info text-xs font-medium flex items-center gap-2">
-              {filters.level.charAt(0).toUpperCase() +
-                filters.level.slice(1).toLowerCase()}
-              <X
-                size={14}
-                className="cursor-pointer hover:opacity-70"
-                onClick={() => setFilters({ level: null })}
-              />
-            </div>
-          )}
-          {filters.status && (
-            <div className="px-3 py-1 rounded-full bg-success/20 text-success text-xs font-medium flex items-center gap-2">
-              {filters.status.charAt(0).toUpperCase() +
-                filters.status.slice(1).toLowerCase()}
-              <X
-                size={14}
-                className="cursor-pointer hover:opacity-70"
-                onClick={() => setFilters({ status: null })}
-              />
-            </div>
-          )}
-          {filters.country && (
-            <div className="px-3 py-1 rounded-full bg-warning/20 text-warning text-xs font-medium flex items-center gap-2">
-              {filters.country}
-              <X
-                size={14}
-                className="cursor-pointer hover:opacity-70"
-                onClick={() => setFilters({ country: null })}
-              />
-            </div>
-          )}
-        </div>
-      )}
+      {/* Position Type */}
+      <div className="flex flex-col gap-1.5">
+        <label className="text-xs font-semibold text-foreground-muted uppercase tracking-wide">
+          {t("positionFilter")}
+        </label>
+        <select
+          value={filters.positionType || ""}
+          onChange={(e) => setFilters({ positionType: e.target.value || null })}
+          className={selectClass}
+        >
+          <option className="bg-surface text-foreground" value="">
+            All Positions
+          </option>
+          {POSITION_TYPES.map((pos) => (
+            <option
+              key={pos}
+              value={pos}
+              className="bg-surface text-foreground"
+            >
+              {pos}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* Actions */}
+      <div className="flex flex-col gap-2 pt-2 border-t border-border">
+        <Button className="w-full text-white-black" onClick={handleApply}>
+          {t("applyFilters")}
+        </Button>
+        <Button variant="outline" className="w-full" onClick={handleReset}>
+          {t("reset")}
+        </Button>
+      </div>
     </div>
   );
 }

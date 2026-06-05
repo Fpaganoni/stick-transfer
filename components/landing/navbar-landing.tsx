@@ -40,9 +40,9 @@ export function NavbarLanding() {
 
   const navLinks = [
     { href: "#home", label: t("home") },
+    { href: "#roles", label: t("forYou") },
     { href: "#features", label: t("features") },
-    { href: "#about", label: t("about") },
-    { href: "#stats", label: t("stats") },
+    { href: "#vacancies", label: t("vacancies") },
     { href: "#cta", label: t("joinUs") },
   ];
 
@@ -63,7 +63,7 @@ export function NavbarLanding() {
               <HockeyXTicks size={28} className="text-foreground" />
             </div>
             <h1 className="text-xl font-bold text-foreground">
-              Hockey Connect
+              Stick Transfer
             </h1>
           </motion.div>
         </Link>

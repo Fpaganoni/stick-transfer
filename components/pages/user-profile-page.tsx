@@ -30,7 +30,6 @@ export function UserProfilePage({
     bio: user.bio,
     cvUrl: user.cvUrl,
     coverImagePosition: user.coverImagePosition || "50%",
-    stats: user.statistics || { gamesPlayed: 0, goals: 0, assists: 0 },
     trajectories:
       user.trajectories?.map((t) => ({
         club: t.club,
@@ -42,7 +41,7 @@ export function UserProfilePage({
   };
 
   return (
-    <main className="bg-overlay max-w-4xl mx-auto pb-24">
+    <main className="bg-overlay max-w-5xl mx-auto pb-24">
       <ProfileHeader {...userData} isOwnProfile={isOwnProfile} />
       <ProfileTabs
         activeTab={activeTab}

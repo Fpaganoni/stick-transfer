@@ -41,11 +41,6 @@ export const GET_USER_FOR_LOGIN = gql`
         name
         logo
       }
-      statistics {
-        gamesPlayed
-        goals
-        assists
-      }
       trajectories {
         title
         organization
@@ -152,11 +147,6 @@ export const GET_USER_BY_USERNAME = gql`
       city
       cvUrl
       multimedia
-      statistics {
-        gamesPlayed
-        goals
-        assists
-      }
       trajectories {
         title
         organization

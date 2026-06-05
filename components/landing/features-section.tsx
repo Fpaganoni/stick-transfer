@@ -1,57 +1,21 @@
 "use client";
 
 import { motion } from "framer-motion";
-import {
-  Users,
-  Briefcase,
-  TrendingUp,
-  MessageCircle,
-  Globe,
-  Trophy,
-} from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Users, ArrowLeftRight, Trophy } from "lucide-react";
 import { useTranslations } from "next-intl";
+
+const features = [
+  { key: "connect", icon: Users },
+  { key: "transfer", icon: ArrowLeftRight },
+  { key: "play", icon: Trophy },
+];
 
 export function FeaturesSection() {
   const t = useTranslations("landing.features");
 
-  const features = [
-    {
-      icon: Users,
-      key: "connect",
-      color: "text-primary",
-    },
-    {
-      icon: Briefcase,
-      key: "opportunities",
-      color: "text-accent",
-    },
-    {
-      icon: TrendingUp,
-      key: "journey",
-      color: "text-primary",
-    },
-    {
-      icon: MessageCircle,
-      key: "messaging",
-      color: "text-accent",
-    },
-    {
-      icon: Globe,
-      key: "network",
-      color: "text-primary",
-    },
-    {
-      icon: Trophy,
-      key: "achievements",
-      color: "text-accent",
-    },
-  ];
-
   return (
-    <section id="features" className="py-20 px-4">
+    <section id="features" className="py-20 px-4 bg-surface-elevated">
       <div className="max-w-7xl mx-auto">
-        {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -67,36 +31,27 @@ export function FeaturesSection() {
           </p>
         </motion.div>
 
-        {/* Features Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {features.map((feature, index) => {
-            const Icon = feature.icon;
-            return (
-              <motion.div
-                key={feature.key}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-              >
-                <Card className="h-full group hover:shadow-lg hover:scale-105 transition-all duration-3000 cursor-pointer border-2 hover:border-primary/40 bg-surface-elevated">
-                  <CardContent className="p-6">
-                    <div
-                      className={`w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}
-                    >
-                      <Icon size={24} className={feature.color} />
-                    </div>
-                    <h3 className="text-xl font-semibold text-foreground mb-2">
-                      {t(`items.${feature.key}.title`)}
-                    </h3>
-                    <p className="text-foreground-muted">
-                      {t(`items.${feature.key}.description`)}
-                    </p>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            );
-          })}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {features.map(({ key, icon: Icon }, index) => (
+            <motion.div
+              key={key}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: index * 0.15 }}
+              className="bg-background rounded-2xl border border-border p-8 shadow-sm hover:shadow-md transition-shadow duration-200"
+            >
+              <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center mb-6">
+                <Icon size={28} className="text-primary" />
+              </div>
+              <h3 className="text-xl font-bold text-primary mb-3">
+                {t(`items.${key}.title` as Parameters<typeof t>[0])}
+              </h3>
+              <p className="text-foreground-muted leading-relaxed text-sm">
+                {t(`items.${key}.description` as Parameters<typeof t>[0])}
+              </p>
+            </motion.div>
+          ))}
         </div>
       </div>
     </section>

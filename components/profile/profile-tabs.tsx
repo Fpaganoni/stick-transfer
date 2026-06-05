@@ -1,14 +1,17 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { TrajectoryItem, UserStats } from "@/types/models/user";
+import { TrajectoryItem } from "@/types/models/user";
 import { useTranslations } from "next-intl";
 import { YoutubeWidget } from "@/components/ui/youtube-widget";
 import { UserApplications } from "./user-applications";
+import { UserSavedJobs } from "./user-saved-jobs";
+import { Download, FileText } from "lucide-react";
 
 interface UserData {
   id: string;
-  stats: UserStats;
+  role?: string;
+  cvUrl?: string;
   trajectories: TrajectoryItem[];
   multimedia?: string[];
 }
@@ -28,12 +31,19 @@ export function ProfileTabs({
 }: ProfileTabsProps) {
   const t = useTranslations("profile");
 
+  const showCvTab =
+    userData.role?.toUpperCase() === "PLAYER" ||
+    userData.role?.toUpperCase() === "COACH";
+
   const tabs = [
     { id: "trajectory", label: t("tabs.trajectory") },
     { id: "multimedia", label: t("tabs.multimedia") },
-    { id: "statistics", label: t("tabs.statistics") },
+    ...(showCvTab ? [{ id: "cv", label: t("tabs.cv") }] : []),
     ...(isOwnProfile
-      ? [{ id: "applications", label: t("tabs.applications") }]
+      ? [
+          { id: "applications", label: t("tabs.applications") },
+          { id: "savedJobs", label: t("tabs.savedJobs") },
+        ]
       : []),
   ];
 
@@ -58,24 +68,32 @@ export function ProfileTabs({
       <div className="px-4 py-6">
         {activeTab === "trajectory" && (
           <div className="space-y-4">
-            {userData.trajectories.map((item, idx) => (
-              <motion.div
-                whileHover={{ scale: 1.02 }}
-                transition={{ duration: 0.2, ease: "easeInOut" }}
-                key={idx}
-                className="bg-background rounded-xl py-4 px-8 border border-border hover:shadow-lg group"
-              >
-                <h3 className="font-semibold text-foreground text-lg mb-1 transition-colors">
-                  {item.club?.name || item.title}
-                </h3>
-                <p className="text-foreground-muted text-sm font-medium mb-2">
-                  {item.period}
+            {userData.trajectories && userData.trajectories.length > 0 ? (
+              userData.trajectories.map((item, idx) => (
+                <motion.div
+                  whileHover={{ scale: 1.02 }}
+                  transition={{ duration: 0.2, ease: "easeInOut" }}
+                  key={idx}
+                  className="bg-background rounded-xl py-4 px-8 border border-border hover:shadow-lg group"
+                >
+                  <h3 className="font-semibold text-foreground text-lg mb-1 transition-colors">
+                    {item.club?.name || item.title}
+                  </h3>
+                  <p className="text-foreground-muted text-sm font-medium mb-2">
+                    {item.period}
+                  </p>
+                  <p className="text-foreground-muted text-sm">
+                    {item.description}
+                  </p>
+                </motion.div>
+              ))
+            ) : (
+              <div className="py-8 text-center border-2 border-dashed border-border rounded-xl">
+                <p className="text-foreground-muted font-medium">
+                  {t("noTrajectory")}
                 </p>
-                <p className="text-foreground-muted text-sm">
-                  {item.description}
-                </p>
-              </motion.div>
-            ))}
+              </div>
+            )}
           </div>
         )}
 
@@ -99,48 +117,43 @@ export function ProfileTabs({
           </div>
         )}
 
-        {activeTab === "statistics" && (
-          <div className="grid grid-cols-3 gap-3 pb-6">
-            <motion.div
-              whileHover={{ scale: 1.04 }}
-              transition={{ duration: 0.2, ease: "easeInOut" }}
-              className="rounded-xl p-4 border border-border-strong text-center hover:border-primary transition-colors duration-300 hover:shadow-lg cursor-pointer"
-            >
-              <p className="text-3xl font-bold text-info">
-                {userData.stats.gamesPlayed}
-              </p>
-              <p className="text-foreground-muted text-sm mt-2 font-medium">
-                {t("stats.gamesPlayed")}
-              </p>
-            </motion.div>
-            <motion.div
-              whileHover={{ scale: 1.04 }}
-              transition={{ duration: 0.2, ease: "easeInOut" }}
-              className="rounded-xl p-4 border border-border-strong text-center hover:border-primary transition-colors duration-300 hover:shadow-lg cursor-pointer"
-            >
-              <p className="text-3xl font-bold text-success">
-                {userData.stats.goals}
-              </p>
-              <p className="text-foreground-muted text-sm mt-2 font-medium">
-                {t("stats.goals")}
-              </p>
-            </motion.div>
-            <motion.div
-              whileHover={{ scale: 1.04 }}
-              transition={{ duration: 0.2, ease: "easeInOut" }}
-              className="rounded-xl p-4 border border-border-strong text-center hover:border-primary transition-colors duration-300 hover:shadow-lg cursor-pointer"
-            >
-              <p className="text-3xl font-bold text-warning">
-                {userData.stats.assists}
-              </p>
-              <p className="text-foreground-muted text-sm mt-2 font-medium">
-                {t("stats.assists")}
-              </p>
-            </motion.div>
+        {activeTab === "cv" && (
+          <div className="space-y-4">
+            {userData.cvUrl ? (
+              <>
+                <iframe
+                  src={`${userData.cvUrl}#zoom=75`}
+                  className="w-full h-screen p-10 rounded-xl border border-border"
+                  title="CV Preview"
+                />
+                <a
+                  href={userData.cvUrl}
+                  download
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-2 w-full py-2.5 rounded-lg bg-primary/10 hover:bg-primary/20 border border-border text-primary font-semibold transition-colors duration-200"
+                >
+                  <Download size={16} />
+                  {t("cv.download")}
+                </a>
+              </>
+            ) : (
+              <div className="py-8 text-center border-2 border-dashed border-border rounded-xl">
+                <FileText
+                  size={32}
+                  className="mx-auto mb-3 text-foreground-muted opacity-40"
+                />
+                <p className="text-foreground-muted font-medium">
+                  {t("cv.noCv")}
+                </p>
+              </div>
+            )}
           </div>
         )}
 
         {activeTab === "applications" && <UserApplications />}
+
+        {activeTab === "savedJobs" && <UserSavedJobs />}
       </div>
     </>
   );

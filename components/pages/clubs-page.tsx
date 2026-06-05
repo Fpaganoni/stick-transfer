@@ -3,38 +3,50 @@
 import { useState, useMemo } from "react";
 import { useTranslations } from "next-intl";
 import { useClubs } from "@/hooks/useClubs";
+import { useAuthStore } from "@/stores/useAuthStore";
 import { ClubListCard } from "@/components/clubs/club-list-card";
-import { Loader } from "@/components/ui/loader";
 import { Error } from "@/components/ui/error";
+import {
+  Empty,
+  EmptyHeader,
+  EmptyTitle,
+  EmptyDescription,
+} from "@/components/ui/empty";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Club } from "@/types/models/club";
 
 interface ClubsPageProps {
   initialData?: { clubs: Club[] };
 }
 
+function ClubCardSkeleton() {
+  return (
+    <div className="w-40 h-[200px] bg-surface border border-border rounded-xl p-3 animate-pulse flex flex-col items-center">
+      <div className="mt-4 mb-2 w-20 h-20 rounded-full bg-surface-elevated" />
+      <div className="h-3 w-24 bg-surface-elevated rounded mt-1" />
+      <div className="h-3 w-16 bg-surface-elevated rounded mt-1" />
+      <div className="mt-auto h-4 w-6 bg-surface-elevated rounded" />
+    </div>
+  );
+}
+
 export function ClubsPage({ initialData }: ClubsPageProps) {
   const t = useTranslations("clubs");
-  const [searchQuery, setSearchQuery] = useState("");
+  const [tab, setTab] = useState("all");
   const { data, isLoading, error } = useClubs(initialData);
+  const user = useAuthStore((s) => s.user);
 
-  const filteredClubs = useMemo(() => {
-    if (!data?.clubs) return [];
-    const query = searchQuery.toLowerCase();
-    return data.clubs.filter(
-      (club) =>
-        club.name.toLowerCase().includes(query) ||
-        club.city?.toLowerCase().includes(query) ||
-        club.country?.toLowerCase().includes(query)
-    );
-  }, [data, searchQuery]);
+  const allClubs = useMemo(() => data?.clubs ?? [], [data?.clubs]);
 
-  if (isLoading && !initialData) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <Loader>{t("loading")}</Loader>
-      </div>
-    );
-  }
+  const myClubs = useMemo(
+    () =>
+      allClubs.filter((club) =>
+        club.members?.some((m) => m.user.id === user?.id)
+      ),
+    [allClubs, user]
+  );
+
+  const activeClubs = tab === "my" ? myClubs : allClubs;
 
   if (error && !data?.clubs) {
     return (
@@ -45,29 +57,81 @@ export function ClubsPage({ initialData }: ClubsPageProps) {
   }
 
   return (
-    <main className="bg-overlay max-w-2xl mx-auto px-4 pb-24">
-      <div className="sticky top-16 bg-background border-b border-border rounded-b-lg shadow-md px-4 py-4 z-20">
-        <h1 className="text-2xl font-bold text-foreground mb-4">
-          {t("title")}
+    <main className="max-w-3xl mx-auto px-4 pb-24">
+      {/* Header */}
+      <div className="pt-8 pb-6">
+        <h1 className="text-3xl font-bold text-foreground mb-2">
+          {t("pageTitle")}
         </h1>
-        <input
-          type="text"
-          placeholder={t("searchPlaceholder")}
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full px-4 py-2 rounded-lg border border-border bg-background text-foreground placeholder-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary"
-        />
+        <p className="text-foreground-muted text-sm">{t("pageSubtitle")}</p>
       </div>
 
-      <div className="space-y-4 mt-6">
-        {filteredClubs.length > 0 ? (
-          filteredClubs.map((club) => <ClubListCard key={club.id} {...club} />)
-        ) : (
-          <div className="text-center text-foreground/70 py-8">
-            {t("noClubs")}
-          </div>
-        )}
-      </div>
+      {/* Tabs */}
+      <Tabs value={tab} onValueChange={setTab}>
+        <TabsList className="mb-6">
+          <TabsTrigger value="all">
+            {t("allClubhouses")}
+            {!isLoading && (
+              <span className="ml-1 text-foreground-muted text-xs">
+                ({allClubs.length})
+              </span>
+            )}
+          </TabsTrigger>
+          <TabsTrigger value="my">
+            {t("myClubhouses")}
+            {!isLoading && (
+              <span className="ml-1 text-foreground-muted text-xs">
+                ({myClubs.length})
+              </span>
+            )}
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="all">
+          <ClubGrid clubs={activeClubs} isLoading={isLoading && !initialData} />
+        </TabsContent>
+        <TabsContent value="my">
+          <ClubGrid clubs={myClubs} isLoading={false} />
+        </TabsContent>
+      </Tabs>
     </main>
+  );
+}
+
+function ClubGrid({
+  clubs,
+  isLoading,
+}: {
+  clubs: Club[];
+  isLoading: boolean;
+}) {
+  const t = useTranslations("clubs");
+  if (isLoading) {
+    return (
+      <div className="flex flex-wrap gap-4">
+        {Array.from({ length: 8 }).map((_, i) => (
+          <ClubCardSkeleton key={i} />
+        ))}
+      </div>
+    );
+  }
+
+  if (clubs.length === 0) {
+    return (
+      <Empty className="border border-dashed border-border mt-4">
+        <EmptyHeader>
+          <EmptyTitle>{t("noClubs")}</EmptyTitle>
+          <EmptyDescription>{t("noClubsDescription")}</EmptyDescription>
+        </EmptyHeader>
+      </Empty>
+    );
+  }
+
+  return (
+    <div className="flex flex-wrap gap-4">
+      {clubs.map((club) => (
+        <ClubListCard key={club.id} {...club} />
+      ))}
+    </div>
   );
 }

@@ -22,6 +22,8 @@ export interface Club {
   city?: string;
   country?: string;
   league?: string;
+  type?: "Team" | "Organization" | "Brand";
+  createdAt?: string;
   isVerified?: boolean;
   verificationStatus?: "UNVERIFIED" | "PENDING" | "VERIFIED" | "REJECTED";
   verificationDoc?: string;
@@ -33,6 +35,8 @@ export interface Club {
   facebook?: string;
   tiktok?: string;
   members?: ClubMember[];
+  // TODO: add videos to GraphQL schema when backend supports it
+  videos?: string[];
   admin?: {
     avatar?: string;
   };

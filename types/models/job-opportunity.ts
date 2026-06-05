@@ -14,7 +14,6 @@ export interface JobOpportunity {
   status: "open" | "closed" | "filled";
 
   // Relations
-  clubId: string;
   club: Club;
 
   // Metadata
@@ -47,5 +46,5 @@ export type CreateJobOpportunityInput = Omit<
   "id" | "createdAt" | "updatedAt" | "club"
 >;
 export type UpdateJobOpportunityInput = Partial<
-  Omit<JobOpportunity, "id" | "clubId" | "createdAt">
+  Omit<JobOpportunity, "id" | "createdAt">
 >;

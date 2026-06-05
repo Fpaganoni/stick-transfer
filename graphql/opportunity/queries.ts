@@ -12,6 +12,7 @@ export const GET_JOB_OPPORTUNITIES = gql`
       description
       positionType
       club {
+        id
         name
         city
         country

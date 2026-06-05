@@ -96,13 +96,6 @@ const createProfileFormSchema = (t: (key: string) => string) =>
         }),
       )
       .optional(),
-    statistics: z
-      .object({
-        gamesPlayed: z.coerce.number().min(0).optional(),
-        goals: z.coerce.number().min(0).optional(),
-        assists: z.coerce.number().min(0).optional(),
-      })
-      .optional(),
   });
 
 type ProfileFormValues = z.infer<ReturnType<typeof createProfileFormSchema>>;
@@ -147,11 +140,6 @@ export function EditProfileForm() {
           isCurrent: t.isCurrent || false,
         })) || [],
       multimedia: user?.multimedia?.map((m) => ({ url: m })) || [],
-      statistics: {
-        gamesPlayed: user?.statistics?.gamesPlayed || 0,
-        goals: user?.statistics?.goals || 0,
-        assists: user?.statistics?.assists || 0,
-      },
     },
   });
 
@@ -215,7 +203,6 @@ export function EditProfileForm() {
         cvUrl: finalCvUrl,
         yearsOfExperience: data.yearsOfExperience,
         multimedia: multimediaUrls,
-        statistics: data.statistics,
         trajectories: updatedTrajectories,
       });
 
@@ -233,11 +220,6 @@ export function EditProfileForm() {
         cvUrl: finalCvUrl,
         trajectories: data.trajectories as TrajectoryItem[],
         multimedia: multimediaUrls,
-        statistics: data.statistics ? {
-          gamesPlayed: data.statistics.gamesPlayed ?? 0,
-          goals: data.statistics.goals ?? 0,
-          assists: data.statistics.assists ?? 0,
-        } : undefined,
       });
 
       toast.success(t("editSuccess") || "Profile updated successfully!");
@@ -538,61 +520,6 @@ export function EditProfileForm() {
                   </div>
                 </Button>
               )}
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Statistics Information */}
-        <Card className="bg-background">
-          <CardHeader>
-            <CardTitle>{t("editForm.statistics") || "Statistics"}</CardTitle>
-            <CardDescription>
-              {t("editForm.statisticsDesc") || "Update your hockey stats"}
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <FormField
-                control={form.control}
-                name="statistics.gamesPlayed"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      {t("stats.gamesPlayed") || "Games Played"}
-                    </FormLabel>
-                    <FormControl>
-                      <Input type="number" placeholder="0" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="statistics.goals"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t("stats.goals") || "Goals"}</FormLabel>
-                    <FormControl>
-                      <Input type="number" placeholder="0" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="statistics.assists"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t("stats.assists") || "Assists"}</FormLabel>
-                    <FormControl>
-                      <Input type="number" placeholder="0" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
             </div>
           </CardContent>
         </Card>
