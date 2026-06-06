@@ -56,15 +56,10 @@ async function setupGraphQLMocks(page: Page) {
       const raw = request.postData();
       if (raw) body = JSON.parse(raw);
     } catch {
-      // non-JSON body — pass through
+      // non-JSON body — absorb below
     }
 
-    if (!body?.query) {
-      route.continue();
-      return;
-    }
-
-    const q = body.query;
+    const q = body?.query ?? "";
 
     if (q.includes("mutation Login") || q.includes("login(email:")) {
       route.fulfill({
@@ -125,7 +120,30 @@ async function setupGraphQLMocks(page: Page) {
       return;
     }
 
-    route.continue();
+    if (q.includes("unreadNotificationsCount") || q.includes("UnreadNotificationsCount")) {
+      route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({ data: { unreadNotificationsCount: 0 } }),
+      });
+      return;
+    }
+
+    if (q.includes("myNotifications") || q.includes("MyNotifications")) {
+      route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({ data: { myNotifications: [] } }),
+      });
+      return;
+    }
+
+    // Absorb all other GraphQL requests — no real backend in E2E tests
+    route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({ data: {} }),
+    });
   });
 }
 
@@ -133,6 +151,7 @@ test.describe("Job Application Flow", () => {
   test.beforeEach(async ({ page }) => {
     await setupGraphQLMocks(page);
     await page.goto("/en");
+    await page.waitForLoadState("networkidle");
   });
 
   test("user can log in", async ({ page }) => {
@@ -148,6 +167,8 @@ test.describe("Job Application Flow", () => {
     await loginUser(page);
 
     await page.goto("/en/opportunities");
+    await page.waitForLoadState("networkidle");
+
     await expect(
       page
         .getByRole("heading", { name: /available positions|positions/i })
@@ -162,6 +183,7 @@ test.describe("Job Application Flow", () => {
     await loginUser(page);
 
     await page.goto("/en/opportunities");
+    await page.waitForLoadState("networkidle");
 
     const firstCard = page
       .locator('[class*="rounded-xl"][class*="border-l-4"]')
@@ -176,6 +198,7 @@ test.describe("Job Application Flow", () => {
     await loginUser(page);
 
     await page.goto("/en/opportunities");
+    await page.waitForLoadState("networkidle");
 
     const firstCard = page
       .locator('[class*="rounded-xl"][class*="border-l-4"]')
@@ -211,12 +234,15 @@ test.describe("Job Application Flow", () => {
   });
 });
 
+// Mocks set in beforeEach — do NOT call setupGraphQLMocks here again.
+// Duplicate route handlers stack in LIFO order; the second continue() reaches the network.
 async function loginUser(page: Page) {
-  await setupGraphQLMocks(page);
   await page.goto("/en");
+  await page.waitForLoadState("networkidle");
   await page.getByRole("button", { name: /sign in|iniciar/i }).first().click();
   await page.getByLabel(/email/i).fill("test@sticktransfer.com");
   await page.getByRole("textbox", { name: /password/i }).fill("Test1234!");
   await page.getByRole("button", { name: /login|sign in|iniciar/i }).last().click();
   await page.waitForURL(/opportunities|feed/, { timeout: 15_000 });
+  await page.waitForLoadState("networkidle");
 }
