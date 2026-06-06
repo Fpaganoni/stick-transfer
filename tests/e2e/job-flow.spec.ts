@@ -32,6 +32,7 @@ const MOCK_OPPORTUNITIES = [
     description: "Looking for an experienced forward player.",
     positionType: "Forward",
     club: {
+      id: "club-1",
       name: "Test Club",
       city: "Buenos Aires",
       country: "AR",
@@ -175,7 +176,7 @@ test.describe("Job Application Flow", () => {
         .first(),
     ).toBeVisible({ timeout: 10_000 });
 
-    const jobCards = page.locator('[class*="rounded-xl"][class*="border-l-4"]');
+    const jobCards = page.locator('[class*="rounded-xl"][class*="cursor-pointer"]');
     await expect(jobCards.first()).toBeVisible({ timeout: 10_000 });
   });
 
@@ -186,7 +187,7 @@ test.describe("Job Application Flow", () => {
     await page.waitForLoadState("networkidle");
 
     const firstCard = page
-      .locator('[class*="rounded-xl"][class*="border-l-4"]')
+      .locator('[class*="rounded-xl"][class*="cursor-pointer"]')
       .first();
     await firstCard.waitFor({ timeout: 10_000 });
     await firstCard.click();
@@ -201,7 +202,7 @@ test.describe("Job Application Flow", () => {
     await page.waitForLoadState("networkidle");
 
     const firstCard = page
-      .locator('[class*="rounded-xl"][class*="border-l-4"]')
+      .locator('[class*="rounded-xl"][class*="cursor-pointer"]')
       .first();
     await firstCard.waitFor({ timeout: 10_000 });
     await firstCard.click();
