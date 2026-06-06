@@ -1,12 +1,12 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useScroll } from "framer-motion";
 import { Check } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { useUIStore } from "@/stores/useUIStore";
+import { useRef, useState, useEffect } from "react";
 
 const ROLES = ["players", "coaches", "clubs", "brands"];
 const BULLETS = ["bullet1", "bullet2", "bullet3"];
@@ -14,37 +14,71 @@ const BULLETS = ["bullet1", "bullet2", "bullet3"];
 export function RoleTabsSection() {
   const t = useTranslations("landing.roleTabs");
   const { openRegisterModal } = useUIStore();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [activeTab, setActiveTab] = useState("players");
+
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end end"],
+  });
+
+  useEffect(() => {
+    return scrollYProgress.on("change", (progress) => {
+      const index = Math.min(
+        Math.floor(progress * ROLES.length),
+        ROLES.length - 1
+      );
+      setActiveTab(ROLES[index]);
+    });
+  }, [scrollYProgress]);
 
   return (
-    <section id="roles" className="py-20 px-4 bg-muted/30">
-      <div className="max-w-7xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-12"
-        >
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-            {t("title")}
-          </h2>
-          <p className="text-lg text-foreground-muted max-w-2xl mx-auto">
-            {t("subtitle")}
-          </p>
-        </motion.div>
+    <div ref={containerRef} className="h-[400vh]">
+      <section
+        id="roles"
+        className="sticky top-0 h-screen flex items-center overflow-hidden px-4 bg-muted/30"
+      >
+        <div className="max-w-7xl mx-auto w-full">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+              {t("title")}
+            </h2>
+            <p className="text-lg text-foreground-muted max-w-2xl mx-auto">
+              {t("subtitle")}
+            </p>
+          </motion.div>
 
-        <Tabs defaultValue="players" className="w-full">
-          <TabsList className="grid grid-cols-2 md:grid-cols-4 w-full mb-10 h-auto">
+          <div className="grid grid-cols-2 md:grid-cols-4 w-full mb-10 bg-muted rounded-lg p-1">
             {ROLES.map((role) => (
-              <TabsTrigger key={role} value={role} className="py-3">
-                {t(`${role}.tab` as Parameters<typeof t>[0])}
-              </TabsTrigger>
+              <button
+                key={role}
+                onClick={() => setActiveTab(role)}
+                className="relative py-3 text-sm font-medium text-center"
+              >
+                {activeTab === role && (
+                  <motion.div
+                    layoutId="active-tab-bg"
+                    className="absolute inset-0 bg-background rounded-md shadow"
+                    transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                  />
+                )}
+                <span className="relative z-10">
+                  {t(`${role}.tab` as Parameters<typeof t>[0])}
+                </span>
+              </button>
             ))}
-          </TabsList>
+          </div>
 
-          {ROLES.map((role, i) => (
-            <TabsContent key={role} value={role}>
+          {ROLES.map((role, i) =>
+            activeTab === role ? (
               <motion.div
+                key={role}
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: i * 0.05 }}
@@ -86,10 +120,10 @@ export function RoleTabsSection() {
                   </div>
                 </div>
               </motion.div>
-            </TabsContent>
-          ))}
-        </Tabs>
-      </div>
-    </section>
+            ) : null
+          )}
+        </div>
+      </section>
+    </div>
   );
 }

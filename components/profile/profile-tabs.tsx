@@ -49,7 +49,7 @@ export function ProfileTabs({
 
   return (
     <>
-      <div className="flex bg-background border-t border-border sticky top-16 z-20 overflow-x-auto">
+      <div className="flex bg-background border-t border-border z-20 overflow-x-auto">
         {tabs.map((tab) => (
           <button
             key={tab.id}
