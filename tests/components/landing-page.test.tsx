@@ -38,26 +38,47 @@ vi.mock("@/stores/useOpportunitiesStore", () => ({
   }),
 }));
 
+const mockMotionValue = { on: () => () => undefined, get: () => 0 };
+
+const FRAMER_PROPS = new Set([
+  "animate", "initial", "exit", "variants", "transition",
+  "whileHover", "whileTap", "whileFocus", "whileInView", "whileDrag",
+  "layoutId", "layout", "viewport", "custom",
+  "drag", "dragConstraints", "dragElastic", "dragMomentum", "dragTransition",
+  "onAnimationStart", "onAnimationComplete", "onDragStart", "onDragEnd",
+  "fill", "priority",
+]);
+
+function makeMotionComponent(tag: string) {
+  return ({ children, ...rest }: React.HTMLAttributes<HTMLElement> & Record<string, unknown>) => {
+    const domProps = Object.fromEntries(
+      Object.entries(rest).filter(([k]) => !FRAMER_PROPS.has(k))
+    );
+    return React.createElement(tag, domProps, children);
+  };
+}
+
 vi.mock("framer-motion", () => ({
   motion: new Proxy(
     {},
-    {
-      get: (_target, prop) =>
-        ({ children, ...rest }: React.HTMLAttributes<HTMLElement>) =>
-          React.createElement(
-            prop as keyof React.JSX.IntrinsicElements,
-            rest,
-            children,
-          ),
-    },
+    { get: (_target, prop) => makeMotionComponent(prop as string) },
   ),
   AnimatePresence: ({ children }: { children: React.ReactNode }) => (
     <>{children}</>
   ),
+  useScroll: () => ({
+    scrollY: mockMotionValue,
+    scrollYProgress: mockMotionValue,
+    scrollX: mockMotionValue,
+    scrollXProgress: mockMotionValue,
+  }),
+  useMotionValue: () => mockMotionValue,
+  useTransform: () => mockMotionValue,
+  useSpring: () => mockMotionValue,
 }));
 
 vi.mock("next/image", () => ({
-  default: (props: React.ImgHTMLAttributes<HTMLImageElement>) => (
+  default: ({ fill, priority, ...props }: React.ImgHTMLAttributes<HTMLImageElement> & { fill?: boolean; priority?: boolean }) => (
     // eslint-disable-next-line @next/next/no-img-element
     <img {...props} alt={props.alt ?? ""} />
   ),
