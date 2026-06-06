@@ -50,12 +50,14 @@ const FRAMER_PROPS = new Set([
 ]);
 
 function makeMotionComponent(tag: string) {
-  return ({ children, ...rest }: React.HTMLAttributes<HTMLElement> & Record<string, unknown>) => {
+  const MotionComponent = ({ children, ...rest }: React.HTMLAttributes<HTMLElement> & Record<string, unknown>) => {
     const domProps = Object.fromEntries(
       Object.entries(rest).filter(([k]) => !FRAMER_PROPS.has(k))
     );
     return React.createElement(tag, domProps, children);
   };
+  MotionComponent.displayName = `Motion.${tag}`;
+  return MotionComponent;
 }
 
 vi.mock("framer-motion", () => ({
@@ -78,7 +80,8 @@ vi.mock("framer-motion", () => ({
 }));
 
 vi.mock("next/image", () => ({
-  default: ({ fill, priority, ...props }: React.ImgHTMLAttributes<HTMLImageElement> & { fill?: boolean; priority?: boolean }) => (
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  default: ({ fill: _fill, priority: _priority, ...props }: React.ImgHTMLAttributes<HTMLImageElement> & { fill?: boolean; priority?: boolean }) => (
     // eslint-disable-next-line @next/next/no-img-element
     <img {...props} alt={props.alt ?? ""} />
   ),
