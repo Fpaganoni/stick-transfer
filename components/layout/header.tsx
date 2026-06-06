@@ -48,7 +48,7 @@ export function Header({ title = "Hockey Connect" }: HeaderProps) {
               className="text-foreground group-hover:text-white-black transition-colors"
             />
             {unreadCount > 0 && (
-              <span className="absolute flex items-center justify-center p-1.5 text-xs text-white font-bold top-1 right-1 min-w-[12px] h-3 bg-error rounded-full">
+              <span className="absolute flex items-center justify-center p-1.5 text-xs text-white font-bold top-1 right-1 min-w-3 h-3 bg-error rounded-full">
                 {unreadCount > 99 ? "99+" : unreadCount}
               </span>
             )}
