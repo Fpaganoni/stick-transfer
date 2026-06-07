@@ -5,6 +5,7 @@ import { Mail, Lock, Eye, EyeOff, ArrowUpIcon } from "lucide-react";
 import { useTranslations, useLocale } from "next-intl";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import { HockeyXTicks } from "@/components/ui/hockey-xtick";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuthStore } from "@/stores/useAuthStore";
@@ -137,152 +138,152 @@ export function LoginPage() {
   ];
 
   return (
-    <div className="w-full rounded-3xl border border-border bg-background p-6 shadow-xl">
+    <div className="w-full rounded-3xl border border-border bg-background p-8 shadow-xl">
       {/* Header */}
-      <div className="flex flex-col items-center mb-6">
-        <Image src="/icon.svg" alt="Stick Transfer" width={44} height={44} />
-        <h2 className="text-lg font-semibold text-foreground text-center mt-3 leading-snug">
+      <div className="flex flex-col items-center mb-7">
+        <HockeyXTicks size={48} className="text-primary" />
+        <h2 className="text-xl font-semibold text-foreground text-center mt-3 leading-snug">
           {t("loginWelcomeTitle")}
         </h2>
       </div>
 
       {error && (
-        <div className="text-error bg-error/20 font-semibold py-2 px-4 text-xs mt-2 rounded-lg mb-5">
+        <div className="text-error bg-error/20 font-semibold py-2 px-4 text-xs rounded-lg mb-5">
           <p className="text-error text-sm">{error}</p>
         </div>
       )}
 
-      {/* Two-column layout */}
-      <div className="flex flex-col sm:flex-row gap-4 items-stretch">
+      {/* Two-column body: OAuth | divider | form */}
+      <div className="flex flex-col sm:flex-row sm:gap-0 gap-5 sm:items-stretch">
         {/* Left: OAuth buttons */}
-        <div className="flex flex-col gap-2 flex-1">
+        <div className="flex flex-col gap-2.5 sm:flex-1">
           {socialButtons.map((btn) => (
             <motion.button
               key={btn.label}
               type="button"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.97 }}
+              whileHover={{ scale: 1.015 }}
+              whileTap={{ scale: 0.975 }}
               transition={{ duration: 0.15 }}
               onClick={() => {
                 window.location.href = btn.href;
               }}
               style={{ backgroundColor: btn.bg }}
-              className="w-full h-10 px-3 rounded-lg text-white font-medium text-sm flex items-center gap-2 cursor-pointer transition-opacity hover:opacity-90"
+              className="w-full h-11 px-4 rounded-xl text-white font-medium text-sm flex items-center gap-3 cursor-pointer transition-opacity hover:opacity-90"
             >
-              <span className="shrink-0">{btn.icon}</span>
-              <span className="truncate">{btn.label}</span>
+              <span className="shrink-0 w-5 flex items-center justify-center">
+                {btn.icon}
+              </span>
+              <span className="flex-1 text-left">{btn.label}</span>
             </motion.button>
           ))}
         </div>
 
-        {/* Center: OR divider */}
-        <div className="flex sm:flex-col flex-row items-center gap-2 sm:px-1">
-          <div className="sm:flex-1 flex-1 sm:w-px sm:h-auto h-px w-auto bg-border" />
-          <div className="rounded-full border border-border w-8 h-8 shrink-0 flex items-center justify-center text-xs font-medium text-foreground/60">
+        {/* OR divider — vertical on desktop, horizontal on mobile */}
+        <div className="flex sm:flex-col flex-row items-center gap-2 sm:mx-6 sm:my-0">
+          <div className="flex-1 sm:w-px sm:h-auto w-auto h-px bg-border" />
+          <span className="text-xs font-medium text-foreground/50 sm:py-1 sm:px-0 px-2">
             {t("or").toUpperCase()}
-          </div>
-          <div className="sm:flex-1 flex-1 sm:w-px sm:h-auto h-px w-auto bg-border" />
+          </span>
+          <div className="flex-1 sm:w-px sm:h-auto w-auto h-px bg-border" />
         </div>
 
-        {/* Right: Email/password form */}
-        <div className="flex-1">
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            className="flex flex-col gap-3"
-          >
-            {/* Email */}
-            <div>
-              <Label htmlFor="email" className="mb-1 text-sm">
-                {t("email")}
-              </Label>
-              <div className="relative">
-                <Mail
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground"
-                  size={16}
-                />
-                <Input
-                  {...register("email")}
-                  id="email"
-                  type="email"
-                  placeholder="your@email.com"
-                  className="pl-9 h-9 text-sm"
-                />
-              </div>
-              {errors.email && (
-                <motion.p
-                  initial={{ opacity: 0, y: -4 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="flex gap-1 text-error bg-error/20 font-semibold p-1 text-xs mt-1"
-                >
-                  <ArrowUpIcon size={14} />
-                  {errors.email.message}
-                </motion.p>
-              )}
+        {/* Right: email/password form */}
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="flex flex-col gap-4 sm:flex-1"
+        >
+          {/* Email */}
+          <div>
+            <Label htmlFor="email" className="mb-1.5 text-sm block">
+              {t("email")}
+            </Label>
+            <div className="relative">
+              <Mail
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground/50"
+                size={16}
+              />
+              <Input
+                {...register("email")}
+                id="email"
+                type="email"
+                placeholder="your@email.com"
+                className="pl-9 h-10 text-sm"
+              />
             </div>
-
-            {/* Password */}
-            <div>
-              <Label htmlFor="password" className="mb-1 text-sm">
-                {t("password")}
-              </Label>
-              <div className="relative">
-                <Lock
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground"
-                  size={16}
-                />
-                <Input
-                  {...register("password")}
-                  id="password"
-                  type={showPassword ? "text" : "password"}
-                  placeholder="••••••••"
-                  className="pl-9 pr-9 h-9 text-sm"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  aria-label={showPassword ? "Hide password" : "Show password"}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-foreground bg-input cursor-pointer"
-                >
-                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                </button>
-              </div>
-              {errors.password && (
-                <motion.p
-                  initial={{ opacity: 0, y: -4 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="flex gap-1 text-error bg-error/20 font-semibold p-1 text-xs mt-1"
-                >
-                  <ArrowUpIcon size={14} />
-                  {errors.password.message}
-                </motion.p>
-              )}
-            </div>
-
-            {/* Login button + "or Sign Up" */}
-            <div className="flex items-center gap-2 mt-1">
-              <motion.button
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.97 }}
-                type="submit"
-                disabled={isPending}
-                className="flex-1 h-9 px-4 bg-primary text-white font-semibold rounded-lg hover:bg-primary-hover transition-colors cursor-pointer disabled:opacity-50 text-sm"
+            {errors.email && (
+              <motion.p
+                initial={{ opacity: 0, y: -4 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="flex gap-1 text-error bg-error/20 font-semibold p-1 text-xs mt-1 rounded"
               >
-                {isPending ? t("loggingIn") : t("login")}
-              </motion.button>
+                <ArrowUpIcon size={14} />
+                {errors.email.message}
+              </motion.p>
+            )}
+          </div>
+
+          {/* Password */}
+          <div>
+            <Label htmlFor="password" className="mb-1.5 text-sm block">
+              {t("password")}
+            </Label>
+            <div className="relative">
+              <Lock
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground/50"
+                size={16}
+              />
+              <Input
+                {...register("password")}
+                id="password"
+                type={showPassword ? "text" : "password"}
+                placeholder="••••••••"
+                className="pl-9 pr-9 h-10 text-sm"
+              />
               <button
                 type="button"
-                onClick={openRegisterModal}
-                className="text-sm text-primary hover:underline cursor-pointer whitespace-nowrap"
+                onClick={() => setShowPassword(!showPassword)}
+                aria-label={showPassword ? "Hide password" : "Show password"}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-foreground/50 hover:text-foreground bg-transparent cursor-pointer transition-colors"
               >
-                {t("orSignUp")}
+                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
             </div>
-          </form>
-        </div>
+            {errors.password && (
+              <motion.p
+                initial={{ opacity: 0, y: -4 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="flex gap-1 text-error bg-error/20 font-semibold p-1 text-xs mt-1 rounded"
+              >
+                <ArrowUpIcon size={14} />
+                {errors.password.message}
+              </motion.p>
+            )}
+          </div>
+
+          {/* Login button + Sign Up — pushed to bottom on desktop */}
+          <div className="flex items-center gap-1 sm:mt-auto mt-1">
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.97 }}
+              type="submit"
+              disabled={isPending}
+              className="flex-1 h-10 px-4 bg-primary text-white font-semibold rounded-xl hover:bg-primary-hover transition-colors cursor-pointer disabled:opacity-50 text-sm"
+            >
+              {isPending ? t("loggingIn") : t("login")}
+            </motion.button>
+            <button
+              type="button"
+              onClick={openRegisterModal}
+              className="flex-1 text-sm text-primary hover:underline cursor-pointer whitespace-nowrap shrink-0"
+            >
+              {t("orSignUp")}
+            </button>
+          </div>
+        </form>
       </div>
 
       {/* Footer links */}
-      <div className="flex flex-wrap justify-center items-center gap-x-2 gap-y-1 mt-5 text-xs text-foreground/50">
+      <div className="flex flex-wrap justify-center items-center gap-x-2 gap-y-1 mt-7 text-xs text-foreground/50">
         <button
           type="button"
           onClick={openRegisterModal}

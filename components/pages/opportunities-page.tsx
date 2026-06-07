@@ -103,7 +103,7 @@ export function OpportunitiesPage({ initialData }: OpportunitiesPageProps) {
         onOpenChange={(open) => !open && closeLoginModal()}
       >
         <DialogContent
-          className="max-w-md p-0 max-h-[90vh] overflow-y-auto"
+          className="sm:max-w-[680px] p-0 overflow-visible"
           showCloseButton={false}
         >
           <DialogTitle className="sr-only">Sign In</DialogTitle>
