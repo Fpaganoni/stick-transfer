@@ -26,7 +26,7 @@ export function RoleTabsSection() {
     return scrollYProgress.on("change", (progress) => {
       const index = Math.min(
         Math.floor(progress * ROLES.length),
-        ROLES.length - 1
+        ROLES.length - 1,
       );
       setActiveTab(ROLES[index]);
     });
@@ -54,24 +54,23 @@ export function RoleTabsSection() {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 w-full mb-10 bg-muted rounded-lg p-1">
+          <div className="grid grid-cols-2 md:grid-cols-4 w-full mb-10 bg-background rounded-lg p-1">
             {ROLES.map((role) => (
-              <button
+              <div
                 key={role}
-                onClick={() => setActiveTab(role)}
                 className="relative py-3 text-sm font-medium text-center"
               >
                 {activeTab === role && (
                   <motion.div
                     layoutId="active-tab-bg"
-                    className="absolute inset-0 bg-background rounded-md shadow"
+                    className="absolute inset-0 bg-primary rounded-md shadow"
                     transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                   />
                 )}
                 <span className="relative z-10">
                   {t(`${role}.tab` as Parameters<typeof t>[0])}
                 </span>
-              </button>
+              </div>
             ))}
           </div>
 
@@ -120,7 +119,7 @@ export function RoleTabsSection() {
                   </div>
                 </div>
               </motion.div>
-            ) : null
+            ) : null,
           )}
         </div>
       </section>
