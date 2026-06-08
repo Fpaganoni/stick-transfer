@@ -110,7 +110,8 @@
       "roleInvalid": "Selecciona un rol válido",
       "countryRequired": "Por favor selecciona tu país",
       "termsRequired": "Debes aceptar los términos y condiciones",
-      "cityRequired": "La ciudad es obligatoria"
+      "cityRequired": "La ciudad es obligatoria",
+      "positionRequired": "La posición es obligatoria"
     },
     "roles": {
       "player": "Jugador",
@@ -637,5 +638,315 @@
     "clearAll": "Limpiar todo",
     "loading": "Cargandoâ€¦",
     "empty": "No tienes notificaciones aÃºn"
+  },
+  "admin": {
+    "nav": {
+      "title": "Admin",
+      "sectionLabel": "Gestión",
+      "overview": "Resumen",
+      "users": "Usuarios",
+      "clubs": "Clubes",
+      "jobs": "Empleos",
+      "news": "Noticias",
+      "logout": "Cerrar sesión"
+    },
+    "overview": {
+      "title": "Resumen",
+      "subtitle": "Estadísticas y actividad de la plataforma de un vistazo.",
+      "stats": {
+        "totalUsers": "Usuarios totales",
+        "totalClubs": "Clubes totales",
+        "openJobs": "Empleos abiertos",
+        "publishedNews": "Artículos publicados",
+        "newInLast30Days": "+{count} en los últimos 30 días"
+      },
+      "charts": {
+        "usersGrowth": "Crecimiento de usuarios",
+        "usersByRole": "Usuarios por rol",
+        "clubsByVerification": "Clubes por estado de verificación",
+        "applicationsByStatus": "Postulaciones por estado",
+        "newsByCategory": "Noticias por categoría"
+      },
+      "social": {
+        "title": "Interacción social",
+        "follows": "Seguimientos",
+        "likes": "Me gusta",
+        "conversations": "Conversaciones",
+        "messages": "Mensajes"
+      },
+      "topCountries": {
+        "title": "Países principales",
+        "empty": "Todavía no hay datos de países."
+      },
+      "topLeagues": {
+        "title": "Ligas principales",
+        "empty": "Todavía no hay datos de ligas."
+      },
+      "errorTitle": "No se pudieron cargar las estadísticas",
+      "errorDescription": "Algo salió mal al obtener los datos del resumen. Intentá de nuevo.",
+      "retry": "Reintentar"
+    },
+    "users": {
+      "title": "Usuarios",
+      "subtitle": "Gestioná cuentas de jugadores, entrenadores, clubes y administradores.",
+      "table": {
+        "name": "Nombre",
+        "email": "Correo",
+        "role": "Rol",
+        "location": "Ubicación",
+        "status": "Estado",
+        "verified": "Verificado",
+        "joined": "Se unió",
+        "actions": "Acciones",
+        "empty": "No se encontraron usuarios",
+        "emptyDescription": "Probá ajustando la búsqueda o los filtros."
+      },
+      "status": {
+        "active": "Activo",
+        "inactive": "Inactivo"
+      },
+      "filters": {
+        "searchPlaceholder": "Buscar por nombre, usuario o correo…",
+        "role": "Rol",
+        "allRoles": "Todos los roles",
+        "status": "Estado",
+        "allStatuses": "Todos los estados",
+        "verification": "Verificación",
+        "allVerifications": "Todos",
+        "verified": "Verificados",
+        "unverified": "No verificados"
+      },
+      "actions": {
+        "openMenu": "Abrir menú",
+        "activate": "Activar",
+        "deactivate": "Desactivar",
+        "verify": "Verificar",
+        "unverify": "Quitar verificación",
+        "changeRole": "Cambiar rol",
+        "confirmActivateTitle": "¿Activar esta cuenta?",
+        "confirmActivateDescription": "{name} recuperará acceso completo a la plataforma de inmediato.",
+        "confirmDeactivateTitle": "¿Desactivar esta cuenta?",
+        "confirmDeactivateDescription": "{name} cerrará sesión y no podrá ingresar hasta que se reactive la cuenta.",
+        "confirmVerifyTitle": "¿Marcar cuenta como verificada?",
+        "confirmVerifyDescription": "{name} obtendrá una insignia de verificado visible para otros usuarios.",
+        "confirmUnverifyTitle": "¿Quitar verificación?",
+        "confirmUnverifyDescription": "{name} perderá su insignia de verificado.",
+        "cancel": "Cancelar",
+        "confirm": "Confirmar",
+        "changeRoleTitle": "Cambiar rol del usuario",
+        "changeRoleDescription": "{name} tiene actualmente el rol {currentRole}. Cambiarlo modifica de inmediato lo que puede acceder en la plataforma.",
+        "selectNewRole": "Seleccioná un nuevo rol",
+        "changeRoleWarning": "Esta es una acción sensible: los permisos del usuario cambian de inmediato y pueden otorgar o quitar acceso de administrador.",
+        "confirmRoleChange": "Cambiar rol"
+      },
+      "toasts": {
+        "activated": "Usuario activado",
+        "deactivated": "Usuario desactivado",
+        "verified": "Usuario verificado",
+        "unverified": "Verificación removida",
+        "roleChanged": "Rol actualizado",
+        "actionFailed": "No se pudo completar la acción. Intentá de nuevo."
+      }
+    },
+    "clubs": {
+      "title": "Clubes",
+      "subtitle": "Revisá los perfiles de clubes y gestioná su estado de verificación.",
+      "table": {
+        "name": "Club",
+        "location": "Ubicación",
+        "league": "Liga",
+        "members": "Miembros",
+        "status": "Estado",
+        "joined": "Se unió",
+        "actions": "Acciones",
+        "review": "Revisar",
+        "empty": "No se encontraron clubes",
+        "emptyDescription": "Probá ajustando la búsqueda o los filtros."
+      },
+      "filters": {
+        "searchPlaceholder": "Buscar clubes…",
+        "status": "Estado",
+        "allStatuses": "Todos los estados",
+        "pendingCount": "{count} pendientes de revisión"
+      },
+      "verificationStatus": {
+        "UNVERIFIED": "Sin verificar",
+        "PENDING": "Pendiente",
+        "VERIFIED": "Verificado",
+        "REJECTED": "Rechazado"
+      },
+      "verificationDialog": {
+        "title": "Verificación de club",
+        "description": "Revisá el documento de verificación del club y aprobá o rechazá la solicitud.",
+        "documentLabel": "Documento de verificación",
+        "viewDocument": "Ver documento",
+        "noDocument": "No se envió ningún documento.",
+        "reject": "Rechazar",
+        "approve": "Aprobar",
+        "confirmApproveTitle": "¿Aprobar este club?",
+        "confirmApproveDescription": "{name} quedará marcado como verificado y se mostrará con una insignia de verificado en toda la plataforma.",
+        "confirmRejectTitle": "¿Rechazar la verificación de este club?",
+        "confirmRejectDescription": "{name} quedará marcado como rechazado y deberá volver a enviar su solicitud de verificación.",
+        "cancel": "Cancelar",
+        "confirm": "Confirmar"
+      },
+      "toasts": {
+        "approved": "Club aprobado",
+        "rejected": "Club rechazado",
+        "statusUpdated": "Estado de verificación actualizado",
+        "actionFailed": "No se pudo completar la acción. Intentá de nuevo."
+      }
+    },
+    "jobs": {
+      "title": "Empleos y postulaciones",
+      "subtitle": "Explorá ofertas de empleo y gestioná postulaciones de toda la plataforma.",
+      "tabs": {
+        "opportunities": "Ofertas",
+        "applications": "Postulaciones"
+      },
+      "opportunities": {
+        "filters": {
+          "searchPlaceholder": "Buscar ofertas…",
+          "status": "Estado",
+          "allStatuses": "Todos los estados"
+        },
+        "status": {
+          "OPEN": "Abierta",
+          "CLOSED": "Cerrada",
+          "FILLED": "Cubierta"
+        },
+        "table": {
+          "title": "Título",
+          "club": "Club",
+          "position": "Posición",
+          "location": "Ubicación",
+          "status": "Estado",
+          "applications": "Postulaciones",
+          "expires": "Vence",
+          "empty": "No se encontraron ofertas",
+          "emptyDescription": "Probá ajustando la búsqueda o los filtros."
+        }
+      },
+      "applications": {
+        "filters": {
+          "searchPlaceholder": "Buscar postulantes…",
+          "status": "Estado",
+          "allStatuses": "Todos los estados"
+        },
+        "status": {
+          "PENDING": "Pendiente",
+          "UNDER_REVIEW": "En revisión",
+          "ACCEPTED": "Aceptada",
+          "REJECTED": "Rechazada",
+          "WITHDRAWN": "Retirada"
+        },
+        "table": {
+          "applicant": "Postulante",
+          "opportunity": "Oferta",
+          "club": "Club",
+          "status": "Estado",
+          "applied": "Postuló",
+          "changeStatus": "Cambiar estado",
+          "empty": "No se encontraron postulaciones",
+          "emptyDescription": "Probá ajustando la búsqueda o los filtros."
+        }
+      },
+      "toasts": {
+        "applicationStatusUpdated": "Estado de la postulación actualizado",
+        "actionFailed": "No se pudo completar la acción. Intentá de nuevo."
+      }
+    },
+    "news": {
+      "title": "Noticias",
+      "subtitle": "Creá, editá y publicá artículos para la sección de noticias.",
+      "newArticle": "Nuevo artículo",
+      "newArticleTitle": "Nuevo artículo",
+      "newArticleSubtitle": "Escribí un artículo nuevo y guardalo como borrador o publicalo de inmediato.",
+      "editArticleTitle": "Editar artículo",
+      "notFoundTitle": "Artículo no encontrado",
+      "notFoundDescription": "Este artículo pudo haber sido eliminado. Volvé al listado de noticias e intentá de nuevo.",
+      "table": {
+        "article": "Artículo",
+        "category": "Categoría",
+        "status": "Estado",
+        "publishedAt": "Publicado",
+        "author": "Autor",
+        "actions": "Acciones",
+        "empty": "No se encontraron artículos",
+        "emptyDescription": "Probá ajustando la búsqueda o los filtros, o creá un artículo nuevo."
+      },
+      "status": {
+        "published": "Publicado",
+        "draft": "Borrador"
+      },
+      "categories": {
+        "INTERNATIONAL": "Internacional",
+        "NATIONAL": "Nacional",
+        "TRANSFERS": "Transferencias",
+        "EQUIPMENT": "Equipamiento",
+        "RESULTS": "Resultados"
+      },
+      "filters": {
+        "searchPlaceholder": "Buscar artículos…",
+        "category": "Categoría",
+        "allCategories": "Todas las categorías",
+        "status": "Estado",
+        "allStatuses": "Todos los estados"
+      },
+      "actions": {
+        "edit": "Editar",
+        "publish": "Publicar",
+        "unpublish": "Despublicar",
+        "delete": "Eliminar"
+      },
+      "confirmDeleteTitle": "¿Eliminar este artículo?",
+      "confirmDeleteDescription": "\"{title}\" se eliminará de forma permanente y se quitará de la sección de noticias. Esta acción no se puede deshacer.",
+      "cancel": "Cancelar",
+      "form": {
+        "contentSection": "Contenido",
+        "contentSectionDesc": "El título, resumen y cuerpo del artículo.",
+        "metaSection": "Metadatos y publicación",
+        "metaSectionDesc": "Categoría, imagen de portada, programación y datos del autor.",
+        "title": "Título",
+        "slug": "Slug",
+        "slugHint": "Se usa en la URL del artículo. Se genera automáticamente a partir del título — editalo para sobrescribirlo.",
+        "excerpt": "Resumen",
+        "content": "Cuerpo",
+        "category": "Categoría",
+        "readingTime": "Tiempo de lectura (minutos)",
+        "coverImage": "URL de imagen de portada",
+        "publishDate": "Fecha de publicación",
+        "publishDatePlaceholder": "Elegí una fecha",
+        "publishDateHint": "Opcional. Dejalo vacío para publicar de inmediato al presionar Publicar.",
+        "authorName": "Nombre del autor",
+        "authorAvatar": "URL del avatar del autor",
+        "relatedArticles": "Artículos relacionados",
+        "relatedArticlesPlaceholder": "Seleccioná artículos relacionados…",
+        "relatedArticlesCount": "{count} seleccionados",
+        "relatedArticlesSearch": "Buscar artículos…",
+        "relatedArticlesEmpty": "No se encontraron artículos.",
+        "removeRelated": "Quitar",
+        "cancel": "Cancelar",
+        "saveDraft": "Guardar borrador",
+        "publish": "Publicar",
+        "validation": {
+          "titleMin": "El título debe tener al menos 3 caracteres.",
+          "slugMin": "El slug debe tener al menos 3 caracteres.",
+          "slugFormat": "El slug solo puede contener minúsculas, números y guiones.",
+          "excerptMin": "El resumen debe tener al menos 10 caracteres.",
+          "excerptMax": "El resumen no puede superar los 280 caracteres.",
+          "contentMin": "El cuerpo debe tener al menos 20 caracteres.",
+          "urlInvalid": "Ingresá una URL válida."
+        }
+      },
+      "toasts": {
+        "created": "Artículo creado",
+        "updated": "Artículo actualizado",
+        "deleted": "Artículo eliminado",
+        "published": "Artículo publicado",
+        "unpublished": "Artículo despublicado",
+        "actionFailed": "No se pudo completar la acción. Intentá de nuevo."
+      }
+    }
   }
 }

@@ -56,7 +56,7 @@ export function ProfileCard({
       text: "text-warning",
       badge: "bg-warning/20 text-foreground border-warning",
     },
-    CLUB_ADMIN: {
+    CLUB: {
       bg: "bg-info/20",
       text: "text-info",
       badge: "bg-info/20 text-foreground border-info",

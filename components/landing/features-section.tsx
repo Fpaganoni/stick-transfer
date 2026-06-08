@@ -36,10 +36,18 @@ export function FeaturesSection() {
             <motion.div
               key={key}
               initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              whileInView={{
+                opacity: 1,
+                y: 0,
+                transition: { duration: 0.5, delay: index * 0.15 },
+              }}
+              whileHover={{
+                scale: 1.05,
+                boxShadow: "0px 10px 20px rgba(0, 0, 0, 0.5)",
+                transition: { duration: 0.2, delay: 0 },
+              }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.15 }}
-              className="bg-background rounded-2xl border border-border p-8 shadow-sm hover:shadow-md transition-shadow duration-200"
+              className="bg-background rounded-2xl border border-border p-8 shadow-sm"
             >
               <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center mb-6">
                 <Icon size={28} className="text-primary" />

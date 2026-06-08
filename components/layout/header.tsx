@@ -3,6 +3,7 @@
 import { Bell, LogOut } from "lucide-react";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 import { LanguageSelector } from "../ui/language-selector";
 import { ThemeToggleControl } from "../ui/theme-provider";
 import { useAuthStore } from "@/stores/useAuthStore";
@@ -30,8 +31,10 @@ export function Header({ title = "Hockey Connect" }: HeaderProps) {
 
   return (
     <header className="sticky top-0 bg-background/30 backdrop-blur-sm border-b border-border z-30 px-4 py-3 flex items-center justify-between">
-      {/* Page title */}
-      <h1 className="text-xl ml-8 font-bold text-foreground">{title}</h1>
+      <div className="flex items-center gap-2">
+        <SidebarTrigger />
+        <h1 className="text-xl ml-2 font-bold text-foreground">{title}</h1>
+      </div>
 
       <div className="flex items-center gap-3">
         <LanguageSelector />

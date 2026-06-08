@@ -21,12 +21,12 @@ export function ProfileSlugWrapper({ username }: ProfileSlugWrapperProps) {
   return (
     <AppShell title={isOwnProfile ? "My Profile" : username}>
       {isOwnProfile ? (
-        currentUser?.role === Role.CLUB_ADMIN ? (
+        currentUser?.role === Role.CLUB ? (
           <ClubProfilePage isOwnProfile={true} />
         ) : (
           <UserProfilePage isOwnProfile={true} />
         )
-      ) : data?.getUserByUsername?.role === Role.CLUB_ADMIN ? (
+      ) : data?.getUserByUsername?.role === Role.CLUB ? (
         <PublicClubProfilePage username={username} />
       ) : (
         <PublicUserProfilePage username={username} />

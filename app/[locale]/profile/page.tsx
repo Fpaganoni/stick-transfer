@@ -11,7 +11,7 @@ export default function ProfileRoute() {
 
   return (
     <AppShell title="Profile">
-      {user?.role === Role.CLUB_ADMIN ? (
+      {user?.role === Role.CLUB ? (
         <ClubProfilePage isOwnProfile={true} />
       ) : (
         <UserProfilePage isOwnProfile={true} />

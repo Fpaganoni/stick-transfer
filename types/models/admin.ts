@@ -1,0 +1,231 @@
+import { Role } from "../enums";
+import { NewsCategory } from "@/hooks/useNews";
+
+// ============================================
+// DASHBOARD STATS — adminDashboardStats
+// ============================================
+
+export interface CountByKey {
+  count: number;
+}
+
+export interface RoleCount extends CountByKey {
+  role: Role | string;
+}
+
+export interface CountrySeriesPoint extends CountByKey {
+  date: string;
+}
+
+export interface CountryCount extends CountByKey {
+  country: string;
+}
+
+export interface LeagueCount extends CountByKey {
+  league: string;
+}
+
+export interface VerificationStatusCount extends CountByKey {
+  status: string;
+}
+
+export interface CategoryCount extends CountByKey {
+  category: NewsCategory | string;
+}
+
+export interface AdminDashboardStats {
+  users: {
+    total: number;
+    byRole: RoleCount[];
+    active: number;
+    inactive: number;
+    verified: number;
+    emailVerified: number;
+    newLast30Days: number;
+    growth: CountrySeriesPoint[];
+    byCountry: CountryCount[];
+  };
+  clubs: {
+    total: number;
+    byVerificationStatus: VerificationStatusCount[];
+    newLast30Days: number;
+    byLeague: LeagueCount[];
+  };
+  jobs: {
+    totalOpportunities: number;
+    byStatus: { status: string; count: number }[];
+    totalApplications: number;
+    applicationsByStatus: { status: string; count: number }[];
+    savedJobsTotal: number;
+  };
+  social: {
+    totalFollows: number;
+    totalLikes: number;
+    totalConversations: number;
+    totalMessages: number;
+  };
+  news: {
+    total: number;
+    published: number;
+    drafts: number;
+    byCategory: CategoryCount[];
+  };
+}
+
+// ============================================
+// USERS — adminUsers / adminSetUserActive / adminSetUserVerified / adminChangeUserRole
+// ============================================
+
+export interface AdminUserRow {
+  id: string;
+  name: string;
+  email: string;
+  username: string;
+  avatar?: string;
+  role: Role | string;
+  country?: string;
+  city?: string;
+  isActive: boolean;
+  isVerified: boolean;
+  isEmailVerified: boolean;
+  authProvider?: string;
+  createdAt: string;
+}
+
+export interface AdminUserFilters {
+  role?: Role | string;
+  isActive?: boolean;
+  isVerified?: boolean;
+  search?: string;
+}
+
+// ============================================
+// CLUBS — adminClubs / adminSetClubVerification
+// ============================================
+
+export type ClubVerificationStatus = "UNVERIFIED" | "PENDING" | "VERIFIED" | "REJECTED";
+
+export interface AdminClubRow {
+  id: string;
+  name: string;
+  logo?: string;
+  city?: string;
+  country?: string;
+  league?: string;
+  verificationStatus: ClubVerificationStatus;
+  verificationDoc?: string;
+  isVerified: boolean;
+  membersCount: number;
+  createdAt: string;
+}
+
+export interface AdminClubFilters {
+  verificationStatus?: ClubVerificationStatus;
+  search?: string;
+}
+
+// ============================================
+// JOBS — adminJobOpportunities / adminJobApplications (sin scoping por club)
+// ============================================
+
+export interface AdminJobFilters {
+  status?: string;
+  country?: string;
+  positionType?: string;
+  search?: string;
+}
+
+export interface AdminApplicationFilters {
+  status?: string;
+  search?: string;
+}
+
+export interface AdminJobOpportunityRow {
+  id: string;
+  title: string;
+  positionType: string;
+  level: string;
+  country: string;
+  city: string;
+  status: string;
+  expiresAt?: string;
+  applicationsCount: number;
+  createdAt: string;
+  club: { id: string; name: string; logo?: string };
+}
+
+export interface AdminJobApplicationRow {
+  id: string;
+  status: string;
+  appliedAt: string;
+  user: { id: string; name: string; username: string; avatar?: string };
+  jobOpportunity: { id: string; title: string; club: { id: string; name: string } };
+}
+
+// ============================================
+// NEWS CMS — superAdminNewsArticles / createNewsArticle / updateNewsArticle / ...
+// ============================================
+
+export interface AdminNewsArticle {
+  id: string;
+  slug: string;
+  title: string;
+  excerpt: string;
+  content: string;
+  coverImage?: string;
+  category: NewsCategory;
+  isPublished: boolean;
+  publishedAt?: string;
+  readingTimeMinutes?: number;
+  authorName?: string;
+  authorAvatar?: string;
+  relatedSlugs?: string[];
+  createdAt: string;
+  updatedAt?: string;
+}
+
+export interface SuperAdminNewsFilters {
+  category?: NewsCategory;
+  search?: string;
+  isPublished?: boolean;
+}
+
+export interface NewsArticleInput {
+  slug: string;
+  title: string;
+  excerpt: string;
+  content: string;
+  coverImage?: string;
+  category: NewsCategory;
+  publishedAt?: string;
+  readingTimeMinutes?: number;
+  authorName?: string;
+  authorAvatar?: string;
+  relatedSlugs?: string[];
+}
+
+// ============================================
+// SHARED PAGINATED RESPONSE SHAPES
+// ============================================
+
+export interface PaginatedResponse<T> {
+  items: T[];
+  total: number;
+  hasMore: boolean;
+}
+
+export interface AdminUsersResponse {
+  adminUsers: PaginatedResponse<AdminUserRow>;
+}
+
+export interface AdminClubsResponse {
+  adminClubs: PaginatedResponse<AdminClubRow>;
+}
+
+export interface AdminDashboardStatsResponse {
+  adminDashboardStats: AdminDashboardStats;
+}
+
+export interface SuperAdminNewsResponse {
+  superAdminNewsArticles: PaginatedResponse<AdminNewsArticle>;
+}

@@ -7,7 +7,7 @@ export function mapRoleToEntityType(role: string): "USER" | "CLUB" {
   const upperRole = role.toUpperCase();
 
   // Clubs are their own entity type
-  if (upperRole === "CLUB_ADMIN") {
+  if (upperRole === "CLUB") {
     return "CLUB";
   }
 

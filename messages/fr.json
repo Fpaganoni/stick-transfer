@@ -110,7 +110,8 @@
       "roleInvalid": "Sélectionnez un rôle valide",
       "countryRequired": "Veuillez sélectionner votre pays",
       "termsRequired": "Vous devez accepter les conditions générales",
-      "cityRequired": "La ville est obligatoire"
+      "cityRequired": "La ville est obligatoire",
+      "positionRequired": "La position est obligatoire"
     },
     "roles": {
       "player": "Joueur",
@@ -637,5 +638,315 @@
     "clearAll": "Tout effacer",
     "loading": "Chargementâ€¦",
     "empty": "Pas encore de notifications"
+  },
+  "admin": {
+    "nav": {
+      "title": "Admin",
+      "sectionLabel": "Gestion",
+      "overview": "Aperçu",
+      "users": "Utilisateurs",
+      "clubs": "Clubs",
+      "jobs": "Emplois",
+      "news": "Actualités",
+      "logout": "Déconnexion"
+    },
+    "overview": {
+      "title": "Aperçu",
+      "subtitle": "Statistiques et activité de la plateforme en un coup d'œil.",
+      "stats": {
+        "totalUsers": "Utilisateurs au total",
+        "totalClubs": "Clubs au total",
+        "openJobs": "Offres ouvertes",
+        "publishedNews": "Articles publiés",
+        "newInLast30Days": "+{count} ces 30 derniers jours"
+      },
+      "charts": {
+        "usersGrowth": "Croissance des utilisateurs",
+        "usersByRole": "Utilisateurs par rôle",
+        "clubsByVerification": "Clubs par statut de vérification",
+        "applicationsByStatus": "Candidatures par statut",
+        "newsByCategory": "Actualités par catégorie"
+      },
+      "social": {
+        "title": "Engagement social",
+        "follows": "Abonnements",
+        "likes": "J'aime",
+        "conversations": "Conversations",
+        "messages": "Messages"
+      },
+      "topCountries": {
+        "title": "Principaux pays",
+        "empty": "Pas encore de données par pays."
+      },
+      "topLeagues": {
+        "title": "Principales ligues",
+        "empty": "Pas encore de données par ligue."
+      },
+      "errorTitle": "Impossible de charger les statistiques",
+      "errorDescription": "Une erreur est survenue lors du chargement de l'aperçu. Veuillez réessayer.",
+      "retry": "Réessayer"
+    },
+    "users": {
+      "title": "Utilisateurs",
+      "subtitle": "Gérez les comptes joueurs, entraîneurs, clubs et administrateurs.",
+      "table": {
+        "name": "Nom",
+        "email": "E-mail",
+        "role": "Rôle",
+        "location": "Lieu",
+        "status": "Statut",
+        "verified": "Vérifié",
+        "joined": "Inscrit le",
+        "actions": "Actions",
+        "empty": "Aucun utilisateur trouvé",
+        "emptyDescription": "Essayez d'ajuster votre recherche ou vos filtres."
+      },
+      "status": {
+        "active": "Actif",
+        "inactive": "Inactif"
+      },
+      "filters": {
+        "searchPlaceholder": "Rechercher par nom, identifiant ou e-mail…",
+        "role": "Rôle",
+        "allRoles": "Tous les rôles",
+        "status": "Statut",
+        "allStatuses": "Tous les statuts",
+        "verification": "Vérification",
+        "allVerifications": "Tous",
+        "verified": "Vérifiés",
+        "unverified": "Non vérifiés"
+      },
+      "actions": {
+        "openMenu": "Ouvrir le menu",
+        "activate": "Activer",
+        "deactivate": "Désactiver",
+        "verify": "Vérifier",
+        "unverify": "Retirer la vérification",
+        "changeRole": "Changer le rôle",
+        "confirmActivateTitle": "Activer ce compte ?",
+        "confirmActivateDescription": "{name} retrouvera immédiatement un accès complet à la plateforme.",
+        "confirmDeactivateTitle": "Désactiver ce compte ?",
+        "confirmDeactivateDescription": "{name} sera déconnecté et ne pourra pas se reconnecter tant que le compte n'est pas réactivé.",
+        "confirmVerifyTitle": "Marquer le compte comme vérifié ?",
+        "confirmVerifyDescription": "{name} obtiendra un badge vérifié visible par les autres utilisateurs.",
+        "confirmUnverifyTitle": "Retirer le statut vérifié ?",
+        "confirmUnverifyDescription": "{name} perdra son badge vérifié.",
+        "cancel": "Annuler",
+        "confirm": "Confirmer",
+        "changeRoleTitle": "Changer le rôle de l'utilisateur",
+        "changeRoleDescription": "{name} a actuellement le rôle {currentRole}. Le changer modifie immédiatement ce que cette personne peut faire sur la plateforme.",
+        "selectNewRole": "Sélectionnez un nouveau rôle",
+        "changeRoleWarning": "Action sensible : les permissions de l'utilisateur changent immédiatement et peuvent accorder ou retirer un accès administrateur.",
+        "confirmRoleChange": "Changer le rôle"
+      },
+      "toasts": {
+        "activated": "Utilisateur activé",
+        "deactivated": "Utilisateur désactivé",
+        "verified": "Utilisateur vérifié",
+        "unverified": "Vérification retirée",
+        "roleChanged": "Rôle mis à jour",
+        "actionFailed": "Impossible de terminer l'action. Veuillez réessayer."
+      }
+    },
+    "clubs": {
+      "title": "Clubs",
+      "subtitle": "Examinez les profils des clubs et gérez leur statut de vérification.",
+      "table": {
+        "name": "Club",
+        "location": "Lieu",
+        "league": "Ligue",
+        "members": "Membres",
+        "status": "Statut",
+        "joined": "Inscrit le",
+        "actions": "Actions",
+        "review": "Examiner",
+        "empty": "Aucun club trouvé",
+        "emptyDescription": "Essayez d'ajuster votre recherche ou vos filtres."
+      },
+      "filters": {
+        "searchPlaceholder": "Rechercher des clubs…",
+        "status": "Statut",
+        "allStatuses": "Tous les statuts",
+        "pendingCount": "{count} en attente d'examen"
+      },
+      "verificationStatus": {
+        "UNVERIFIED": "Non vérifié",
+        "PENDING": "En attente",
+        "VERIFIED": "Vérifié",
+        "REJECTED": "Rejeté"
+      },
+      "verificationDialog": {
+        "title": "Vérification du club",
+        "description": "Examinez le document de vérification du club puis approuvez ou rejetez la demande.",
+        "documentLabel": "Document de vérification",
+        "viewDocument": "Voir le document",
+        "noDocument": "Aucun document n'a été soumis.",
+        "reject": "Rejeter",
+        "approve": "Approuver",
+        "confirmApproveTitle": "Approuver ce club ?",
+        "confirmApproveDescription": "{name} sera marqué comme vérifié et affichera un badge vérifié sur toute la plateforme.",
+        "confirmRejectTitle": "Rejeter la vérification de ce club ?",
+        "confirmRejectDescription": "{name} sera marqué comme rejeté et devra soumettre une nouvelle demande de vérification.",
+        "cancel": "Annuler",
+        "confirm": "Confirmer"
+      },
+      "toasts": {
+        "approved": "Club approuvé",
+        "rejected": "Club rejeté",
+        "statusUpdated": "Statut de vérification mis à jour",
+        "actionFailed": "Impossible de terminer l'action. Veuillez réessayer."
+      }
+    },
+    "jobs": {
+      "title": "Emplois et candidatures",
+      "subtitle": "Parcourez les offres d'emploi et gérez les candidatures sur toute la plateforme.",
+      "tabs": {
+        "opportunities": "Offres",
+        "applications": "Candidatures"
+      },
+      "opportunities": {
+        "filters": {
+          "searchPlaceholder": "Rechercher des offres…",
+          "status": "Statut",
+          "allStatuses": "Tous les statuts"
+        },
+        "status": {
+          "OPEN": "Ouverte",
+          "CLOSED": "Fermée",
+          "FILLED": "Pourvue"
+        },
+        "table": {
+          "title": "Titre",
+          "club": "Club",
+          "position": "Poste",
+          "location": "Lieu",
+          "status": "Statut",
+          "applications": "Candidatures",
+          "expires": "Expire",
+          "empty": "Aucune offre trouvée",
+          "emptyDescription": "Essayez d'ajuster votre recherche ou vos filtres."
+        }
+      },
+      "applications": {
+        "filters": {
+          "searchPlaceholder": "Rechercher des candidats…",
+          "status": "Statut",
+          "allStatuses": "Tous les statuts"
+        },
+        "status": {
+          "PENDING": "En attente",
+          "UNDER_REVIEW": "En cours d'examen",
+          "ACCEPTED": "Acceptée",
+          "REJECTED": "Rejetée",
+          "WITHDRAWN": "Retirée"
+        },
+        "table": {
+          "applicant": "Candidat",
+          "opportunity": "Offre",
+          "club": "Club",
+          "status": "Statut",
+          "applied": "Candidature",
+          "changeStatus": "Changer le statut",
+          "empty": "Aucune candidature trouvée",
+          "emptyDescription": "Essayez d'ajuster votre recherche ou vos filtres."
+        }
+      },
+      "toasts": {
+        "applicationStatusUpdated": "Statut de la candidature mis à jour",
+        "actionFailed": "Impossible de terminer l'action. Veuillez réessayer."
+      }
+    },
+    "news": {
+      "title": "Actualités",
+      "subtitle": "Créez, modifiez et publiez des articles pour la section actualités.",
+      "newArticle": "Nouvel article",
+      "newArticleTitle": "Nouvel article",
+      "newArticleSubtitle": "Rédigez un nouvel article et enregistrez-le comme brouillon ou publiez-le immédiatement.",
+      "editArticleTitle": "Modifier l'article",
+      "notFoundTitle": "Article introuvable",
+      "notFoundDescription": "Cet article a peut-être été supprimé. Retournez à la liste des actualités et réessayez.",
+      "table": {
+        "article": "Article",
+        "category": "Catégorie",
+        "status": "Statut",
+        "publishedAt": "Publié",
+        "author": "Auteur",
+        "actions": "Actions",
+        "empty": "Aucun article trouvé",
+        "emptyDescription": "Essayez d'ajuster votre recherche ou vos filtres, ou créez un nouvel article."
+      },
+      "status": {
+        "published": "Publié",
+        "draft": "Brouillon"
+      },
+      "categories": {
+        "INTERNATIONAL": "International",
+        "NATIONAL": "National",
+        "TRANSFERS": "Transferts",
+        "EQUIPMENT": "Équipement",
+        "RESULTS": "Résultats"
+      },
+      "filters": {
+        "searchPlaceholder": "Rechercher des articles…",
+        "category": "Catégorie",
+        "allCategories": "Toutes les catégories",
+        "status": "Statut",
+        "allStatuses": "Tous les statuts"
+      },
+      "actions": {
+        "edit": "Modifier",
+        "publish": "Publier",
+        "unpublish": "Dépublier",
+        "delete": "Supprimer"
+      },
+      "confirmDeleteTitle": "Supprimer cet article ?",
+      "confirmDeleteDescription": "« {title} » sera définitivement supprimé de la section actualités. Cette action est irréversible.",
+      "cancel": "Annuler",
+      "form": {
+        "contentSection": "Contenu",
+        "contentSectionDesc": "Le titre, le résumé et le corps de l'article.",
+        "metaSection": "Métadonnées et publication",
+        "metaSectionDesc": "Catégorie, image de couverture, planification et informations sur l'auteur.",
+        "title": "Titre",
+        "slug": "Slug",
+        "slugHint": "Utilisé dans l'URL de l'article. Généré automatiquement à partir du titre — modifiez-le pour le personnaliser.",
+        "excerpt": "Résumé",
+        "content": "Corps",
+        "category": "Catégorie",
+        "readingTime": "Temps de lecture (minutes)",
+        "coverImage": "URL de l'image de couverture",
+        "publishDate": "Date de publication",
+        "publishDatePlaceholder": "Choisir une date",
+        "publishDateHint": "Facultatif. Laissez vide pour publier immédiatement en cliquant sur Publier.",
+        "authorName": "Nom de l'auteur",
+        "authorAvatar": "URL de l'avatar de l'auteur",
+        "relatedArticles": "Articles liés",
+        "relatedArticlesPlaceholder": "Sélectionner des articles liés…",
+        "relatedArticlesCount": "{count} sélectionné(s)",
+        "relatedArticlesSearch": "Rechercher des articles…",
+        "relatedArticlesEmpty": "Aucun article trouvé.",
+        "removeRelated": "Retirer",
+        "cancel": "Annuler",
+        "saveDraft": "Enregistrer le brouillon",
+        "publish": "Publier",
+        "validation": {
+          "titleMin": "Le titre doit comporter au moins 3 caractères.",
+          "slugMin": "Le slug doit comporter au moins 3 caractères.",
+          "slugFormat": "Le slug ne peut contenir que des minuscules, des chiffres et des tirets.",
+          "excerptMin": "Le résumé doit comporter au moins 10 caractères.",
+          "excerptMax": "Le résumé ne peut pas dépasser 280 caractères.",
+          "contentMin": "Le corps doit comporter au moins 20 caractères.",
+          "urlInvalid": "Saisissez une URL valide."
+        }
+      },
+      "toasts": {
+        "created": "Article créé",
+        "updated": "Article mis à jour",
+        "deleted": "Article supprimé",
+        "published": "Article publié",
+        "unpublished": "Article dépublié",
+        "actionFailed": "Impossible de terminer l'action. Veuillez réessayer."
+      }
+    }
   }
 }

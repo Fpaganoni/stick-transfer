@@ -110,7 +110,8 @@
       "roleInvalid": "Select a valid role",
       "countryRequired": "Please select your country",
       "termsRequired": "You must accept the terms and conditions",
-      "cityRequired": "City is required"
+      "cityRequired": "City is required",
+      "positionRequired": "Position is required"
     },
     "roles": {
       "player": "Player",
@@ -637,5 +638,315 @@
     "clearAll": "Clear all",
     "loading": "Loadingâ€¦",
     "empty": "No notifications yet"
+  },
+  "admin": {
+    "nav": {
+      "title": "Admin",
+      "sectionLabel": "Management",
+      "overview": "Overview",
+      "users": "Users",
+      "clubs": "Clubs",
+      "jobs": "Jobs",
+      "news": "News",
+      "logout": "Log out"
+    },
+    "overview": {
+      "title": "Overview",
+      "subtitle": "Platform-wide stats and activity at a glance.",
+      "stats": {
+        "totalUsers": "Total users",
+        "totalClubs": "Total clubs",
+        "openJobs": "Open jobs",
+        "publishedNews": "Published articles",
+        "newInLast30Days": "+{count} in the last 30 days"
+      },
+      "charts": {
+        "usersGrowth": "User growth",
+        "usersByRole": "Users by role",
+        "clubsByVerification": "Clubs by verification status",
+        "applicationsByStatus": "Applications by status",
+        "newsByCategory": "News by category"
+      },
+      "social": {
+        "title": "Social engagement",
+        "follows": "Follows",
+        "likes": "Likes",
+        "conversations": "Conversations",
+        "messages": "Messages"
+      },
+      "topCountries": {
+        "title": "Top countries",
+        "empty": "No country data yet."
+      },
+      "topLeagues": {
+        "title": "Top leagues",
+        "empty": "No league data yet."
+      },
+      "errorTitle": "Couldn't load dashboard stats",
+      "errorDescription": "Something went wrong while fetching the overview data. Please try again.",
+      "retry": "Retry"
+    },
+    "users": {
+      "title": "Users",
+      "subtitle": "Manage player, coach, club and admin accounts.",
+      "table": {
+        "name": "Name",
+        "email": "Email",
+        "role": "Role",
+        "location": "Location",
+        "status": "Status",
+        "verified": "Verified",
+        "joined": "Joined",
+        "actions": "Actions",
+        "empty": "No users found",
+        "emptyDescription": "Try adjusting your search or filters."
+      },
+      "status": {
+        "active": "Active",
+        "inactive": "Inactive"
+      },
+      "filters": {
+        "searchPlaceholder": "Search by name, username or email…",
+        "role": "Role",
+        "allRoles": "All roles",
+        "status": "Status",
+        "allStatuses": "All statuses",
+        "verification": "Verification",
+        "allVerifications": "All",
+        "verified": "Verified",
+        "unverified": "Unverified"
+      },
+      "actions": {
+        "openMenu": "Open menu",
+        "activate": "Activate",
+        "deactivate": "Deactivate",
+        "verify": "Verify",
+        "unverify": "Unverify",
+        "changeRole": "Change role",
+        "confirmActivateTitle": "Activate this account?",
+        "confirmActivateDescription": "{name} will regain full access to the platform immediately.",
+        "confirmDeactivateTitle": "Deactivate this account?",
+        "confirmDeactivateDescription": "{name} will be signed out and won't be able to log in until reactivated.",
+        "confirmVerifyTitle": "Mark account as verified?",
+        "confirmVerifyDescription": "{name} will get a verified badge visible to other users.",
+        "confirmUnverifyTitle": "Remove verified status?",
+        "confirmUnverifyDescription": "{name} will lose their verified badge.",
+        "cancel": "Cancel",
+        "confirm": "Confirm",
+        "changeRoleTitle": "Change user role",
+        "changeRoleDescription": "{name} currently has the {currentRole} role. Changing it immediately changes what they can access on the platform.",
+        "selectNewRole": "Select a new role",
+        "changeRoleWarning": "This is a sensitive action — the user's permissions change immediately and may grant or revoke admin access.",
+        "confirmRoleChange": "Change role"
+      },
+      "toasts": {
+        "activated": "User activated",
+        "deactivated": "User deactivated",
+        "verified": "User verified",
+        "unverified": "User unverified",
+        "roleChanged": "User role updated",
+        "actionFailed": "Couldn't complete the action. Please try again."
+      }
+    },
+    "clubs": {
+      "title": "Clubs",
+      "subtitle": "Review club profiles and manage verification status.",
+      "table": {
+        "name": "Club",
+        "location": "Location",
+        "league": "League",
+        "members": "Members",
+        "status": "Status",
+        "joined": "Joined",
+        "actions": "Actions",
+        "review": "Review",
+        "empty": "No clubs found",
+        "emptyDescription": "Try adjusting your search or filters."
+      },
+      "filters": {
+        "searchPlaceholder": "Search clubs…",
+        "status": "Status",
+        "allStatuses": "All statuses",
+        "pendingCount": "{count} pending review"
+      },
+      "verificationStatus": {
+        "UNVERIFIED": "Unverified",
+        "PENDING": "Pending",
+        "VERIFIED": "Verified",
+        "REJECTED": "Rejected"
+      },
+      "verificationDialog": {
+        "title": "Club verification",
+        "description": "Review the club's verification document and approve or reject the request.",
+        "documentLabel": "Verification document",
+        "viewDocument": "View document",
+        "noDocument": "No document was submitted.",
+        "reject": "Reject",
+        "approve": "Approve",
+        "confirmApproveTitle": "Approve this club?",
+        "confirmApproveDescription": "{name} will be marked as verified and shown with a verified badge across the platform.",
+        "confirmRejectTitle": "Reject this club's verification?",
+        "confirmRejectDescription": "{name} will be marked as rejected and will need to resubmit their verification request.",
+        "cancel": "Cancel",
+        "confirm": "Confirm"
+      },
+      "toasts": {
+        "approved": "Club approved",
+        "rejected": "Club rejected",
+        "statusUpdated": "Verification status updated",
+        "actionFailed": "Couldn't complete the action. Please try again."
+      }
+    },
+    "jobs": {
+      "title": "Jobs & Applications",
+      "subtitle": "Browse job opportunities and manage applications platform-wide.",
+      "tabs": {
+        "opportunities": "Opportunities",
+        "applications": "Applications"
+      },
+      "opportunities": {
+        "filters": {
+          "searchPlaceholder": "Search opportunities…",
+          "status": "Status",
+          "allStatuses": "All statuses"
+        },
+        "status": {
+          "OPEN": "Open",
+          "CLOSED": "Closed",
+          "FILLED": "Filled"
+        },
+        "table": {
+          "title": "Title",
+          "club": "Club",
+          "position": "Position",
+          "location": "Location",
+          "status": "Status",
+          "applications": "Applications",
+          "expires": "Expires",
+          "empty": "No opportunities found",
+          "emptyDescription": "Try adjusting your search or filters."
+        }
+      },
+      "applications": {
+        "filters": {
+          "searchPlaceholder": "Search applicants…",
+          "status": "Status",
+          "allStatuses": "All statuses"
+        },
+        "status": {
+          "PENDING": "Pending",
+          "UNDER_REVIEW": "Under review",
+          "ACCEPTED": "Accepted",
+          "REJECTED": "Rejected",
+          "WITHDRAWN": "Withdrawn"
+        },
+        "table": {
+          "applicant": "Applicant",
+          "opportunity": "Opportunity",
+          "club": "Club",
+          "status": "Status",
+          "applied": "Applied",
+          "changeStatus": "Change status",
+          "empty": "No applications found",
+          "emptyDescription": "Try adjusting your search or filters."
+        }
+      },
+      "toasts": {
+        "applicationStatusUpdated": "Application status updated",
+        "actionFailed": "Couldn't complete the action. Please try again."
+      }
+    },
+    "news": {
+      "title": "News",
+      "subtitle": "Create, edit and publish articles for the news section.",
+      "newArticle": "New article",
+      "newArticleTitle": "New article",
+      "newArticleSubtitle": "Write a new article and save it as a draft or publish it right away.",
+      "editArticleTitle": "Edit article",
+      "notFoundTitle": "Article not found",
+      "notFoundDescription": "This article may have been deleted. Go back to the news list and try again.",
+      "table": {
+        "article": "Article",
+        "category": "Category",
+        "status": "Status",
+        "publishedAt": "Published",
+        "author": "Author",
+        "actions": "Actions",
+        "empty": "No articles found",
+        "emptyDescription": "Try adjusting your search or filters, or create a new article."
+      },
+      "status": {
+        "published": "Published",
+        "draft": "Draft"
+      },
+      "categories": {
+        "INTERNATIONAL": "International",
+        "NATIONAL": "National",
+        "TRANSFERS": "Transfers",
+        "EQUIPMENT": "Equipment",
+        "RESULTS": "Results"
+      },
+      "filters": {
+        "searchPlaceholder": "Search articles…",
+        "category": "Category",
+        "allCategories": "All categories",
+        "status": "Status",
+        "allStatuses": "All statuses"
+      },
+      "actions": {
+        "edit": "Edit",
+        "publish": "Publish",
+        "unpublish": "Unpublish",
+        "delete": "Delete"
+      },
+      "confirmDeleteTitle": "Delete this article?",
+      "confirmDeleteDescription": "\"{title}\" will be permanently deleted and removed from the news section. This cannot be undone.",
+      "cancel": "Cancel",
+      "form": {
+        "contentSection": "Content",
+        "contentSectionDesc": "The article's headline, summary and body copy.",
+        "metaSection": "Metadata & publishing",
+        "metaSectionDesc": "Category, cover image, schedule and author details.",
+        "title": "Title",
+        "slug": "Slug",
+        "slugHint": "Used in the article's URL. Auto-generated from the title — edit it to override.",
+        "excerpt": "Excerpt",
+        "content": "Body",
+        "category": "Category",
+        "readingTime": "Reading time (minutes)",
+        "coverImage": "Cover image URL",
+        "publishDate": "Publish date",
+        "publishDatePlaceholder": "Pick a date",
+        "publishDateHint": "Optional. Leave empty to publish immediately when you hit Publish.",
+        "authorName": "Author name",
+        "authorAvatar": "Author avatar URL",
+        "relatedArticles": "Related articles",
+        "relatedArticlesPlaceholder": "Select related articles…",
+        "relatedArticlesCount": "{count} selected",
+        "relatedArticlesSearch": "Search articles…",
+        "relatedArticlesEmpty": "No articles found.",
+        "removeRelated": "Remove",
+        "cancel": "Cancel",
+        "saveDraft": "Save draft",
+        "publish": "Publish",
+        "validation": {
+          "titleMin": "Title must be at least 3 characters.",
+          "slugMin": "Slug must be at least 3 characters.",
+          "slugFormat": "Slug can only contain lowercase letters, numbers and hyphens.",
+          "excerptMin": "Excerpt must be at least 10 characters.",
+          "excerptMax": "Excerpt can't exceed 280 characters.",
+          "contentMin": "Body must be at least 20 characters.",
+          "urlInvalid": "Enter a valid URL."
+        }
+      },
+      "toasts": {
+        "created": "Article created",
+        "updated": "Article updated",
+        "deleted": "Article deleted",
+        "published": "Article published",
+        "unpublished": "Article unpublished",
+        "actionFailed": "Couldn't complete the action. Please try again."
+      }
+    }
   }
 }

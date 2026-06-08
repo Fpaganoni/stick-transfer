@@ -19,6 +19,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { GraphQLError } from "@/types/graphql-error";
+import { Role } from "@/types/enums";
 
 const BACKEND_URL =
   typeof process !== "undefined"
@@ -52,7 +53,7 @@ function XIcon() {
 export function LoginPage() {
   const t = useTranslations("auth");
   const locale = useLocale();
-  const { openRegisterModal } = useUIStore();
+  const { openRegisterModal, closeLoginModal } = useUIStore();
 
   const loginSchema = z.object({
     email: z
@@ -96,7 +97,13 @@ export function LoginPage() {
           });
           const fullUser = response.user;
           login(fullUser, token);
-          router.push(`/${locale}/opportunities`);
+          closeLoginModal();
+          const localePrefix = locale === "en" ? "" : `/${locale}`;
+          router.push(
+            fullUser.role === Role.SUPERADMIN
+              ? `${localePrefix}/admin`
+              : `${localePrefix}/opportunities`
+          );
         },
         onError: (err) => {
           const errorMsj =

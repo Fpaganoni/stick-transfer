@@ -50,7 +50,7 @@ const ROLE_CARDS: RoleCard[] = [
   { id: "player", icon: "🏃", backendRole: "PLAYER" },
   { id: "goalkeeper", icon: "🥅", backendRole: "PLAYER" },
   { id: "coach", icon: "📋", backendRole: "COACH" },
-  { id: "clubAdmin", icon: "🏟️", backendRole: "CLUB_ADMIN" },
+  { id: "clubAdmin", icon: "🏟️", backendRole: "CLUB" },
   { id: "scout", icon: "🔍", backendRole: "COACH" },
   { id: "agent", icon: "💼", backendRole: "PLAYER" },
 ];

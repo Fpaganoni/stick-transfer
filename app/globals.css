@@ -24,6 +24,20 @@
   --accent-foreground: oklch(1 0 0); /* #FFFFFF - Texto blanco sobre accent */
   --accent-soft: oklch(0.95 0.04 145); /* #E8F7EC - Fondos sutiles */
 
+  /* === TOKENS SEMÁNTICOS (shadcn) === */
+  --primary-foreground: var(--white-black);
+  --card: var(--surface);
+  --card-foreground: var(--foreground);
+  --popover: var(--surface);
+  --popover-foreground: var(--foreground);
+  --secondary: var(--surface-elevated);
+  --secondary-foreground: var(--foreground);
+  --muted: var(--surface-elevated);
+  --muted-foreground: var(--foreground-muted);
+  --destructive: var(--error);
+  --destructive-foreground: var(--pure-white);
+  --ring: var(--primary);
+
   /* === ESTADOS === */
   --success: oklch(0.6 0.15 145); /* #27AE60 - Verde éxito */
   --warning: oklch(0.7 0.15 65); /* #F39C12 - Amarillo alerta */
@@ -36,6 +50,16 @@
   --border-strong: oklch(
     0.6 0.04 70
   ); /* #897E72 - Bordes MUY VISIBLES (oscuro) */
+
+  /* === SIDEBAR === */
+  --sidebar: var(--surface);
+  --sidebar-foreground: var(--foreground);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--white-black);
+  --sidebar-accent: var(--primary-soft);
+  --sidebar-accent-foreground: var(--primary);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--primary);
 
   /* === OVERLAYS === */
   --overlay: oklch(0.15 0 0 / 0.4); /* Negro con opacidad para modales */
@@ -93,6 +117,20 @@
   ); /* Texto oscuro sobre accent claro */
   --accent-soft: oklch(0.28 0.03 145); /* #1E3325 - Fondos sutiles */
 
+  /* === TOKENS SEMÁNTICOS (shadcn) === */
+  --primary-foreground: var(--white-black);
+  --card: var(--surface);
+  --card-foreground: var(--foreground);
+  --popover: var(--surface);
+  --popover-foreground: var(--foreground);
+  --secondary: var(--surface-elevated);
+  --secondary-foreground: var(--foreground);
+  --muted: var(--surface-elevated);
+  --muted-foreground: var(--foreground-muted);
+  --destructive: var(--error);
+  --destructive-foreground: var(--pure-white);
+  --ring: var(--primary);
+
   /* === ESTADOS === */
   --success: oklch(0.65 0.14 145); /* #52C97E - Verde éxito claro */
   --warning: oklch(0.75 0.13 65); /* #F5B56F - Amarillo alerta claro */
@@ -105,6 +143,16 @@
   --border-strong: oklch(
     0.55 0.04 70
   ); /* #847869 - Bordes MUY VISIBLES (claro) */
+
+  /* === SIDEBAR === */
+  --sidebar: var(--surface);
+  --sidebar-foreground: var(--foreground);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--white-black);
+  --sidebar-accent: var(--primary-soft);
+  --sidebar-accent-foreground: var(--primary);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--primary);
 
   /* === OVERLAYS === */
   --overlay: oklch(0.1 0 0 / 0.6); /* Negro con opacidad para modales */
@@ -130,12 +178,9 @@
 }
 
 @theme inline {
-  --color-primary: #18283e;
   --color-primary-light: #1f3a52;
-  --color-accent: #4caf50;
   --color-accent-bright: #b1e4e4;
   --color-accent-dark: #2e7d32;
-  --color-background: #18283e;
   --color-surface: #1f3a52;
   --color-surface-light: #243550;
   --color-text: #ffffff;
@@ -161,11 +206,12 @@
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
   --color-primary: var(--primary);
-  --color-primary-contrast: var(--primary-contrast);
   --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
 
   --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
 
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
@@ -187,12 +233,10 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
-  --color-turf: var(--turf);
 
   /* NEW COLORS*/
   --color-primary-hover: var(--primary-hover);
   --color-foreground-muted: var(--foreground-muted);
-  --color-primary-foreground: var(--primary-foreground);
   --color-border: var(--border);
   --color-border-strong: var(--border-strong);
   --color-white-black: var(--white-black);
