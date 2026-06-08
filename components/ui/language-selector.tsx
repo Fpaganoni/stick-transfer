@@ -9,6 +9,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { sidebarMenuButtonVariants } from "@/components/ui/sidebar";
+import { cn } from "@/lib/utils";
 
 const languages = [
   { code: "en", name: "English", flag: "🇺🇸" },
@@ -18,8 +20,14 @@ const languages = [
 
 import { useState, useEffect } from "react";
 
-export function LanguageSelector() {
+interface LanguageSelectorProps {
+  /** "chip" keeps the existing pill look; "toolbar" matches the unified topbar buttons (Header). */
+  variant?: "chip" | "toolbar";
+}
+
+export function LanguageSelector({ variant = "chip" }: LanguageSelectorProps) {
   const [mounted, setMounted] = useState(false);
+  const [open, setOpen] = useState(false);
   const locale = useLocale();
   const router = useRouter();
   const pathname = usePathname();
@@ -61,7 +69,11 @@ export function LanguageSelector() {
   const currentLanguage = languages.find((lang) => lang.code === locale);
 
   if (!mounted) {
-    return (
+    return variant === "toolbar" ? (
+      <div className="flex size-9 items-center justify-center rounded-md text-foreground opacity-50">
+        <Globe size={20} />
+      </div>
+    ) : (
       <div className="flex items-center gap-2 h-9 px-4 py-2 rounded-lg bg-input/30 text-foreground opacity-50">
         <Globe size={20} />
       </div>
@@ -69,10 +81,24 @@ export function LanguageSelector() {
   }
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger className="flex items-center gap-2 h-9 px-4 py-2 rounded-lg bg-input/30 hover:bg-input/80 text-foreground transition-colors">
-        <Globe size={20} />
-        <span className="hidden md:inline">{currentLanguage?.flag}</span>
+    <DropdownMenu open={open} onOpenChange={setOpen}>
+      <DropdownMenuTrigger
+        aria-label="Language"
+        data-active={variant === "toolbar" ? open : undefined}
+        className={
+          variant === "toolbar"
+            ? cn(sidebarMenuButtonVariants({ size: "topbar" }))
+            : "flex items-center gap-2 h-9 px-4 py-2 rounded-lg bg-input/30 hover:bg-input/80 text-foreground transition-colors"
+        }
+      >
+        {variant === "toolbar" ? (
+          <Globe />
+        ) : (
+          <>
+            <Globe size={20} />
+            <span className="hidden md:inline">{currentLanguage?.flag}</span>
+          </>
+        )}
       </DropdownMenuTrigger>
       <DropdownMenuContent className="bg-input" align="end">
         {languages.map((language) => (

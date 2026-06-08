@@ -193,9 +193,9 @@ export const ThemeToggleButton = ({
       aria-label={`Switch to ${theme === "light" ? "dark" : "light"} theme`}
     >
       {theme === "light" ? (
-        <Moon className="h-[1.2rem] w-[1.2rem]" />
+        <Moon className="size-5" />
       ) : (
-        <Sun className="h-[1.2rem] w-[1.2rem]" />
+        <Sun className="size-5" />
       )}
       {showLabel && (
         <span className="text-sm">{theme === "light" ? "Dark" : "Light"}</span>

@@ -2,6 +2,8 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { ThemeToggleButton, useThemeTransition } from "./toggleThemeRight";
+import { sidebarMenuButtonVariants } from "./sidebar";
+import { cn } from "@/lib/utils";
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [, setTheme] = useState<"light" | "dark">("light");
@@ -68,7 +70,7 @@ export function ThemeToggleControl() {
     <ThemeToggleButton
       theme={theme}
       onClick={toggleTheme}
-      className="w-8 h-8 rounded-sm bg-background-gradient border-2 border-primary hover:border-primary text-foreground text-sm hover:bg-primary hover:text-background shadow-lg"
+      className={cn(sidebarMenuButtonVariants({ size: "topbar" }), "border-0")}
     />
   );
 }

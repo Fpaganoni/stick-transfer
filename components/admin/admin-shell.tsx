@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import {
@@ -32,10 +33,9 @@ import {
   BreadcrumbPage,
 } from "@/components/ui/breadcrumb";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { LanguageSelector } from "@/components/ui/language-selector";
-import { ThemeToggleButton } from "@/components/ui/toggleThemeRight";
+import { ThemeToggleControl } from "@/components/ui/theme-provider";
 import { useAuthStore } from "@/stores/useAuthStore";
 
 interface AdminShellProps {
@@ -43,6 +43,7 @@ interface AdminShellProps {
 }
 
 export function AdminShell({ children }: AdminShellProps) {
+  const [showLogout, setShowLogout] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
   const t = useTranslations("admin.nav");
@@ -125,9 +126,9 @@ export function AdminShell({ children }: AdminShellProps) {
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
-          <div className="ml-auto flex items-center gap-2">
-            <LanguageSelector />
-            <ThemeToggleButton />
+          <div className="ml-auto flex items-center gap-3">
+            <LanguageSelector variant="toolbar" />
+            <ThemeToggleControl />
             <div className="flex items-center gap-2 pl-2">
               <Avatar className="size-8">
                 <AvatarImage src={user?.avatar} alt={user?.name} />
@@ -135,9 +136,24 @@ export function AdminShell({ children }: AdminShellProps) {
               </Avatar>
               <span className="hidden text-sm font-medium sm:inline">{user?.name}</span>
             </div>
-            <Button variant="ghost" size="icon" onClick={handleLogout} title={t("logout")}>
-              <LogOut className="size-4" />
-            </Button>
+            <div className="relative">
+              <SidebarMenuButton
+                size="topbar"
+                isActive={showLogout}
+                onClick={() => setShowLogout(!showLogout)}
+                aria-label={t("logout")}
+              >
+                <LogOut />
+              </SidebarMenuButton>
+              {showLogout && (
+                <button
+                  onClick={handleLogout}
+                  className="absolute right-0 top-full mt-2 px-4 py-2 bg-background border border-border rounded-md text-foreground text-sm hover:bg-sidebar-accent hover:text-sidebar-accent-foreground shadow-lg transition-colors cursor-pointer whitespace-nowrap z-50"
+                >
+                  {t("logout")}
+                </button>
+              )}
+            </div>
           </div>
         </header>
         <main className="flex flex-1 flex-col gap-4 p-4 md:p-6">{children}</main>

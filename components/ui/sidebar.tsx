@@ -7,7 +7,6 @@ import { PanelLeftIcon } from "lucide-react";
 
 import { useIsMobile } from "@/hooks/ui/use-mobile";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -257,16 +256,16 @@ function SidebarTrigger({
   className,
   onClick,
   ...props
-}: React.ComponentProps<typeof Button>) {
-  const { toggleSidebar } = useSidebar();
+}: React.ComponentProps<typeof SidebarMenuButton>) {
+  const { isMobile, open, openMobile, toggleSidebar } = useSidebar();
 
   return (
-    <Button
+    <SidebarMenuButton
       data-sidebar="trigger"
       data-slot="sidebar-trigger"
-      variant="ghost"
-      size="icon"
-      className={cn("size-7", className)}
+      size="topbar"
+      isActive={isMobile ? openMobile : open}
+      className={className}
       onClick={(event) => {
         onClick?.(event);
         toggleSidebar();
@@ -275,7 +274,7 @@ function SidebarTrigger({
     >
       <PanelLeftIcon />
       <span className="sr-only">Toggle Sidebar</span>
-    </Button>
+    </SidebarMenuButton>
   );
 }
 
@@ -486,6 +485,7 @@ const sidebarMenuButtonVariants = cva(
         default: "h-10 text-sm",
         sm: "h-7 text-xs",
         lg: "h-12 text-sm group-data-[collapsible=icon]:p-0!",
+        topbar: "h-9 w-9 justify-center gap-0 p-0",
       },
     },
     defaultVariants: {
@@ -719,5 +719,6 @@ export {
   SidebarRail,
   SidebarSeparator,
   SidebarTrigger,
+  sidebarMenuButtonVariants,
   useSidebar,
 };

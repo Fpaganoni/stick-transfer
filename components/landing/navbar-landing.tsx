@@ -83,7 +83,7 @@ export function NavbarLanding() {
 
         {/* Desktop CTAs */}
         <div className="hidden md:flex items-center gap-4">
-          <LanguageSelector />
+          <LanguageSelector variant="toolbar" />
           <ThemeToggleControl />
 
           {!mounted ? (
@@ -191,7 +191,7 @@ export function NavbarLanding() {
                 </a>
               ))}
               <div className="flex flex-col gap-2 pt-4 border-t border-border">
-                <LanguageSelector />
+                <LanguageSelector variant="toolbar" />
                 <ThemeToggleControl />
 
                 {!mounted ? (
