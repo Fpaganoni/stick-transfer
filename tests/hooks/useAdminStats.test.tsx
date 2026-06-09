@@ -26,15 +26,42 @@ function wrapper() {
 
 const mockStats = {
   adminDashboardStats: {
-    totalUsers: 120,
-    totalClubs: 14,
-    totalJobOpportunities: 32,
-    totalNewsArticles: 8,
-    usersByRole: [{ role: "PLAYER", count: 100 }],
-    clubsByVerificationStatus: [{ status: "VERIFIED", count: 10 }],
-    applicationsByStatus: [{ status: "PENDING", count: 5 }],
-    newsByCategory: [{ category: "TRANSFERS", count: 3 }],
-    userGrowth: [{ date: "2026-06-01", count: 4 }],
+    users: {
+      total: 120,
+      byRole: [{ role: "PLAYER", count: 100 }],
+      active: 100,
+      inactive: 20,
+      verified: 90,
+      emailVerified: 85,
+      newLast30Days: 10,
+      growth: [{ date: "2026-06-01", count: 4 }],
+      byCountry: [],
+    },
+    clubs: {
+      total: 14,
+      byVerificationStatus: [{ status: "VERIFIED", count: 10 }],
+      newLast30Days: 2,
+      byLeague: [],
+    },
+    jobs: {
+      totalOpportunities: 32,
+      byStatus: [],
+      totalApplications: 5,
+      applicationsByStatus: [{ status: "PENDING", count: 5 }],
+      savedJobsTotal: 0,
+    },
+    social: {
+      totalFollows: 0,
+      totalLikes: 0,
+      totalConversations: 0,
+      totalMessages: 0,
+    },
+    news: {
+      total: 8,
+      published: 6,
+      drafts: 2,
+      byCategory: [{ category: "TRANSFERS", count: 3 }],
+    },
   },
 };
 
@@ -47,7 +74,7 @@ describe("useAdminStats", () => {
     const { result } = renderHook(() => useAdminStats(), { wrapper: wrapper() });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(result.current.data?.adminDashboardStats.totalUsers).toBe(120);
+    expect(result.current.data?.adminDashboardStats.users.total).toBe(120);
     expect(mockRequest).toHaveBeenCalledTimes(1);
   });
 
