@@ -67,7 +67,7 @@ export function AdminShell({ children }: AdminShellProps) {
 
   const handleLogout = () => {
     logout();
-    router.replace("/login");
+    router.replace(localePrefix || "/");
   };
 
   return (
