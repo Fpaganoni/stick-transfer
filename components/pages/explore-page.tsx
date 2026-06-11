@@ -54,7 +54,6 @@ export function ExplorePage() {
   const roleOptions = [
     { value: "PLAYER", label: t("roles.player") },
     { value: "COACH", label: t("roles.coach") },
-    { value: "CLUB", label: t("roles.clubAdmin") },
   ];
 
   const positionOptions = [

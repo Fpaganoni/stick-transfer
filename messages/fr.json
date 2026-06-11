@@ -66,6 +66,7 @@
     "termsAndConditions": "J'accepte les Conditions Générales",
     "preferredPosition": "Position Préférée",
     "city": "Ville",
+    "clubName": "Nom du Club",
     "role": "Rôle",
     "stepRoleTitle": "Choisissez votre rôle",
     "stepBasicTitle": "Informations de base",
@@ -85,7 +86,8 @@
       "role": "Joueur | Entraîneur | Club",
       "country": "Sélectionnez votre pays",
       "preferredPosition": "Sélectionnez votre position",
-      "city": "ex. Paris"
+      "city": "ex. Paris",
+      "clubName": "ex. Club de Hockey de Paris"
     },
     "submitButton": "S'inscrire",
     "submitting": "Inscription...",
@@ -111,7 +113,8 @@
       "countryRequired": "Veuillez sélectionner votre pays",
       "termsRequired": "Vous devez accepter les conditions générales",
       "cityRequired": "La ville est obligatoire",
-      "positionRequired": "La position est obligatoire"
+      "positionRequired": "La position est obligatoire",
+      "clubNameRequired": "Le nom du club doit contenir au moins 2 caractères"
     },
     "roles": {
       "player": "Joueur",
@@ -632,6 +635,9 @@
     "CLUB_INVITE": "{actorName} vous a invitÃ© Ã  rejoindre un club.",
     "CLUB_ACCEPT": "{actorName} a acceptÃ© votre invitation au club.",
     "JOB_APPLICATION_UPDATE": "{actorName} a mis Ã  jour le statut de votre candidature.",
+    "CLUB_PENDING_VERIFICATION": "Un nouveau club est en attente de vérification.",
+    "CLUB_VERIFIED": "Votre club a été vérifié.",
+    "REPORT_RECEIVED": "Un nouveau signalement a été reçu.",
     "title": "Notifications",
     "markAllRead": "Tout marquer comme lu",
     "remove": "Supprimer la notification",

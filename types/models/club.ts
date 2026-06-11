@@ -37,7 +37,8 @@ export interface Club {
   members?: ClubMember[];
   // TODO: add videos to GraphQL schema when backend supports it
   videos?: string[];
-  admin?: {
+  user?: {
+    id: string;
     avatar?: string;
   };
 }

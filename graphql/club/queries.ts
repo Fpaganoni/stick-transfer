@@ -16,7 +16,8 @@ export const GET_CLUBS = gql`
       country
       league
       isVerified
-      admin {
+      user {
+        id
         avatar
       }
     }

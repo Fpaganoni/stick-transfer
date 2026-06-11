@@ -66,6 +66,7 @@
     "termsAndConditions": "I agree to the Terms and Conditions",
     "preferredPosition": "Preferred Position",
     "city": "City",
+    "clubName": "Club Name",
     "role": "Role",
     "stepRoleTitle": "Choose your role",
     "stepBasicTitle": "Basic Information",
@@ -85,7 +86,8 @@
       "role": "Player | Coach | Club",
       "country": "Select your country",
       "preferredPosition": "Select your position",
-      "city": "e.g. Amsterdam"
+      "city": "e.g. Amsterdam",
+      "clubName": "e.g. Amsterdam Hockey Club"
     },
     "submitButton": "Register",
     "submitting": "Registering...",
@@ -111,7 +113,8 @@
       "countryRequired": "Please select your country",
       "termsRequired": "You must accept the terms and conditions",
       "cityRequired": "City is required",
-      "positionRequired": "Position is required"
+      "positionRequired": "Position is required",
+      "clubNameRequired": "Club name must be at least 2 characters"
     },
     "roles": {
       "player": "Player",
@@ -632,6 +635,9 @@
     "CLUB_INVITE": "{actorName} invited you to join a club.",
     "CLUB_ACCEPT": "{actorName} accepted your club invitation.",
     "JOB_APPLICATION_UPDATE": "{actorName} updated the status of your job application.",
+    "CLUB_PENDING_VERIFICATION": "A new club is pending verification.",
+    "CLUB_VERIFIED": "Your club has been verified.",
+    "REPORT_RECEIVED": "A new report has been submitted.",
     "title": "Notifications",
     "markAllRead": "Mark all as read",
     "remove": "Remove notification",

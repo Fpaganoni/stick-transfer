@@ -10,6 +10,9 @@ import {
   RefreshCw,
   X,
   Trash2,
+  Building2,
+  BadgeCheck,
+  Flag,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
@@ -36,6 +39,15 @@ const TYPE_ICON: Record<NotificationType, React.ReactNode> = {
   [NotificationType.JOB_APPLICATION_UPDATE]: (
     <Briefcase size={12} className="text-primary" />
   ),
+  [NotificationType.CLUB_PENDING_VERIFICATION]: (
+    <Building2 size={12} className="text-warning" />
+  ),
+  [NotificationType.CLUB_VERIFIED]: (
+    <BadgeCheck size={12} className="text-accent" />
+  ),
+  [NotificationType.REPORT_RECEIVED]: (
+    <Flag size={12} className="text-error" />
+  ),
 };
 
 function resolveNotificationHref(
@@ -49,6 +61,20 @@ function resolveNotificationHref(
     type === NotificationType.CLUB_ACCEPT
   ) {
     return `/${locale}/clubs`;
+  }
+
+  if (type === NotificationType.CLUB_PENDING_VERIFICATION) {
+    return `/${locale}/admin/clubs`;
+  }
+
+  if (type === NotificationType.CLUB_VERIFIED) {
+    return notification.entityId
+      ? `/${locale}/clubs/${notification.entityId}`
+      : `/${locale}/clubs`;
+  }
+
+  if (type === NotificationType.REPORT_RECEIVED) {
+    return `/${locale}/admin/reports`;
   }
 
   return null;

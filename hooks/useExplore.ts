@@ -22,8 +22,8 @@ export function useExploreUsers(filters: ExploreFilters = {}) {
 
   return useQuery<ExploreUsersResponse>({
     queryKey: ["explore", searchQuery, role, position, level, country, limit, offset],
-    queryFn: () =>
-      graphqlClient.request<ExploreUsersResponse>(EXPLORE_USERS_QUERY, {
+    queryFn: async () => {
+      const data = await graphqlClient.request<ExploreUsersResponse>(EXPLORE_USERS_QUERY, {
         searchQuery: searchQuery || undefined,
         role: role || undefined,
         position: position || undefined,
@@ -31,6 +31,11 @@ export function useExploreUsers(filters: ExploreFilters = {}) {
         country: country || undefined,
         limit,
         offset,
-      }),
+      });
+      // Fallback filter: club users have their own /clubs listing, never show in /explore
+      return {
+        exploreUsers: data.exploreUsers.filter((u) => u.role !== "CLUB"),
+      };
+    },
   });
 }
