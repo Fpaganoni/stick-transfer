@@ -53,12 +53,9 @@ export function useUpdateReportStatus() {
       queryClient.setQueriesData<ReportsResponse>({ queryKey: REPORTS_KEY }, (old) => {
         if (!old) return old;
         return {
-          reports: {
-            ...old.reports,
-            items: old.reports.items.map((item: Report) =>
-              item.id === id ? { ...item, status } : item
-            ),
-          },
+          reports: old.reports.map((item: Report) =>
+            item.id === id ? { ...item, status } : item
+          ),
         };
       });
 
