@@ -26,42 +26,33 @@ function wrapper() {
 
 const mockStats = {
   adminDashboardStats: {
-    users: {
-      total: 120,
-      byRole: [{ role: "PLAYER", count: 100 }],
-      active: 100,
-      inactive: 20,
-      verified: 90,
-      emailVerified: 85,
-      newLast30Days: 10,
-      growth: [{ date: "2026-06-01", count: 4 }],
-      byCountry: [],
-    },
-    clubs: {
-      total: 14,
-      byVerificationStatus: [{ status: "VERIFIED", count: 10 }],
-      newLast30Days: 2,
-      byLeague: [],
-    },
-    jobs: {
-      totalOpportunities: 32,
-      byStatus: [],
-      totalApplications: 5,
-      applicationsByStatus: [{ status: "PENDING", count: 5 }],
-      savedJobsTotal: 0,
-    },
-    social: {
-      totalFollows: 0,
-      totalLikes: 0,
-      totalConversations: 0,
-      totalMessages: 0,
-    },
-    news: {
-      total: 8,
-      published: 6,
-      drafts: 2,
-      byCategory: [{ category: "TRANSFERS", count: 3 }],
-    },
+    totalUsersCount: 120,
+    playersCount: 100,
+    coachesCount: 12,
+    clubsCount: 14,
+    superAdminsCount: 1,
+    activeUsersCount: 100,
+    verifiedClubsCount: 10,
+    pendingVerificationClubsCount: 2,
+    unverifiedClubsCount: 1,
+    rejectedClubsCount: 1,
+    openJobsCount: 20,
+    closedJobsCount: 8,
+    filledJobsCount: 4,
+    totalApplicationsCount: 5,
+    pendingApplicationsCount: 5,
+    acceptedApplicationsCount: 0,
+    rejectedApplicationsCount: 0,
+    totalReportsCount: 3,
+    pendingReportsCount: 1,
+    reviewedReportsCount: 1,
+    actionTakenReportsCount: 1,
+    publishedNewsCount: 6,
+    draftNewsCount: 2,
+    pendingClubMembershipsCount: 4,
+    activeClubMembershipsCount: 10,
+    newUsersLast7Days: 3,
+    newUsersLast30Days: 10,
   },
 };
 
@@ -74,7 +65,7 @@ describe("useAdminStats", () => {
     const { result } = renderHook(() => useAdminStats(), { wrapper: wrapper() });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(result.current.data?.adminDashboardStats.users.total).toBe(120);
+    expect(result.current.data?.adminDashboardStats.totalUsersCount).toBe(120);
     expect(mockRequest).toHaveBeenCalledTimes(1);
   });
 

@@ -662,32 +662,29 @@
       "subtitle": "Statistiques et activité de la plateforme en un coup d'œil.",
       "stats": {
         "totalUsers": "Utilisateurs au total",
+        "activeUsers": "Utilisateurs actifs",
         "totalClubs": "Clubs au total",
         "openJobs": "Offres ouvertes",
+        "totalApplications": "Candidatures totales",
+        "totalReports": "Signalements totaux",
         "publishedNews": "Articles publiés",
-        "newInLast30Days": "+{count} ces 30 derniers jours"
+        "newUsers7d": "Nouveaux utilisateurs (7j)",
+        "newInLast30Days": "+{count} ces 30 derniers jours",
+        "newUsers7dDelta": "+{count} ces 7 derniers jours",
+        "verifiedCount": "{count} vérifiés",
+        "pendingCount": "{count} en attente"
       },
       "charts": {
-        "usersGrowth": "Croissance des utilisateurs",
         "usersByRole": "Utilisateurs par rôle",
         "clubsByVerification": "Clubs par statut de vérification",
+        "jobsByStatus": "Offres par statut",
         "applicationsByStatus": "Candidatures par statut",
-        "newsByCategory": "Actualités par catégorie"
+        "reportsByStatus": "Signalements par statut"
       },
-      "social": {
-        "title": "Engagement social",
-        "follows": "Abonnements",
-        "likes": "J'aime",
-        "conversations": "Conversations",
-        "messages": "Messages"
-      },
-      "topCountries": {
-        "title": "Principaux pays",
-        "empty": "Pas encore de données par pays."
-      },
-      "topLeagues": {
-        "title": "Principales ligues",
-        "empty": "Pas encore de données par ligue."
+      "memberships": {
+        "title": "Adhésions aux clubs",
+        "pending": "En attente",
+        "active": "Actives"
       },
       "errorTitle": "Impossible de charger les statistiques",
       "errorDescription": "Une erreur est survenue lors du chargement de l'aperçu. Veuillez réessayer.",

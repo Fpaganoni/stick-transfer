@@ -1,69 +1,35 @@
 import { gql } from "graphql-request";
 
-// TODO: backend pendiente — contrato documentado, endpoint aún no expuesto
 export const ADMIN_DASHBOARD_STATS = gql`
   query AdminDashboardStats {
     adminDashboardStats {
-      users {
-        total
-        byRole {
-          role
-          count
-        }
-        active
-        inactive
-        verified
-        emailVerified
-        newLast30Days
-        growth {
-          date
-          count
-        }
-        byCountry {
-          country
-          count
-        }
-      }
-      clubs {
-        total
-        byVerificationStatus {
-          status
-          count
-        }
-        newLast30Days
-        byLeague {
-          league
-          count
-        }
-      }
-      jobs {
-        totalOpportunities
-        byStatus {
-          status
-          count
-        }
-        totalApplications
-        applicationsByStatus {
-          status
-          count
-        }
-        savedJobsTotal
-      }
-      social {
-        totalFollows
-        totalLikes
-        totalConversations
-        totalMessages
-      }
-      news {
-        total
-        published
-        drafts
-        byCategory {
-          category
-          count
-        }
-      }
+      totalUsersCount
+      playersCount
+      coachesCount
+      clubsCount
+      superAdminsCount
+      activeUsersCount
+      verifiedClubsCount
+      pendingVerificationClubsCount
+      unverifiedClubsCount
+      rejectedClubsCount
+      openJobsCount
+      closedJobsCount
+      filledJobsCount
+      totalApplicationsCount
+      pendingApplicationsCount
+      acceptedApplicationsCount
+      rejectedApplicationsCount
+      totalReportsCount
+      pendingReportsCount
+      reviewedReportsCount
+      actionTakenReportsCount
+      publishedNewsCount
+      draftNewsCount
+      pendingClubMembershipsCount
+      activeClubMembershipsCount
+      newUsersLast7Days
+      newUsersLast30Days
     }
   }
 `;
