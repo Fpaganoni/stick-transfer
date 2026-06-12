@@ -48,12 +48,17 @@ export default function AdminNewsPage() {
     const f: SuperAdminNewsFilters = {};
     if (search) f.search = search;
     if (category !== "ALL") f.category = category as NewsCategory;
-    if (status !== "ALL") f.isPublished = status === "PUBLISHED";
     return f;
-  }, [search, category, status]);
+  }, [search, category]);
 
   const { data, isLoading } = useSuperAdminNews(filters, page, PAGE_SIZE);
-  const items = data?.superAdminNewsArticles.items ?? [];
+  const allItems = data?.superAdminNewsArticles.items ?? [];
+  // SuperAdminNewsFilters has no isPublished (backend NewsFiltersInput doesn't
+  // support it) — apply the status filter client-side on the current page.
+  const items =
+    status === "ALL"
+      ? allItems
+      : allItems.filter((article) => article.isPublished === (status === "PUBLISHED"));
   const total = data?.superAdminNewsArticles.total ?? 0;
 
   return (

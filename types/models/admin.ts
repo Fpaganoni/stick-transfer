@@ -134,6 +134,15 @@ export interface AdminJobApplicationRow {
 // NEWS CMS — superAdminNewsArticles / createNewsArticle / updateNewsArticle / ...
 // ============================================
 
+export interface RelatedNewsArticle {
+  id: string;
+  slug: string;
+  title: string;
+  coverImage?: string;
+  category: NewsCategory;
+  publishedAt?: string;
+}
+
 export interface AdminNewsArticle {
   id: string;
   slug: string;
@@ -145,17 +154,13 @@ export interface AdminNewsArticle {
   isPublished: boolean;
   publishedAt?: string;
   readingTimeMinutes?: number;
-  authorName?: string;
-  authorAvatar?: string;
-  relatedSlugs?: string[];
-  createdAt: string;
-  updatedAt?: string;
+  author?: { name: string; avatar?: string };
+  relatedArticles?: RelatedNewsArticle[];
 }
 
 export interface SuperAdminNewsFilters {
   category?: NewsCategory;
   search?: string;
-  isPublished?: boolean;
 }
 
 export interface NewsArticleInput {
@@ -167,9 +172,8 @@ export interface NewsArticleInput {
   category: NewsCategory;
   publishedAt?: string;
   readingTimeMinutes?: number;
-  authorName?: string;
-  authorAvatar?: string;
-  relatedSlugs?: string[];
+  author?: { name?: string; avatar?: string };
+  relatedArticleIds?: string[];
 }
 
 // ============================================

@@ -121,7 +121,7 @@ export function AdminNewsTable({ articles, isLoading, localePrefix }: AdminNewsT
                 <TableCell className="text-foreground-muted">
                   {article.publishedAt ? formatDate(article.publishedAt, locale) : "—"}
                 </TableCell>
-                <TableCell className="text-foreground-muted">{article.authorName || "—"}</TableCell>
+                <TableCell className="text-foreground-muted">{article.author?.name || "—"}</TableCell>
                 <TableCell className="text-right">
                   <div className="flex items-center justify-end gap-1">
                     <Button variant="ghost" size="icon" className="size-8" asChild>

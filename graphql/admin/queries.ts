@@ -139,7 +139,7 @@ export const ADMIN_JOB_APPLICATIONS = gql`
 `;
 
 export const SUPER_ADMIN_NEWS_ARTICLES = gql`
-  query SuperAdminNewsArticles($filters: SuperAdminNewsFiltersInput, $page: Int, $limit: Int) {
+  query SuperAdminNewsArticles($filters: NewsFiltersInput, $page: Int, $limit: Int) {
     superAdminNewsArticles(filters: $filters, page: $page, limit: $limit) {
       items {
         id
@@ -152,11 +152,18 @@ export const SUPER_ADMIN_NEWS_ARTICLES = gql`
         isPublished
         publishedAt
         readingTimeMinutes
-        authorName
-        authorAvatar
-        relatedSlugs
-        createdAt
-        updatedAt
+        author {
+          name
+          avatar
+        }
+        relatedArticles {
+          id
+          slug
+          title
+          coverImage
+          category
+          publishedAt
+        }
       }
       total
       hasMore
