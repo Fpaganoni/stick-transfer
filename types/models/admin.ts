@@ -53,7 +53,9 @@ export interface AdminUserRow {
   role: Role | string;
   country?: string;
   city?: string;
-  isActive: boolean;
+  // GAP backend: User no expone isActive ni authProvider. Quedan undefined
+  // hasta que el backend los agregue; la UI debe tolerar ausencia.
+  isActive?: boolean;
   isVerified: boolean;
   isEmailVerified: boolean;
   authProvider?: string;
@@ -116,8 +118,10 @@ export interface AdminJobOpportunityRow {
   country: string;
   city: string;
   status: string;
+  // GAP backend: JobOpportunity no expone expiresAt ni applicationsCount.
+  // Quedan undefined hasta que el backend los agregue.
   expiresAt?: string;
-  applicationsCount: number;
+  applicationsCount?: number;
   createdAt: string;
   club: { id: string; name: string; logo?: string };
 }

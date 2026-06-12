@@ -15,13 +15,17 @@ const ADMIN_JOBS_KEY = ["admin", "jobs", "opportunities"] as const;
 const ADMIN_APPLICATIONS_KEY = ["admin", "jobs", "applications"] as const;
 
 interface AdminJobOpportunitiesResponse {
-  adminJobOpportunities: PaginatedResponse<AdminJobOpportunityRow>;
+  jobOpportunities: AdminJobOpportunityRow[];
 }
 
 interface AdminJobApplicationsResponse {
   adminJobApplications: PaginatedResponse<AdminJobApplicationRow>;
 }
 
+// GAP backend: no existe adminJobOpportunities — se usa jobOpportunities con
+// filtros/paginación reales (JobOpportunityFiltersInput). Retorna array plano
+// sin total/hasMore; la page aplica una heurística de paginación (igual que
+// /admin/reports).
 export function useAdminJobOpportunities(filters?: AdminJobFilters, page = 1, limit = 20) {
   return useQuery<AdminJobOpportunitiesResponse>({
     queryKey: [...ADMIN_JOBS_KEY, filters, page],
@@ -35,6 +39,12 @@ export function useAdminJobOpportunities(filters?: AdminJobFilters, page = 1, li
   });
 }
 
+// GAP backend (producto): no existe vista global cross-club de aplicaciones
+// (adminJobApplications). Lo más cercano es getClubApplications(clubId, ...)
+// o userApplications(userId, ...), ninguno da vista admin global. El tab
+// "Applications" de /admin/jobs queda deshabilitado hasta que exista un
+// endpoint admin dedicado — este hook y su mutación quedan documentados
+// para cuando ese endpoint se agregue.
 export function useAdminJobApplications(filters?: AdminApplicationFilters, page = 1, limit = 20) {
   return useQuery<AdminJobApplicationsResponse>({
     queryKey: [...ADMIN_APPLICATIONS_KEY, filters, page],

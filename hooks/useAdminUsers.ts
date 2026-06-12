@@ -13,52 +13,81 @@ import { toast } from "sonner";
 
 const ADMIN_USERS_KEY = ["admin", "users"] as const;
 
+interface UsersResponse {
+  users: AdminUserRow[];
+}
+
+function applyUserFilters(users: AdminUserRow[], filters?: AdminUserFilters): AdminUserRow[] {
+  return users.filter((user) => {
+    if (filters?.role && user.role !== filters.role) return false;
+    // GAP backend: isActive no existe en User, este filtro no tiene efecto
+    // hasta que el backend lo agregue (ver AdminUserRow).
+    if (filters?.isActive !== undefined && user.isActive !== filters.isActive) return false;
+    if (filters?.isVerified !== undefined && user.isVerified !== filters.isVerified) return false;
+    if (filters?.search) {
+      const q = filters.search.toLowerCase();
+      const haystack = `${user.name} ${user.username} ${user.email}`.toLowerCase();
+      if (!haystack.includes(q)) return false;
+    }
+    return true;
+  });
+}
+
+// GAP backend: no existe adminUsers/AdminUserFiltersInput — `users` no soporta
+// filtros ni paginación. Se trae la lista completa y se filtra/pagina aquí.
 export function useAdminUsers(filters?: AdminUserFilters, page = 1, limit = 20) {
-  return useQuery<AdminUsersResponse>({
-    queryKey: [...ADMIN_USERS_KEY, filters, page],
-    queryFn: async () =>
-      graphqlClient.request<AdminUsersResponse>(ADMIN_USERS, { filters, page, limit }),
+  return useQuery<UsersResponse, Error, AdminUsersResponse>({
+    queryKey: ADMIN_USERS_KEY,
+    queryFn: async () => graphqlClient.request<UsersResponse>(ADMIN_USERS),
+    select: (data) => {
+      const filtered = applyUserFilters(data.users, filters);
+      const start = (page - 1) * limit;
+      const items = filtered.slice(start, start + limit);
+      return {
+        adminUsers: {
+          items,
+          total: filtered.length,
+          hasMore: start + limit < filtered.length,
+        },
+      };
+    },
     staleTime: 60_000,
   });
 }
 
 type UserMutationContext = {
-  previousLists?: [readonly unknown[], AdminUsersResponse | undefined][];
+  previous?: UsersResponse;
 };
 
-function patchUserInLists(
+function patchUser(
   queryClient: ReturnType<typeof useQueryClient>,
   userId: string,
   patch: Partial<AdminUserRow>
 ): UserMutationContext {
-  const previousLists = queryClient.getQueriesData<AdminUsersResponse>({
-    queryKey: ADMIN_USERS_KEY,
-  });
+  const previous = queryClient.getQueryData<UsersResponse>(ADMIN_USERS_KEY);
 
-  queryClient.setQueriesData<AdminUsersResponse>({ queryKey: ADMIN_USERS_KEY }, (old) => {
+  queryClient.setQueryData<UsersResponse>(ADMIN_USERS_KEY, (old) => {
     if (!old) return old;
     return {
-      adminUsers: {
-        ...old.adminUsers,
-        items: old.adminUsers.items.map((item) =>
-          item.id === userId ? { ...item, ...patch } : item
-        ),
-      },
+      users: old.users.map((user) => (user.id === userId ? { ...user, ...patch } : user)),
     };
   });
 
-  return { previousLists };
+  return { previous };
 }
 
-function rollbackUserLists(
+function rollbackUser(
   queryClient: ReturnType<typeof useQueryClient>,
   context: UserMutationContext | undefined
 ) {
-  context?.previousLists?.forEach(([key, data]) => {
-    queryClient.setQueryData(key, data);
-  });
+  if (context?.previous) {
+    queryClient.setQueryData(ADMIN_USERS_KEY, context.previous);
+  }
 }
 
+// GAP backend: adminSetUserActive/adminSetUserVerified/adminChangeUserRole
+// están marcados "TODO: backend pendiente" en graphql/admin/mutations.ts —
+// contrato documentado, sin confirmar contra el schema real.
 export function useAdminSetUserActive() {
   const queryClient = useQueryClient();
   const t = useTranslations("admin.users");
@@ -73,7 +102,7 @@ export function useAdminSetUserActive() {
 
     onMutate: async ({ userId, isActive }) => {
       await queryClient.cancelQueries({ queryKey: ADMIN_USERS_KEY });
-      return patchUserInLists(queryClient, userId, { isActive });
+      return patchUser(queryClient, userId, { isActive });
     },
 
     onSuccess: (_data, { isActive }) => {
@@ -81,7 +110,7 @@ export function useAdminSetUserActive() {
     },
 
     onError: (_err, _vars, context) => {
-      rollbackUserLists(queryClient, context);
+      rollbackUser(queryClient, context);
       toast.error(t("toasts.actionFailed"));
     },
 
@@ -105,7 +134,7 @@ export function useAdminSetUserVerified() {
 
     onMutate: async ({ userId, isVerified }) => {
       await queryClient.cancelQueries({ queryKey: ADMIN_USERS_KEY });
-      return patchUserInLists(queryClient, userId, { isVerified });
+      return patchUser(queryClient, userId, { isVerified });
     },
 
     onSuccess: (_data, { isVerified }) => {
@@ -113,7 +142,7 @@ export function useAdminSetUserVerified() {
     },
 
     onError: (_err, _vars, context) => {
-      rollbackUserLists(queryClient, context);
+      rollbackUser(queryClient, context);
       toast.error(t("toasts.actionFailed"));
     },
 
@@ -137,7 +166,7 @@ export function useAdminChangeUserRole() {
 
     onMutate: async ({ userId, role }) => {
       await queryClient.cancelQueries({ queryKey: ADMIN_USERS_KEY });
-      return patchUserInLists(queryClient, userId, { role });
+      return patchUser(queryClient, userId, { role });
     },
 
     onSuccess: () => {
@@ -145,7 +174,7 @@ export function useAdminChangeUserRole() {
     },
 
     onError: (_err, _vars, context) => {
-      rollbackUserLists(queryClient, context);
+      rollbackUser(queryClient, context);
       toast.error(t("toasts.actionFailed"));
     },
 
