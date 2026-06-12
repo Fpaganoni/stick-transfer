@@ -13,6 +13,9 @@ function getToastIcon(type: Notification["type"]): string {
     [NotificationType.CLUB_INVITE]: "🏑",
     [NotificationType.CLUB_ACCEPT]: "✅",
     [NotificationType.JOB_APPLICATION_UPDATE]: "💼",
+    [NotificationType.CLUB_PENDING_VERIFICATION]: "🏟️",
+    [NotificationType.CLUB_VERIFIED]: "🏅",
+    [NotificationType.REPORT_RECEIVED]: "🚩",
   };
   return icons[type] ?? "🔔";
 }

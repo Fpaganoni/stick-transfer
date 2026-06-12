@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useLocale } from "next-intl";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { Role } from "@/types/enums";
 import { Spinner } from "@/components/ui/spinner";
@@ -12,8 +13,10 @@ interface AdminGuardProps {
 
 export function AdminGuard({ children }: AdminGuardProps) {
   const router = useRouter();
+  const locale = useLocale();
   const { user, isLoggedIn } = useAuthStore();
   const [hydrated, setHydrated] = useState(false);
+  const localePrefix = locale === "en" ? "" : `/${locale}`;
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -24,14 +27,14 @@ export function AdminGuard({ children }: AdminGuardProps) {
     if (!hydrated) return;
 
     if (!isLoggedIn) {
-      router.replace("/login");
+      router.replace(localePrefix || "/");
       return;
     }
 
     if (user?.role !== Role.SUPERADMIN) {
       router.replace("/opportunities");
     }
-  }, [hydrated, isLoggedIn, user, router]);
+  }, [hydrated, isLoggedIn, user, router, localePrefix]);
 
   if (!hydrated || !isLoggedIn || user?.role !== Role.SUPERADMIN) {
     return (

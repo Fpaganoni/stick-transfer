@@ -18,9 +18,11 @@ import { motion } from "framer-motion";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useUserRegister, useUpdateUser } from "@/hooks/useUsers";
+import { useMutation } from "@tanstack/react-query";
 import { jwtDecode } from "jwt-decode";
 import { graphqlClient, setAuthToken } from "@/lib/graphql-client";
 import { GET_USER_FOR_LOGIN } from "@/graphql/user/queries";
+import { CREATE_CLUB } from "@/graphql/club/mutations";
 import { useRouter } from "next/navigation";
 import { useLocale } from "next-intl";
 import { useAuthStore } from "@/stores/useAuthStore";
@@ -181,7 +183,7 @@ type Step2Data = {
 // ---------------------------------------------------------------------------
 
 type Step3PlayerData = { position: string };
-type Step3ClubData = { city: string };
+type Step3ClubData = { name: string; city: string; country: string };
 
 // ---------------------------------------------------------------------------
 // Main component
@@ -197,6 +199,12 @@ export const RegisterPage = () => {
   const { openLoginModal } = useUIStore();
   const { mutate: registerUser, isPending: isRegistering } = useUserRegister();
   const { mutate: updateUser } = useUpdateUser();
+  const { mutate: createClub, isPending: isCreatingClub } = useMutation({
+    mutationFn: (input: { name: string; city: string; country: string }) =>
+      graphqlClient.request<{ createClub: { id: string } }>(CREATE_CLUB, {
+        input,
+      }),
+  });
 
   const [step, setStep] = useState(1);
   const [selectedRole, setSelectedRole] = useState<RoleCardId | null>(null);
@@ -250,7 +258,9 @@ export const RegisterPage = () => {
     position: z.string().min(1, tValidation("positionRequired")),
   });
   const step3ClubSchema = z.object({
+    name: z.string().min(2, tValidation("clubNameRequired")),
     city: z.string().min(1, tValidation("cityRequired")),
+    country: z.string().min(1, tValidation("countryRequired")),
   });
 
   const step3PlayerForm = useForm<Step3PlayerData>({
@@ -316,11 +326,35 @@ export const RegisterPage = () => {
           if (step2Data.country) extra.country = step2Data.country;
           if ("position" in step3Data && step3Data.position)
             extra.position = step3Data.position;
-          if ("city" in step3Data && step3Data.city)
+          if (!isClub && "city" in step3Data && step3Data.city)
             extra.city = step3Data.city;
 
           if (Object.keys(extra).length > 1) {
             updateUser(extra);
+          }
+
+          if (isClub && "name" in step3Data) {
+            createClub(
+              {
+                name: step3Data.name,
+                city: step3Data.city,
+                country: step3Data.country,
+              },
+              {
+                onSuccess: (clubResponse) => {
+                  router.push(
+                    `/${locale}/clubs/${clubResponse.createClub.id}`,
+                  );
+                },
+                onError: (err) => {
+                  const msg =
+                    (err as GraphQLError)?.response?.errors?.[0]?.message ||
+                    t("registrationFailed");
+                  setError(msg);
+                },
+              },
+            );
+            return;
           }
 
           router.push(`/${locale}/opportunities`);
@@ -650,6 +684,22 @@ export const RegisterPage = () => {
               onSubmit={step3ClubForm.handleSubmit(onSubmitStep3Club)}
               className="space-y-3"
             >
+              {/* Club name */}
+              <div>
+                <Label htmlFor="clubName" className="mb-1 text-sm">
+                  {t("clubName")}
+                </Label>
+                <Input
+                  {...step3ClubForm.register("name")}
+                  id="clubName"
+                  placeholder={t("placeholders.clubName")}
+                  className="h-9 text-sm"
+                />
+                <FieldError
+                  message={step3ClubForm.formState.errors.name?.message}
+                />
+              </div>
+
               {/* City */}
               <div>
                 <Label htmlFor="city" className="mb-1 text-sm">
@@ -663,6 +713,31 @@ export const RegisterPage = () => {
                 />
                 <FieldError
                   message={step3ClubForm.formState.errors.city?.message}
+                />
+              </div>
+
+              {/* Country */}
+              <div>
+                <Label htmlFor="clubCountry" className="mb-1 text-sm">
+                  {t("country")}
+                </Label>
+                <select
+                  {...step3ClubForm.register("country")}
+                  id="clubCountry"
+                  defaultValue=""
+                  className="w-full h-9 rounded-md border border-input bg-background text-foreground text-sm px-3 focus:outline-none focus:ring-2 focus:ring-ring appearance-none cursor-pointer"
+                >
+                  <option value="" disabled>
+                    {t("placeholders.country")}
+                  </option>
+                  {HOCKEY_COUNTRIES.map((c) => (
+                    <option key={c} value={c}>
+                      {c}
+                    </option>
+                  ))}
+                </select>
+                <FieldError
+                  message={step3ClubForm.formState.errors.country?.message}
                 />
               </div>
 
@@ -680,10 +755,12 @@ export const RegisterPage = () => {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.97 }}
                   type="submit"
-                  disabled={isRegistering}
+                  disabled={isRegistering || isCreatingClub}
                   className="flex-1 h-9 bg-primary text-white font-semibold rounded-lg hover:bg-primary-hover transition-colors cursor-pointer disabled:opacity-50 text-sm"
                 >
-                  {isRegistering ? t("creatingProfile") : t("createProfile")}
+                  {isRegistering || isCreatingClub
+                    ? t("creatingProfile")
+                    : t("createProfile")}
                 </motion.button>
               </div>
             </form>

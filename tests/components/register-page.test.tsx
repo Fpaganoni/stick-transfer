@@ -1,7 +1,8 @@
 import React from "react";
 import { describe, it, expect, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import { RegisterPage } from "@/components/pages/register-page";
+import { renderWithProviders } from "../test-utils";
 
 vi.mock("next-intl", () => ({
   useTranslations: () => (key: string) => key,
@@ -57,7 +58,7 @@ vi.mock("framer-motion", () => ({
 
 describe("RegisterPage", () => {
   it("step 1 renders 6 role cards", () => {
-    render(<RegisterPage />);
+    renderWithProviders(<RegisterPage />);
 
     const roleCards = [
       "role-card-player",
@@ -74,12 +75,12 @@ describe("RegisterPage", () => {
   });
 
   it("step 1 shows next button", () => {
-    render(<RegisterPage />);
+    renderWithProviders(<RegisterPage />);
     expect(screen.getByText("next")).toBeDefined();
   });
 
   it("step indicator renders on mount", () => {
-    const { container } = render(<RegisterPage />);
+    const { container } = renderWithProviders(<RegisterPage />);
     expect(container.firstChild).not.toBeNull();
   });
 });

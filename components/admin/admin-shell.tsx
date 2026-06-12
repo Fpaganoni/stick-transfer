@@ -9,6 +9,7 @@ import {
   Building2,
   Briefcase,
   Newspaper,
+  Flag,
   LogOut,
 } from "lucide-react";
 import {
@@ -56,6 +57,7 @@ export function AdminShell({ children }: AdminShellProps) {
     { href: "/admin/clubs", label: t("clubs"), icon: Building2 },
     { href: "/admin/jobs", label: t("jobs"), icon: Briefcase },
     { href: "/admin/news", label: t("news"), icon: Newspaper },
+    { href: "/admin/reports", label: t("reports"), icon: Flag },
   ];
 
   const localePrefix = locale === "en" ? "" : `/${locale}`;
@@ -67,7 +69,7 @@ export function AdminShell({ children }: AdminShellProps) {
 
   const handleLogout = () => {
     logout();
-    router.replace("/login");
+    router.replace(localePrefix || "/");
   };
 
   return (

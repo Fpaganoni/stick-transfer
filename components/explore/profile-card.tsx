@@ -56,11 +56,6 @@ export function ProfileCard({
       text: "text-warning",
       badge: "bg-warning/20 text-foreground border-warning",
     },
-    CLUB: {
-      bg: "bg-info/20",
-      text: "text-info",
-      badge: "bg-info/20 text-foreground border-info",
-    },
   };
 
   const colors = roleColors[role] || roleColors.PLAYER;
