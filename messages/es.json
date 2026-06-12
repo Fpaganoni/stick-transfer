@@ -654,7 +654,8 @@
       "clubs": "Clubes",
       "jobs": "Empleos",
       "news": "Noticias",
-      "logout": "Cerrar sesión"
+      "logout": "Cerrar sesión",
+      "reports": "Reportes"
     },
     "overview": {
       "title": "Resumen",
@@ -951,6 +952,70 @@
         "deleted": "Artículo eliminado",
         "published": "Artículo publicado",
         "unpublished": "Artículo despublicado",
+        "actionFailed": "No se pudo completar la acción. Intentá de nuevo."
+      }
+    },
+    "reports": {
+      "title": "Reportes",
+      "subtitle": "Revisá los reportes de usuarios y tomá acciones sobre el contenido marcado.",
+      "table": {
+        "reporter": "Reportado por",
+        "target": "Objetivo",
+        "reason": "Motivo",
+        "status": "Estado",
+        "date": "Fecha",
+        "actions": "Acciones",
+        "view": "Ver",
+        "empty": "No se encontraron reportes",
+        "emptyDescription": "Probá ajustando los filtros."
+      },
+      "filters": {
+        "status": "Estado",
+        "allStatuses": "Todos los estados",
+        "targetType": "Tipo de objetivo",
+        "allTargetTypes": "Todos los tipos"
+      },
+      "targetTypes": {
+        "USER": "Usuario",
+        "CLUB": "Club",
+        "POST": "Publicación",
+        "JOB_OPPORTUNITY": "Oferta de empleo",
+        "MESSAGE": "Mensaje",
+        "NEWS_ARTICLE": "Noticia"
+      },
+      "reasons": {
+        "SPAM": "Spam",
+        "HARASSMENT": "Acoso",
+        "INAPPROPRIATE_CONTENT": "Contenido inapropiado",
+        "FAKE_PROFILE": "Perfil falso",
+        "SCAM": "Estafa",
+        "OTHER": "Otro"
+      },
+      "status": {
+        "PENDING": "Pendiente",
+        "REVIEWED": "Revisado",
+        "ACTION_TAKEN": "Acción tomada",
+        "DISMISSED": "Descartado"
+      },
+      "dialog": {
+        "title": "Detalle del reporte",
+        "reporter": "Reportado por",
+        "target": "Objetivo",
+        "reason": "Motivo",
+        "description": "Descripción",
+        "noDescription": "No se proporcionaron detalles adicionales.",
+        "status": "Estado",
+        "reportedOn": "Reportado el",
+        "reviewedBy": "Revisado por",
+        "reviewedAt": "Revisado el",
+        "viewTarget": "Ver objetivo",
+        "markReviewed": "Marcar como revisado",
+        "markActionTaken": "Marcar acción tomada",
+        "dismiss": "Descartar",
+        "close": "Cerrar"
+      },
+      "toasts": {
+        "statusUpdated": "Estado del reporte actualizado",
         "actionFailed": "No se pudo completar la acción. Intentá de nuevo."
       }
     }

@@ -654,7 +654,8 @@
       "clubs": "Clubs",
       "jobs": "Emplois",
       "news": "Actualités",
-      "logout": "Déconnexion"
+      "logout": "Déconnexion",
+      "reports": "Signalements"
     },
     "overview": {
       "title": "Aperçu",
@@ -952,6 +953,70 @@
         "published": "Article publié",
         "unpublished": "Article dépublié",
         "actionFailed": "Impossible de terminer l'action. Veuillez réessayer."
+      }
+    },
+    "reports": {
+      "title": "Signalements",
+      "subtitle": "Examinez les signalements des utilisateurs et agissez sur le contenu signalé.",
+      "table": {
+        "reporter": "Signalé par",
+        "target": "Cible",
+        "reason": "Motif",
+        "status": "Statut",
+        "date": "Date",
+        "actions": "Actions",
+        "view": "Voir",
+        "empty": "Aucun signalement trouvé",
+        "emptyDescription": "Essayez d’ajuster vos filtres."
+      },
+      "filters": {
+        "status": "Statut",
+        "allStatuses": "Tous les statuts",
+        "targetType": "Type de cible",
+        "allTargetTypes": "Tous les types"
+      },
+      "targetTypes": {
+        "USER": "Utilisateur",
+        "CLUB": "Club",
+        "POST": "Publication",
+        "JOB_OPPORTUNITY": "Offre d’emploi",
+        "MESSAGE": "Message",
+        "NEWS_ARTICLE": "Article"
+      },
+      "reasons": {
+        "SPAM": "Spam",
+        "HARASSMENT": "Harcèlement",
+        "INAPPROPRIATE_CONTENT": "Contenu inapproprié",
+        "FAKE_PROFILE": "Faux profil",
+        "SCAM": "Arnaque",
+        "OTHER": "Autre"
+      },
+      "status": {
+        "PENDING": "En attente",
+        "REVIEWED": "Examiné",
+        "ACTION_TAKEN": "Action prise",
+        "DISMISSED": "Rejeté"
+      },
+      "dialog": {
+        "title": "Détails du signalement",
+        "reporter": "Signalé par",
+        "target": "Cible",
+        "reason": "Motif",
+        "description": "Description",
+        "noDescription": "Aucun détail supplémentaire fourni.",
+        "status": "Statut",
+        "reportedOn": "Signalé le",
+        "reviewedBy": "Examiné par",
+        "reviewedAt": "Examiné le",
+        "viewTarget": "Voir la cible",
+        "markReviewed": "Marquer comme examiné",
+        "markActionTaken": "Marquer action prise",
+        "dismiss": "Rejeter",
+        "close": "Fermer"
+      },
+      "toasts": {
+        "statusUpdated": "Statut du signalement mis à jour",
+        "actionFailed": "Impossible de terminer l’action. Veuillez réessayer."
       }
     }
   }

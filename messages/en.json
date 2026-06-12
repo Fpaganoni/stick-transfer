@@ -654,7 +654,8 @@
       "clubs": "Clubs",
       "jobs": "Jobs",
       "news": "News",
-      "logout": "Log out"
+      "logout": "Log out",
+      "reports": "Reports"
     },
     "overview": {
       "title": "Overview",
@@ -951,6 +952,70 @@
         "deleted": "Article deleted",
         "published": "Article published",
         "unpublished": "Article unpublished",
+        "actionFailed": "Couldn't complete the action. Please try again."
+      }
+    },
+    "reports": {
+      "title": "Reports",
+      "subtitle": "Review user reports and take action on flagged content.",
+      "table": {
+        "reporter": "Reporter",
+        "target": "Target",
+        "reason": "Reason",
+        "status": "Status",
+        "date": "Date",
+        "actions": "Actions",
+        "view": "View",
+        "empty": "No reports found",
+        "emptyDescription": "Try adjusting your filters."
+      },
+      "filters": {
+        "status": "Status",
+        "allStatuses": "All statuses",
+        "targetType": "Target type",
+        "allTargetTypes": "All types"
+      },
+      "targetTypes": {
+        "USER": "User",
+        "CLUB": "Club",
+        "POST": "Post",
+        "JOB_OPPORTUNITY": "Job opportunity",
+        "MESSAGE": "Message",
+        "NEWS_ARTICLE": "News article"
+      },
+      "reasons": {
+        "SPAM": "Spam",
+        "HARASSMENT": "Harassment",
+        "INAPPROPRIATE_CONTENT": "Inappropriate content",
+        "FAKE_PROFILE": "Fake profile",
+        "SCAM": "Scam",
+        "OTHER": "Other"
+      },
+      "status": {
+        "PENDING": "Pending",
+        "REVIEWED": "Reviewed",
+        "ACTION_TAKEN": "Action taken",
+        "DISMISSED": "Dismissed"
+      },
+      "dialog": {
+        "title": "Report details",
+        "reporter": "Reporter",
+        "target": "Target",
+        "reason": "Reason",
+        "description": "Description",
+        "noDescription": "No additional details provided.",
+        "status": "Status",
+        "reportedOn": "Reported on",
+        "reviewedBy": "Reviewed by",
+        "reviewedAt": "Reviewed on",
+        "viewTarget": "View target",
+        "markReviewed": "Mark as reviewed",
+        "markActionTaken": "Mark action taken",
+        "dismiss": "Dismiss",
+        "close": "Close"
+      },
+      "toasts": {
+        "statusUpdated": "Report status updated",
         "actionFailed": "Couldn't complete the action. Please try again."
       }
     }
