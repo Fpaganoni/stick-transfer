@@ -20,6 +20,11 @@ vi.mock("next/navigation", () => ({
   useSearchParams: () => new URLSearchParams(),
 }));
 
+vi.mock("next-intl", () => ({
+  useTranslations: () => (key: string) => key,
+  useLocale: () => "en",
+}));
+
 vi.mock("@/stores/useAuthStore", () => ({
   useAuthStore: () => authState,
 }));
@@ -31,14 +36,14 @@ describe("AdminGuard", () => {
     authState.user = null;
   });
 
-  it("redirects to /login when there is no session", async () => {
+  it("redirects to locale home when there is no session", async () => {
     render(
       <AdminGuard>
         <div>secret content</div>
       </AdminGuard>
     );
 
-    await waitFor(() => expect(mockReplace).toHaveBeenCalledWith("/login"));
+    await waitFor(() => expect(mockReplace).toHaveBeenCalledWith("/"));
     expect(screen.queryByText("secret content")).not.toBeInTheDocument();
   });
 
