@@ -36,8 +36,8 @@ export const ADMIN_DASHBOARD_STATS = gql`
 
 // GAP backend: no existe adminUsers/AdminUserFiltersInput. Backend solo expone
 // `users: [User!]!` sin args. Filtrado y paginación se resuelven client-side
-// en useAdminUsers. Campos isActive/authProvider tampoco existen en User
-// (ver AdminUserRow) — quedan undefined hasta que el backend los agregue.
+// en useAdminUsers. authProvider tampoco existe en User (ver AdminUserRow) —
+// queda undefined hasta que el backend lo agregue.
 export const ADMIN_USERS = gql`
   query AdminUsers {
     users {
@@ -49,6 +49,7 @@ export const ADMIN_USERS = gql`
       role
       country
       city
+      isActive
       isVerified
       isEmailVerified
       createdAt

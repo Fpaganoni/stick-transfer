@@ -53,11 +53,11 @@ export interface AdminUserRow {
   role: Role | string;
   country?: string;
   city?: string;
-  // GAP backend: User no expone isActive ni authProvider. Quedan undefined
-  // hasta que el backend los agregue; la UI debe tolerar ausencia.
-  isActive?: boolean;
+  isActive: boolean;
   isVerified: boolean;
   isEmailVerified: boolean;
+  // GAP backend: User no expone authProvider. Queda undefined hasta que el
+  // backend lo agregue; la UI debe tolerar ausencia.
   authProvider?: string;
   createdAt: string;
 }

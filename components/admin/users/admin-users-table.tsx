@@ -95,14 +95,9 @@ export function AdminUsersTable({ users, isLoading }: AdminUsersTableProps) {
                 {[user.city, user.country].filter(Boolean).join(", ") || "—"}
               </TableCell>
               <TableCell>
-                {/* GAP backend: User no expone isActive todavía */}
-                {user.isActive === undefined ? (
-                  <span className="text-foreground-muted">—</span>
-                ) : (
-                  <Badge variant="outline" className={user.isActive ? "border-success text-success" : "border-error text-error"}>
-                    {user.isActive ? t("status.active") : t("status.inactive")}
-                  </Badge>
-                )}
+                <Badge variant="outline" className={user.isActive ? "border-success text-success" : "border-error text-error"}>
+                  {user.isActive ? t("status.active") : t("status.inactive")}
+                </Badge>
               </TableCell>
               <TableCell>
                 {user.isVerified ? (

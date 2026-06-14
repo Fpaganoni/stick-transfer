@@ -20,8 +20,6 @@ interface UsersResponse {
 function applyUserFilters(users: AdminUserRow[], filters?: AdminUserFilters): AdminUserRow[] {
   return users.filter((user) => {
     if (filters?.role && user.role !== filters.role) return false;
-    // GAP backend: isActive no existe en User, este filtro no tiene efecto
-    // hasta que el backend lo agregue (ver AdminUserRow).
     if (filters?.isActive !== undefined && user.isActive !== filters.isActive) return false;
     if (filters?.isVerified !== undefined && user.isVerified !== filters.isVerified) return false;
     if (filters?.search) {
