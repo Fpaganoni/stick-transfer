@@ -79,16 +79,16 @@ describe("useAdminUsers", () => {
 describe("useAdminSetUserActive", () => {
   beforeEach(() => mockRequest.mockReset());
 
-  it("mutates with userId and isActive", async () => {
+  it("mutates with userId and active", async () => {
     mockRequest.mockResolvedValueOnce({ adminSetUserActive: { ...mockUserRow, isActive: false } });
 
     const { result } = renderHook(() => useAdminSetUserActive(), { wrapper: wrapper() });
-    result.current.mutate({ userId: "user-1", isActive: false });
+    result.current.mutate({ userId: "user-1", active: false });
 
     await waitFor(() => expect(mockRequest).toHaveBeenCalled());
     expect(mockRequest).toHaveBeenCalledWith(expect.anything(), {
       userId: "user-1",
-      isActive: false,
+      active: false,
     });
   });
 });
@@ -96,16 +96,16 @@ describe("useAdminSetUserActive", () => {
 describe("useAdminSetUserVerified", () => {
   beforeEach(() => mockRequest.mockReset());
 
-  it("mutates with userId and isVerified", async () => {
+  it("mutates with userId and verified", async () => {
     mockRequest.mockResolvedValueOnce({ adminSetUserVerified: { ...mockUserRow, isVerified: true } });
 
     const { result } = renderHook(() => useAdminSetUserVerified(), { wrapper: wrapper() });
-    result.current.mutate({ userId: "user-1", isVerified: true });
+    result.current.mutate({ userId: "user-1", verified: true });
 
     await waitFor(() => expect(mockRequest).toHaveBeenCalled());
     expect(mockRequest).toHaveBeenCalledWith(expect.anything(), {
       userId: "user-1",
-      isVerified: true,
+      verified: true,
     });
   });
 });

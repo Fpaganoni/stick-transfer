@@ -58,9 +58,9 @@ export function AdminUserRowActions({ user }: AdminUserRowActionsProps) {
 
   const handleConfirm = () => {
     if (confirmKind === "active") {
-      setActive.mutate({ userId: user.id, isActive: !user.isActive });
+      setActive.mutate({ userId: user.id, active: !user.isActive });
     } else if (confirmKind === "verified") {
-      setVerified.mutate({ userId: user.id, isVerified: !user.isVerified });
+      setVerified.mutate({ userId: user.id, verified: !user.isVerified });
     }
     closeConfirm();
   };

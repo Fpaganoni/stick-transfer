@@ -85,9 +85,6 @@ function rollbackUser(
   }
 }
 
-// GAP backend: adminSetUserActive/adminSetUserVerified/adminChangeUserRole
-// están marcados "TODO: backend pendiente" en graphql/admin/mutations.ts —
-// contrato documentado, sin confirmar contra el schema real.
 export function useAdminSetUserActive() {
   const queryClient = useQueryClient();
   const t = useTranslations("admin.users");
@@ -95,18 +92,18 @@ export function useAdminSetUserActive() {
   return useMutation<
     { adminSetUserActive: AdminUserRow },
     Error,
-    { userId: string; isActive: boolean },
+    { userId: string; active: boolean },
     UserMutationContext
   >({
     mutationFn: async (variables) => graphqlClient.request(ADMIN_SET_USER_ACTIVE, variables),
 
-    onMutate: async ({ userId, isActive }) => {
+    onMutate: async ({ userId, active }) => {
       await queryClient.cancelQueries({ queryKey: ADMIN_USERS_KEY });
-      return patchUser(queryClient, userId, { isActive });
+      return patchUser(queryClient, userId, { isActive: active });
     },
 
-    onSuccess: (_data, { isActive }) => {
-      toast.success(isActive ? t("toasts.activated") : t("toasts.deactivated"));
+    onSuccess: (_data, { active }) => {
+      toast.success(active ? t("toasts.activated") : t("toasts.deactivated"));
     },
 
     onError: (_err, _vars, context) => {
@@ -127,18 +124,18 @@ export function useAdminSetUserVerified() {
   return useMutation<
     { adminSetUserVerified: AdminUserRow },
     Error,
-    { userId: string; isVerified: boolean },
+    { userId: string; verified: boolean },
     UserMutationContext
   >({
     mutationFn: async (variables) => graphqlClient.request(ADMIN_SET_USER_VERIFIED, variables),
 
-    onMutate: async ({ userId, isVerified }) => {
+    onMutate: async ({ userId, verified }) => {
       await queryClient.cancelQueries({ queryKey: ADMIN_USERS_KEY });
-      return patchUser(queryClient, userId, { isVerified });
+      return patchUser(queryClient, userId, { isVerified: verified });
     },
 
-    onSuccess: (_data, { isVerified }) => {
-      toast.success(isVerified ? t("toasts.verified") : t("toasts.unverified"));
+    onSuccess: (_data, { verified }) => {
+      toast.success(verified ? t("toasts.verified") : t("toasts.unverified"));
     },
 
     onError: (_err, _vars, context) => {
