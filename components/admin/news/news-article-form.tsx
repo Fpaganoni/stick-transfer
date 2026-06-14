@@ -163,11 +163,11 @@ export function NewsArticleForm({ article, mode }: NewsArticleFormProps) {
       category: values.category,
       publishedAt: values.publishedAt || undefined,
       readingTimeMinutes: values.readingTimeMinutes,
-      author: {
-        name: values.author.name || undefined,
-        avatar: values.author.avatar || undefined,
-      },
-      relatedArticleIds: values.relatedArticleIds,
+      authorName: values.author.name || undefined,
+      authorAvatar: values.author.avatar || undefined,
+      relatedSlugs: (values.relatedArticleIds ?? [])
+        .map((id) => candidates.find((c) => c.id === id)?.slug)
+        .filter((slug): slug is string => Boolean(slug)),
     };
 
     try {

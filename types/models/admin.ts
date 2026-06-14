@@ -176,8 +176,9 @@ export interface NewsArticleInput {
   category: NewsCategory;
   publishedAt?: string;
   readingTimeMinutes?: number;
-  author?: { name?: string; avatar?: string };
-  relatedArticleIds?: string[];
+  authorName?: string;
+  authorAvatar?: string;
+  relatedSlugs?: string[];
 }
 
 // ============================================
