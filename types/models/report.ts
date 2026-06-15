@@ -44,14 +44,8 @@ export interface ReportFilters {
   targetType?: ReportTargetType;
 }
 
-export interface PaginatedReports {
-  items: Report[];
-  total: number;
-  hasMore: boolean;
-}
-
 export interface ReportsResponse {
-  reports: PaginatedReports;
+  reports: Report[];
 }
 
 export interface ReportResponse {

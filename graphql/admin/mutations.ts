@@ -5,8 +5,8 @@ import { gql } from "graphql-request";
 // ============================================
 
 export const ADMIN_SET_USER_ACTIVE = gql`
-  mutation AdminSetUserActive($userId: ID!, $isActive: Boolean!) {
-    adminSetUserActive(userId: $userId, isActive: $isActive) {
+  mutation AdminSetUserActive($userId: ID!, $active: Boolean!) {
+    adminSetUserActive(userId: $userId, active: $active) {
       id
       isActive
     }
@@ -14,8 +14,8 @@ export const ADMIN_SET_USER_ACTIVE = gql`
 `;
 
 export const ADMIN_SET_USER_VERIFIED = gql`
-  mutation AdminSetUserVerified($userId: ID!, $isVerified: Boolean!) {
-    adminSetUserVerified(userId: $userId, isVerified: $isVerified) {
+  mutation AdminSetUserVerified($userId: ID!, $verified: Boolean!) {
+    adminSetUserVerified(userId: $userId, verified: $verified) {
       id
       isVerified
     }

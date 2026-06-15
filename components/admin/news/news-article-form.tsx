@@ -82,13 +82,15 @@ const createNewsFormSchema = (t: (key: string) => string) =>
     category: z.enum(["INTERNATIONAL", "NATIONAL", "TRANSFERS", "EQUIPMENT", "RESULTS"]),
     publishedAt: z.string().optional(),
     readingTimeMinutes: z.coerce.number().min(0).optional(),
-    authorName: z.string().optional(),
-    authorAvatar: z
-      .string()
-      .url({ message: t("form.validation.urlInvalid") })
-      .optional()
-      .or(z.literal("")),
-    relatedSlugs: z.array(z.string()).optional(),
+    author: z.object({
+      name: z.string().optional(),
+      avatar: z
+        .string()
+        .url({ message: t("form.validation.urlInvalid") })
+        .optional()
+        .or(z.literal("")),
+    }),
+    relatedArticleIds: z.array(z.string()).optional(),
   });
 
 type NewsFormValues = z.infer<ReturnType<typeof createNewsFormSchema>>;
@@ -129,9 +131,11 @@ export function NewsArticleForm({ article, mode }: NewsArticleFormProps) {
       category: (article?.category as NewsCategory) ?? "NATIONAL",
       publishedAt: article?.publishedAt ?? "",
       readingTimeMinutes: article?.readingTimeMinutes ?? undefined,
-      authorName: article?.authorName ?? "Stick Transfer",
-      authorAvatar: article?.authorAvatar ?? "",
-      relatedSlugs: article?.relatedSlugs ?? [],
+      author: {
+        name: article?.author?.name ?? "Stick Transfer",
+        avatar: article?.author?.avatar ?? "",
+      },
+      relatedArticleIds: article?.relatedArticles?.map((a) => a.id) ?? [],
     },
   });
 
@@ -145,7 +149,7 @@ export function NewsArticleForm({ article, mode }: NewsArticleFormProps) {
 
   const excerptValue = form.watch("excerpt") ?? "";
   const publishedAtValue = form.watch("publishedAt");
-  const relatedSlugs = form.watch("relatedSlugs") ?? [];
+  const relatedArticleIds = form.watch("relatedArticleIds") ?? [];
 
   const isSaving = createMutation.isPending || updateMutation.isPending || publishMutation.isPending;
 
@@ -159,9 +163,11 @@ export function NewsArticleForm({ article, mode }: NewsArticleFormProps) {
       category: values.category,
       publishedAt: values.publishedAt || undefined,
       readingTimeMinutes: values.readingTimeMinutes,
-      authorName: values.authorName || undefined,
-      authorAvatar: values.authorAvatar || undefined,
-      relatedSlugs: values.relatedSlugs,
+      authorName: values.author.name || undefined,
+      authorAvatar: values.author.avatar || undefined,
+      relatedSlugs: (values.relatedArticleIds ?? [])
+        .map((id) => candidates.find((c) => c.id === id)?.slug)
+        .filter((slug): slug is string => Boolean(slug)),
     };
 
     try {
@@ -183,10 +189,10 @@ export function NewsArticleForm({ article, mode }: NewsArticleFormProps) {
     }
   }
 
-  const toggleRelated = (slug: string) => {
-    const current = form.getValues("relatedSlugs") ?? [];
-    const next = current.includes(slug) ? current.filter((s) => s !== slug) : [...current, slug];
-    form.setValue("relatedSlugs", next, { shouldValidate: true });
+  const toggleRelated = (id: string) => {
+    const current = form.getValues("relatedArticleIds") ?? [];
+    const next = current.includes(id) ? current.filter((i) => i !== id) : [...current, id];
+    form.setValue("relatedArticleIds", next, { shouldValidate: true });
   };
 
   return (
@@ -362,7 +368,7 @@ export function NewsArticleForm({ article, mode }: NewsArticleFormProps) {
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <FormField
                 control={form.control}
-                name="authorName"
+                name="author.name"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>{t("form.authorName")}</FormLabel>
@@ -375,7 +381,7 @@ export function NewsArticleForm({ article, mode }: NewsArticleFormProps) {
               />
               <FormField
                 control={form.control}
-                name="authorAvatar"
+                name="author.avatar"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>{t("form.authorAvatar")}</FormLabel>
@@ -393,8 +399,8 @@ export function NewsArticleForm({ article, mode }: NewsArticleFormProps) {
               <Popover open={relatedOpen} onOpenChange={setRelatedOpen}>
                 <PopoverTrigger asChild>
                   <Button type="button" variant="outline" className="w-full justify-between font-normal">
-                    {relatedSlugs.length > 0
-                      ? t("form.relatedArticlesCount", { count: relatedSlugs.length })
+                    {relatedArticleIds.length > 0
+                      ? t("form.relatedArticlesCount", { count: relatedArticleIds.length })
                       : t("form.relatedArticlesPlaceholder")}
                     <ChevronsUpDown className="size-4 opacity-50" />
                   </Button>
@@ -406,9 +412,9 @@ export function NewsArticleForm({ article, mode }: NewsArticleFormProps) {
                       <CommandEmpty>{t("form.relatedArticlesEmpty")}</CommandEmpty>
                       <CommandGroup>
                         {candidates.map((candidate) => {
-                          const selected = relatedSlugs.includes(candidate.slug);
+                          const selected = relatedArticleIds.includes(candidate.id);
                           return (
-                            <CommandItem key={candidate.id} onSelect={() => toggleRelated(candidate.slug)}>
+                            <CommandItem key={candidate.id} onSelect={() => toggleRelated(candidate.id)}>
                               <Check className={cn("size-4", selected ? "opacity-100" : "opacity-0")} />
                               <span className="truncate">{candidate.title}</span>
                             </CommandItem>
@@ -419,14 +425,14 @@ export function NewsArticleForm({ article, mode }: NewsArticleFormProps) {
                   </Command>
                 </PopoverContent>
               </Popover>
-              {relatedSlugs.length > 0 && (
+              {relatedArticleIds.length > 0 && (
                 <div className="flex flex-wrap gap-2 pt-1">
-                  {relatedSlugs.map((slug) => {
-                    const candidate = candidates.find((c) => c.slug === slug);
+                  {relatedArticleIds.map((id) => {
+                    const candidate = candidates.find((c) => c.id === id);
                     return (
-                      <Badge key={slug} variant="secondary" className="gap-1">
-                        {candidate?.title ?? slug}
-                        <button type="button" onClick={() => toggleRelated(slug)} aria-label={t("form.removeRelated")}>
+                      <Badge key={id} variant="secondary" className="gap-1">
+                        {candidate?.title ?? id}
+                        <button type="button" onClick={() => toggleRelated(id)} aria-label={t("form.removeRelated")}>
                           <X className="size-3" />
                         </button>
                       </Badge>

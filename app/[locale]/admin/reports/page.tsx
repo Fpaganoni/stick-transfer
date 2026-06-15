@@ -50,8 +50,11 @@ export default function AdminReportsPage() {
   };
 
   const { data, isLoading } = useReports(filters, page, PAGE_SIZE);
-  const items = data?.reports.items ?? [];
-  const total = data?.reports.total ?? 0;
+  const items = data?.reports ?? [];
+  // Backend `reports` returns a flat array (no total/hasMore). Approximate a
+  // page count for AdminPagination: assume another page exists if this page
+  // came back full.
+  const total = (page - 1) * PAGE_SIZE + items.length + (items.length === PAGE_SIZE ? 1 : 0);
 
   const openReport = (report: Report) => {
     setSelectedReport(report);

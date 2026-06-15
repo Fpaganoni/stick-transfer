@@ -662,32 +662,29 @@
       "subtitle": "Estadísticas y actividad de la plataforma de un vistazo.",
       "stats": {
         "totalUsers": "Usuarios totales",
+        "activeUsers": "Usuarios activos",
         "totalClubs": "Clubes totales",
         "openJobs": "Empleos abiertos",
+        "totalApplications": "Postulaciones totales",
+        "totalReports": "Reportes totales",
         "publishedNews": "Artículos publicados",
-        "newInLast30Days": "+{count} en los últimos 30 días"
+        "newUsers7d": "Nuevos usuarios (7d)",
+        "newInLast30Days": "+{count} en los últimos 30 días",
+        "newUsers7dDelta": "+{count} en los últimos 7 días",
+        "verifiedCount": "{count} verificados",
+        "pendingCount": "{count} pendientes"
       },
       "charts": {
-        "usersGrowth": "Crecimiento de usuarios",
         "usersByRole": "Usuarios por rol",
         "clubsByVerification": "Clubes por estado de verificación",
+        "jobsByStatus": "Empleos por estado",
         "applicationsByStatus": "Postulaciones por estado",
-        "newsByCategory": "Noticias por categoría"
+        "reportsByStatus": "Reportes por estado"
       },
-      "social": {
-        "title": "Interacción social",
-        "follows": "Seguimientos",
-        "likes": "Me gusta",
-        "conversations": "Conversaciones",
-        "messages": "Mensajes"
-      },
-      "topCountries": {
-        "title": "Países principales",
-        "empty": "Todavía no hay datos de países."
-      },
-      "topLeagues": {
-        "title": "Ligas principales",
-        "empty": "Todavía no hay datos de ligas."
+      "memberships": {
+        "title": "Membresías de clubes",
+        "pending": "Pendientes",
+        "active": "Activas"
       },
       "errorTitle": "No se pudieron cargar las estadísticas",
       "errorDescription": "Algo salió mal al obtener los datos del resumen. Intentá de nuevo.",

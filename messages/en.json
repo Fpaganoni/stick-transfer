@@ -662,32 +662,29 @@
       "subtitle": "Platform-wide stats and activity at a glance.",
       "stats": {
         "totalUsers": "Total users",
+        "activeUsers": "Active users",
         "totalClubs": "Total clubs",
         "openJobs": "Open jobs",
+        "totalApplications": "Total applications",
+        "totalReports": "Total reports",
         "publishedNews": "Published articles",
-        "newInLast30Days": "+{count} in the last 30 days"
+        "newUsers7d": "New users (7d)",
+        "newInLast30Days": "+{count} in the last 30 days",
+        "newUsers7dDelta": "+{count} in the last 7 days",
+        "verifiedCount": "{count} verified",
+        "pendingCount": "{count} pending"
       },
       "charts": {
-        "usersGrowth": "User growth",
         "usersByRole": "Users by role",
         "clubsByVerification": "Clubs by verification status",
+        "jobsByStatus": "Jobs by status",
         "applicationsByStatus": "Applications by status",
-        "newsByCategory": "News by category"
+        "reportsByStatus": "Reports by status"
       },
-      "social": {
-        "title": "Social engagement",
-        "follows": "Follows",
-        "likes": "Likes",
-        "conversations": "Conversations",
-        "messages": "Messages"
-      },
-      "topCountries": {
-        "title": "Top countries",
-        "empty": "No country data yet."
-      },
-      "topLeagues": {
-        "title": "Top leagues",
-        "empty": "No league data yet."
+      "memberships": {
+        "title": "Club memberships",
+        "pending": "Pending",
+        "active": "Active"
       },
       "errorTitle": "Couldn't load dashboard stats",
       "errorDescription": "Something went wrong while fetching the overview data. Please try again.",

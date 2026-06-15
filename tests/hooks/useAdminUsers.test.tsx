@@ -1,8 +1,9 @@
 /**
  * What: Unit tests for useAdminUsers query and mutation hooks.
- * Why: Verifies the users list query passes filters/pagination through, and
- *      that the activate/verify/role-change mutations call the GraphQL client
- *      with the expected variables (the optimistic-update plumbing depends on it).
+ * Why: Verifies that the flat `users` list is filtered/paginated client-side
+ *      (backend has no adminUsers/AdminUserFiltersInput), and that the
+ *      activate/verify/role-change mutations call the GraphQL client with
+ *      the expected variables (the optimistic-update plumbing depends on it).
  */
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { renderHook, waitFor } from "@testing-library/react";
@@ -27,12 +28,24 @@ vi.mock("sonner", () => ({
 
 const mockUserRow = {
   id: "user-1",
-  fullName: "Franco Paganoni",
+  name: "Franco Paganoni",
+  username: "franco",
   email: "franco@test.com",
   role: Role.PLAYER,
-  isActive: true,
   isVerified: false,
+  isEmailVerified: true,
   createdAt: "2026-01-01T00:00:00.000Z",
+};
+
+const otherUserRow = {
+  id: "user-2",
+  name: "Coach Test",
+  username: "coach",
+  email: "coach@test.com",
+  role: Role.COACH,
+  isVerified: true,
+  isEmailVerified: true,
+  createdAt: "2026-01-02T00:00:00.000Z",
 };
 
 function wrapper() {
@@ -48,37 +61,34 @@ function wrapper() {
 describe("useAdminUsers", () => {
   beforeEach(() => mockRequest.mockReset());
 
-  it("fetches users with filters and pagination variables", async () => {
-    mockRequest.mockResolvedValueOnce({
-      adminUsers: { items: [mockUserRow], total: 1, hasMore: false },
-    });
+  it("fetches the flat users list and applies filters/pagination client-side", async () => {
+    mockRequest.mockResolvedValueOnce({ users: [mockUserRow, otherUserRow] });
 
-    const { result } = renderHook(() => useAdminUsers({ role: Role.PLAYER }, 2, 20), {
+    const { result } = renderHook(() => useAdminUsers({ role: Role.COACH }, 1, 20), {
       wrapper: wrapper(),
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
     expect(result.current.data?.adminUsers.items).toHaveLength(1);
-    expect(mockRequest).toHaveBeenCalledWith(
-      expect.anything(),
-      { filters: { role: Role.PLAYER }, page: 2, limit: 20 }
-    );
+    expect(result.current.data?.adminUsers.items[0].id).toBe("user-2");
+    expect(result.current.data?.adminUsers.total).toBe(1);
+    expect(mockRequest).toHaveBeenCalledWith(expect.anything());
   });
 });
 
 describe("useAdminSetUserActive", () => {
   beforeEach(() => mockRequest.mockReset());
 
-  it("mutates with userId and isActive", async () => {
+  it("mutates with userId and active", async () => {
     mockRequest.mockResolvedValueOnce({ adminSetUserActive: { ...mockUserRow, isActive: false } });
 
     const { result } = renderHook(() => useAdminSetUserActive(), { wrapper: wrapper() });
-    result.current.mutate({ userId: "user-1", isActive: false });
+    result.current.mutate({ userId: "user-1", active: false });
 
     await waitFor(() => expect(mockRequest).toHaveBeenCalled());
     expect(mockRequest).toHaveBeenCalledWith(expect.anything(), {
       userId: "user-1",
-      isActive: false,
+      active: false,
     });
   });
 });
@@ -86,16 +96,16 @@ describe("useAdminSetUserActive", () => {
 describe("useAdminSetUserVerified", () => {
   beforeEach(() => mockRequest.mockReset());
 
-  it("mutates with userId and isVerified", async () => {
+  it("mutates with userId and verified", async () => {
     mockRequest.mockResolvedValueOnce({ adminSetUserVerified: { ...mockUserRow, isVerified: true } });
 
     const { result } = renderHook(() => useAdminSetUserVerified(), { wrapper: wrapper() });
-    result.current.mutate({ userId: "user-1", isVerified: true });
+    result.current.mutate({ userId: "user-1", verified: true });
 
     await waitFor(() => expect(mockRequest).toHaveBeenCalled());
     expect(mockRequest).toHaveBeenCalledWith(expect.anything(), {
       userId: "user-1",
-      isVerified: true,
+      verified: true,
     });
   });
 });

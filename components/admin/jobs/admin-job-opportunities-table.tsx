@@ -94,7 +94,7 @@ export function AdminJobOpportunitiesTable({ opportunities, isLoading }: AdminJo
                     {KNOWN_STATUSES.includes(status) ? t(`opportunities.status.${status}`) : status}
                   </Badge>
                 </TableCell>
-                <TableCell className="text-foreground-muted">{job.applicationsCount}</TableCell>
+                <TableCell className="text-foreground-muted">{job.applicationsCount ?? "—"}</TableCell>
                 <TableCell className="text-foreground-muted">
                   {job.expiresAt ? formatDate(job.expiresAt, locale) : "—"}
                 </TableCell>

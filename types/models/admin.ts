@@ -5,71 +5,39 @@ import { NewsCategory } from "@/hooks/useNews";
 // DASHBOARD STATS — adminDashboardStats
 // ============================================
 
-export interface CountByKey {
+export interface RoleCount {
+  role: Role | string;
   count: number;
 }
 
-export interface RoleCount extends CountByKey {
-  role: Role | string;
-}
-
-export interface CountrySeriesPoint extends CountByKey {
-  date: string;
-}
-
-export interface CountryCount extends CountByKey {
-  country: string;
-}
-
-export interface LeagueCount extends CountByKey {
-  league: string;
-}
-
-export interface VerificationStatusCount extends CountByKey {
-  status: string;
-}
-
-export interface CategoryCount extends CountByKey {
-  category: NewsCategory | string;
-}
-
 export interface AdminDashboardStats {
-  users: {
-    total: number;
-    byRole: RoleCount[];
-    active: number;
-    inactive: number;
-    verified: number;
-    emailVerified: number;
-    newLast30Days: number;
-    growth: CountrySeriesPoint[];
-    byCountry: CountryCount[];
-  };
-  clubs: {
-    total: number;
-    byVerificationStatus: VerificationStatusCount[];
-    newLast30Days: number;
-    byLeague: LeagueCount[];
-  };
-  jobs: {
-    totalOpportunities: number;
-    byStatus: { status: string; count: number }[];
-    totalApplications: number;
-    applicationsByStatus: { status: string; count: number }[];
-    savedJobsTotal: number;
-  };
-  social: {
-    totalFollows: number;
-    totalLikes: number;
-    totalConversations: number;
-    totalMessages: number;
-  };
-  news: {
-    total: number;
-    published: number;
-    drafts: number;
-    byCategory: CategoryCount[];
-  };
+  totalUsersCount: number;
+  playersCount: number;
+  coachesCount: number;
+  clubsCount: number;
+  superAdminsCount: number;
+  activeUsersCount: number;
+  verifiedClubsCount: number;
+  pendingVerificationClubsCount: number;
+  unverifiedClubsCount: number;
+  rejectedClubsCount: number;
+  openJobsCount: number;
+  closedJobsCount: number;
+  filledJobsCount: number;
+  totalApplicationsCount: number;
+  pendingApplicationsCount: number;
+  acceptedApplicationsCount: number;
+  rejectedApplicationsCount: number;
+  totalReportsCount: number;
+  pendingReportsCount: number;
+  reviewedReportsCount: number;
+  actionTakenReportsCount: number;
+  publishedNewsCount: number;
+  draftNewsCount: number;
+  pendingClubMembershipsCount: number;
+  activeClubMembershipsCount: number;
+  newUsersLast7Days: number;
+  newUsersLast30Days: number;
 }
 
 // ============================================
@@ -88,6 +56,8 @@ export interface AdminUserRow {
   isActive: boolean;
   isVerified: boolean;
   isEmailVerified: boolean;
+  // GAP backend: User no expone authProvider. Queda undefined hasta que el
+  // backend lo agregue; la UI debe tolerar ausencia.
   authProvider?: string;
   createdAt: string;
 }
@@ -148,8 +118,10 @@ export interface AdminJobOpportunityRow {
   country: string;
   city: string;
   status: string;
+  // GAP backend: JobOpportunity no expone expiresAt ni applicationsCount.
+  // Quedan undefined hasta que el backend los agregue.
   expiresAt?: string;
-  applicationsCount: number;
+  applicationsCount?: number;
   createdAt: string;
   club: { id: string; name: string; logo?: string };
 }
@@ -166,6 +138,15 @@ export interface AdminJobApplicationRow {
 // NEWS CMS — superAdminNewsArticles / createNewsArticle / updateNewsArticle / ...
 // ============================================
 
+export interface RelatedNewsArticle {
+  id: string;
+  slug: string;
+  title: string;
+  coverImage?: string;
+  category: NewsCategory;
+  publishedAt?: string;
+}
+
 export interface AdminNewsArticle {
   id: string;
   slug: string;
@@ -177,17 +158,13 @@ export interface AdminNewsArticle {
   isPublished: boolean;
   publishedAt?: string;
   readingTimeMinutes?: number;
-  authorName?: string;
-  authorAvatar?: string;
-  relatedSlugs?: string[];
-  createdAt: string;
-  updatedAt?: string;
+  author?: { name: string; avatar?: string };
+  relatedArticles?: RelatedNewsArticle[];
 }
 
 export interface SuperAdminNewsFilters {
   category?: NewsCategory;
   search?: string;
-  isPublished?: boolean;
 }
 
 export interface NewsArticleInput {
