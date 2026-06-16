@@ -27,7 +27,7 @@ function isUnauthenticatedError(error: unknown): boolean {
   if (error.response?.status === 401) return true;
 
   return (error.response?.errors ?? []).some(
-    (gqlError) => gqlError.extensions?.code === "UNAUTHENTICATED"
+    (gqlError) => gqlError.extensions?.code === "UNAUTHENTICATED",
   );
 }
 
@@ -41,7 +41,7 @@ function handleUnauthenticated() {
     ? `/${maybeLocale}`
     : "";
 
-  window.location.href = `${localePrefix}/login`;
+  window.location.href = `${localePrefix}/`;
 }
 
 // Wraps graphql-request so any UNAUTHENTICATED/401 response logs the user
@@ -49,7 +49,9 @@ function handleUnauthenticated() {
 export const graphqlClient = {
   request: (async (...args: Parameters<GraphQLClient["request"]>) => {
     try {
-      return await client.request(...(args as Parameters<typeof client.request>));
+      return await client.request(
+        ...(args as Parameters<typeof client.request>),
+      );
     } catch (error) {
       if (isUnauthenticatedError(error)) {
         handleUnauthenticated();
