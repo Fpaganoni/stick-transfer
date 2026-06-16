@@ -9,7 +9,7 @@ interface FollowersFollowingModalProps {
   isOpen: boolean;
   onClose: () => void;
   mode: "followers" | "following";
-  users: Array<{ id: string; name: string; avatar?: string }>;
+  users: Array<{ id: string; name: string; avatar?: string; username?: string }>;
   totalCount: number;
 }
 
@@ -73,7 +73,7 @@ export function FollowersFollowingModal({
                   {users.map((user) => (
                     <li key={user.id}>
                       <Link
-                        href={`/profile/${user.id}`}
+                        href={`/profile/${user.username || user.id}`}
                         onClick={onClose}
                         className="flex items-center gap-3 px-5 py-3 hover:bg-surface-elevated transition-colors"
                       >

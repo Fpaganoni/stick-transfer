@@ -328,6 +328,13 @@
   },
   "profile": {
     "followers": "Seguidores",
+    "following": "Siguiendo",
+    "follow": "Seguir",
+    "unfollow": "Dejar de seguir",
+    "followed": "¡Ahora sigues a este usuario!",
+    "unfollowed": "Dejaste de seguir",
+    "followError": "Error al actualizar seguimiento",
+    "report": "Reportar",
     "editProfile": "Editar Perfil",
     "editSuccess": "¡Perfil actualizado con éxito!",
     "editError": "Error al actualizar el perfil. Inténtalo de nuevo.",

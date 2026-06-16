@@ -6,6 +6,7 @@ export interface UserBasicInfo {
   id: string;
   name: string;
   avatar?: string;
+  username?: string;
 }
 
 export interface FollowVariables {

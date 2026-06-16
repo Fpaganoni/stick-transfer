@@ -328,6 +328,13 @@
   },
   "profile": {
     "followers": "Followers",
+    "following": "Following",
+    "follow": "Follow",
+    "unfollow": "Unfollow",
+    "followed": "Now following this user!",
+    "unfollowed": "Unfollowed",
+    "followError": "Failed to update follow status",
+    "report": "Report",
     "editProfile": "Edit Profile",
     "editSuccess": "Profile updated successfully!",
     "editError": "Failed to update profile. Please try again.",

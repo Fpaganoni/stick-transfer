@@ -81,11 +81,13 @@ export const GET_USER = gql`
         id
         name
         avatar
+        username
       }
       following {
         id
         name
         avatar
+        username
       }
       trajectories {
         title
@@ -151,11 +153,13 @@ export const GET_USER_BY_USERNAME = gql`
         id
         name
         avatar
+        username
       }
       following {
         id
         name
         avatar
+        username
       }
       trajectories {
         title
