@@ -11,6 +11,8 @@ import {
   UPLOAD_CV,
   DELETE_CV,
   UPDATE_USER,
+  FOLLOW_USER,
+  UNFOLLOW_USER,
 } from "@/graphql/user/mutations";
 import {
   LoginVariables,
@@ -22,8 +24,9 @@ import {
   DeleteCvVariables,
   DeleteCvResponse,
   UpdateUserVariables,
-} from "@/types/models/user";
-import {
+  FollowVariables,
+  FollowResponse,
+  UnfollowResponse,
   User,
 } from "@/types/models/user";
 
@@ -142,6 +145,32 @@ export function useDeleteCv() {
       graphqlClient.request(DELETE_CV, variables),
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({ queryKey: ["user", variables.userId] });
+    },
+  });
+}
+
+// ==================
+// FOLLOW / UNFOLLOW
+// ==================
+
+export function useFollow() {
+  const queryClient = useQueryClient();
+  return useMutation<FollowResponse, Error, FollowVariables>({
+    mutationFn: (variables) => graphqlClient.request(FOLLOW_USER, variables),
+    onSuccess: (_data, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["user", variables.followingId] });
+      queryClient.invalidateQueries({ queryKey: ["user", "username"] });
+    },
+  });
+}
+
+export function useUnfollow() {
+  const queryClient = useQueryClient();
+  return useMutation<UnfollowResponse, Error, FollowVariables>({
+    mutationFn: (variables) => graphqlClient.request(UNFOLLOW_USER, variables),
+    onSuccess: (_data, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["user", variables.followingId] });
+      queryClient.invalidateQueries({ queryKey: ["user", "username"] });
     },
   });
 }

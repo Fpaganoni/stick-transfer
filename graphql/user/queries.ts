@@ -147,6 +147,16 @@ export const GET_USER_BY_USERNAME = gql`
       city
       cvUrl
       multimedia
+      followers {
+        id
+        name
+        avatar
+      }
+      following {
+        id
+        name
+        avatar
+      }
       trajectories {
         title
         organization

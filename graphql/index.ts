@@ -63,4 +63,4 @@ export {
 // REPORT
 export { GET_REPORTS, GET_REPORT } from "./report/queries";
 
-export { UPDATE_REPORT_STATUS } from "./report/mutations";
+export { CREATE_REPORT, UPDATE_REPORT_STATUS } from "./report/mutations";
