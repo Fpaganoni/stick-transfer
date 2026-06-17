@@ -69,6 +69,8 @@ export const GET_USER = gql`
       coverImagePosition
       bio
       position
+      role
+      country
       clubId
       cvUrl
       multimedia

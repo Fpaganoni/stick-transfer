@@ -291,7 +291,7 @@ export function ProfileHeader({
                 </span>
               </div>
               <div className="flex items-center gap-2 mt-1">
-                <Badge variant="player">{role}</Badge>
+                {role && <Badge variant="player">{role}</Badge>}
                 <span className="text-foreground font-semibold text-sm">
                   {position || t("positionNotSet")}
                 </span>
