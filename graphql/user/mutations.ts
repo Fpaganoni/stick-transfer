@@ -95,10 +95,10 @@ export const UPDATE_USER = gql`
 
 export const FOLLOW_USER = gql`
   mutation Follow(
-    $followerType: String!
-    $followerId: String!
-    $followingType: String!
-    $followingId: String!
+    $followerType: FollowEntityType!
+    $followerId: ID!
+    $followingType: FollowEntityType!
+    $followingId: ID!
   ) {
     follow(
       followerType: $followerType
@@ -107,7 +107,9 @@ export const FOLLOW_USER = gql`
       followingId: $followingId
     ) {
       id
+      followerType
       followerId
+      followingType
       followingId
     }
   }
@@ -115,10 +117,10 @@ export const FOLLOW_USER = gql`
 
 export const UNFOLLOW_USER = gql`
   mutation Unfollow(
-    $followerType: String!
-    $followerId: String!
-    $followingType: String!
-    $followingId: String!
+    $followerType: FollowEntityType!
+    $followerId: ID!
+    $followingType: FollowEntityType!
+    $followingId: ID!
   ) {
     unfollow(
       followerType: $followerType

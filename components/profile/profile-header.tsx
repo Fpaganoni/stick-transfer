@@ -9,6 +9,9 @@ import {
   X,
   Loader2,
   Flag,
+  UserPlus,
+  UserCheck,
+  UserMinus,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { useState, useRef, useCallback, useEffect } from "react";
@@ -39,8 +42,18 @@ type ProfileHeaderProps = Pick<
 > & {
   isOwnProfile?: boolean;
   username?: string;
-  followers?: Array<{ id: string; name: string; avatar?: string; username?: string }>;
-  following?: Array<{ id: string; name: string; avatar?: string; username?: string }>;
+  followers?: Array<{
+    id: string;
+    name: string;
+    avatar?: string;
+    username?: string;
+  }>;
+  following?: Array<{
+    id: string;
+    name: string;
+    avatar?: string;
+    username?: string;
+  }>;
 };
 
 export function ProfileHeader({
@@ -82,7 +95,8 @@ export function ProfileHeader({
   const unfollowMutation = useUnfollow();
 
   const isFollowing = followers.some((f) => f.id === currentUser?.id);
-  const isFollowPending = followMutation.isPending || unfollowMutation.isPending;
+  const isFollowPending =
+    followMutation.isPending || unfollowMutation.isPending;
 
   useEffect(() => {
     const pos = coverImagePosition ? parseFloat(coverImagePosition) : 50;
@@ -268,7 +282,8 @@ export function ProfileHeader({
                 />
               </motion.div>
             </div>
-            <div className="pt-6">
+
+            <div className="pt-6 flex-1">
               <div className="flex items-center gap-2 flex-wrap">
                 <h1 className="text-2xl font-bold text-foreground">{name}</h1>
                 <span className="text-2xl text-foreground-muted">
@@ -284,123 +299,129 @@ export function ProfileHeader({
               <p className="text-foreground-muted text-sm text-start my-2 leading-relaxed">
                 {bio || t("noBio")}
               </p>
+
+              {isOwnProfile ? (
+                <div className="flex flex-col gap-2 mt-3">
+                  <Link href="/profile/edit" className="w-fit block">
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      transition={{ duration: 0.2, ease: "easeInOut" }}
+                      className="flex items-center gap-2 justify-center h-(--input-button-height) px-4 py-2 bg-primary text-white-black font-semibold rounded-lg hover:bg-primary-hover transition-colors duration-200 cursor-pointer disabled:opacity-50"
+                    >
+                      <Edit size={18} />
+                      {t("editProfile")}
+                    </motion.button>
+                  </Link>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => setFollowersModalOpen(true)}
+                      className="text-sm text-foreground-muted hover:text-foreground hover:underline transition-colors"
+                    >
+                      {followers.length} {t("followers")}
+                    </button>
+                    <span className="text-foreground-muted">·</span>
+                    <button
+                      onClick={() => setFollowingModalOpen(true)}
+                      className="text-sm text-foreground-muted hover:text-foreground hover:underline transition-colors"
+                    >
+                      {following.length} {t("following")}
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex flex-col gap-2 mt-3">
+                  <div className="flex gap-3 items-center">
+                    <motion.button
+                      onClick={handleMessage}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      transition={{ duration: 0.2 }}
+                      className="p-3 rounded-full border-2 border-primary text-foreground hover:bg-primary/10 transition-colors duration-200 flex items-center justify-center shadow-sm"
+                      title={t("message")}
+                    >
+                      <MessageCircle className="w-5 h-5" />
+                    </motion.button>
+
+                    <motion.button
+                      onClick={handleFollowToggle}
+                      disabled={isFollowPending}
+                      onMouseEnter={() =>
+                        isFollowing && setIsHoveringUnfollow(true)
+                      }
+                      onMouseLeave={() => setIsHoveringUnfollow(false)}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      transition={{ duration: 0.2 }}
+                      className={`p-3 rounded-full border-2 flex items-center justify-center shadow-sm transition-colors duration-200 disabled:opacity-50 ${
+                        isFollowing
+                          ? isHoveringUnfollow
+                            ? "bg-error border-error text-white"
+                            : "bg-primary border-primary text-white-black"
+                          : "bg-transparent border-primary text-foreground hover:bg-primary/10"
+                      }`}
+                      title={
+                        isFollowing
+                          ? t("unfollow", { fallback: "Unfollow" })
+                          : t("follow", { fallback: "Follow" })
+                      }
+                    >
+                      {isFollowPending ? (
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                      ) : isFollowing ? (
+                        isHoveringUnfollow ? (
+                          <UserMinus className="w-5 h-5" />
+                        ) : (
+                          <UserCheck className="w-5 h-5" />
+                        )
+                      ) : (
+                        <UserPlus className="w-5 h-5" />
+                      )}
+                    </motion.button>
+
+                    {cvUrl && (
+                      <motion.a
+                        href={cvUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        download
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="p-3 rounded-full border-2 border-primary text-foreground hover:bg-primary-hover transition-colors flex items-center justify-center shadow-sm"
+                        title={t("cv.download", { fallback: "Download CV" })}
+                      >
+                        <Download className="w-5 h-5" />
+                      </motion.a>
+                    )}
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => setFollowersModalOpen(true)}
+                      className="text-sm text-foreground-muted hover:text-foreground hover:underline transition-colors"
+                    >
+                      {followers.length} {t("followers")}
+                    </button>
+                    <span className="text-foreground-muted">·</span>
+                    <button
+                      onClick={() => setFollowingModalOpen(true)}
+                      className="text-sm text-foreground-muted hover:text-foreground hover:underline transition-colors"
+                    >
+                      {following.length} {t("following")}
+                    </button>
+                  </div>
+
+                  <button
+                    onClick={() => setReportModalOpen(true)}
+                    className="flex items-center gap-1 w-fit text-sm text-foreground-muted hover:text-error transition-colors"
+                  >
+                    <Flag size={14} />
+                    {t("report")}
+                  </button>
+                </div>
+              )}
             </div>
           </div>
-        </div>
-
-        <div className="flex flex-col gap-2">
-          {isOwnProfile ? (
-            <>
-              <Link href="/profile/edit" className="w-[50%] mx-auto block">
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  transition={{ duration: 0.2, ease: "easeInOut" }}
-                  className="w-full flex items-center gap-2 justify-center h-(--input-button-height) px-4 py-2 bg-primary text-white-black font-semibold rounded-lg hover:bg-primary-hover transition-colors duration-200 cursor-pointer disabled:opacity-50"
-                >
-                  <Edit size={18} />
-                  {t("editProfile")}
-                </motion.button>
-              </Link>
-              <div className="flex items-center gap-2 ml-40">
-                <button
-                  onClick={() => setFollowersModalOpen(true)}
-                  className="text-sm text-foreground-muted hover:text-foreground hover:underline transition-colors"
-                >
-                  {followers.length} {t("followers")}
-                </button>
-                <span className="text-foreground-muted">·</span>
-                <button
-                  onClick={() => setFollowingModalOpen(true)}
-                  className="text-sm text-foreground-muted hover:text-foreground hover:underline transition-colors"
-                >
-                  {following.length} {t("following")}
-                </button>
-              </div>
-            </>
-          ) : (
-            <>
-              <div className="flex gap-3 items-center ml-40">
-                <motion.button
-                  onClick={handleMessage}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="p-3 rounded-full border-2 border-primary text-foreground hover:bg-primary transition-colors flex items-center justify-center shadow-sm"
-                  title={t("message")}
-                >
-                  <MessageCircle className="w-5 h-5" />
-                </motion.button>
-
-                <motion.button
-                  onClick={handleFollowToggle}
-                  disabled={isFollowPending}
-                  onMouseEnter={() => isFollowing && setIsHoveringUnfollow(true)}
-                  onMouseLeave={() => setIsHoveringUnfollow(false)}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  transition={{ duration: 0.2 }}
-                  className={`flex items-center justify-center gap-2 h-(--input-button-height) px-4 rounded-lg text-sm font-semibold transition-colors duration-200 disabled:opacity-50 border-2 ${
-                    isFollowing
-                      ? isHoveringUnfollow
-                        ? "bg-error border-error text-white"
-                        : "bg-primary border-primary text-white-black"
-                      : "bg-transparent border-primary text-foreground hover:bg-primary/10"
-                  }`}
-                >
-                  {isFollowPending ? (
-                    <Loader2 size={14} className="animate-spin" />
-                  ) : isFollowing ? (
-                    isHoveringUnfollow
-                      ? t("unfollow", { fallback: "Unfollow" })
-                      : t("following", { fallback: "Following" })
-                  ) : (
-                    t("follow", { fallback: "Follow" })
-                  )}
-                </motion.button>
-
-                {cvUrl && (
-                  <motion.a
-                    href={cvUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    download
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="p-3 rounded-full border-2 border-primary text-foreground hover:bg-primary-hover transition-colors flex items-center justify-center shadow-sm"
-                    title={t("cv.download", { fallback: "Download CV" })}
-                  >
-                    <Download className="w-5 h-5" />
-                  </motion.a>
-                )}
-              </div>
-
-              <div className="flex items-center gap-2 ml-40 mt-1">
-                <button
-                  onClick={() => setFollowersModalOpen(true)}
-                  className="text-sm text-foreground-muted hover:text-foreground hover:underline transition-colors"
-                >
-                  {followers.length} {t("followers")}
-                </button>
-                <span className="text-foreground-muted">·</span>
-                <button
-                  onClick={() => setFollowingModalOpen(true)}
-                  className="text-sm text-foreground-muted hover:text-foreground hover:underline transition-colors"
-                >
-                  {following.length} {t("following")}
-                </button>
-              </div>
-
-              <div className="flex ml-40 mt-1">
-                <button
-                  onClick={() => setReportModalOpen(true)}
-                  className="flex items-center gap-1 text-sm text-foreground-muted hover:text-error transition-colors"
-                >
-                  <Flag size={14} />
-                  {t("report")}
-                </button>
-              </div>
-            </>
-          )}
         </div>
       </div>
 
