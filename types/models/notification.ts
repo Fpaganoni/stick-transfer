@@ -7,6 +7,7 @@ export enum NotificationType {
   CLUB_PENDING_VERIFICATION = "CLUB_PENDING_VERIFICATION",
   CLUB_VERIFIED = "CLUB_VERIFIED",
   REPORT_RECEIVED = "REPORT_RECEIVED",
+  NEW_FOLLOWER = "NEW_FOLLOWER",
 }
 
 export interface Notification {

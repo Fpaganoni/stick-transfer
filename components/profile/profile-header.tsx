@@ -26,6 +26,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { FollowersFollowingModal } from "./followers-following-modal";
 import { ReportModal } from "./report-modal";
+import { AvatarPhotoModal } from "../ui/avatar-photo-modal";
 
 type ProfileHeaderProps = Pick<
   User,
@@ -87,6 +88,7 @@ export function ProfileHeader({
   const [followingModalOpen, setFollowingModalOpen] = useState(false);
   const [reportModalOpen, setReportModalOpen] = useState(false);
   const [isHoveringUnfollow, setIsHoveringUnfollow] = useState(false);
+  const [avatarModalOpen, setAvatarModalOpen] = useState(false);
 
   const isDragging = useRef(false);
   const coverContainerRef = useRef<HTMLDivElement>(null);
@@ -270,7 +272,8 @@ export function ProfileHeader({
               <motion.div
                 whileHover={{ scale: 1.05 }}
                 transition={{ duration: 0.2, ease: "easeInOut" }}
-                className="w-48 h-48 rounded-full border-2 border-background shadow-lg relative overflow-hidden bg-muted"
+                onClick={() => setAvatarModalOpen(true)}
+                className="w-48 h-48 rounded-full border-2 border-background shadow-lg relative overflow-hidden bg-muted cursor-pointer"
               >
                 <Image
                   src={avatar || "/hockey-stadium.jpg"}
@@ -385,9 +388,10 @@ export function ProfileHeader({
                         target="_blank"
                         rel="noopener noreferrer"
                         download
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="p-3 rounded-full border-2 border-primary text-foreground hover:bg-primary-hover transition-colors flex items-center justify-center shadow-sm"
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        transition={{ duration: 0.2 }}
+                        className="p-3 rounded-full border-2 border-primary text-foreground hover:bg-primary/10 transition-colors duration-200 flex items-center justify-center shadow-sm"
                         title={t("cv.download", { fallback: "Download CV" })}
                       >
                         <Download className="w-5 h-5" />
@@ -447,6 +451,12 @@ export function ProfileHeader({
           targetType="USER"
         />
       )}
+      <AvatarPhotoModal
+        isOpen={avatarModalOpen}
+        onClose={() => setAvatarModalOpen(false)}
+        src={avatar || "/hockey-stadium.jpg"}
+        alt={name}
+      />
     </div>
   );
 }

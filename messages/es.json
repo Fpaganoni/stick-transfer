@@ -639,6 +639,7 @@
     "COMMENT_POST": "{actorName} ha comentado en tu publicaciÃ³n.",
     "REPLY_COMMENT": "{actorName} ha respondido a tu comentario.",
     "FOLLOW_USER": "{actorName} ha comenzado a seguirte.",
+    "NEW_FOLLOWER": "{actorName} ha comenzado a seguirte.",
     "CLUB_INVITE": "{actorName} te ha invitado a unirte a un club.",
     "CLUB_ACCEPT": "{actorName} ha aceptado tu invitaciÃ³n al club.",
     "JOB_APPLICATION_UPDATE": "{actorName} ha actualizado el estado de tu solicitud de empleo.",
