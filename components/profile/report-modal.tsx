@@ -78,7 +78,7 @@ export function ReportModal({
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className="relative z-10 w-full max-w-md bg-surface border border-border rounded-2xl shadow-xl"
+            className="relative z-10 w-full max-w-md bg-background border border-border rounded-2xl shadow-xl"
           >
             <div className="flex items-center justify-between px-5 py-4 border-b border-border">
               <h2 className="text-base font-semibold text-foreground">
@@ -86,7 +86,7 @@ export function ReportModal({
               </h2>
               <button
                 onClick={handleClose}
-                className="p-1.5 rounded-lg text-foreground-muted hover:text-foreground hover:bg-surface-elevated transition-colors"
+                className="p-1.5 rounded-lg text-foreground-muted hover:text-foreground hover:bg-border/30 transition-colors"
                 aria-label="Close"
               >
                 <X size={18} />
@@ -101,7 +101,7 @@ export function ReportModal({
                 <select
                   value={reason}
                   onChange={(e) => setReason(e.target.value)}
-                  className="w-full h-(--input-button-height) px-3 rounded-lg border border-border bg-surface text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary transition-colors"
+                  className="w-full h-(--input-button-height) px-3 rounded-lg border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary transition-colors"
                 >
                   <option value="">Select a reason</option>
                   {REPORT_REASONS.map((r) => (
@@ -126,7 +126,7 @@ export function ReportModal({
                   }
                   placeholder="Tell us more about this issue..."
                   rows={4}
-                  className="w-full px-3 py-2 rounded-lg border border-border bg-surface text-foreground text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary transition-colors"
+                  className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary transition-colors"
                 />
                 <p className="text-xs text-foreground-muted text-right">
                   {description.length}/500
@@ -137,7 +137,7 @@ export function ReportModal({
             <div className="flex justify-end gap-3 px-5 py-4 border-t border-border">
               <button
                 onClick={handleClose}
-                className="h-(--input-button-height) px-4 rounded-lg border border-border text-sm text-foreground hover:bg-surface-elevated transition-colors"
+                className="h-(--input-button-height) px-4 rounded-lg border border-border text-sm text-foreground hover:bg-border/30 transition-colors"
               >
                 Cancel
               </button>

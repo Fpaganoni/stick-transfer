@@ -159,6 +159,7 @@ export function useFollow() {
     mutationFn: (variables) => graphqlClient.request(FOLLOW_USER, variables),
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({ queryKey: ["user", variables.followingId] });
+      queryClient.invalidateQueries({ queryKey: ["user", variables.followerId] });
       queryClient.invalidateQueries({ queryKey: ["user", "username"] });
     },
   });
@@ -170,6 +171,7 @@ export function useUnfollow() {
     mutationFn: (variables) => graphqlClient.request(UNFOLLOW_USER, variables),
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({ queryKey: ["user", variables.followingId] });
+      queryClient.invalidateQueries({ queryKey: ["user", variables.followerId] });
       queryClient.invalidateQueries({ queryKey: ["user", "username"] });
     },
   });

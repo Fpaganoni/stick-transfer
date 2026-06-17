@@ -43,7 +43,7 @@ export function FollowersFollowingModal({
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className="relative z-10 w-full max-w-md bg-surface border border-border rounded-2xl shadow-xl"
+            className="relative z-10 w-full max-w-md bg-background border border-border rounded-2xl shadow-xl"
           >
             {/* Header */}
             <div className="flex items-center justify-between px-5 py-4 border-b border-border">
@@ -55,7 +55,7 @@ export function FollowersFollowingModal({
               </h2>
               <button
                 onClick={onClose}
-                className="p-1.5 rounded-lg text-foreground-muted hover:text-foreground hover:bg-surface-elevated transition-colors"
+                className="p-1.5 rounded-lg text-foreground-muted hover:text-foreground hover:bg-border/30 transition-colors"
                 aria-label="Cerrar"
               >
                 <X size={18} />
@@ -75,7 +75,7 @@ export function FollowersFollowingModal({
                       <Link
                         href={`/profile/${user.username || user.id}`}
                         onClick={onClose}
-                        className="flex items-center gap-3 px-5 py-3 hover:bg-surface-elevated transition-colors"
+                        className="flex items-center gap-3 px-5 py-3 hover:bg-border/30 transition-colors"
                       >
                         <div className="relative w-10 h-10 rounded-full overflow-hidden shrink-0 bg-muted">
                           <Image
