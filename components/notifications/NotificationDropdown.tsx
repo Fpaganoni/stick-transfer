@@ -13,6 +13,7 @@ import {
   Building2,
   BadgeCheck,
   Flag,
+  UserPlus,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
@@ -47,6 +48,9 @@ const TYPE_ICON: Record<NotificationType, React.ReactNode> = {
   ),
   [NotificationType.REPORT_RECEIVED]: (
     <Flag size={12} className="text-error" />
+  ),
+  [NotificationType.NEW_FOLLOWER]: (
+    <UserPlus size={12} className="text-primary" />
   ),
 };
 

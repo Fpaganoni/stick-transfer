@@ -15,7 +15,9 @@ interface PublicClubProfilePageProps {
   username: string;
 }
 
-export function PublicClubProfilePage({ username }: PublicClubProfilePageProps) {
+export function PublicClubProfilePage({
+  username,
+}: PublicClubProfilePageProps) {
   const [activeTab, setActiveTab] = useState("profile");
   const { data, isLoading, error } = useUserByUsername(username);
   const { isLoggedIn } = useAuthStore();
@@ -92,8 +94,11 @@ export function PublicClubProfilePage({ username }: PublicClubProfilePageProps) 
           </p>
           <ul className="space-y-2 mb-5 text-left max-w-xs mx-auto">
             {visitorItems.map(({ icon: Icon, key }) => (
-              <li key={key} className="flex items-center gap-2 text-foreground text-sm">
-                <Icon size={16} className="text-primary flex-shrink-0" />
+              <li
+                key={key}
+                className="flex items-center gap-2 text-foreground text-sm"
+              >
+                <Icon size={16} className="text-primary shrink-0" />
                 {t(key)}
               </li>
             ))}

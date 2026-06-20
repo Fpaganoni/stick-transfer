@@ -2,6 +2,28 @@ import { Role, Position, Level } from "../enums";
 import { Club } from "./club";
 
 // Tipos relacionados con User
+export interface UserBasicInfo {
+  id: string;
+  name: string;
+  avatar?: string;
+  username?: string;
+}
+
+export interface FollowVariables {
+  followerType: string;
+  followerId: string;
+  followingType: string;
+  followingId: string;
+}
+
+export interface FollowResponse {
+  follow: { id: string; followerId: string; followingId: string };
+}
+
+export interface UnfollowResponse {
+  unfollow: boolean;
+}
+
 export interface TrajectoryItem {
   id?: string;
   title: string;
@@ -40,6 +62,8 @@ export interface User {
   clubId?: string;
   club?: Club;
   trajectories?: TrajectoryItem[];
+  followers?: UserBasicInfo[];
+  following?: UserBasicInfo[];
 
   // Metadata (opcional)
   createdAt?: string;

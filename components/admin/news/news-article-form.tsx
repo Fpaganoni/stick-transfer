@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { CalendarIcon, Check, ChevronsUpDown, X } from "lucide-react";
@@ -139,7 +139,7 @@ export function NewsArticleForm({ article, mode }: NewsArticleFormProps) {
     },
   });
 
-  const titleValue = form.watch("title");
+  const titleValue = useWatch({ control: form.control, name: "title" });
   useEffect(() => {
     if (!slugTouched) {
       form.setValue("slug", slugify(titleValue), { shouldValidate: true });
@@ -147,9 +147,9 @@ export function NewsArticleForm({ article, mode }: NewsArticleFormProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [titleValue, slugTouched]);
 
-  const excerptValue = form.watch("excerpt") ?? "";
-  const publishedAtValue = form.watch("publishedAt");
-  const relatedArticleIds = form.watch("relatedArticleIds") ?? [];
+  const excerptValue = useWatch({ control: form.control, name: "excerpt" }) ?? "";
+  const publishedAtValue = useWatch({ control: form.control, name: "publishedAt" });
+  const relatedArticleIds = useWatch({ control: form.control, name: "relatedArticleIds" }) ?? [];
 
   const isSaving = createMutation.isPending || updateMutation.isPending || publishMutation.isPending;
 

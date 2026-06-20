@@ -8,17 +8,25 @@ import {
   Check,
   X,
   Loader2,
+  Flag,
+  UserPlus,
+  UserCheck,
+  UserMinus,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { useState, useRef, useCallback, useEffect } from "react";
 import { Badge } from "../ui/badge";
 import { User } from "@/types/models/user";
-import { useUpdateUser } from "@/hooks/useUsers";
+import { useUpdateUser, useFollow, useUnfollow } from "@/hooks/useUsers";
+import { useAuthStore } from "@/stores/useAuthStore";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { FollowersFollowingModal } from "./followers-following-modal";
+import { ReportModal } from "./report-modal";
+import { AvatarPhotoModal } from "../ui/avatar-photo-modal";
 
 type ProfileHeaderProps = Pick<
   User,
@@ -34,6 +42,19 @@ type ProfileHeaderProps = Pick<
   | "cvUrl"
 > & {
   isOwnProfile?: boolean;
+  username?: string;
+  followers?: Array<{
+    id: string;
+    name: string;
+    avatar?: string;
+    username?: string;
+  }>;
+  following?: Array<{
+    id: string;
+    name: string;
+    avatar?: string;
+    username?: string;
+  }>;
 };
 
 export function ProfileHeader({
@@ -48,9 +69,12 @@ export function ProfileHeader({
   coverImagePosition,
   cvUrl,
   isOwnProfile = false,
+  followers = [],
+  following = [],
 }: ProfileHeaderProps) {
   const t = useTranslations("profile");
   const router = useRouter();
+  const { user: currentUser } = useAuthStore();
 
   const [isHoveringCover, setIsHoveringCover] = useState(false);
   const [isRepositioning, setIsRepositioning] = useState(false);
@@ -60,9 +84,21 @@ export function ProfileHeader({
   const [savedPos, setSavedPos] = useState<number>(
     coverImagePosition ? parseFloat(coverImagePosition) : 50,
   );
+  const [followersModalOpen, setFollowersModalOpen] = useState(false);
+  const [followingModalOpen, setFollowingModalOpen] = useState(false);
+  const [reportModalOpen, setReportModalOpen] = useState(false);
+  const [isHoveringUnfollow, setIsHoveringUnfollow] = useState(false);
+  const [avatarModalOpen, setAvatarModalOpen] = useState(false);
+
   const isDragging = useRef(false);
   const coverContainerRef = useRef<HTMLDivElement>(null);
   const updateUser = useUpdateUser();
+  const followMutation = useFollow();
+  const unfollowMutation = useUnfollow();
+
+  const isFollowing = followers.some((f) => f.id === currentUser?.id);
+  const isFollowPending =
+    followMutation.isPending || unfollowMutation.isPending;
 
   useEffect(() => {
     const pos = coverImagePosition ? parseFloat(coverImagePosition) : 50;
@@ -116,6 +152,37 @@ export function ProfileHeader({
   const handleCancelReposition = () => {
     setCoverPos(savedPos);
     setIsRepositioning(false);
+  };
+
+  const handleFollowToggle = () => {
+    if (!currentUser) return;
+    const vars = {
+      followerType: "USER",
+      followerId: currentUser.id,
+      followingType: "USER",
+      followingId: id,
+    };
+    if (isFollowing) {
+      unfollowMutation.mutate(vars, {
+        onSuccess: () =>
+          toast.success(t("unfollowed", { fallback: "Unfollowed" })),
+        onError: () =>
+          toast.error(
+            t("followError", { fallback: "Failed to update follow status" }),
+          ),
+      });
+    } else {
+      followMutation.mutate(vars, {
+        onSuccess: () =>
+          toast.success(
+            t("followed", { fallback: "Now following this user!" }),
+          ),
+        onError: () =>
+          toast.error(
+            t("followError", { fallback: "Failed to update follow status" }),
+          ),
+      });
+    }
   };
 
   const handleMessage = () => {
@@ -205,7 +272,8 @@ export function ProfileHeader({
               <motion.div
                 whileHover={{ scale: 1.05 }}
                 transition={{ duration: 0.2, ease: "easeInOut" }}
-                className="w-48 h-48 rounded-full border-2 border-background shadow-lg relative overflow-hidden bg-muted"
+                onClick={() => setAvatarModalOpen(true)}
+                className="w-48 h-48 rounded-full border-2 border-background shadow-lg relative overflow-hidden bg-muted cursor-pointer"
               >
                 <Image
                   src={avatar || "/hockey-stadium.jpg"}
@@ -217,7 +285,8 @@ export function ProfileHeader({
                 />
               </motion.div>
             </div>
-            <div className="pt-6">
+
+            <div className="pt-6 flex-1">
               <div className="flex items-center gap-2 flex-wrap">
                 <h1 className="text-2xl font-bold text-foreground">{name}</h1>
                 <span className="text-2xl text-foreground-muted">
@@ -225,62 +294,169 @@ export function ProfileHeader({
                 </span>
               </div>
               <div className="flex items-center gap-2 mt-1">
-                <Badge variant="player">{role}</Badge>
+                {role && <Badge variant="player">{role}</Badge>}
                 <span className="text-foreground font-semibold text-sm">
                   {position || t("positionNotSet")}
                 </span>
               </div>
-
               <p className="text-foreground-muted text-sm text-start my-2 leading-relaxed">
                 {bio || t("noBio")}
               </p>
+
+              {isOwnProfile ? (
+                <div className="flex flex-col gap-2 mt-3">
+                  <Link href="/profile/edit" className="w-fit block">
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      transition={{ duration: 0.2, ease: "easeInOut" }}
+                      className="flex items-center gap-2 justify-center h-(--input-button-height) px-4 py-2 bg-primary text-white-black font-semibold rounded-lg hover:bg-primary-hover transition-colors duration-200 cursor-pointer disabled:opacity-50"
+                    >
+                      <Edit size={18} />
+                      {t("editProfile")}
+                    </motion.button>
+                  </Link>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => setFollowersModalOpen(true)}
+                      className="text-sm text-foreground-muted hover:text-foreground hover:underline transition-colors"
+                    >
+                      {followers.length} {t("followers")}
+                    </button>
+                    <span className="text-foreground-muted">·</span>
+                    <button
+                      onClick={() => setFollowingModalOpen(true)}
+                      className="text-sm text-foreground-muted hover:text-foreground hover:underline transition-colors"
+                    >
+                      {following.length} {t("following")}
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex flex-col gap-2 mt-3">
+                  <div className="flex gap-3 items-center">
+                    <motion.button
+                      onClick={handleMessage}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      transition={{ duration: 0.2 }}
+                      className="p-3 rounded-full border-2 border-primary text-foreground hover:bg-primary/10 transition-colors duration-200 flex items-center justify-center shadow-sm"
+                      title={t("message")}
+                    >
+                      <MessageCircle className="w-5 h-5" />
+                    </motion.button>
+
+                    <motion.button
+                      onClick={handleFollowToggle}
+                      disabled={isFollowPending}
+                      onMouseEnter={() =>
+                        isFollowing && setIsHoveringUnfollow(true)
+                      }
+                      onMouseLeave={() => setIsHoveringUnfollow(false)}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      transition={{ duration: 0.2 }}
+                      className={`p-3 rounded-full border-2 flex items-center justify-center shadow-sm transition-colors duration-200 disabled:opacity-50 ${
+                        isFollowing
+                          ? isHoveringUnfollow
+                            ? "bg-error border-error text-white"
+                            : "bg-primary border-primary text-white-black"
+                          : "bg-transparent border-primary text-foreground hover:bg-primary/10"
+                      }`}
+                      title={
+                        isFollowing
+                          ? t("unfollow", { fallback: "Unfollow" })
+                          : t("follow", { fallback: "Follow" })
+                      }
+                    >
+                      {isFollowPending ? (
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                      ) : isFollowing ? (
+                        isHoveringUnfollow ? (
+                          <UserMinus className="w-5 h-5" />
+                        ) : (
+                          <UserCheck className="w-5 h-5" />
+                        )
+                      ) : (
+                        <UserPlus className="w-5 h-5" />
+                      )}
+                    </motion.button>
+
+                    {cvUrl && (
+                      <motion.a
+                        href={cvUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        download
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        transition={{ duration: 0.2 }}
+                        className="p-3 rounded-full border-2 border-primary text-foreground hover:bg-primary/10 transition-colors duration-200 flex items-center justify-center shadow-sm"
+                        title={t("cv.download", { fallback: "Download CV" })}
+                      >
+                        <Download className="w-5 h-5" />
+                      </motion.a>
+                    )}
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => setFollowersModalOpen(true)}
+                      className="text-sm text-foreground-muted hover:text-foreground hover:underline transition-colors"
+                    >
+                      {followers.length} {t("followers")}
+                    </button>
+                    <span className="text-foreground-muted">·</span>
+                    <button
+                      onClick={() => setFollowingModalOpen(true)}
+                      className="text-sm text-foreground-muted hover:text-foreground hover:underline transition-colors"
+                    >
+                      {following.length} {t("following")}
+                    </button>
+                  </div>
+
+                  <button
+                    onClick={() => setReportModalOpen(true)}
+                    className="flex items-center gap-1 w-fit text-sm text-foreground-muted hover:text-error transition-colors"
+                  >
+                    <Flag size={14} />
+                    {t("report")}
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>
-
-        <div className="flex flex-col gap-2">
-          {isOwnProfile ? (
-            <Link href="/profile/edit" className="w-[50%] mx-auto block">
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                transition={{ duration: 0.2, ease: "easeInOut" }}
-                className="w-full flex items-center gap-2 justify-center h-(--input-button-height) px-4 py-2 bg-primary text-white-black font-semibold rounded-lg hover:bg-primary-hover transition-colors duration-200 cursor-pointer disabled:opacity-50"
-              >
-                <Edit size={18} />
-                {t("editProfile")}
-              </motion.button>
-            </Link>
-          ) : (
-            <div className="flex gap-4 justify-start ml-40">
-              <motion.button
-                onClick={handleMessage}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="p-3 rounded-full border-2 border-primary text-foreground hover:bg-primary transition-colors flex items-center justify-center shadow-sm"
-                title={t("message")}
-              >
-                <MessageCircle className="w-5 h-5" />
-              </motion.button>
-
-              {cvUrl && (
-                <motion.a
-                  href={cvUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  download
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="p-3 rounded-full border-2 border-primary text-foreground hover:bg-primary-hover transition-colors flex items-center justify-center shadow-sm"
-                  title={t("cv.download", { fallback: "Download CV" })}
-                >
-                  <Download className="w-5 h-5" />
-                </motion.a>
-              )}
-            </div>
-          )}
-        </div>
       </div>
+
+      <FollowersFollowingModal
+        isOpen={followersModalOpen}
+        onClose={() => setFollowersModalOpen(false)}
+        mode="followers"
+        users={followers}
+        totalCount={followers.length}
+      />
+      <FollowersFollowingModal
+        isOpen={followingModalOpen}
+        onClose={() => setFollowingModalOpen(false)}
+        mode="following"
+        users={following}
+        totalCount={following.length}
+      />
+      {!isOwnProfile && (
+        <ReportModal
+          isOpen={reportModalOpen}
+          onClose={() => setReportModalOpen(false)}
+          targetId={id}
+          targetType="USER"
+        />
+      )}
+      <AvatarPhotoModal
+        isOpen={avatarModalOpen}
+        onClose={() => setAvatarModalOpen(false)}
+        src={avatar || "/hockey-stadium.jpg"}
+        alt={name}
+      />
     </div>
   );
 }

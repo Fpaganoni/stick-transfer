@@ -2,12 +2,14 @@
 
 import { Edit, BadgeCheck, MoreHorizontal } from "lucide-react";
 import { motion } from "framer-motion";
+import { useState } from "react";
 import { User } from "@/types/models/user";
 import { Badge } from "../ui/badge";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { AvatarPhotoModal } from "../ui/avatar-photo-modal";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -41,6 +43,7 @@ export function ClubProfileHeader({
 }: ClubProfileHeaderProps) {
   const t = useTranslations("clubProfile");
   const router = useRouter();
+  const [avatarModalOpen, setAvatarModalOpen] = useState(false);
 
   const handleMessage = () => {
     router.push(`/messages?userId=${id}&name=${encodeURIComponent(name)}`);
@@ -75,7 +78,8 @@ export function ClubProfileHeader({
               <motion.div
                 whileHover={{ scale: 1.05 }}
                 transition={{ duration: 0.2, ease: "easeInOut" }}
-                className="w-32 h-32 rounded-full border-4 border-border shadow-lg relative overflow-hidden bg-muted"
+                onClick={() => setAvatarModalOpen(true)}
+                className="w-32 h-32 rounded-full border-4 border-border shadow-lg relative overflow-hidden bg-muted cursor-pointer"
               >
                 <Image
                   src={avatar || "/hockey-stadium.jpg"}
@@ -160,6 +164,12 @@ export function ClubProfileHeader({
           )}
         </div>
       </div>
+      <AvatarPhotoModal
+        isOpen={avatarModalOpen}
+        onClose={() => setAvatarModalOpen(false)}
+        src={avatar || "/hockey-stadium.jpg"}
+        alt={name}
+      />
     </div>
   );
 }

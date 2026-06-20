@@ -4,6 +4,7 @@ import { useState } from "react";
 import { ProfileHeader } from "@/components/profile/profile-header";
 import { ProfileTabs } from "@/components/profile/profile-tabs";
 import { useAuthStore } from "@/stores/useAuthStore";
+import { useUser } from "@/hooks/useUsers";
 
 interface UserProfilePageProps {
   isOwnProfile?: boolean;
@@ -13,7 +14,10 @@ export function UserProfilePage({
   isOwnProfile = false,
 }: UserProfilePageProps) {
   const [activeTab, setActiveTab] = useState("trajectory");
-  const { user } = useAuthStore();
+  const { user: authUser } = useAuthStore();
+  const { data: freshData } = useUser(authUser?.id ?? null);
+
+  const user = freshData?.user ?? authUser;
 
   if (!user) {
     return <div>PLEASE LOGIN</div>;
@@ -42,7 +46,12 @@ export function UserProfilePage({
 
   return (
     <main className="bg-overlay max-w-5xl mx-auto pb-24">
-      <ProfileHeader {...userData} isOwnProfile={isOwnProfile} />
+      <ProfileHeader
+          {...userData}
+          isOwnProfile={isOwnProfile}
+          followers={user.followers || []}
+          following={user.following || []}
+        />
       <ProfileTabs
         activeTab={activeTab}
         setActiveTab={setActiveTab}

@@ -16,6 +16,7 @@ function getToastIcon(type: Notification["type"]): string {
     [NotificationType.CLUB_PENDING_VERIFICATION]: "🏟️",
     [NotificationType.CLUB_VERIFIED]: "🏅",
     [NotificationType.REPORT_RECEIVED]: "🚩",
+    [NotificationType.NEW_FOLLOWER]: "👤",
   };
   return icons[type] ?? "🔔";
 }

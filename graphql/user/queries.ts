@@ -69,6 +69,8 @@ export const GET_USER = gql`
       coverImagePosition
       bio
       position
+      role
+      country
       clubId
       cvUrl
       multimedia
@@ -81,11 +83,13 @@ export const GET_USER = gql`
         id
         name
         avatar
+        username
       }
       following {
         id
         name
         avatar
+        username
       }
       trajectories {
         title
@@ -147,6 +151,18 @@ export const GET_USER_BY_USERNAME = gql`
       city
       cvUrl
       multimedia
+      followers {
+        id
+        name
+        avatar
+        username
+      }
+      following {
+        id
+        name
+        avatar
+        username
+      }
       trajectories {
         title
         organization

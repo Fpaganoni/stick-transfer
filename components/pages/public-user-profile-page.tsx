@@ -58,7 +58,13 @@ export function PublicUserProfilePage({
 
   return (
     <main className="bg-overlay max-w-4xl mx-auto pb-24">
-      <ProfileHeader {...userData} isOwnProfile={false} />
+      <ProfileHeader
+          {...userData}
+          isOwnProfile={false}
+          username={user.username}
+          followers={user.followers || []}
+          following={user.following || []}
+        />
       <ProfileTabs
         activeTab={activeTab}
         setActiveTab={setActiveTab}
