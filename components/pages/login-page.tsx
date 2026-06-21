@@ -145,10 +145,10 @@ export function LoginPage() {
   ];
 
   return (
-    <div className="w-full rounded-3xl border border-border bg-background p-8 shadow-xl">
+    <div className="w-full rounded-3xl border border-border bg-background p-5 sm:p-8 shadow-xl">
       {/* Header */}
-      <div className="flex flex-col items-center mb-7">
-        <HockeyXTicks size={48} className="text-primary" />
+      <div className="flex flex-col items-center mb-4 sm:mb-7">
+        <HockeyXTicks size={40} className="text-primary" />
         <h2 className="text-xl font-semibold text-foreground text-center mt-3 leading-snug">
           {t("loginWelcomeTitle")}
         </h2>
@@ -175,7 +175,7 @@ export function LoginPage() {
                 window.location.href = btn.href;
               }}
               style={{ backgroundColor: btn.bg }}
-              className="w-full h-11 px-4 rounded-xl text-white font-medium text-sm flex items-center gap-3 cursor-pointer transition-opacity hover:opacity-90"
+              className="w-full h-9 sm:h-11 px-4 rounded-xl text-white font-medium text-sm flex items-center gap-3 cursor-pointer transition-opacity hover:opacity-90"
             >
               <span className="shrink-0 w-5 flex items-center justify-center">
                 {btn.icon}
@@ -290,7 +290,7 @@ export function LoginPage() {
       </div>
 
       {/* Footer links */}
-      <div className="flex flex-wrap justify-center items-center gap-x-2 gap-y-1 mt-7 text-xs text-foreground/50">
+      <div className="flex flex-wrap justify-center items-center gap-x-2 gap-y-1 mt-4 sm:mt-7 text-xs text-foreground/50">
         <button
           type="button"
           onClick={openRegisterModal}

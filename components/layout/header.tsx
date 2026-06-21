@@ -31,14 +31,14 @@ export function Header({ title = "Hockey Connect" }: HeaderProps) {
   };
 
   return (
-    <header className="sticky top-0 bg-background/30 backdrop-blur-sm border-b border-border z-30 px-4 py-3 flex items-center justify-between">
-      <div className="flex items-center gap-2">
-        <SidebarTrigger />
-        <h1 className="text-xl ml-2 font-bold text-foreground">{title}</h1>
+    <header className="sticky top-0 bg-background/30 backdrop-blur-sm border-b border-border z-30 px-4 py-3 flex items-center justify-between gap-2">
+      <div className="flex items-center gap-2 min-w-0">
+        <SidebarTrigger className="shrink-0" />
+        <h1 className="text-base sm:text-xl ml-2 font-bold text-foreground truncate">{title}</h1>
       </div>
 
-      <div className="flex items-center gap-3">
-        <LanguageSelector variant="toolbar" />
+      <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
+        <div className="hidden sm:block"><LanguageSelector variant="toolbar" /></div>
         <ThemeToggleControl />
 
         <div className="relative">

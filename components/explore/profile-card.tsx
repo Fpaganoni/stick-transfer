@@ -66,7 +66,7 @@ export function ProfileCard({
       transition={{ duration: 0.3, ease: "easeInOut" }}
       className={`${colors.bg} rounded-xl p-4 hover:shadow-lg group mb-6`}
     >
-      <div className="flex items-start justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4">
         {/* Profile Info */}
         <div className="flex items-start gap-3 flex-1 min-w-0">
           <div className="relative w-14 h-14 shrink-0 rounded-full overflow-hidden">
@@ -108,7 +108,7 @@ export function ProfileCard({
         <motion.button
           whileTap={{ scale: 0.95 }}
           onClick={handleViewProfile}
-          className="px-4 py-2 rounded-lg bg-background text-foreground font-medium cursor-pointer shrink-0 group-hover:shadow-lg flex items-center gap-2 min-w-fit"
+          className="w-full sm:w-auto sm:shrink-0 px-4 py-2.5 rounded-lg bg-background text-foreground font-medium cursor-pointer group-hover:shadow-lg flex items-center justify-center gap-2"
         >
           {t("viewProfile")}
           <ArrowRight

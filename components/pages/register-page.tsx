@@ -108,7 +108,7 @@ function StepIndicator({ currentStep }: { currentStep: number }) {
   ];
 
   return (
-    <div className="flex items-center justify-center mb-6 gap-0">
+    <div className="flex items-center justify-center mb-3 sm:mb-6 gap-0">
       {[1, 2, 3].map((n, i) => (
         <div key={n} className="flex items-center">
           <div className="flex flex-col items-center gap-1">
@@ -373,7 +373,7 @@ export const RegisterPage = () => {
   const onSubmitStep3Club: SubmitHandler<Step3ClubData> = submitStep3;
 
   return (
-    <div className="rounded-2xl border border-border bg-background p-6 shadow-xl">
+    <div className="rounded-2xl border border-border bg-background p-4 sm:p-6 shadow-xl">
       <StepIndicator currentStep={step} />
 
       {error && (

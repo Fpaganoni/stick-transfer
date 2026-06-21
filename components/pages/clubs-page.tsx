@@ -21,7 +21,7 @@ interface ClubsPageProps {
 
 function ClubCardSkeleton() {
   return (
-    <div className="w-40 h-[200px] bg-surface border border-border rounded-xl p-3 animate-pulse flex flex-col items-center">
+    <div className="w-full h-[180px] sm:h-[200px] bg-surface border border-border rounded-xl p-3 animate-pulse flex flex-col items-center">
       <div className="mt-4 mb-2 w-20 h-20 rounded-full bg-surface-elevated" />
       <div className="h-3 w-24 bg-surface-elevated rounded mt-1" />
       <div className="h-3 w-16 bg-surface-elevated rounded mt-1" />
@@ -108,7 +108,7 @@ function ClubGrid({
   const t = useTranslations("clubs");
   if (isLoading) {
     return (
-      <div className="flex flex-wrap gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
         {Array.from({ length: 8 }).map((_, i) => (
           <ClubCardSkeleton key={i} />
         ))}
@@ -128,7 +128,7 @@ function ClubGrid({
   }
 
   return (
-    <div className="flex flex-wrap gap-4">
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
       {clubs.map((club) => (
         <ClubListCard key={club.id} {...club} />
       ))}

@@ -121,7 +121,7 @@ export function NavbarLanding() {
                   </Button>
                 </DialogTrigger>
                 <DialogContent
-                  className="max-w-[min(calc(100vw-2rem),680px)] p-0 overflow-visible"
+                  className="max-w-[min(calc(100vw-2rem),680px)] p-0 max-h-[90vh] overflow-y-auto"
                   showCloseButton={false}
                 >
                   <DialogTitle className="sr-only">Sign In</DialogTitle>
