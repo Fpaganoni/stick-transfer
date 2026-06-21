@@ -92,7 +92,7 @@ const POSITIONS = [
   { value: "goalkeeper", labelKey: "goalkeeper" },
   { value: "defender", labelKey: "defender" },
   { value: "midfielder", labelKey: "midfielder" },
-  { value: "attacker", labelKey: "attacker" },
+  { value: "attacker", labelKey: "forward" },
 ];
 
 // ---------------------------------------------------------------------------
