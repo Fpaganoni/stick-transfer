@@ -63,7 +63,7 @@ export function FollowersFollowingModal({
             </div>
 
             {/* List */}
-            <div className="max-h-96 overflow-y-auto">
+            <div className="max-h-[70vh] overflow-y-auto">
               {users.length === 0 ? (
                 <p className="text-center text-foreground-muted text-sm py-10">
                   {emptyText}

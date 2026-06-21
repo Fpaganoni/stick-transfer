@@ -24,6 +24,7 @@ export function RoleTabsSection() {
 
   useEffect(() => {
     return scrollYProgress.on("change", (progress) => {
+      if (!window.matchMedia("(min-width: 768px)").matches) return;
       const index = Math.min(
         Math.floor(progress * ROLES.length),
         ROLES.length - 1,
@@ -33,10 +34,10 @@ export function RoleTabsSection() {
   }, [scrollYProgress]);
 
   return (
-    <div ref={containerRef} className="h-[400vh]">
+    <div ref={containerRef} className="md:h-[400vh]">
       <section
         id="roles"
-        className="sticky top-0 h-screen flex items-center overflow-hidden px-4 bg-muted/30"
+        className="md:sticky md:top-0 md:h-screen md:overflow-hidden flex items-center px-4 py-16 md:py-0 bg-muted/30"
       >
         <div className="max-w-7xl mx-auto w-full">
           <motion.div
@@ -44,7 +45,7 @@ export function RoleTabsSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="text-center mb-12"
+            className="text-center mb-6 md:mb-12"
           >
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
               {t("title")}
@@ -54,11 +55,12 @@ export function RoleTabsSection() {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 w-full mb-10 bg-background rounded-lg p-1">
+          <div className="grid grid-cols-2 md:grid-cols-4 w-full mb-4 md:mb-10 bg-background rounded-lg p-1">
             {ROLES.map((role) => (
               <div
                 key={role}
-                className="relative py-3 text-sm font-medium text-center"
+                onClick={() => setActiveTab(role)}
+                className="relative py-3 text-sm font-medium text-center cursor-pointer select-none"
               >
                 {activeTab === role && (
                   <motion.div

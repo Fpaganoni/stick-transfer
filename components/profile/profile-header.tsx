@@ -193,7 +193,7 @@ export function ProfileHeader({
     <div className="bg-background">
       <div
         ref={coverContainerRef}
-        className={`h-86 relative overflow-hidden ${isRepositioning ? "cursor-ns-resize" : ""}`}
+        className={`h-48 sm:h-64 md:h-86 relative overflow-hidden ${isRepositioning ? "cursor-ns-resize" : ""}`}
         onMouseEnter={() => setIsHoveringCover(true)}
         onMouseLeave={() => {
           setIsHoveringCover(false);

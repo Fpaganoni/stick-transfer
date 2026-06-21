@@ -121,7 +121,7 @@ export function NavbarLanding() {
                   </Button>
                 </DialogTrigger>
                 <DialogContent
-                  className="sm:max-w-[680px] p-0 overflow-visible"
+                  className="max-w-[min(calc(100vw-2rem),680px)] p-0 overflow-visible"
                   showCloseButton={false}
                 >
                   <DialogTitle className="sr-only">Sign In</DialogTitle>
@@ -145,7 +145,7 @@ export function NavbarLanding() {
                   </Button>
                 </DialogTrigger>
                 <DialogContent
-                  className="max-w-md p-0 max-h-[90vh] overflow-y-auto"
+                  className="max-w-[min(calc(100vw-2rem),28rem)] p-0 max-h-[90vh] overflow-y-auto"
                   showCloseButton={false}
                 >
                   <DialogTitle className="sr-only">Sign Up</DialogTitle>
@@ -230,7 +230,7 @@ export function NavbarLanding() {
                         </Button>
                       </DialogTrigger>
                       <DialogContent
-                        className="max-w-md p-0 max-h-[90vh] overflow-y-auto"
+                        className="max-w-[min(calc(100vw-2rem),28rem)] p-0 max-h-[90vh] overflow-y-auto"
                         showCloseButton={false}
                       >
                         <DialogTitle className="sr-only">Sign In</DialogTitle>
@@ -255,7 +255,7 @@ export function NavbarLanding() {
                         </Button>
                       </DialogTrigger>
                       <DialogContent
-                        className="max-w-md p-0 max-h-[90vh] overflow-y-auto"
+                        className="max-w-[min(calc(100vw-2rem),28rem)] p-0 max-h-[90vh] overflow-y-auto"
                         showCloseButton={false}
                       >
                         <DialogTitle className="sr-only">Sign Up</DialogTitle>

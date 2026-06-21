@@ -59,7 +59,7 @@ export function FilterButton({
       </button>
 
       {isOpen && (
-        <div className="absolute top-full left-0 mt-2 w-48 shadow-lg z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+        <div className="absolute top-full left-0 right-auto mt-2 w-48 max-w-[calc(100vw-2rem)] shadow-lg z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
           {options.map((option) => (
             <button
               key={option.value}

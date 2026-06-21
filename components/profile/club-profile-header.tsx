@@ -2,7 +2,7 @@
 
 import { Edit, BadgeCheck, MoreHorizontal } from "lucide-react";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { User } from "@/types/models/user";
 import { Badge } from "../ui/badge";
 import { useTranslations } from "next-intl";
@@ -44,6 +44,11 @@ export function ClubProfileHeader({
   const t = useTranslations("clubProfile");
   const router = useRouter();
   const [avatarModalOpen, setAvatarModalOpen] = useState(false);
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
+
+  useEffect(() => {
+    setIsTouchDevice(window.matchMedia("(hover: none)").matches);
+  }, []);
 
   const handleMessage = () => {
     router.push(`/messages?userId=${id}&name=${encodeURIComponent(name)}`);
@@ -59,7 +64,7 @@ export function ClubProfileHeader({
 
   return (
     <div className="bg-background">
-      <div className="h-86 relative overflow-hidden">
+      <div className="h-48 sm:h-64 md:h-86 relative overflow-hidden">
         <Image
           src={coverImage || "/hockey-stadium.jpg"}
           alt="Cover"
@@ -76,7 +81,7 @@ export function ClubProfileHeader({
           <div className="flex items-start gap-3 flex-1 -mt-24 relative z-10">
             <div className="rounded-full shrink-0 mx-2">
               <motion.div
-                whileHover={{ scale: 1.05 }}
+                whileHover={isTouchDevice ? {} : { scale: 1.05 }}
                 transition={{ duration: 0.2, ease: "easeInOut" }}
                 onClick={() => setAvatarModalOpen(true)}
                 className="w-32 h-32 rounded-full border-4 border-border shadow-lg relative overflow-hidden bg-muted cursor-pointer"
@@ -125,7 +130,7 @@ export function ClubProfileHeader({
           {isOwnProfile ? (
             <Link href="/profile/edit" className="w-[50%] mx-auto block">
               <motion.button
-                whileHover={{ scale: 1.02 }}
+                whileHover={isTouchDevice ? {} : { scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 transition={{ duration: 0.2, ease: "easeInOut" }}
                 className="w-full flex items-center gap-2 justify-center h-(--input-button-height) px-4 py-2 bg-primary text-white-black font-semibold rounded-lg hover:bg-primary-hover transition-colors duration-200 cursor-pointer disabled:opacity-50"
@@ -139,7 +144,7 @@ export function ClubProfileHeader({
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <motion.button
-                    whileHover={{ scale: 1.05 }}
+                    whileHover={isTouchDevice ? {} : { scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     className="p-3 rounded-full border-2 border-border text-foreground hover:bg-surface-elevated transition-colors flex items-center justify-center shadow-sm"
                   >

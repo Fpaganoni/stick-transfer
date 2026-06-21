@@ -43,14 +43,14 @@ export function AvatarPhotoModal({
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.8, opacity: 0 }}
             transition={{ duration: 0.25, ease: "easeOut" }}
-            className="relative w-80 h-80 sm:w-[420px] sm:h-[420px] rounded-full overflow-hidden shadow-2xl border-4 border-white/20"
+            className="relative w-[min(80vw,420px)] h-[min(80vw,420px)] rounded-full overflow-hidden shadow-2xl border-4 border-white/20"
             onClick={(e) => e.stopPropagation()}
           >
             <Image
               src={src}
               alt={alt}
               fill
-              sizes="420px"
+              sizes="(max-width: 525px) 80vw, 420px"
               className="object-cover"
               priority
             />

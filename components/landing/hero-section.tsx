@@ -85,7 +85,7 @@ export function HeroSection() {
           transition={{ duration: 0.7, delay: 0.2 }}
           className="relative hidden lg:block"
         >
-          <div className="relative w-full h-[500px] rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
+          <div className="relative w-full h-[min(500px,50vh)] rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
             <Image
               src="/hockey-collection.avif"
               alt="Hockey Network"
@@ -96,9 +96,9 @@ export function HeroSection() {
             <div className="absolute inset-0 bg-linear-to-t from-[#0d1b2e]/50 to-transparent" />
           </div>
 
-          {/* Decorative blobs */}
-          <div className="absolute -top-8 -right-8 w-40 h-40 bg-primary/25 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute -bottom-8 -left-8 w-48 h-48 bg-primary/15 rounded-full blur-3xl pointer-events-none" />
+          {/* Decorative blobs — clipped by parent section overflow-hidden */}
+          <div className="absolute -top-4 -right-4 w-28 h-28 bg-primary/25 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-primary/15 rounded-full blur-3xl pointer-events-none" />
         </motion.div>
       </div>
     </section>

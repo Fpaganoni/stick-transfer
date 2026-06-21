@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ArrowLeft, Send, Plus } from "lucide-react";
 import { motion } from "framer-motion";
 import { Input } from "../ui/input";
@@ -43,6 +43,11 @@ export function ChatConversation({ onBack }: ChatConversationProps) {
   const t = useTranslations("messages");
   const [messages, setMessages] = useState<ChatMessage[]>(INITIAL_MESSAGES);
   const [newMessage, setNewMessage] = useState("");
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
+
+  useEffect(() => {
+    setIsTouchDevice(window.matchMedia("(hover: none)").matches);
+  }, []);
 
   const handleSend = () => {
     if (newMessage.trim()) {
@@ -64,7 +69,7 @@ export function ChatConversation({ onBack }: ChatConversationProps) {
       <div className="sticky top-16 bg-background border-b border-border px-4 py-3 flex items-center gap-3 z-20 shadow-sm">
         <motion.button
           whileTap={{ scale: 0.95 }}
-          whileHover={{ scale: 1.1 }}
+          whileHover={isTouchDevice ? {} : { scale: 1.1 }}
           transition={{ duration: 0.2, ease: "easeInOut" }}
           onClick={onBack}
           className="p-2 rounded-lg cursor-pointer"
@@ -72,11 +77,12 @@ export function ChatConversation({ onBack }: ChatConversationProps) {
           <ArrowLeft size={24} className="text-foreground" />
         </motion.button>
         <motion.img
-          whileHover={{ scale: 1.1 }}
+          whileHover={isTouchDevice ? {} : { scale: 1.1 }}
           transition={{ duration: 0.2, ease: "easeInOut" }}
           src="/user.png"
           alt="Conversation"
           className="w-10 h-10 rounded-full object-cover cursor-pointer"
+          draggable={false}
         />
         <div className="flex-1">
           <p className="font-semibold text-foreground">Sarah Mitchell</p>
@@ -117,7 +123,7 @@ export function ChatConversation({ onBack }: ChatConversationProps) {
       <div className="border-t border-border bg-background px-6 pt-8 pb-12 flex items-center gap-2 shadow-lg">
         <motion.button
           whileTap={{ scale: 0.95 }}
-          whileHover={{ scale: 1.1 }}
+          whileHover={isTouchDevice ? {} : { scale: 1.1 }}
           transition={{ duration: 0.2, ease: "easeInOut" }}
           className="p-2 cursor-pointer shrink-0 text-foreground mr-2"
         >
@@ -133,7 +139,7 @@ export function ChatConversation({ onBack }: ChatConversationProps) {
         />
         <motion.button
           whileTap={{ scale: 0.95 }}
-          whileHover={{ scale: 1.1 }}
+          whileHover={isTouchDevice ? {} : { scale: 1.1 }}
           transition={{ duration: 0.2, ease: "easeInOut" }}
           onClick={handleSend}
           disabled={!newMessage.trim()}
