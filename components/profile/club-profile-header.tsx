@@ -84,24 +84,24 @@ export function ClubProfileHeader({
                 whileHover={isTouchDevice ? {} : { scale: 1.05 }}
                 transition={{ duration: 0.2, ease: "easeInOut" }}
                 onClick={() => setAvatarModalOpen(true)}
-                className="w-32 h-32 rounded-full border-4 border-border shadow-lg relative overflow-hidden bg-muted cursor-pointer"
+                className="w-24 h-24 sm:w-32 sm:h-32 rounded-full border-4 border-border shadow-lg relative overflow-hidden bg-muted cursor-pointer"
               >
                 <Image
                   src={avatar || "/hockey-stadium.jpg"}
                   alt={name}
                   fill
                   priority
-                  sizes="128px"
+                  sizes="(max-width: 640px) 96px, 128px"
                   className="object-cover"
                 />
               </motion.div>
             </div>
-            <div className="pt-6">
-              <div className="flex items-center gap-2 flex-wrap">
-                <h1 className="text-2xl font-bold text-foreground">{name}</h1>
+            <div className="pt-6 flex-1 min-w-0">
+              <div className="flex items-center gap-2 flex-wrap min-w-0 overflow-hidden">
+                <h1 className="text-lg sm:text-2xl font-bold text-foreground min-w-0 truncate">{name}</h1>
                 {isVerified && (
                   <BadgeCheck
-                    className="w-6 h-6 text-accent"
+                    className="w-5 h-5 sm:w-6 sm:h-6 text-accent shrink-0"
                     data-testid="verified-badge"
                   />
                 )}
@@ -110,16 +110,16 @@ export function ClubProfileHeader({
                 <Badge variant="club">{role}</Badge>
               </div>
               {memberCount !== undefined && (
-                <p className="text-foreground-muted text-sm font-medium mt-1">
+                <p className="text-foreground-muted text-sm font-medium mt-1 truncate">
                   {memberCount} {t("header.members")}
                 </p>
               )}
               {(city || country) && (
-                <p className="text-foreground-muted text-sm font-medium mt-1">
+                <p className="text-foreground-muted text-sm font-medium mt-1 truncate">
                   {[city, country].filter(Boolean).join(", ") || "🌍"}
                 </p>
               )}
-              <p className="text-foreground-muted text-sm text-center mb-2 leading-relaxed mt-2">
+              <p className="text-foreground-muted text-sm mb-2 leading-relaxed mt-2 line-clamp-2">
                 {bio || t("noBio")}
               </p>
             </div>
@@ -140,7 +140,7 @@ export function ClubProfileHeader({
               </motion.button>
             </Link>
           ) : (
-            <div className="flex gap-3 justify-start ml-40">
+            <div className="flex gap-3 justify-start ml-28 sm:ml-40">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <motion.button

@@ -82,16 +82,16 @@ export function ClubContactSection({ club }: ClubContactSectionProps) {
   if (!hasContact && !hasSocial) return null;
 
   return (
-    <section className="mt-12">
-      <h2 className="text-2xl font-bold text-foreground mb-8">
+    <section className="mt-12 overflow-hidden">
+      <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-6 sm:mb-8">
         {t("contactAndSocial")}
       </h2>
 
-      <div className="grid md:grid-cols-2 gap-8">
+      <div className="grid md:grid-cols-2 gap-6 md:gap-8">
         {/* Contacto */}
         {hasContact && (
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-foreground mb-6">
+          <div className="min-w-0 space-y-4">
+            <h3 className="text-base sm:text-lg font-semibold text-foreground mb-4 sm:mb-6">
               {t("contactInfo")}
             </h3>
             <div className="space-y-3">
@@ -103,18 +103,18 @@ export function ClubContactSection({ club }: ClubContactSectionProps) {
                       href={href?.(club[field] as string)}
                       target={field === "website" ? "_blank" : undefined}
                       rel={field === "website" ? "noopener noreferrer" : undefined}
-                      className="flex items-center gap-4 p-4 rounded-lg bg-background border border-border hover:border-primary/50 hover:bg-primary/5 transition-all duration-200 cursor-pointer group"
+                      className="flex items-center gap-3 p-3 rounded-lg bg-background border border-border hover:border-primary/50 hover:bg-primary/5 transition-all duration-200 cursor-pointer group overflow-hidden"
                     >
-                      <div className="text-primary/70 group-hover:text-primary transition-colors">
+                      <div className="shrink-0 text-primary/70 group-hover:text-primary transition-colors">
                         {icon}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm text-foreground/60">{label}</p>
-                        <p className="text-foreground font-medium truncate">
+                        <p className="text-xs text-foreground/60">{label}</p>
+                        <p className="text-foreground text-sm font-medium truncate">
                           {club[field]}
                         </p>
                       </div>
-                      <div className="text-primary/0 group-hover:text-primary/70 transition-colors">
+                      <div className="shrink-0 text-primary/0 group-hover:text-primary/70 transition-colors">
                         →
                       </div>
                     </a>
@@ -126,8 +126,8 @@ export function ClubContactSection({ club }: ClubContactSectionProps) {
 
         {/* Redes Sociales */}
         {hasSocial && (
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-foreground mb-6">
+          <div className="min-w-0 space-y-4">
+            <h3 className="text-base sm:text-lg font-semibold text-foreground mb-4 sm:mb-6">
               {t("followUs")}
             </h3>
             <div className="grid grid-cols-2 gap-3">
@@ -139,12 +139,12 @@ export function ClubContactSection({ club }: ClubContactSectionProps) {
                       href={href(club[field] as string)}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex flex-col items-center justify-center p-6 rounded-lg bg-background border border-border hover:border-primary/50 hover:bg-primary/5 hover:scale-105 transition-all duration-200 cursor-pointer group"
+                      className="flex flex-col items-center justify-center p-3 sm:p-6 rounded-lg bg-background border border-border hover:border-primary/50 hover:bg-primary/5 sm:hover:scale-105 transition-all duration-200 cursor-pointer group"
                     >
                       <div className="text-primary/70 group-hover:text-primary transition-colors mb-2">
                         {icon}
                       </div>
-                      <span className="text-xs text-foreground/60 group-hover:text-foreground/80 transition-colors">
+                      <span className="text-xs text-foreground/60 group-hover:text-foreground/80 transition-colors text-center">
                         {label}
                       </span>
                     </a>

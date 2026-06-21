@@ -63,9 +63,9 @@ export function ClubDetailPage({ clubId }: ClubDetailPageProps) {
 
   return (
     <>
-      <main className="bg-overlay max-w-5xl mx-auto pb-24">
+      <main className="bg-overlay max-w-5xl mx-auto pb-24 overflow-x-hidden">
         {/* Cover image */}
-        <div className="relative h-80 bg-linear-to-b from-primary/10 to-background overflow-hidden">
+        <div className="relative h-48 sm:h-80 bg-linear-to-b from-primary/10 to-background overflow-hidden">
           {club.coverImage ? (
             <Image
               src={club.coverImage}
@@ -80,9 +80,9 @@ export function ClubDetailPage({ clubId }: ClubDetailPageProps) {
         </div>
 
         {/* Club info */}
-        <div className="px-6 sm:px-8">
+        <div className="px-4 sm:px-6">
           {/* Logo + Title section */}
-          <div className="flex items-end gap-4 -mt-16 mb-8 relative z-10">
+          <div className="flex flex-col sm:flex-row sm:items-end gap-3 sm:gap-4 -mt-10 sm:-mt-16 mb-6 sm:mb-8 relative z-10">
             {/* Logo */}
             {club.logo && (
               <div className="shrink-0">
@@ -91,19 +91,19 @@ export function ClubDetailPage({ clubId }: ClubDetailPageProps) {
                   alt={club.name}
                   width={120}
                   height={120}
-                  className="h-46 w-46 rounded-full object-cover border-4 border-background shadow-lg"
+                  className="w-20 h-20 sm:w-28 sm:h-28 rounded-full object-cover border-4 border-background shadow-lg"
                 />
               </div>
             )}
 
             {/* Title con badge */}
-            <div className="flex-1 pb-2">
-              <div className="flex items-center gap-3 mb-2">
-                <h1 className="text-3xl sm:text-4xl font-bold text-foreground">
+            <div className="flex-1 min-w-0 sm:pb-2">
+              <div className="flex items-center gap-3 mb-2 min-w-0">
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground min-w-0 wrap-break-word">
                   {club.name}
                 </h1>
                 {club.isVerified && (
-                  <CheckCircle className="w-7 h-7 text-primary shrink-0" />
+                  <CheckCircle className="w-6 h-6 sm:w-7 sm:h-7 text-primary shrink-0" />
                 )}
               </div>
             </div>
