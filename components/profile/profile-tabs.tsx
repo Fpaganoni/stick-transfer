@@ -55,7 +55,7 @@ export function ProfileTabs({
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`shrink-0 snap-start text-foreground-muted py-4 px-4 font-medium text-center border-b-2 transition-colors duration-200 cursor-pointer whitespace-nowrap hover:text-foreground ${
+              className={`flex-1 shrink-0 min-w-fit snap-start text-foreground-muted py-4 px-4 font-medium text-center border-b-2 transition-colors duration-200 cursor-pointer whitespace-nowrap hover:text-foreground ${
                 activeTab === tab.id
                   ? "border-b-primary text-primary font-bold"
                   : "border-b-transparent text-foreground-muted hover:text-foreground"

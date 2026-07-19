@@ -98,15 +98,15 @@ export function OpportunityDetailModal() {
 
   return (
     <Dialog open={isModalOpen} onOpenChange={(open) => !open && closeModal()}>
-      <DialogContent className="max-w-2xl">
-        <DialogHeader className="pb-4">
+      <DialogContent className="max-w-2xl max-h-[calc(100dvh-2rem)] grid-rows-[auto_1fr] p-0 gap-0">
+        <DialogHeader className="p-6 pb-4">
           <DialogTitle className="text-2xl font-bold pr-6">
             {opportunity.title}
           </DialogTitle>
         </DialogHeader>
 
         {/* Club and Status */}
-        <div className="space-y-4">
+        <div className="space-y-4 overflow-y-auto px-6 pb-6">
           <div className="flex items-start justify-between gap-4">
             <div>
               <p className="text-lg font-semibold text-foreground">

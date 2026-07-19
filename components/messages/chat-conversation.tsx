@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { ArrowLeft, Send, Plus } from "lucide-react";
 import { motion } from "framer-motion";
 import { Input } from "../ui/input";
@@ -44,10 +44,15 @@ export function ChatConversation({ onBack }: ChatConversationProps) {
   const [messages, setMessages] = useState<ChatMessage[]>(INITIAL_MESSAGES);
   const [newMessage, setNewMessage] = useState("");
   const [isTouchDevice, setIsTouchDevice] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setIsTouchDevice(window.matchMedia("(hover: none)").matches);
   }, []);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   const handleSend = () => {
     if (newMessage.trim()) {
@@ -65,8 +70,8 @@ export function ChatConversation({ onBack }: ChatConversationProps) {
   };
 
   return (
-    <div className="h-[calc(100vh-120px)] flex flex-col bg-background-gradient ">
-      <div className="sticky top-16 bg-background border-b border-border px-4 py-3 flex items-center gap-3 z-20 shadow-sm">
+    <div className="h-[calc(100dvh-120px)] flex flex-col overflow-hidden bg-background-gradient ">
+      <div className="shrink-0 bg-background border-b border-border px-4 py-3 flex items-center gap-3 z-20 shadow-sm">
         <motion.button
           whileTap={{ scale: 0.95 }}
           whileHover={isTouchDevice ? {} : { scale: 1.1 }}
@@ -118,9 +123,10 @@ export function ChatConversation({ onBack }: ChatConversationProps) {
             </div>
           </motion.div>
         ))}
+        <div ref={messagesEndRef} />
       </div>
 
-      <div className="border-t border-border bg-background px-6 pt-8 pb-12 flex items-center gap-2 shadow-lg">
+      <div className="shrink-0 border-t border-border bg-background px-6 py-4 flex items-center gap-2 shadow-lg">
         <motion.button
           whileTap={{ scale: 0.95 }}
           whileHover={isTouchDevice ? {} : { scale: 1.1 }}

@@ -23,7 +23,7 @@ export function MessagesPage() {
   }
 
   return (
-    <main className="max-w-lg mx-auto h-[calc(100vh-120px)] flex flex-col">
+    <main className="max-w-lg mx-auto h-[calc(100dvh-120px)] flex flex-col">
       <div className="sticky top-16 bg-background z-20 px-4 py-4 border-b border-border-strong rounded-b-lg">
         <div className="flex items-center gap-2 mb-3">
           <div className="relative flex-1">
