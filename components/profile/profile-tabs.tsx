@@ -49,20 +49,24 @@ export function ProfileTabs({
 
   return (
     <>
-      <div className="flex bg-background border-t border-border z-20 overflow-x-auto">
-        {tabs.map((tab) => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
-            className={`flex-1 text-foreground-muted py-4 font-medium text-center border-b-2 border-l border-r transition-transform duration-300 cursor-pointer whitespace-nowrap min-w-fit hover:text-foreground ${
-              activeTab === tab.id
-                ? "border-b-border-strong border-b-2 text-primary font-bold hover:text-primary shadow-lg"
-                : "border-b-transparent text-foreground-muted hover:text-foreground"
-            }`}
-          >
-            {tab.label}
-          </button>
-        ))}
+      <div className="relative bg-background border-t border-border z-20">
+        <div className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide gap-1 px-2">
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`shrink-0 snap-start text-foreground-muted py-4 px-4 font-medium text-center border-b-2 transition-colors duration-200 cursor-pointer whitespace-nowrap hover:text-foreground ${
+                activeTab === tab.id
+                  ? "border-b-primary text-primary font-bold"
+                  : "border-b-transparent text-foreground-muted hover:text-foreground"
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+        <div className="pointer-events-none absolute inset-y-0 left-0 w-6 bg-linear-to-r from-background to-transparent" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 w-6 bg-linear-to-l from-background to-transparent" />
       </div>
 
       <div className="px-4 py-6">

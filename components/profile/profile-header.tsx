@@ -267,56 +267,58 @@ export function ProfileHeader({
 
       <div className="px-4 pt-0 pb-6">
         <div className="flex justify-between items-start mb-4">
-          <div className="flex items-start gap-3 flex-1 -mt-24 relative z-10">
+          <div className="flex flex-col items-center text-center sm:flex-row sm:items-start sm:text-start gap-3 flex-1 -mt-16 sm:-mt-20 md:-mt-24 relative z-10 min-w-0">
             <div className="rounded-full shrink-0 mx-2">
               <motion.div
                 whileHover={{ scale: 1.05 }}
                 transition={{ duration: 0.2, ease: "easeInOut" }}
                 onClick={() => setAvatarModalOpen(true)}
-                className="w-48 h-48 rounded-full border-2 border-background shadow-lg relative overflow-hidden bg-muted cursor-pointer"
+                className="w-28 h-28 sm:w-36 sm:h-36 md:w-48 md:h-48 rounded-full border-2 border-background shadow-lg relative overflow-hidden bg-muted cursor-pointer"
               >
                 <Image
                   src={avatar || "/hockey-stadium.jpg"}
                   alt={name}
                   fill
                   priority
-                  sizes="128px"
+                  sizes="(max-width: 640px) 112px, (max-width: 768px) 144px, 192px"
                   className="object-cover"
                 />
               </motion.div>
             </div>
 
-            <div className="pt-6 flex-1">
-              <div className="flex items-center gap-2 flex-wrap">
-                <h1 className="text-2xl font-bold text-foreground">{name}</h1>
-                <span className="text-2xl text-foreground-muted">
+            <div className="pt-1 sm:pt-6 flex-1 min-w-0 w-full">
+              <div className="flex items-center justify-center sm:justify-start gap-2 flex-wrap">
+                <h1 className="text-xl sm:text-2xl font-bold text-foreground wrap-break-word">
+                  {name}
+                </h1>
+                <span className="text-xl sm:text-2xl text-foreground-muted">
                   {country || "🌍"}
                 </span>
               </div>
-              <div className="flex items-center gap-2 mt-1">
+              <div className="flex items-center justify-center sm:justify-start gap-2 mt-1 flex-wrap">
                 {role && <Badge variant="player">{role}</Badge>}
                 <span className="text-foreground font-semibold text-sm">
                   {position || t("positionNotSet")}
                 </span>
               </div>
-              <p className="text-foreground-muted text-sm text-start my-2 leading-relaxed">
+              <p className="text-foreground-muted text-sm text-center sm:text-start my-2 leading-relaxed">
                 {bio || t("noBio")}
               </p>
 
               {isOwnProfile ? (
-                <div className="flex flex-col gap-2 mt-3">
-                  <Link href="/profile/edit" className="w-fit block">
+                <div className="flex flex-col items-center sm:items-start gap-2 mt-3">
+                  <Link href="/profile/edit" className="w-full sm:w-fit block">
                     <motion.button
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                       transition={{ duration: 0.2, ease: "easeInOut" }}
-                      className="flex items-center gap-2 justify-center h-(--input-button-height) px-4 py-2 bg-primary text-white-black font-semibold rounded-lg hover:bg-primary-hover transition-colors duration-200 cursor-pointer disabled:opacity-50"
+                      className="flex items-center gap-2 justify-center h-(--input-button-height) px-4 py-2 w-full sm:w-auto bg-primary text-white-black font-semibold rounded-lg hover:bg-primary-hover transition-colors duration-200 cursor-pointer disabled:opacity-50"
                     >
                       <Edit size={18} />
                       {t("editProfile")}
                     </motion.button>
                   </Link>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 justify-center sm:justify-start">
                     <button
                       onClick={() => setFollowersModalOpen(true)}
                       className="text-sm text-foreground-muted hover:text-foreground hover:underline transition-colors"
@@ -333,8 +335,8 @@ export function ProfileHeader({
                   </div>
                 </div>
               ) : (
-                <div className="flex flex-col gap-2 mt-3">
-                  <div className="flex gap-3 items-center">
+                <div className="flex flex-col items-center sm:items-start gap-2 mt-3">
+                  <div className="flex gap-3 items-center justify-center sm:justify-start">
                     <motion.button
                       onClick={handleMessage}
                       whileHover={{ scale: 1.02 }}
@@ -399,7 +401,7 @@ export function ProfileHeader({
                     )}
                   </div>
 
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 justify-center sm:justify-start">
                     <button
                       onClick={() => setFollowersModalOpen(true)}
                       className="text-sm text-foreground-muted hover:text-foreground hover:underline transition-colors"
@@ -417,7 +419,7 @@ export function ProfileHeader({
 
                   <button
                     onClick={() => setReportModalOpen(true)}
-                    className="flex items-center gap-1 w-fit text-sm text-foreground-muted hover:text-error transition-colors"
+                    className="flex items-center gap-1 w-fit mx-auto sm:mx-0 text-sm text-foreground-muted hover:text-error transition-colors"
                   >
                     <Flag size={14} />
                     {t("report")}
