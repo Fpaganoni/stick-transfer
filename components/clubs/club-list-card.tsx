@@ -81,7 +81,7 @@ export function ClubListCard(club: Club) {
       )}
 
       {(flag ?? club.country) && (
-        <div className="mt-auto pt-1 text-sm text-foreground-muted">
+        <div className="mt-1 text-sm text-foreground-muted">
           {flag ?? club.country}
         </div>
       )}
