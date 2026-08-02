@@ -127,4 +127,6 @@ Open a Pull Request
 This project is licensed under the MIT License - see the LICENSE file for details.
 
 <div align="center"> <p><strong>Made with ❤️ by Fpaganoni</strong></p> <p> <a href="https://github.com/Fpaganoni">GitHub</a> • <a href="https://github.com/Fpaganoni/stick-transfer">Repository</a> </p> </div>
+
+realease soon ...
 ```
