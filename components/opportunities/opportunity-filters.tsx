@@ -3,6 +3,13 @@
 import { useOpportunitiesStore } from "@/stores/useOpportunitiesStore";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface OpportunityFiltersProps {
   availableCountries: string[];
@@ -35,8 +42,8 @@ export function OpportunityFilters({
     onClose?.();
   };
 
-  const selectClass =
-    "w-full px-3 py-2 rounded-lg bg-input border border-border text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 hover:border-border-strong transition-all cursor-pointer";
+  const triggerClass =
+    "w-full bg-input border-border text-foreground text-sm hover:border-border-strong";
 
   return (
     <div className="flex flex-col gap-5 p-4 pt-6">
@@ -45,24 +52,19 @@ export function OpportunityFilters({
         <label className="text-xs font-semibold text-foreground-muted uppercase tracking-wide">
           {t("filters.experience")}
         </label>
-        <select
-          value={filters.level || ""}
-          onChange={(e) => setFilters({ level: e.target.value || null })}
-          className={selectClass}
+        <Select
+          value={filters.level || "ALL"}
+          onValueChange={(v) => setFilters({ level: v === "ALL" ? null : v })}
         >
-          <option className="bg-surface text-foreground" value="">
-            {t("filters.experience")}
-          </option>
-          <option
-            className="bg-surface text-foreground"
-            value="PROFESSIONAL"
-          >
-            Professional
-          </option>
-          <option className="bg-surface text-foreground" value="AMATEUR">
-            Amateur
-          </option>
-        </select>
+          <SelectTrigger className={triggerClass}>
+            <SelectValue placeholder={t("filters.experience")} />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="ALL">{t("filters.experience")}</SelectItem>
+            <SelectItem value="PROFESSIONAL">Professional</SelectItem>
+            <SelectItem value="AMATEUR">Amateur</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       {/* Status */}
@@ -70,24 +72,20 @@ export function OpportunityFilters({
         <label className="text-xs font-semibold text-foreground-muted uppercase tracking-wide">
           {t("open")} / {t("filled")}
         </label>
-        <select
-          value={filters.status || ""}
-          onChange={(e) => setFilters({ status: e.target.value || null })}
-          className={selectClass}
+        <Select
+          value={filters.status || "ALL"}
+          onValueChange={(v) => setFilters({ status: v === "ALL" ? null : v })}
         >
-          <option className="bg-surface text-foreground" value="">
-            All
-          </option>
-          <option className="bg-surface text-foreground" value="open">
-            {t("open")}
-          </option>
-          <option className="bg-surface text-foreground" value="filled">
-            {t("filled")}
-          </option>
-          <option className="bg-surface text-foreground" value="closed">
-            {t("closed")}
-          </option>
-        </select>
+          <SelectTrigger className={triggerClass}>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="ALL">All</SelectItem>
+            <SelectItem value="open">{t("open")}</SelectItem>
+            <SelectItem value="filled">{t("filled")}</SelectItem>
+            <SelectItem value="closed">{t("closed")}</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       {/* Country */}
@@ -95,24 +93,22 @@ export function OpportunityFilters({
         <label className="text-xs font-semibold text-foreground-muted uppercase tracking-wide">
           {t("filters.location")}
         </label>
-        <select
-          value={filters.country || ""}
-          onChange={(e) => setFilters({ country: e.target.value || null })}
-          className={selectClass}
+        <Select
+          value={filters.country || "ALL"}
+          onValueChange={(v) => setFilters({ country: v === "ALL" ? null : v })}
         >
-          <option className="bg-surface text-foreground" value="">
-            All Countries
-          </option>
-          {availableCountries.map((country) => (
-            <option
-              key={country}
-              value={country}
-              className="bg-surface text-foreground"
-            >
-              {country}
-            </option>
-          ))}
-        </select>
+          <SelectTrigger className={triggerClass}>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="ALL">All Countries</SelectItem>
+            {availableCountries.map((country) => (
+              <SelectItem key={country} value={country}>
+                {country}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       {/* Position Type */}
@@ -120,24 +116,24 @@ export function OpportunityFilters({
         <label className="text-xs font-semibold text-foreground-muted uppercase tracking-wide">
           {t("positionFilter")}
         </label>
-        <select
-          value={filters.positionType || ""}
-          onChange={(e) => setFilters({ positionType: e.target.value || null })}
-          className={selectClass}
+        <Select
+          value={filters.positionType || "ALL"}
+          onValueChange={(v) =>
+            setFilters({ positionType: v === "ALL" ? null : v })
+          }
         >
-          <option className="bg-surface text-foreground" value="">
-            All Positions
-          </option>
-          {POSITION_TYPES.map((pos) => (
-            <option
-              key={pos}
-              value={pos}
-              className="bg-surface text-foreground"
-            >
-              {pos}
-            </option>
-          ))}
-        </select>
+          <SelectTrigger className={triggerClass}>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="ALL">All Positions</SelectItem>
+            {POSITION_TYPES.map((pos) => (
+              <SelectItem key={pos} value={pos}>
+                {pos}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       {/* Actions */}

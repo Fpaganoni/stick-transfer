@@ -38,7 +38,7 @@ export function Header({ title = "Hockey Connect" }: HeaderProps) {
       </div>
 
       <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
-        <div className="hidden sm:block"><LanguageSelector variant="toolbar" /></div>
+        <LanguageSelector variant="toolbar" />
         <ThemeToggleControl />
 
         <div className="relative">

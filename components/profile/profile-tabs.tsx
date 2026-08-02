@@ -92,8 +92,8 @@ export function ProfileTabs({
                 </motion.div>
               ))
             ) : (
-              <div className="py-8 text-center border-2 border-dashed border-border rounded-xl">
-                <p className="text-foreground-muted font-medium">
+              <div className="py-8 text-center border-2 border-dashed border-foreground dark:border-border rounded-xl">
+                <p className="text-foreground dark:text-foreground-muted font-medium">
                   {t("noTrajectory")}
                 </p>
               </div>
@@ -112,8 +112,8 @@ export function ProfileTabs({
                 />
               ))
             ) : (
-              <div className="col-span-full py-8 text-center border-2 border-dashed border-border rounded-xl">
-                <p className="text-foreground-muted font-medium">
+              <div className="col-span-full py-8 text-center border-2 border-dashed border-foreground dark:border-border rounded-xl">
+                <p className="text-foreground dark:text-foreground-muted font-medium">
                   No multimedia available
                 </p>
               </div>
@@ -142,12 +142,12 @@ export function ProfileTabs({
                 </a>
               </>
             ) : (
-              <div className="py-8 text-center border-2 border-dashed border-border rounded-xl">
+              <div className="py-8 text-center border-2 border-dashed border-foreground dark:border-border rounded-xl">
                 <FileText
                   size={32}
-                  className="mx-auto mb-3 text-foreground-muted opacity-40"
+                  className="mx-auto mb-3 text-foreground dark:text-foreground-muted"
                 />
-                <p className="text-foreground-muted font-medium">
+                <p className="text-foreground dark:text-foreground-muted font-medium">
                   {t("cv.noCv")}
                 </p>
               </div>

@@ -1,8 +1,11 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @plugin "tailwind-scrollbar-hide";
+@custom-variant dark (&:where(.dark, .dark *));
 
 :root {
+  color-scheme: light;
+
   /* === FONDOS === */
   --background: oklch(0.98 0.01 80); /* #F9F9F8 - Fondo principal */
   --surface: oklch(1 0 0); /* #FFFFFF - Cards, modales */
@@ -86,6 +89,8 @@
 }
 
 .dark {
+  color-scheme: dark;
+
   /* === FONDOS === */
   --background: oklch(
     0.18 0.02 240
@@ -182,7 +187,7 @@
   --color-primary-light: #1f3a52;
   --color-accent-bright: #b1e4e4;
   --color-accent-dark: #2e7d32;
-  --color-surface: #1f3a52;
+  --color-surface: var(--surface);
   --color-surface-light: #243550;
   --color-text: #ffffff;
   --color-text-secondary: #a8b8c8;
