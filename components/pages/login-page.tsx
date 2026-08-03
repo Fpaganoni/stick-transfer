@@ -145,11 +145,11 @@ export function LoginPage() {
   ];
 
   return (
-    <div className="w-full rounded-3xl border border-border bg-background p-5 sm:p-8 shadow-xl">
+    <div className="w-full rounded-3xl border border-border bg-background p-5 sm:p-8 lg:p-10 shadow-xl">
       {/* Header */}
-      <div className="flex flex-col items-center mb-4 sm:mb-7">
-        <HockeyXTicks size={40} className="text-primary" />
-        <h2 className="text-xl font-semibold text-foreground text-center mt-3 leading-snug">
+      <div className="flex flex-col items-center mb-4 sm:mb-7 lg:mb-9">
+        <HockeyXTicks size={40} className="text-primary lg:scale-110" />
+        <h2 className="text-xl lg:text-2xl font-semibold text-foreground text-center mt-3 leading-snug">
           {t("loginWelcomeTitle")}
         </h2>
       </div>
@@ -163,7 +163,7 @@ export function LoginPage() {
       {/* Two-column body: OAuth | divider | form */}
       <div className="flex flex-col sm:flex-row sm:gap-0 gap-5 sm:items-stretch">
         {/* Left: OAuth buttons */}
-        <div className="flex flex-col gap-2.5 sm:flex-1">
+        <div className="flex flex-col gap-2.5 lg:gap-3.5 sm:flex-1">
           {socialButtons.map((btn) => (
             <motion.button
               key={btn.label}
@@ -175,7 +175,7 @@ export function LoginPage() {
                 window.location.href = btn.href;
               }}
               style={{ backgroundColor: btn.bg }}
-              className="w-full h-9 sm:h-11 px-4 rounded-xl text-white font-medium text-sm flex items-center gap-3 cursor-pointer transition-opacity hover:opacity-90"
+              className="w-full h-9 sm:h-11 lg:h-12 px-4 lg:px-5 rounded-xl text-white font-medium text-sm lg:text-base flex items-center gap-3 cursor-pointer transition-opacity hover:opacity-90"
             >
               <span className="shrink-0 w-5 flex items-center justify-center">
                 {btn.icon}
@@ -186,7 +186,7 @@ export function LoginPage() {
         </div>
 
         {/* OR divider — vertical on desktop, horizontal on mobile */}
-        <div className="flex sm:flex-col flex-row items-center gap-2 sm:mx-6 sm:my-0">
+        <div className="flex sm:flex-col flex-row items-center gap-2 sm:mx-6 lg:mx-9 sm:my-0">
           <div className="flex-1 sm:w-px sm:h-auto w-auto h-px bg-border" />
           <span className="text-xs font-medium text-foreground/50 sm:py-1 sm:px-0 px-2">
             {t("or").toUpperCase()}
