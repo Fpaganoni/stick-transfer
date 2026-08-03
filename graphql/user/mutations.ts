@@ -14,9 +14,14 @@ export const REGISTER = gql`
   mutation Register(
     $email: String!
     $name: String!
-    $username: String!
+    $username: String
     $password: String!
-    $role: String!
+    $role: String
+    $country: String
+    $city: String
+    $position: String
+    $dateOfBirth: String
+    $clubName: String
   ) {
     register(
       email: $email
@@ -24,6 +29,11 @@ export const REGISTER = gql`
       username: $username
       password: $password
       role: $role
+      country: $country
+      city: $city
+      position: $position
+      dateOfBirth: $dateOfBirth
+      clubName: $clubName
     )
   }
 `;

@@ -149,9 +149,14 @@ export interface LoginResponse {
 export interface RegisterVariables {
   email: string;
   name: string;
-  username: string;
+  username?: string;
   password: string;
-  role: string;
+  role?: string;
+  country?: string;
+  city?: string;
+  position?: string;
+  dateOfBirth?: string;
+  clubName?: string;
 }
 
 export interface RegisterResponse {

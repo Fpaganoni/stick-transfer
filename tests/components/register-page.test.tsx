@@ -57,17 +57,10 @@ vi.mock("framer-motion", () => ({
 }));
 
 describe("RegisterPage", () => {
-  it("step 1 renders 6 role cards", () => {
+  it("step 1 renders 3 role cards", () => {
     renderWithProviders(<RegisterPage />);
 
-    const roleCards = [
-      "role-card-player",
-      "role-card-goalkeeper",
-      "role-card-coach",
-      "role-card-clubAdmin",
-      "role-card-scout",
-      "role-card-agent",
-    ];
+    const roleCards = ["role-card-player", "role-card-coach", "role-card-clubAdmin"];
 
     roleCards.forEach((testId) => {
       expect(screen.getByTestId(testId)).toBeDefined();

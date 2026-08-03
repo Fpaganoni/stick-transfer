@@ -67,6 +67,7 @@
     "preferredPosition": "Posición Preferida",
     "city": "Ciudad",
     "clubName": "Nombre del Club",
+    "dateOfBirth": "Fecha de Nacimiento",
     "role": "Rol",
     "stepRoleTitle": "Elige tu rol",
     "stepBasicTitle": "Información Básica",

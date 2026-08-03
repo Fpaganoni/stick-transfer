@@ -17,12 +17,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useUserRegister, useUpdateUser } from "@/hooks/useUsers";
-import { useMutation } from "@tanstack/react-query";
+import { useUserRegister } from "@/hooks/useUsers";
 import { jwtDecode } from "jwt-decode";
 import { graphqlClient, setAuthToken } from "@/lib/graphql-client";
 import { GET_USER_FOR_LOGIN } from "@/graphql/user/queries";
-import { CREATE_CLUB } from "@/graphql/club/mutations";
 import { useRouter } from "next/navigation";
 import { useLocale } from "next-intl";
 import { useAuthStore } from "@/stores/useAuthStore";
@@ -34,13 +32,7 @@ import { useUIStore } from "@/stores/useUIStore";
 // Role card definitions
 // ---------------------------------------------------------------------------
 
-type RoleCardId =
-  | "player"
-  | "goalkeeper"
-  | "coach"
-  | "clubAdmin"
-  | "scout"
-  | "agent";
+type RoleCardId = "player" | "coach" | "clubAdmin";
 
 interface RoleCard {
   id: RoleCardId;
@@ -50,11 +42,8 @@ interface RoleCard {
 
 const ROLE_CARDS: RoleCard[] = [
   { id: "player", icon: "🏃", backendRole: "PLAYER" },
-  { id: "goalkeeper", icon: "🥅", backendRole: "PLAYER" },
   { id: "coach", icon: "📋", backendRole: "COACH" },
   { id: "clubAdmin", icon: "🏟️", backendRole: "CLUB" },
-  { id: "scout", icon: "🔍", backendRole: "COACH" },
-  { id: "agent", icon: "💼", backendRole: "PLAYER" },
 ];
 
 const HOCKEY_COUNTRIES = [
@@ -182,7 +171,7 @@ type Step2Data = {
 // Step 3 form types
 // ---------------------------------------------------------------------------
 
-type Step3PlayerData = { position: string };
+type Step3PlayerData = { position: string; dateOfBirth?: string };
 type Step3ClubData = { name: string; city: string; country: string };
 
 // ---------------------------------------------------------------------------
@@ -198,13 +187,6 @@ export const RegisterPage = () => {
   const { login } = useAuthStore();
   const { openLoginModal } = useUIStore();
   const { mutate: registerUser, isPending: isRegistering } = useUserRegister();
-  const { mutate: updateUser } = useUpdateUser();
-  const { mutate: createClub, isPending: isCreatingClub } = useMutation({
-    mutationFn: (input: { name: string; city: string; country: string }) =>
-      graphqlClient.request<{ createClub: { id: string } }>(CREATE_CLUB, {
-        input,
-      }),
-  });
 
   const [step, setStep] = useState(1);
   const [selectedRole, setSelectedRole] = useState<RoleCardId | null>(null);
@@ -256,6 +238,7 @@ export const RegisterPage = () => {
   // Step 3 schemas
   const step3PlayerSchema = z.object({
     position: z.string().min(1, tValidation("positionRequired")),
+    dateOfBirth: z.string().optional(),
   });
   const step3ClubSchema = z.object({
     name: z.string().min(2, tValidation("clubNameRequired")),
@@ -302,6 +285,16 @@ export const RegisterPage = () => {
         username: step2Data.username,
         password: step2Data.password,
         role: card.backendRole,
+        country: step2Data.country,
+        ...(isClub && "name" in step3Data
+          ? { clubName: step3Data.name, city: step3Data.city }
+          : {}),
+        ...(!isClub && "position" in step3Data
+          ? {
+              position: step3Data.position,
+              dateOfBirth: step3Data.dateOfBirth,
+            }
+          : {}),
       },
       {
         onSuccess: async (responseData) => {
@@ -316,44 +309,8 @@ export const RegisterPage = () => {
           const fullUser = response.user;
           login(fullUser, token);
 
-          // Update extra profile fields from step 3
-          const extra: {
-            id: string;
-            country?: string;
-            position?: string;
-            city?: string;
-          } = { id: userId };
-          if (step2Data.country) extra.country = step2Data.country;
-          if ("position" in step3Data && step3Data.position)
-            extra.position = step3Data.position;
-          if (!isClub && "city" in step3Data && step3Data.city)
-            extra.city = step3Data.city;
-
-          if (Object.keys(extra).length > 1) {
-            updateUser(extra);
-          }
-
-          if (isClub && "name" in step3Data) {
-            createClub(
-              {
-                name: step3Data.name,
-                city: step3Data.city,
-                country: step3Data.country,
-              },
-              {
-                onSuccess: (clubResponse) => {
-                  router.push(
-                    `/${locale}/clubs/${clubResponse.createClub.id}`,
-                  );
-                },
-                onError: (err) => {
-                  const msg =
-                    (err as GraphQLError)?.response?.errors?.[0]?.message ||
-                    t("registrationFailed");
-                  setError(msg);
-                },
-              },
-            );
+          if (isClub && fullUser.clubId) {
+            router.push(`/${locale}/clubs/${fullUser.clubId}`);
             return;
           }
 
@@ -363,6 +320,18 @@ export const RegisterPage = () => {
           const msg =
             (err as GraphQLError)?.response?.errors?.[0]?.message ||
             t("registrationFailed");
+
+          if (msg.includes("email already exists")) {
+            setStep(2);
+            step2Form.setError("email", { message: msg });
+            return;
+          }
+          if (msg.includes("username already exists")) {
+            setStep(2);
+            step2Form.setError("username", { message: msg });
+            return;
+          }
+
           setError(msg);
         },
       },
@@ -755,12 +724,10 @@ export const RegisterPage = () => {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.97 }}
                   type="submit"
-                  disabled={isRegistering || isCreatingClub}
+                  disabled={isRegistering}
                   className="flex-1 h-9 bg-primary text-white font-semibold rounded-lg hover:bg-primary-hover transition-colors cursor-pointer disabled:opacity-50 text-sm"
                 >
-                  {isRegistering || isCreatingClub
-                    ? t("creatingProfile")
-                    : t("createProfile")}
+                  {isRegistering ? t("creatingProfile") : t("createProfile")}
                 </motion.button>
               </div>
             </form>
@@ -791,6 +758,24 @@ export const RegisterPage = () => {
                 </select>
                 <FieldError
                   message={step3PlayerForm.formState.errors.position?.message}
+                />
+              </div>
+
+              {/* Date of birth */}
+              <div>
+                <Label htmlFor="dateOfBirth" className="mb-1 text-sm">
+                  {t("dateOfBirth")}
+                </Label>
+                <Input
+                  {...step3PlayerForm.register("dateOfBirth")}
+                  id="dateOfBirth"
+                  type="date"
+                  className="h-9 text-sm"
+                />
+                <FieldError
+                  message={
+                    step3PlayerForm.formState.errors.dateOfBirth?.message
+                  }
                 />
               </div>
 
