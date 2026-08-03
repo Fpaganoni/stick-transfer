@@ -43,12 +43,10 @@ export function ChatConversation({ onBack }: ChatConversationProps) {
   const t = useTranslations("messages");
   const [messages, setMessages] = useState<ChatMessage[]>(INITIAL_MESSAGES);
   const [newMessage, setNewMessage] = useState("");
-  const [isTouchDevice, setIsTouchDevice] = useState(false);
+  const [isTouchDevice] = useState(
+    () => typeof window !== "undefined" && window.matchMedia("(hover: none)").matches
+  );
   const messagesEndRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    setIsTouchDevice(window.matchMedia("(hover: none)").matches);
-  }, []);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });

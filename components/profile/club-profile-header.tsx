@@ -2,7 +2,7 @@
 
 import { Edit, BadgeCheck, MoreHorizontal } from "lucide-react";
 import { motion } from "framer-motion";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { User } from "@/types/models/user";
 import { Badge } from "../ui/badge";
 import { useTranslations } from "next-intl";
@@ -44,11 +44,9 @@ export function ClubProfileHeader({
   const t = useTranslations("clubProfile");
   const router = useRouter();
   const [avatarModalOpen, setAvatarModalOpen] = useState(false);
-  const [isTouchDevice, setIsTouchDevice] = useState(false);
-
-  useEffect(() => {
-    setIsTouchDevice(window.matchMedia("(hover: none)").matches);
-  }, []);
+  const [isTouchDevice] = useState(
+    () => typeof window !== "undefined" && window.matchMedia("(hover: none)").matches
+  );
 
   const handleMessage = () => {
     router.push(`/messages?userId=${id}&name=${encodeURIComponent(name)}`);
