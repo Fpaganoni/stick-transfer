@@ -66,3 +66,23 @@ vi.mock("next-intl", () => ({
 beforeEach(() => {
   localStorage.clear();
 });
+
+// ── jsdom stubs required by Radix UI (Select, etc.) ──────────────────────────
+Element.prototype.scrollIntoView = vi.fn();
+Element.prototype.hasPointerCapture = vi.fn(() => false);
+Element.prototype.releasePointerCapture = vi.fn();
+Element.prototype.setPointerCapture = vi.fn();
+
+// ── jsdom stub for window.matchMedia (not implemented by jsdom) ─────────────
+window.matchMedia =
+  window.matchMedia ||
+  vi.fn().mockImplementation((query: string) => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: vi.fn(),
+    removeListener: vi.fn(),
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    dispatchEvent: vi.fn(),
+  }));

@@ -30,31 +30,36 @@ describe("OpportunityFilters", () => {
     expect(selects.length).toBe(4);
   });
 
-  it("renders country options from props", () => {
+  it("renders country options from props", async () => {
     render(<OpportunityFilters {...defaultProps} />);
-    expect(screen.getByRole("option", { name: "ESP" })).toBeInTheDocument();
+    const [, , countryTrigger] = screen.getAllByRole("combobox");
+    fireEvent.click(countryTrigger);
+    expect(await screen.findByRole("option", { name: "ESP" })).toBeInTheDocument();
     expect(screen.getByRole("option", { name: "ARG" })).toBeInTheDocument();
     expect(screen.getByRole("option", { name: "FRA" })).toBeInTheDocument();
   });
 
-  it("changing level select updates store filters.level", () => {
+  it("changing level select updates store filters.level", async () => {
     render(<OpportunityFilters {...defaultProps} />);
-    const [levelSelect] = screen.getAllByRole("combobox");
-    fireEvent.change(levelSelect, { target: { value: "PROFESSIONAL" } });
+    const [levelTrigger] = screen.getAllByRole("combobox");
+    fireEvent.click(levelTrigger);
+    fireEvent.click(await screen.findByRole("option", { name: "Professional" }));
     expect(useOpportunitiesStore.getState().filters.level).toBe("PROFESSIONAL");
   });
 
-  it("changing status select updates store filters.status", () => {
+  it("changing status select updates store filters.status", async () => {
     render(<OpportunityFilters {...defaultProps} />);
-    const [, statusSelect] = screen.getAllByRole("combobox");
-    fireEvent.change(statusSelect, { target: { value: "open" } });
+    const [, statusTrigger] = screen.getAllByRole("combobox");
+    fireEvent.click(statusTrigger);
+    fireEvent.click(await screen.findByRole("option", { name: "open" }));
     expect(useOpportunitiesStore.getState().filters.status).toBe("open");
   });
 
-  it("changing country select updates store filters.country", () => {
+  it("changing country select updates store filters.country", async () => {
     render(<OpportunityFilters {...defaultProps} />);
-    const [, , countrySelect] = screen.getAllByRole("combobox");
-    fireEvent.change(countrySelect, { target: { value: "ARG" } });
+    const [, , countryTrigger] = screen.getAllByRole("combobox");
+    fireEvent.click(countryTrigger);
+    fireEvent.click(await screen.findByRole("option", { name: "ARG" }));
     expect(useOpportunitiesStore.getState().filters.country).toBe("ARG");
   });
 
