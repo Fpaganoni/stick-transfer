@@ -185,7 +185,7 @@ export const RegisterPage = () => {
   const locale = useLocale();
   const router = useRouter();
   const { login } = useAuthStore();
-  const { openLoginModal } = useUIStore();
+  const { openLoginModal, closeRegisterModal } = useUIStore();
   const { mutate: registerUser, isPending: isRegistering } = useUserRegister();
 
   const [step, setStep] = useState(1);
@@ -308,6 +308,7 @@ export const RegisterPage = () => {
           });
           const fullUser = response.user;
           login(fullUser, token);
+          closeRegisterModal();
 
           if (isClub && fullUser.clubId) {
             router.push(`/${locale}/clubs/${fullUser.clubId}`);

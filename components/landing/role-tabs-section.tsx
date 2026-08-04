@@ -69,7 +69,11 @@ export function RoleTabsSection() {
                     transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                   />
                 )}
-                <span className="relative z-10">
+                <span
+                  className={`relative z-10 ${
+                    activeTab === role ? "text-white" : ""
+                  }`}
+                >
                   {t(`${role}.tab` as Parameters<typeof t>[0])}
                 </span>
               </div>
