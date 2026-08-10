@@ -34,13 +34,11 @@ export function AppShell({ children, title }: AppShellProps) {
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setHydrated(true);
-  }, []);
 
-  useEffect(() => {
-    if (!hydrated || !isSuperAdmin) return;
+    if (!isSuperAdmin) return;
     const localePrefix = locale === "en" ? "" : `/${locale}`;
     router.replace(`${localePrefix}/admin`);
-  }, [hydrated, isSuperAdmin, locale, router]);
+  }, [isSuperAdmin, locale, router]);
 
   if (!hydrated || isSuperAdmin) {
     return (

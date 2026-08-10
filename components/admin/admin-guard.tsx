@@ -21,10 +21,6 @@ export function AdminGuard({ children }: AdminGuardProps) {
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setHydrated(true);
-  }, []);
-
-  useEffect(() => {
-    if (!hydrated) return;
 
     if (!isLoggedIn) {
       router.replace(localePrefix || "/");
@@ -34,7 +30,7 @@ export function AdminGuard({ children }: AdminGuardProps) {
     if (user?.role !== Role.SUPERADMIN) {
       router.replace("/opportunities");
     }
-  }, [hydrated, isLoggedIn, user, router, localePrefix]);
+  }, [isLoggedIn, user, router, localePrefix]);
 
   if (!hydrated || !isLoggedIn || user?.role !== Role.SUPERADMIN) {
     return (
