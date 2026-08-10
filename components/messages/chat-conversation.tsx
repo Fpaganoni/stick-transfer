@@ -5,6 +5,7 @@ import { ArrowLeft, Send, Plus } from "lucide-react";
 import { motion } from "framer-motion";
 import { Input } from "../ui/input";
 import { useTranslations } from "next-intl";
+import { useMediaQuery } from "@/hooks/ui/use-media-query";
 
 interface ChatMessage {
   id: number;
@@ -43,9 +44,7 @@ export function ChatConversation({ onBack }: ChatConversationProps) {
   const t = useTranslations("messages");
   const [messages, setMessages] = useState<ChatMessage[]>(INITIAL_MESSAGES);
   const [newMessage, setNewMessage] = useState("");
-  const [isTouchDevice] = useState(
-    () => typeof window !== "undefined" && window.matchMedia("(hover: none)").matches
-  );
+  const isTouchDevice = useMediaQuery("(hover: none)");
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
