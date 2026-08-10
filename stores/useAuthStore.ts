@@ -28,15 +28,17 @@ export const useAuthStore = create<AuthState>()(
       //ACTIONS
 
       login: (user: User, token: string) => {
-        if (typeof document !== "undefined") {
-          document.cookie = "st-auth=1; path=/; max-age=2592000; SameSite=Lax";
+        if (typeof window !== "undefined") {
+          // best-effort cookie sync; middleware still gates on its own read
+          fetch("/api/auth/session", { method: "POST" }).catch(() => {});
         }
         set({ user, token, isLoggedIn: true });
       },
 
       logout: () => {
-        if (typeof document !== "undefined") {
-          document.cookie = "st-auth=; path=/; max-age=0";
+        if (typeof window !== "undefined") {
+          // best-effort cookie sync; middleware still gates on its own read
+          fetch("/api/auth/session", { method: "DELETE" }).catch(() => {});
         }
         set({ user: null, token: null, isLoggedIn: false });
       },
