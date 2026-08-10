@@ -129,6 +129,7 @@ export function ProfileTabs({
                   src={`${userData.cvUrl}#zoom=75`}
                   className="w-full h-screen p-10 rounded-xl border border-border"
                   title="CV Preview"
+                  sandbox=""
                 />
                 <a
                   href={userData.cvUrl}
