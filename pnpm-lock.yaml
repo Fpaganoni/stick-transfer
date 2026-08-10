@@ -4,6 +4,9 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+overrides:
+  tailwind-merge: 2.6.0
+
 importers:
 
   .:
@@ -192,7 +195,7 @@ importers:
         specifier: ^1.7.4
         version: 1.7.4(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
       tailwind-merge:
-        specifier: ^2.5.5
+        specifier: 2.6.0
         version: 2.6.0
       tailwind-scrollbar-hide:
         specifier: ^4.0.0
