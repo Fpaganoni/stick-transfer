@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useTranslations, useLocale } from "next-intl";
 import { Loader } from "lucide-react";
+import DOMPurify from "isomorphic-dompurify";
 import { useNewsArticleQuery } from "@/hooks/useNews";
 import type { NewsCategory } from "@/hooks/useNews";
 import { formatDate } from "@/lib/date-utils";
@@ -96,7 +97,7 @@ export function NewsDetailPage({ slug }: NewsDetailPageProps) {
 
       <div
         className="prose text-foreground max-w-none"
-        dangerouslySetInnerHTML={{ __html: article.content }}
+        dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(article.content) }}
       />
 
       {article.relatedArticles.length > 0 && (
