@@ -220,8 +220,8 @@ export function OpportunityDetailModal() {
                 {t("benefits")}
               </h3>
               <div className="grid grid-cols-2 gap-2">
-                {benefitsArray.map((benefit: string, index: number) => (
-                  <div key={index} className="flex items-start gap-2">
+                {benefitsArray.map((benefit: string) => (
+                  <div key={benefit} className="flex items-start gap-2">
                     <CheckCircle size={16} className="text-success mt-0.5" />
                     <p className="text-sm text-foreground">{benefit}</p>
                   </div>

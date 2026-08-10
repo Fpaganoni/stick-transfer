@@ -73,11 +73,11 @@ export function ProfileTabs({
         {activeTab === "trajectory" && (
           <div className="space-y-4">
             {userData.trajectories && userData.trajectories.length > 0 ? (
-              userData.trajectories.map((item, idx) => (
+              userData.trajectories.map((item) => (
                 <motion.div
                   whileHover={{ scale: 1.02 }}
                   transition={{ duration: 0.2, ease: "easeInOut" }}
-                  key={idx}
+                  key={item.id ?? `${item.title}-${item.period}`}
                   className="bg-background rounded-xl py-4 px-8 border border-border hover:shadow-lg group"
                 >
                   <h3 className="font-semibold text-foreground text-lg mb-1 transition-colors">
@@ -106,7 +106,7 @@ export function ProfileTabs({
             {userData.multimedia && userData.multimedia.length > 0 ? (
               userData.multimedia.map((url, i) => (
                 <YoutubeWidget
-                  key={i}
+                  key={url}
                   url={url}
                   title={`Video highlight ${i + 1}`}
                 />

@@ -276,8 +276,8 @@ export function ClubProfileTabs({
               </Empty>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {videos.map((url, i) => (
-                  <YoutubeWidget key={i} url={url} />
+                {videos.map((url) => (
+                  <YoutubeWidget key={url} url={url} />
                 ))}
               </div>
             )}
