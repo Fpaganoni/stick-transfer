@@ -1,0 +1,28 @@
+minimumReleaseAge: 10080
+trustPolicy: no-downgrade
+
+overrides:
+  tailwind-merge: 2.6.0
+
+# tailwind-merge@2.6.0 was published under the original dcastil maintainer
+# account before an npm ownership change (new maintainer "dcas
+# <tinge_07defunct@icloud.com>", unrelated to the original author). Pinned
+# via overrides above and excluded here so the vetted hash keeps installing;
+# any other version stays blocked by trustPolicy until re-verified.
+trustPolicyExclude:
+  - 'tailwind-merge@2.6.0'
+  - '@graphql-tools/batch-execute@10.0.4 || 9.0.19'
+  - '@graphql-tools/delegate@10.2.23 || 12.0.2'
+  - '@graphql-tools/executor-graphql-ws@2.0.7 || 3.1.3'
+  - '@graphql-tools/executor-http@1.3.3 || 3.0.7'
+  - '@graphql-tools/wrap@10.1.4 || 11.1.2'
+  - 'eslint-import-resolver-typescript@3.10.1'
+  - 'semver@6.3.1'
+  - 'ua-parser-js@1.0.41'
+  - 'undici-types@6.21.0'
+  - 'vite@5.4.21'
+
+minimumReleaseAgeExclude:
+  - 'isomorphic-dompurify@3.22.0'
+  - 'undici@8.10.0'
+  - '@asamuzakjp/css-color@6.0.7'
