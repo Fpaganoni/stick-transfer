@@ -71,6 +71,7 @@ export function ClubDetailPage({ clubId }: ClubDetailPageProps) {
               src={club.coverImage}
               alt={club.name}
               fill
+              sizes="(min-width: 1024px) 1024px, 100vw"
               className="w-full h-full object-cover"
             />
           ) : (

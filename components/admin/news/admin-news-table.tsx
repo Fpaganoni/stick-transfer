@@ -101,7 +101,7 @@ export function AdminNewsTable({ articles, isLoading, localePrefix }: AdminNewsT
                   <div className="flex items-center gap-3">
                     <div className="relative size-12 shrink-0 overflow-hidden rounded-md bg-muted">
                       {article.coverImage ? (
-                        <Image src={article.coverImage} alt={article.title} fill className="object-cover" />
+                        <Image src={article.coverImage} alt={article.title} fill sizes="48px" className="object-cover" />
                       ) : null}
                     </div>
                     <div className="flex flex-col">

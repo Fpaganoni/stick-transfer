@@ -90,6 +90,7 @@ export function HeroSection() {
               src="/hockey-collection.avif"
               alt="Hockey Network"
               fill
+              sizes="(min-width: 1024px) 50vw, 0px"
               className="object-cover"
               priority
             />

@@ -120,6 +120,7 @@ export function RoleTabsSection() {
                       src={`/${role}.webp`}
                       alt={role}
                       fill
+                      sizes="(min-width: 1024px) 50vw, 0px"
                       className="object-cover"
                     />
                   </div>
