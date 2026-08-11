@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Play } from "lucide-react";
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 interface YoutubeWidgetProps {
   url: string;
@@ -42,13 +43,14 @@ export function YoutubeWidget({ url, title = "YouTube Video" }: YoutubeWidgetPro
           aria-label={`Play ${title}`}
         >
           {/* Thumbnail */}
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          <Image
             src={thumbnailUrl}
             alt={title}
-            className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-300"
+            fill
+            sizes="(max-width: 768px) 100vw, 50vw"
+            className="object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-300"
           />
-          
+
           {/* Overlay gradient */}
           <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-300" />
           
