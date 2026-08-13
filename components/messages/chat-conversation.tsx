@@ -7,6 +7,22 @@ import { Input } from "../ui/input";
 import { useTranslations } from "next-intl";
 import { useMediaQuery } from "@/hooks/ui/use-media-query";
 
+function MessageTime({ timestamp }: { timestamp: Date }) {
+  const [formatted, setFormatted] = useState("");
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setFormatted(
+      timestamp.toLocaleTimeString(undefined, {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+    );
+  }, [timestamp]);
+
+  return formatted;
+}
+
 interface ChatMessage {
   id: number;
   sender: "user" | "other";
@@ -112,10 +128,7 @@ export function ChatConversation({ onBack }: ChatConversationProps) {
             >
               <p className="text-sm wrap-break-word">{msg.text}</p>
               <p className="text-xs mt-2 text-foreground-muted">
-                {msg.timestamp.toLocaleTimeString([], {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })}
+                <MessageTime timestamp={msg.timestamp} />
               </p>
             </div>
           </motion.div>
