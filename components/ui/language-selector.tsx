@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { sidebarMenuButtonVariants } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
+import { useHydrated } from "@/hooks/ui/use-hydrated";
 
 const languages = [
   { code: "en", name: "English", flag: "🇺🇸" },
@@ -18,7 +19,7 @@ const languages = [
   { code: "fr", name: "Français", flag: "🇫🇷" },
 ];
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 interface LanguageSelectorProps {
   /** "chip" keeps the existing pill look; "toolbar" matches the unified topbar buttons (Header). */
@@ -26,16 +27,11 @@ interface LanguageSelectorProps {
 }
 
 export function LanguageSelector({ variant = "chip" }: LanguageSelectorProps) {
-  const [mounted, setMounted] = useState(false);
+  const mounted = useHydrated();
   const [open, setOpen] = useState(false);
   const locale = useLocale();
   const router = useRouter();
   const pathname = usePathname();
-
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setMounted(true);
-  }, []);
 
   const handleLanguageChange = (newLocale: string) => {
     // Get the current path without any locale prefix

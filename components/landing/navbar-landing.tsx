@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { useTranslations, useLocale } from "next-intl";
 import { Menu, X } from "lucide-react";
@@ -18,6 +18,7 @@ import {
 import { LoginPage } from "@/components/pages/login-page";
 import { RegisterPage } from "@/components/pages/register-page";
 import { useUIStore } from "@/stores/useUIStore";
+import { useHydrated } from "@/hooks/ui/use-hydrated";
 
 export function NavbarLanding() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -29,14 +30,9 @@ export function NavbarLanding() {
     openRegisterModal,
     closeRegisterModal,
   } = useUIStore();
-  const [mounted, setMounted] = useState(false);
+  const mounted = useHydrated();
   const t = useTranslations("landingNav");
   const locale = useLocale();
-
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setMounted(true);
-  }, []);
 
   const navLinks = [
     { href: "#home", label: t("home") },

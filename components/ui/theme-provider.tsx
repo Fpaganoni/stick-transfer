@@ -4,27 +4,20 @@ import { useEffect, useState, useCallback } from "react";
 import { ThemeToggleButton, useThemeTransition } from "./toggleThemeRight";
 import { sidebarMenuButtonVariants } from "./sidebar";
 import { cn } from "@/lib/utils";
+import { useHydrated } from "@/hooks/ui/use-hydrated";
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [, setTheme] = useState<"light" | "dark">("light");
-  const [mounted, setMounted] = useState(false);
+  const mounted = useHydrated();
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setMounted(true);
-
     const savedTheme = localStorage.getItem("theme") as "light" | "dark";
     if (!savedTheme) {
       localStorage.setItem("theme", "light");
-      setTheme("light");
       document.documentElement.classList.remove("dark");
+    } else if (savedTheme === "dark") {
+      document.documentElement.classList.add("dark");
     } else {
-      setTheme(savedTheme);
-      if (savedTheme === "dark") {
-        document.documentElement.classList.add("dark");
-      } else {
-        document.documentElement.classList.remove("dark");
-      }
+      document.documentElement.classList.remove("dark");
     }
   }, []);
 
