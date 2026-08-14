@@ -15,6 +15,8 @@ export function OAuthRedirectPage() {
   const [error, setError] = useState("");
 
   useEffect(() => {
+    let ignore = false;
+
     const handleOAuthRedirect = async () => {
       try {
         // Read token from URL query params: /oauth-redirect?token=<JWT>
@@ -22,7 +24,7 @@ export function OAuthRedirectPage() {
         const token = params.get("token");
 
         if (!token) {
-          setError("No authentication token received.");
+          if (!ignore) setError("No authentication token received.");
           return;
         }
 
@@ -31,7 +33,7 @@ export function OAuthRedirectPage() {
         const userId = decoded.sub;
 
         if (!userId) {
-          setError("Invalid token: missing user identifier.");
+          if (!ignore) setError("Invalid token: missing user identifier.");
           return;
         }
 
@@ -41,6 +43,8 @@ export function OAuthRedirectPage() {
         });
         const fullUser = response.user;
 
+        if (ignore) return;
+
         // Save user in auth store (persisted via Zustand)
         login(fullUser, token);
 
@@ -48,11 +52,15 @@ export function OAuthRedirectPage() {
         router.replace("/");
       } catch (err) {
         console.error("OAuth redirect error:", err);
-        setError("Authentication failed. Please try again.");
+        if (!ignore) setError("Authentication failed. Please try again.");
       }
     };
 
     handleOAuthRedirect();
+
+    return () => {
+      ignore = true;
+    };
   }, [login, router]);
 
   if (error) {
