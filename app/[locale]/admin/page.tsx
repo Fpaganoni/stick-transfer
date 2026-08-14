@@ -12,15 +12,28 @@ import {
   ClipboardList,
   Flag,
 } from "lucide-react";
+import dynamic from "next/dynamic";
 import { useAdminStats } from "@/hooks/useAdminStats";
 import { StatCard } from "@/components/admin/stat-card";
-import { RoleDistributionChart } from "@/components/admin/charts/role-distribution-chart";
-import {
-  StatusBarChart,
-  StatusBarDatum,
-} from "@/components/admin/charts/status-bar-chart";
+import type { StatusBarDatum } from "@/components/admin/charts/status-bar-chart";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+
+const RoleDistributionChart = dynamic(
+  () =>
+    import("@/components/admin/charts/role-distribution-chart").then(
+      (m) => m.RoleDistributionChart,
+    ),
+  { ssr: false, loading: () => <Skeleton className="h-[260px] w-full" /> },
+);
+
+const StatusBarChart = dynamic(
+  () =>
+    import("@/components/admin/charts/status-bar-chart").then(
+      (m) => m.StatusBarChart,
+    ),
+  { ssr: false, loading: () => <Skeleton className="h-60 w-full" /> },
+);
 import {
   Empty,
   EmptyDescription,
