@@ -11,7 +11,7 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, UseFormReturn, SubmitHandler } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
@@ -173,6 +173,497 @@ type Step2Data = {
 
 type Step3PlayerData = { position: string; dateOfBirth?: string };
 type Step3ClubData = { name: string; city: string; country: string };
+
+// ---------------------------------------------------------------------------
+// Step 1: Role selection
+// ---------------------------------------------------------------------------
+
+interface Step1RoleSelectProps {
+  t: (key: string) => string;
+  selectedRole: RoleCardId | null;
+  roleError: boolean;
+  onSelectRole: (id: RoleCardId) => void;
+  onNext: () => void;
+  onLoginClick: () => void;
+}
+
+function Step1RoleSelect({
+  t,
+  selectedRole,
+  roleError,
+  onSelectRole,
+  onNext,
+  onLoginClick,
+}: Step1RoleSelectProps) {
+  return (
+    <div>
+      <h3 className="text-base font-semibold text-foreground mb-4">
+        {t("stepRoleTitle")}
+      </h3>
+      <div className="grid grid-cols-3 gap-3 mb-4">
+        {ROLE_CARDS.map((card) => {
+          const isSelected = selectedRole === card.id;
+          return (
+            <button
+              key={card.id}
+              type="button"
+              data-testid={`role-card-${card.id}`}
+              onClick={() => onSelectRole(card.id)}
+              className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border-2 transition-all cursor-pointer text-center ${
+                isSelected
+                  ? "border-primary bg-primary/5"
+                  : "border-border hover:border-primary/40 bg-background"
+              }`}
+            >
+              <span className="text-2xl">{card.icon}</span>
+              <span className="text-xs font-semibold text-foreground leading-tight">
+                {t(`roles.${card.id === "clubAdmin" ? "clubAdmin" : card.id}`)}
+              </span>
+              <span className="text-[10px] text-foreground/50 leading-tight">
+                {t(`roleDescriptions.${card.id}`)}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+      {roleError && (
+        <p className="text-error text-xs mb-3">{t("roleSelectError")}</p>
+      )}
+      <motion.button
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.97 }}
+        type="button"
+        onClick={onNext}
+        className="w-full h-9 bg-primary text-white font-semibold rounded-lg hover:bg-primary-hover transition-colors cursor-pointer flex items-center justify-center gap-1 text-sm"
+      >
+        {t("next")} <ChevronRight size={16} />
+      </motion.button>
+      <p className="text-center text-xs text-foreground/50 mt-3">
+        {t("alreadyHaveAccount")}{" "}
+        <button
+          type="button"
+          onClick={onLoginClick}
+          className="text-primary hover:underline cursor-pointer"
+        >
+          {t("loginLink")}
+        </button>
+      </p>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Step 2: Basic data
+// ---------------------------------------------------------------------------
+
+interface Step2BasicDataProps {
+  t: (key: string) => string;
+  form: UseFormReturn<Step2Data>;
+  showPassword: boolean;
+  showConfirmPassword: boolean;
+  onTogglePassword: () => void;
+  onToggleConfirmPassword: () => void;
+  onBack: () => void;
+  onNext: () => void;
+}
+
+function Step2BasicData({
+  t,
+  form,
+  showPassword,
+  showConfirmPassword,
+  onTogglePassword,
+  onToggleConfirmPassword,
+  onBack,
+  onNext,
+}: Step2BasicDataProps) {
+  return (
+    <form className="space-y-3">
+      <h3 className="text-base font-semibold text-foreground mb-1">
+        {t("stepBasicTitle")}
+      </h3>
+
+      {/* First + Last name */}
+      <div className="grid grid-cols-2 gap-3">
+        <div>
+          <Label htmlFor="firstName" className="mb-1 text-sm">
+            {t("firstName")}
+          </Label>
+          <div className="relative">
+            <User
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground"
+              size={16}
+            />
+            <Input
+              {...form.register("firstName")}
+              id="firstName"
+              placeholder={t("placeholders.firstName")}
+              className="pl-9 h-9 text-sm"
+            />
+          </div>
+          <FieldError message={form.formState.errors.firstName?.message} />
+        </div>
+        <div>
+          <Label htmlFor="lastName" className="mb-1 text-sm">
+            {t("lastName")}
+          </Label>
+          <div className="relative">
+            <User
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground"
+              size={16}
+            />
+            <Input
+              {...form.register("lastName")}
+              id="lastName"
+              placeholder={t("placeholders.lastName")}
+              className="pl-9 h-9 text-sm"
+            />
+          </div>
+          <FieldError message={form.formState.errors.lastName?.message} />
+        </div>
+      </div>
+
+      {/* Username */}
+      <div>
+        <Label htmlFor="username" className="mb-1 text-sm">
+          {t("username")}
+        </Label>
+        <div className="relative">
+          <User
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground"
+            size={16}
+          />
+          <Input
+            {...form.register("username")}
+            id="username"
+            placeholder={t("placeholders.username")}
+            className="pl-9 h-9 text-sm"
+          />
+        </div>
+        <FieldError message={form.formState.errors.username?.message} />
+      </div>
+
+      {/* Email */}
+      <div>
+        <Label htmlFor="reg-email" className="mb-1 text-sm">
+          {t("email")}
+        </Label>
+        <div className="relative">
+          <Mail
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground"
+            size={16}
+          />
+          <Input
+            {...form.register("email")}
+            id="reg-email"
+            type="email"
+            placeholder={t("placeholders.email")}
+            className="pl-9 h-9 text-sm"
+          />
+        </div>
+        <FieldError message={form.formState.errors.email?.message} />
+      </div>
+
+      {/* Password */}
+      <div>
+        <Label htmlFor="reg-password" className="mb-1 text-sm">
+          {t("password")}
+        </Label>
+        <div className="relative">
+          <Lock
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground"
+            size={16}
+          />
+          <Input
+            {...form.register("password")}
+            id="reg-password"
+            type={showPassword ? "text" : "password"}
+            placeholder={t("placeholders.password")}
+            className="pl-9 pr-9 h-9 text-sm"
+          />
+          <button
+            type="button"
+            onClick={onTogglePassword}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-foreground cursor-pointer"
+          >
+            {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+          </button>
+        </div>
+        <FieldError message={form.formState.errors.password?.message} />
+      </div>
+
+      {/* Confirm password */}
+      <div>
+        <Label htmlFor="confirmPassword" className="mb-1 text-sm">
+          {t("confirmPassword")}
+        </Label>
+        <div className="relative">
+          <Lock
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground"
+            size={16}
+          />
+          <Input
+            {...form.register("confirmPassword")}
+            id="confirmPassword"
+            type={showConfirmPassword ? "text" : "password"}
+            placeholder={t("placeholders.password")}
+            className="pl-9 pr-9 h-9 text-sm"
+          />
+          <button
+            type="button"
+            onClick={onToggleConfirmPassword}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-foreground cursor-pointer"
+          >
+            {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+          </button>
+        </div>
+        <FieldError message={form.formState.errors.confirmPassword?.message} />
+      </div>
+
+      {/* Country */}
+      <div>
+        <Label htmlFor="country" className="mb-1 text-sm">
+          {t("country")}
+        </Label>
+        <select
+          {...form.register("country")}
+          id="country"
+          defaultValue=""
+          className="w-full h-9 rounded-md border border-input bg-background text-foreground text-sm px-3 focus:outline-none focus:ring-2 focus:ring-ring appearance-none cursor-pointer"
+        >
+          <option value="" disabled>
+            {t("placeholders.country")}
+          </option>
+          {HOCKEY_COUNTRIES.map((c) => (
+            <option key={c} value={c}>
+              {c}
+            </option>
+          ))}
+        </select>
+        <FieldError message={form.formState.errors.country?.message} />
+      </div>
+
+      {/* Terms */}
+      <div className="flex items-start gap-2 pt-1">
+        <input
+          {...form.register("terms")}
+          id="terms"
+          type="checkbox"
+          className="mt-0.5 accent-primary cursor-pointer"
+        />
+        <Label
+          htmlFor="terms"
+          className="text-xs text-foreground/70 cursor-pointer leading-relaxed"
+        >
+          {t("termsAndConditions")}
+        </Label>
+      </div>
+      {form.formState.errors.terms && (
+        <p className="text-error text-xs">
+          {form.formState.errors.terms.message}
+        </p>
+      )}
+
+      {/* Navigation */}
+      <div className="flex gap-2 pt-2">
+        <motion.button
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.97 }}
+          type="button"
+          onClick={onBack}
+          className="h-9 px-4 border border-border rounded-lg text-sm font-medium hover:bg-border/30 transition-colors cursor-pointer flex items-center gap-1"
+        >
+          <ChevronLeft size={16} /> {t("back")}
+        </motion.button>
+        <motion.button
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.97 }}
+          type="button"
+          onClick={onNext}
+          className="flex-1 h-9 bg-primary text-white font-semibold rounded-lg hover:bg-primary-hover transition-colors cursor-pointer flex items-center justify-center gap-1 text-sm"
+        >
+          {t("next")} <ChevronRight size={16} />
+        </motion.button>
+      </div>
+    </form>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Step 3: Role-specific data
+// ---------------------------------------------------------------------------
+
+interface Step3ClubDataProps {
+  t: (key: string) => string;
+  form: UseFormReturn<Step3ClubData>;
+  isRegistering: boolean;
+  onBack: () => void;
+  onSubmit: SubmitHandler<Step3ClubData>;
+}
+
+function Step3ClubDataForm({
+  t,
+  form,
+  isRegistering,
+  onBack,
+  onSubmit,
+}: Step3ClubDataProps) {
+  return (
+    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
+      {/* Club name */}
+      <div>
+        <Label htmlFor="clubName" className="mb-1 text-sm">
+          {t("clubName")}
+        </Label>
+        <Input
+          {...form.register("name")}
+          id="clubName"
+          placeholder={t("placeholders.clubName")}
+          className="h-9 text-sm"
+        />
+        <FieldError message={form.formState.errors.name?.message} />
+      </div>
+
+      {/* City */}
+      <div>
+        <Label htmlFor="city" className="mb-1 text-sm">
+          {t("city")}
+        </Label>
+        <Input
+          {...form.register("city")}
+          id="city"
+          placeholder={t("placeholders.city")}
+          className="h-9 text-sm"
+        />
+        <FieldError message={form.formState.errors.city?.message} />
+      </div>
+
+      {/* Country */}
+      <div>
+        <Label htmlFor="clubCountry" className="mb-1 text-sm">
+          {t("country")}
+        </Label>
+        <select
+          {...form.register("country")}
+          id="clubCountry"
+          defaultValue=""
+          className="w-full h-9 rounded-md border border-input bg-background text-foreground text-sm px-3 focus:outline-none focus:ring-2 focus:ring-ring appearance-none cursor-pointer"
+        >
+          <option value="" disabled>
+            {t("placeholders.country")}
+          </option>
+          {HOCKEY_COUNTRIES.map((c) => (
+            <option key={c} value={c}>
+              {c}
+            </option>
+          ))}
+        </select>
+        <FieldError message={form.formState.errors.country?.message} />
+      </div>
+
+      <div className="flex gap-2 pt-2">
+        <motion.button
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.97 }}
+          type="button"
+          onClick={onBack}
+          className="h-9 px-4 border border-border rounded-lg text-sm font-medium hover:bg-border/30 transition-colors cursor-pointer flex items-center gap-1"
+        >
+          <ChevronLeft size={16} /> {t("back")}
+        </motion.button>
+        <motion.button
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.97 }}
+          type="submit"
+          disabled={isRegistering}
+          className="flex-1 h-9 bg-primary text-white font-semibold rounded-lg hover:bg-primary-hover transition-colors cursor-pointer disabled:opacity-50 text-sm"
+        >
+          {isRegistering ? t("creatingProfile") : t("createProfile")}
+        </motion.button>
+      </div>
+    </form>
+  );
+}
+
+interface Step3PlayerDataProps {
+  t: (key: string) => string;
+  tExplore: (key: string) => string;
+  form: UseFormReturn<Step3PlayerData>;
+  isRegistering: boolean;
+  onBack: () => void;
+  onSubmit: SubmitHandler<Step3PlayerData>;
+}
+
+function Step3PlayerDataForm({
+  t,
+  tExplore,
+  form,
+  isRegistering,
+  onBack,
+  onSubmit,
+}: Step3PlayerDataProps) {
+  return (
+    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
+      {/* Preferred position */}
+      <div>
+        <Label htmlFor="position" className="mb-1 text-sm">
+          {t("preferredPosition")}
+        </Label>
+        <select
+          {...form.register("position")}
+          id="position"
+          defaultValue=""
+          className="w-full h-9 rounded-md border border-input bg-background text-foreground text-sm px-3 focus:outline-none focus:ring-2 focus:ring-ring appearance-none cursor-pointer"
+        >
+          <option value="" disabled>
+            {t("placeholders.preferredPosition")}
+          </option>
+          {POSITIONS.map((p) => (
+            <option key={p.value} value={p.value}>
+              {tExplore(`positions.${p.labelKey}`)}
+            </option>
+          ))}
+        </select>
+        <FieldError message={form.formState.errors.position?.message} />
+      </div>
+
+      {/* Date of birth */}
+      <div>
+        <Label htmlFor="dateOfBirth" className="mb-1 text-sm">
+          {t("dateOfBirth")}
+        </Label>
+        <Input
+          {...form.register("dateOfBirth")}
+          id="dateOfBirth"
+          type="date"
+          className="h-9 text-sm"
+        />
+        <FieldError message={form.formState.errors.dateOfBirth?.message} />
+      </div>
+
+      <div className="flex gap-2 pt-2">
+        <motion.button
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.97 }}
+          type="button"
+          onClick={onBack}
+          className="h-9 px-4 border border-border rounded-lg text-sm font-medium hover:bg-border/30 transition-colors cursor-pointer flex items-center gap-1"
+        >
+          <ChevronLeft size={16} /> {t("back")}
+        </motion.button>
+        <motion.button
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.97 }}
+          type="submit"
+          disabled={isRegistering}
+          className="flex-1 h-9 bg-primary text-white font-semibold rounded-lg hover:bg-primary-hover transition-colors cursor-pointer disabled:opacity-50 text-sm"
+        >
+          {isRegistering ? t("creatingProfile") : t("createProfile")}
+        </motion.button>
+      </div>
+    </form>
+  );
+}
 
 // ---------------------------------------------------------------------------
 // Main component
@@ -352,297 +843,33 @@ export const RegisterPage = () => {
         </div>
       )}
 
-      {/* ------------------------------------------------------------------ */}
-      {/* Step 1: Role selection                                               */}
-      {/* ------------------------------------------------------------------ */}
       {step === 1 && (
-        <div>
-          <h3 className="text-base font-semibold text-foreground mb-4">
-            {t("stepRoleTitle")}
-          </h3>
-          <div className="grid grid-cols-3 gap-3 mb-4">
-            {ROLE_CARDS.map((card) => {
-              const isSelected = selectedRole === card.id;
-              return (
-                <button
-                  key={card.id}
-                  type="button"
-                  data-testid={`role-card-${card.id}`}
-                  onClick={() => {
-                    setSelectedRole(card.id);
-                    setRoleError(false);
-                  }}
-                  className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border-2 transition-all cursor-pointer text-center ${
-                    isSelected
-                      ? "border-primary bg-primary/5"
-                      : "border-border hover:border-primary/40 bg-background"
-                  }`}
-                >
-                  <span className="text-2xl">{card.icon}</span>
-                  <span className="text-xs font-semibold text-foreground leading-tight">
-                    {t(
-                      `roles.${card.id === "clubAdmin" ? "clubAdmin" : card.id}`,
-                    )}
-                  </span>
-                  <span className="text-[10px] text-foreground/50 leading-tight">
-                    {t(`roleDescriptions.${card.id}`)}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-          {roleError && (
-            <p className="text-error text-xs mb-3">{t("roleSelectError")}</p>
-          )}
-          <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.97 }}
-            type="button"
-            onClick={handleNext}
-            className="w-full h-9 bg-primary text-white font-semibold rounded-lg hover:bg-primary-hover transition-colors cursor-pointer flex items-center justify-center gap-1 text-sm"
-          >
-            {t("next")} <ChevronRight size={16} />
-          </motion.button>
-          <p className="text-center text-xs text-foreground/50 mt-3">
-            {t("alreadyHaveAccount")}{" "}
-            <button
-              type="button"
-              onClick={openLoginModal}
-              className="text-primary hover:underline cursor-pointer"
-            >
-              {t("loginLink")}
-            </button>
-          </p>
-        </div>
+        <Step1RoleSelect
+          t={t}
+          selectedRole={selectedRole}
+          roleError={roleError}
+          onSelectRole={(id) => {
+            setSelectedRole(id);
+            setRoleError(false);
+          }}
+          onNext={handleNext}
+          onLoginClick={openLoginModal}
+        />
       )}
 
-      {/* ------------------------------------------------------------------ */}
-      {/* Step 2: Basic data                                                   */}
-      {/* ------------------------------------------------------------------ */}
       {step === 2 && (
-        <form className="space-y-3">
-          <h3 className="text-base font-semibold text-foreground mb-1">
-            {t("stepBasicTitle")}
-          </h3>
-
-          {/* First + Last name */}
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <Label htmlFor="firstName" className="mb-1 text-sm">
-                {t("firstName")}
-              </Label>
-              <div className="relative">
-                <User
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground"
-                  size={16}
-                />
-                <Input
-                  {...step2Form.register("firstName")}
-                  id="firstName"
-                  placeholder={t("placeholders.firstName")}
-                  className="pl-9 h-9 text-sm"
-                />
-              </div>
-              <FieldError
-                message={step2Form.formState.errors.firstName?.message}
-              />
-            </div>
-            <div>
-              <Label htmlFor="lastName" className="mb-1 text-sm">
-                {t("lastName")}
-              </Label>
-              <div className="relative">
-                <User
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground"
-                  size={16}
-                />
-                <Input
-                  {...step2Form.register("lastName")}
-                  id="lastName"
-                  placeholder={t("placeholders.lastName")}
-                  className="pl-9 h-9 text-sm"
-                />
-              </div>
-              <FieldError
-                message={step2Form.formState.errors.lastName?.message}
-              />
-            </div>
-          </div>
-
-          {/* Username */}
-          <div>
-            <Label htmlFor="username" className="mb-1 text-sm">
-              {t("username")}
-            </Label>
-            <div className="relative">
-              <User
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground"
-                size={16}
-              />
-              <Input
-                {...step2Form.register("username")}
-                id="username"
-                placeholder={t("placeholders.username")}
-                className="pl-9 h-9 text-sm"
-              />
-            </div>
-            <FieldError
-              message={step2Form.formState.errors.username?.message}
-            />
-          </div>
-
-          {/* Email */}
-          <div>
-            <Label htmlFor="reg-email" className="mb-1 text-sm">
-              {t("email")}
-            </Label>
-            <div className="relative">
-              <Mail
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground"
-                size={16}
-              />
-              <Input
-                {...step2Form.register("email")}
-                id="reg-email"
-                type="email"
-                placeholder={t("placeholders.email")}
-                className="pl-9 h-9 text-sm"
-              />
-            </div>
-            <FieldError message={step2Form.formState.errors.email?.message} />
-          </div>
-
-          {/* Password */}
-          <div>
-            <Label htmlFor="reg-password" className="mb-1 text-sm">
-              {t("password")}
-            </Label>
-            <div className="relative">
-              <Lock
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground"
-                size={16}
-              />
-              <Input
-                {...step2Form.register("password")}
-                id="reg-password"
-                type={showPassword ? "text" : "password"}
-                placeholder={t("placeholders.password")}
-                className="pl-9 pr-9 h-9 text-sm"
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-foreground cursor-pointer"
-              >
-                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-              </button>
-            </div>
-            <FieldError
-              message={step2Form.formState.errors.password?.message}
-            />
-          </div>
-
-          {/* Confirm password */}
-          <div>
-            <Label htmlFor="confirmPassword" className="mb-1 text-sm">
-              {t("confirmPassword")}
-            </Label>
-            <div className="relative">
-              <Lock
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground"
-                size={16}
-              />
-              <Input
-                {...step2Form.register("confirmPassword")}
-                id="confirmPassword"
-                type={showConfirmPassword ? "text" : "password"}
-                placeholder={t("placeholders.password")}
-                className="pl-9 pr-9 h-9 text-sm"
-              />
-              <button
-                type="button"
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-foreground cursor-pointer"
-              >
-                {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-              </button>
-            </div>
-            <FieldError
-              message={step2Form.formState.errors.confirmPassword?.message}
-            />
-          </div>
-
-          {/* Country */}
-          <div>
-            <Label htmlFor="country" className="mb-1 text-sm">
-              {t("country")}
-            </Label>
-            <select
-              {...step2Form.register("country")}
-              id="country"
-              defaultValue=""
-              className="w-full h-9 rounded-md border border-input bg-background text-foreground text-sm px-3 focus:outline-none focus:ring-2 focus:ring-ring appearance-none cursor-pointer"
-            >
-              <option value="" disabled>
-                {t("placeholders.country")}
-              </option>
-              {HOCKEY_COUNTRIES.map((c) => (
-                <option key={c} value={c}>
-                  {c}
-                </option>
-              ))}
-            </select>
-            <FieldError message={step2Form.formState.errors.country?.message} />
-          </div>
-
-          {/* Terms */}
-          <div className="flex items-start gap-2 pt-1">
-            <input
-              {...step2Form.register("terms")}
-              id="terms"
-              type="checkbox"
-              className="mt-0.5 accent-primary cursor-pointer"
-            />
-            <Label
-              htmlFor="terms"
-              className="text-xs text-foreground/70 cursor-pointer leading-relaxed"
-            >
-              {t("termsAndConditions")}
-            </Label>
-          </div>
-          {step2Form.formState.errors.terms && (
-            <p className="text-error text-xs">
-              {step2Form.formState.errors.terms.message}
-            </p>
-          )}
-
-          {/* Navigation */}
-          <div className="flex gap-2 pt-2">
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.97 }}
-              type="button"
-              onClick={handleBack}
-              className="h-9 px-4 border border-border rounded-lg text-sm font-medium hover:bg-border/30 transition-colors cursor-pointer flex items-center gap-1"
-            >
-              <ChevronLeft size={16} /> {t("back")}
-            </motion.button>
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.97 }}
-              type="button"
-              onClick={handleNext}
-              className="flex-1 h-9 bg-primary text-white font-semibold rounded-lg hover:bg-primary-hover transition-colors cursor-pointer flex items-center justify-center gap-1 text-sm"
-            >
-              {t("next")} <ChevronRight size={16} />
-            </motion.button>
-          </div>
-        </form>
+        <Step2BasicData
+          t={t}
+          form={step2Form}
+          showPassword={showPassword}
+          showConfirmPassword={showConfirmPassword}
+          onTogglePassword={() => setShowPassword((v) => !v)}
+          onToggleConfirmPassword={() => setShowConfirmPassword((v) => !v)}
+          onBack={handleBack}
+          onNext={handleNext}
+        />
       )}
 
-      {/* ------------------------------------------------------------------ */}
-      {/* Step 3: Role-specific data                                           */}
-      {/* ------------------------------------------------------------------ */}
       {step === 3 && (
         <div>
           <h3 className="text-base font-semibold text-foreground mb-4">
@@ -650,157 +877,22 @@ export const RegisterPage = () => {
           </h3>
 
           {isClub ? (
-            <form
-              onSubmit={step3ClubForm.handleSubmit(onSubmitStep3Club)}
-              className="space-y-3"
-            >
-              {/* Club name */}
-              <div>
-                <Label htmlFor="clubName" className="mb-1 text-sm">
-                  {t("clubName")}
-                </Label>
-                <Input
-                  {...step3ClubForm.register("name")}
-                  id="clubName"
-                  placeholder={t("placeholders.clubName")}
-                  className="h-9 text-sm"
-                />
-                <FieldError
-                  message={step3ClubForm.formState.errors.name?.message}
-                />
-              </div>
-
-              {/* City */}
-              <div>
-                <Label htmlFor="city" className="mb-1 text-sm">
-                  {t("city")}
-                </Label>
-                <Input
-                  {...step3ClubForm.register("city")}
-                  id="city"
-                  placeholder={t("placeholders.city")}
-                  className="h-9 text-sm"
-                />
-                <FieldError
-                  message={step3ClubForm.formState.errors.city?.message}
-                />
-              </div>
-
-              {/* Country */}
-              <div>
-                <Label htmlFor="clubCountry" className="mb-1 text-sm">
-                  {t("country")}
-                </Label>
-                <select
-                  {...step3ClubForm.register("country")}
-                  id="clubCountry"
-                  defaultValue=""
-                  className="w-full h-9 rounded-md border border-input bg-background text-foreground text-sm px-3 focus:outline-none focus:ring-2 focus:ring-ring appearance-none cursor-pointer"
-                >
-                  <option value="" disabled>
-                    {t("placeholders.country")}
-                  </option>
-                  {HOCKEY_COUNTRIES.map((c) => (
-                    <option key={c} value={c}>
-                      {c}
-                    </option>
-                  ))}
-                </select>
-                <FieldError
-                  message={step3ClubForm.formState.errors.country?.message}
-                />
-              </div>
-
-              <div className="flex gap-2 pt-2">
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.97 }}
-                  type="button"
-                  onClick={handleBack}
-                  className="h-9 px-4 border border-border rounded-lg text-sm font-medium hover:bg-border/30 transition-colors cursor-pointer flex items-center gap-1"
-                >
-                  <ChevronLeft size={16} /> {t("back")}
-                </motion.button>
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.97 }}
-                  type="submit"
-                  disabled={isRegistering}
-                  className="flex-1 h-9 bg-primary text-white font-semibold rounded-lg hover:bg-primary-hover transition-colors cursor-pointer disabled:opacity-50 text-sm"
-                >
-                  {isRegistering ? t("creatingProfile") : t("createProfile")}
-                </motion.button>
-              </div>
-            </form>
+            <Step3ClubDataForm
+              t={t}
+              form={step3ClubForm}
+              isRegistering={isRegistering}
+              onBack={handleBack}
+              onSubmit={onSubmitStep3Club}
+            />
           ) : (
-            <form
-              onSubmit={step3PlayerForm.handleSubmit(onSubmitStep3Player)}
-              className="space-y-3"
-            >
-              {/* Preferred position */}
-              <div>
-                <Label htmlFor="position" className="mb-1 text-sm">
-                  {t("preferredPosition")}
-                </Label>
-                <select
-                  {...step3PlayerForm.register("position")}
-                  id="position"
-                  defaultValue=""
-                  className="w-full h-9 rounded-md border border-input bg-background text-foreground text-sm px-3 focus:outline-none focus:ring-2 focus:ring-ring appearance-none cursor-pointer"
-                >
-                  <option value="" disabled>
-                    {t("placeholders.preferredPosition")}
-                  </option>
-                  {POSITIONS.map((p) => (
-                    <option key={p.value} value={p.value}>
-                      {tExplore(`positions.${p.labelKey}`)}
-                    </option>
-                  ))}
-                </select>
-                <FieldError
-                  message={step3PlayerForm.formState.errors.position?.message}
-                />
-              </div>
-
-              {/* Date of birth */}
-              <div>
-                <Label htmlFor="dateOfBirth" className="mb-1 text-sm">
-                  {t("dateOfBirth")}
-                </Label>
-                <Input
-                  {...step3PlayerForm.register("dateOfBirth")}
-                  id="dateOfBirth"
-                  type="date"
-                  className="h-9 text-sm"
-                />
-                <FieldError
-                  message={
-                    step3PlayerForm.formState.errors.dateOfBirth?.message
-                  }
-                />
-              </div>
-
-              <div className="flex gap-2 pt-2">
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.97 }}
-                  type="button"
-                  onClick={handleBack}
-                  className="h-9 px-4 border border-border rounded-lg text-sm font-medium hover:bg-border/30 transition-colors cursor-pointer flex items-center gap-1"
-                >
-                  <ChevronLeft size={16} /> {t("back")}
-                </motion.button>
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.97 }}
-                  type="submit"
-                  disabled={isRegistering}
-                  className="flex-1 h-9 bg-primary text-white font-semibold rounded-lg hover:bg-primary-hover transition-colors cursor-pointer disabled:opacity-50 text-sm"
-                >
-                  {isRegistering ? t("creatingProfile") : t("createProfile")}
-                </motion.button>
-              </div>
-            </form>
+            <Step3PlayerDataForm
+              t={t}
+              tExplore={tExplore}
+              form={step3PlayerForm}
+              isRegistering={isRegistering}
+              onBack={handleBack}
+              onSubmit={onSubmitStep3Player}
+            />
           )}
         </div>
       )}
