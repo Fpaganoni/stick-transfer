@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
-import { useForm, useWatch } from "react-hook-form";
+import { Control, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { CalendarIcon, Check, ChevronsUpDown, X } from "lucide-react";
@@ -94,10 +94,316 @@ const createNewsFormSchema = (t: (key: string) => string) =>
   });
 
 type NewsFormValues = z.infer<ReturnType<typeof createNewsFormSchema>>;
+type NewsArticleCandidate = AdminNewsArticle;
 
 interface NewsArticleFormProps {
   article?: AdminNewsArticle;
   mode: "create" | "edit";
+}
+
+interface ContentSectionProps {
+  control: Control<NewsFormValues>;
+  t: (key: string) => string;
+  excerptValue: string;
+  onSlugTouched: () => void;
+}
+
+function ContentSection({ control, t, excerptValue, onSlugTouched }: ContentSectionProps) {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>{t("form.contentSection")}</CardTitle>
+        <CardDescription>{t("form.contentSectionDesc")}</CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <FormField
+          control={control}
+          name="title"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>{t("form.title")}</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={control}
+          name="slug"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>{t("form.slug")}</FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  onChange={(e) => {
+                    onSlugTouched();
+                    field.onChange(slugify(e.target.value));
+                  }}
+                />
+              </FormControl>
+              <FormDescription>{t("form.slugHint")}</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={control}
+          name="excerpt"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>{t("form.excerpt")}</FormLabel>
+              <FormControl>
+                <Textarea rows={3} {...field} />
+              </FormControl>
+              <div className="flex items-center justify-between">
+                <FormMessage />
+                <span className="text-xs text-foreground-muted">{excerptValue.length}/280</span>
+              </div>
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={control}
+          name="content"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>{t("form.content")}</FormLabel>
+              <FormControl>
+                <Textarea rows={12} {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      </CardContent>
+    </Card>
+  );
+}
+
+interface MetaSectionProps {
+  control: Control<NewsFormValues>;
+  t: (key: string) => string;
+  publishedAtValue: string | undefined;
+  candidates: NewsArticleCandidate[];
+  relatedArticleIds: string[];
+  relatedOpen: boolean;
+  onRelatedOpenChange: (open: boolean) => void;
+  onToggleRelated: (id: string) => void;
+}
+
+function MetaSection({
+  control,
+  t,
+  publishedAtValue,
+  candidates,
+  relatedArticleIds,
+  relatedOpen,
+  onRelatedOpenChange,
+  onToggleRelated,
+}: MetaSectionProps) {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>{t("form.metaSection")}</CardTitle>
+        <CardDescription>{t("form.metaSectionDesc")}</CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <FormField
+            control={control}
+            name="category"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{t("form.category")}</FormLabel>
+                <Select value={field.value} onValueChange={field.onChange}>
+                  <FormControl>
+                    <SelectTrigger className="w-full">
+                      <SelectValue />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {CATEGORIES.map((category) => (
+                      <SelectItem key={category} value={category}>
+                        {t(`categories.${category}`)}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={control}
+            name="readingTimeMinutes"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{t("form.readingTime")}</FormLabel>
+                <FormControl>
+                  <Input type="number" min={0} {...field} value={field.value ?? ""} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
+        <FormField
+          control={control}
+          name="coverImage"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>{t("form.coverImage")}</FormLabel>
+              <FormControl>
+                <Input placeholder="https://…" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={control}
+          name="publishedAt"
+          render={({ field }) => (
+            <FormItem className="flex flex-col">
+              <FormLabel>{t("form.publishDate")}</FormLabel>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className={cn("w-full justify-start text-left font-normal", !field.value && "text-foreground-muted")}
+                    >
+                      <CalendarIcon className="size-4" />
+                      {publishedAtValue ? formatDate(publishedAtValue, "en") : t("form.publishDatePlaceholder")}
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={field.value ? new Date(field.value) : undefined}
+                    onSelect={(date) => field.onChange(date ? date.toISOString() : "")}
+                  />
+                </PopoverContent>
+              </Popover>
+              <FormDescription>{t("form.publishDateHint")}</FormDescription>
+            </FormItem>
+          )}
+        />
+
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <FormField
+            control={control}
+            name="author.name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{t("form.authorName")}</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={control}
+            name="author.avatar"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{t("form.authorAvatar")}</FormLabel>
+                <FormControl>
+                  <Input placeholder="https://…" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
+        <FormItem>
+          <FormLabel>{t("form.relatedArticles")}</FormLabel>
+          <Popover open={relatedOpen} onOpenChange={onRelatedOpenChange}>
+            <PopoverTrigger asChild>
+              <Button type="button" variant="outline" className="w-full justify-between font-normal">
+                {relatedArticleIds.length > 0
+                  ? t("form.relatedArticlesCount", { count: relatedArticleIds.length })
+                  : t("form.relatedArticlesPlaceholder")}
+                <ChevronsUpDown className="size-4 opacity-50" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-[320px] p-0" align="start">
+              <Command>
+                <CommandInput placeholder={t("form.relatedArticlesSearch")} />
+                <CommandList>
+                  <CommandEmpty>{t("form.relatedArticlesEmpty")}</CommandEmpty>
+                  <CommandGroup>
+                    {candidates.map((candidate) => {
+                      const selected = relatedArticleIds.includes(candidate.id);
+                      return (
+                        <CommandItem key={candidate.id} onSelect={() => onToggleRelated(candidate.id)}>
+                          <Check className={cn("size-4", selected ? "opacity-100" : "opacity-0")} />
+                          <span className="truncate">{candidate.title}</span>
+                        </CommandItem>
+                      );
+                    })}
+                  </CommandGroup>
+                </CommandList>
+              </Command>
+            </PopoverContent>
+          </Popover>
+          {relatedArticleIds.length > 0 && (
+            <div className="flex flex-wrap gap-2 pt-1">
+              {relatedArticleIds.map((id) => {
+                const candidate = candidates.find((c) => c.id === id);
+                return (
+                  <Badge key={id} variant="secondary" className="gap-1">
+                    {candidate?.title ?? id}
+                    <button type="button" onClick={() => onToggleRelated(id)} aria-label={t("form.removeRelated")}>
+                      <X className="size-3" />
+                    </button>
+                  </Badge>
+                );
+              })}
+            </div>
+          )}
+        </FormItem>
+      </CardContent>
+    </Card>
+  );
+}
+
+interface FormActionsProps {
+  t: (key: string) => string;
+  isSaving: boolean;
+  onCancel: () => void;
+  onSaveDraft: () => void;
+  onPublish: () => void;
+}
+
+function FormActions({ t, isSaving, onCancel, onSaveDraft, onPublish }: FormActionsProps) {
+  return (
+    <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+      <Button type="button" variant="ghost" onClick={onCancel} disabled={isSaving}>
+        {t("form.cancel")}
+      </Button>
+      <Button type="button" variant="outline" onClick={onSaveDraft} disabled={isSaving}>
+        {t("form.saveDraft")}
+      </Button>
+      <Button type="button" onClick={onPublish} disabled={isSaving}>
+        {t("form.publish")}
+      </Button>
+    </div>
+  );
 }
 
 export function NewsArticleForm({ article, mode }: NewsArticleFormProps) {
@@ -198,273 +504,31 @@ export function NewsArticleForm({ article, mode }: NewsArticleFormProps) {
   return (
     <Form {...form}>
       <form className="space-y-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>{t("form.contentSection")}</CardTitle>
-            <CardDescription>{t("form.contentSectionDesc")}</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <FormField
-              control={form.control}
-              name="title"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t("form.title")}</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+        <ContentSection
+          control={form.control}
+          t={t}
+          excerptValue={excerptValue}
+          onSlugTouched={() => setSlugTouched(true)}
+        />
 
-            <FormField
-              control={form.control}
-              name="slug"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t("form.slug")}</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      onChange={(e) => {
-                        setSlugTouched(true);
-                        field.onChange(slugify(e.target.value));
-                      }}
-                    />
-                  </FormControl>
-                  <FormDescription>{t("form.slugHint")}</FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+        <MetaSection
+          control={form.control}
+          t={t}
+          publishedAtValue={publishedAtValue}
+          candidates={candidates}
+          relatedArticleIds={relatedArticleIds}
+          relatedOpen={relatedOpen}
+          onRelatedOpenChange={setRelatedOpen}
+          onToggleRelated={toggleRelated}
+        />
 
-            <FormField
-              control={form.control}
-              name="excerpt"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t("form.excerpt")}</FormLabel>
-                  <FormControl>
-                    <Textarea rows={3} {...field} />
-                  </FormControl>
-                  <div className="flex items-center justify-between">
-                    <FormMessage />
-                    <span className="text-xs text-foreground-muted">{excerptValue.length}/280</span>
-                  </div>
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="content"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t("form.content")}</FormLabel>
-                  <FormControl>
-                    <Textarea rows={12} {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>{t("form.metaSection")}</CardTitle>
-            <CardDescription>{t("form.metaSectionDesc")}</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              <FormField
-                control={form.control}
-                name="category"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t("form.category")}</FormLabel>
-                    <Select value={field.value} onValueChange={field.onChange}>
-                      <FormControl>
-                        <SelectTrigger className="w-full">
-                          <SelectValue />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {CATEGORIES.map((category) => (
-                          <SelectItem key={category} value={category}>
-                            {t(`categories.${category}`)}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="readingTimeMinutes"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t("form.readingTime")}</FormLabel>
-                    <FormControl>
-                      <Input type="number" min={0} {...field} value={field.value ?? ""} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <FormField
-              control={form.control}
-              name="coverImage"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t("form.coverImage")}</FormLabel>
-                  <FormControl>
-                    <Input placeholder="https://…" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="publishedAt"
-              render={({ field }) => (
-                <FormItem className="flex flex-col">
-                  <FormLabel>{t("form.publishDate")}</FormLabel>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          type="button"
-                          variant="outline"
-                          className={cn("w-full justify-start text-left font-normal", !field.value && "text-foreground-muted")}
-                        >
-                          <CalendarIcon className="size-4" />
-                          {publishedAtValue ? formatDate(publishedAtValue, "en") : t("form.publishDatePlaceholder")}
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        mode="single"
-                        selected={field.value ? new Date(field.value) : undefined}
-                        onSelect={(date) => field.onChange(date ? date.toISOString() : "")}
-                      />
-                    </PopoverContent>
-                  </Popover>
-                  <FormDescription>{t("form.publishDateHint")}</FormDescription>
-                </FormItem>
-              )}
-            />
-
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              <FormField
-                control={form.control}
-                name="author.name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t("form.authorName")}</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="author.avatar"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t("form.authorAvatar")}</FormLabel>
-                    <FormControl>
-                      <Input placeholder="https://…" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <FormItem>
-              <FormLabel>{t("form.relatedArticles")}</FormLabel>
-              <Popover open={relatedOpen} onOpenChange={setRelatedOpen}>
-                <PopoverTrigger asChild>
-                  <Button type="button" variant="outline" className="w-full justify-between font-normal">
-                    {relatedArticleIds.length > 0
-                      ? t("form.relatedArticlesCount", { count: relatedArticleIds.length })
-                      : t("form.relatedArticlesPlaceholder")}
-                    <ChevronsUpDown className="size-4 opacity-50" />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-[320px] p-0" align="start">
-                  <Command>
-                    <CommandInput placeholder={t("form.relatedArticlesSearch")} />
-                    <CommandList>
-                      <CommandEmpty>{t("form.relatedArticlesEmpty")}</CommandEmpty>
-                      <CommandGroup>
-                        {candidates.map((candidate) => {
-                          const selected = relatedArticleIds.includes(candidate.id);
-                          return (
-                            <CommandItem key={candidate.id} onSelect={() => toggleRelated(candidate.id)}>
-                              <Check className={cn("size-4", selected ? "opacity-100" : "opacity-0")} />
-                              <span className="truncate">{candidate.title}</span>
-                            </CommandItem>
-                          );
-                        })}
-                      </CommandGroup>
-                    </CommandList>
-                  </Command>
-                </PopoverContent>
-              </Popover>
-              {relatedArticleIds.length > 0 && (
-                <div className="flex flex-wrap gap-2 pt-1">
-                  {relatedArticleIds.map((id) => {
-                    const candidate = candidates.find((c) => c.id === id);
-                    return (
-                      <Badge key={id} variant="secondary" className="gap-1">
-                        {candidate?.title ?? id}
-                        <button type="button" onClick={() => toggleRelated(id)} aria-label={t("form.removeRelated")}>
-                          <X className="size-3" />
-                        </button>
-                      </Badge>
-                    );
-                  })}
-                </div>
-              )}
-            </FormItem>
-          </CardContent>
-        </Card>
-
-        <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
-          <Button
-            type="button"
-            variant="ghost"
-            onClick={() => router.push(`${localePrefix}/admin/news`)}
-            disabled={isSaving}
-          >
-            {t("form.cancel")}
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={form.handleSubmit((values) => submit(values, false))}
-            disabled={isSaving}
-          >
-            {t("form.saveDraft")}
-          </Button>
-          <Button type="button" onClick={form.handleSubmit((values) => submit(values, true))} disabled={isSaving}>
-            {t("form.publish")}
-          </Button>
-        </div>
+        <FormActions
+          t={t}
+          isSaving={isSaving}
+          onCancel={() => router.push(`${localePrefix}/admin/news`)}
+          onSaveDraft={form.handleSubmit((values) => submit(values, false))}
+          onPublish={form.handleSubmit((values) => submit(values, true))}
+        />
       </form>
     </Form>
   );

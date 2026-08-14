@@ -47,80 +47,83 @@ interface NewsArticleResponse {
   newsArticle: NewsArticleDetail;
 }
 
-const MOCK_ARTICLES: NewsArticleSummary[] = [
-  {
-    id: "1",
-    slug: "fih-pro-league-2026-preview",
-    title: "FIH Pro League 2026: Everything You Need to Know",
-    excerpt:
-      "The FIH Pro League enters a new era with expanded nations, revised formats, and top clubs battling for global supremacy on the world stage.",
-    coverImage: "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=800&q=80",
-    category: "INTERNATIONAL",
-    publishedAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-    readingTimeMinutes: 5,
-    author: { name: "Alex Morgan", avatar: "" },
-  },
-  {
-    id: "2",
-    slug: "netherlands-hockey-dominance-2026",
-    title: "Netherlands Continue to Dominate European Hockey",
-    excerpt:
-      "Dutch clubs set the pace again in the EHL quarterfinals, with HC Rotterdam and Amsterdam both progressing to the Final Four.",
-    coverImage: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&q=80",
-    category: "NATIONAL",
-    publishedAt: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(),
-    readingTimeMinutes: 4,
-    author: { name: "Johan de Boer", avatar: "" },
-  },
-  {
-    id: "3",
-    slug: "top-transfers-summer-2026",
-    title: "Summer 2026: The Biggest Hockey Transfers So Far",
-    excerpt:
-      "From Belgium to Australia — this summer's transfer window is heating up with marquee signings reshaping top club rosters worldwide.",
-    coverImage: "https://images.unsplash.com/photo-1517649763962-0c623066013b?w=800&q=80",
-    category: "TRANSFERS",
-    publishedAt: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
-    readingTimeMinutes: 6,
-    author: { name: "Sarah Chen", avatar: "" },
-  },
-  {
-    id: "4",
-    slug: "adidas-hockey-stick-2026",
-    title: "Adidas Launches Next-Gen Hockey Stick Line for 2026",
-    excerpt:
-      "Adidas unveils its most advanced hockey stick collection yet, featuring carbon-fiber composites and sensor-ready grip technology.",
-    coverImage: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&q=80",
-    category: "EQUIPMENT",
-    publishedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-    readingTimeMinutes: 3,
-    author: { name: "Marco Visser", avatar: "" },
-  },
-  {
-    id: "5",
-    slug: "ehl-quarterfinals-results",
-    title: "EHL Quarterfinals: Shock Upsets and Dominant Wins",
-    excerpt:
-      "Surprise eliminations rocked the EHL quarterfinals as underdogs from Spain and Belgium stunned heavily favoured opponents.",
-    coverImage: "https://images.unsplash.com/photo-1546519638-68e109498ffc?w=800&q=80",
-    category: "RESULTS",
-    publishedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
-    readingTimeMinutes: 4,
-    author: { name: "Pierre Dubois", avatar: "" },
-  },
-  {
-    id: "6",
-    slug: "argentina-hockey-rising",
-    title: "Argentina's Hockey Scene Is on the Rise",
-    excerpt:
-      "New investment in youth academies and domestic leagues is turning Argentina into a serious hockey powerhouse for the next decade.",
-    coverImage: "https://images.unsplash.com/photo-1560272564-c83b66b1ad12?w=800&q=80",
-    category: "NATIONAL",
-    publishedAt: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString(),
-    readingTimeMinutes: 5,
-    author: { name: "Carlos Mendez", avatar: "" },
-  },
-];
+function getMockArticles(): NewsArticleSummary[] {
+  const now = Date.now();
+  return [
+    {
+      id: "1",
+      slug: "fih-pro-league-2026-preview",
+      title: "FIH Pro League 2026: Everything You Need to Know",
+      excerpt:
+        "The FIH Pro League enters a new era with expanded nations, revised formats, and top clubs battling for global supremacy on the world stage.",
+      coverImage: "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=800&q=80",
+      category: "INTERNATIONAL",
+      publishedAt: new Date(now - 2 * 60 * 60 * 1000).toISOString(),
+      readingTimeMinutes: 5,
+      author: { name: "Alex Morgan", avatar: "" },
+    },
+    {
+      id: "2",
+      slug: "netherlands-hockey-dominance-2026",
+      title: "Netherlands Continue to Dominate European Hockey",
+      excerpt:
+        "Dutch clubs set the pace again in the EHL quarterfinals, with HC Rotterdam and Amsterdam both progressing to the Final Four.",
+      coverImage: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&q=80",
+      category: "NATIONAL",
+      publishedAt: new Date(now - 5 * 60 * 60 * 1000).toISOString(),
+      readingTimeMinutes: 4,
+      author: { name: "Johan de Boer", avatar: "" },
+    },
+    {
+      id: "3",
+      slug: "top-transfers-summer-2026",
+      title: "Summer 2026: The Biggest Hockey Transfers So Far",
+      excerpt:
+        "From Belgium to Australia — this summer's transfer window is heating up with marquee signings reshaping top club rosters worldwide.",
+      coverImage: "https://images.unsplash.com/photo-1517649763962-0c623066013b?w=800&q=80",
+      category: "TRANSFERS",
+      publishedAt: new Date(now - 24 * 60 * 60 * 1000).toISOString(),
+      readingTimeMinutes: 6,
+      author: { name: "Sarah Chen", avatar: "" },
+    },
+    {
+      id: "4",
+      slug: "adidas-hockey-stick-2026",
+      title: "Adidas Launches Next-Gen Hockey Stick Line for 2026",
+      excerpt:
+        "Adidas unveils its most advanced hockey stick collection yet, featuring carbon-fiber composites and sensor-ready grip technology.",
+      coverImage: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&q=80",
+      category: "EQUIPMENT",
+      publishedAt: new Date(now - 2 * 24 * 60 * 60 * 1000).toISOString(),
+      readingTimeMinutes: 3,
+      author: { name: "Marco Visser", avatar: "" },
+    },
+    {
+      id: "5",
+      slug: "ehl-quarterfinals-results",
+      title: "EHL Quarterfinals: Shock Upsets and Dominant Wins",
+      excerpt:
+        "Surprise eliminations rocked the EHL quarterfinals as underdogs from Spain and Belgium stunned heavily favoured opponents.",
+      coverImage: "https://images.unsplash.com/photo-1546519638-68e109498ffc?w=800&q=80",
+      category: "RESULTS",
+      publishedAt: new Date(now - 3 * 24 * 60 * 60 * 1000).toISOString(),
+      readingTimeMinutes: 4,
+      author: { name: "Pierre Dubois", avatar: "" },
+    },
+    {
+      id: "6",
+      slug: "argentina-hockey-rising",
+      title: "Argentina's Hockey Scene Is on the Rise",
+      excerpt:
+        "New investment in youth academies and domestic leagues is turning Argentina into a serious hockey powerhouse for the next decade.",
+      coverImage: "https://images.unsplash.com/photo-1560272564-c83b66b1ad12?w=800&q=80",
+      category: "NATIONAL",
+      publishedAt: new Date(now - 4 * 24 * 60 * 60 * 1000).toISOString(),
+      readingTimeMinutes: 5,
+      author: { name: "Carlos Mendez", avatar: "" },
+    },
+  ];
+}
 
 export function useNewsQuery(filters?: NewsFiltersInput, page = 1) {
   return useQuery<NewsListResponse>({
@@ -133,9 +136,10 @@ export function useNewsQuery(filters?: NewsFiltersInput, page = 1) {
           limit: 12,
         });
       } catch {
+        const mockArticles = getMockArticles();
         const items = filters?.category
-          ? MOCK_ARTICLES.filter((a) => a.category === filters.category)
-          : MOCK_ARTICLES;
+          ? mockArticles.filter((a) => a.category === filters.category)
+          : mockArticles;
         return {
           news: {
             items,
@@ -156,7 +160,8 @@ export function useNewsArticleQuery(slug: string) {
       try {
         return await graphqlClient.request<NewsArticleResponse>(GET_NEWS_ARTICLE, { slug });
       } catch {
-        const found = MOCK_ARTICLES.find((a) => a.slug === slug);
+        const mockArticles = getMockArticles();
+        const found = mockArticles.find((a) => a.slug === slug);
         const article: NewsArticleDetail = {
           id: found?.id ?? "1",
           slug: found?.slug ?? slug,
@@ -169,7 +174,7 @@ export function useNewsArticleQuery(slug: string) {
           publishedAt: found?.publishedAt ?? new Date().toISOString(),
           readingTimeMinutes: found?.readingTimeMinutes ?? 3,
           author: found?.author ?? { name: "Editorial Team", avatar: "" },
-          relatedArticles: MOCK_ARTICLES.filter((a) => a.slug !== slug)
+          relatedArticles: mockArticles.filter((a) => a.slug !== slug)
             .slice(0, 3)
             .map(({ id, slug, title, coverImage, category, publishedAt }) => ({
               id,
