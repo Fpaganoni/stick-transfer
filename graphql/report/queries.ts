@@ -29,33 +29,3 @@ export const GET_REPORTS = gql`
     }
   }
 `;
-
-export const GET_REPORT = gql`
-  query Report($id: ID!) {
-    report(id: $id) {
-      id
-      reporterId
-      reporter {
-        id
-        name
-        username
-        avatar
-      }
-      targetType
-      targetId
-      reason
-      description
-      status
-      reviewedById
-      reviewedBy {
-        id
-        name
-        username
-        avatar
-      }
-      reviewedAt
-      createdAt
-      updatedAt
-    }
-  }
-`;

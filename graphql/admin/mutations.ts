@@ -46,19 +46,6 @@ export const ADMIN_SET_CLUB_VERIFICATION = gql`
 `;
 
 // ============================================
-// JOBS — TODO: backend pendiente, spec documentada (sin scoping por club)
-// ============================================
-
-export const ADMIN_UPDATE_APPLICATION_STATUS = gql`
-  mutation AdminUpdateApplicationStatus($id: ID!, $status: ApplicationStatus!) {
-    updateApplicationStatus(id: $id, status: $status) {
-      id
-      status
-    }
-  }
-`;
-
-// ============================================
 // NEWS CMS — ya implementado en el backend (requireSuperAdmin)
 // ============================================
 

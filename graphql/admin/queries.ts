@@ -105,35 +105,6 @@ export const ADMIN_JOB_OPPORTUNITIES = gql`
   }
 `;
 
-// TODO: backend pendiente — vista admin sin scoping por club, spec documentada
-export const ADMIN_JOB_APPLICATIONS = gql`
-  query AdminJobApplications($filters: AdminApplicationFiltersInput, $page: Int, $limit: Int) {
-    adminJobApplications(filters: $filters, page: $page, limit: $limit) {
-      items {
-        id
-        status
-        appliedAt
-        user {
-          id
-          name
-          username
-          avatar
-        }
-        jobOpportunity {
-          id
-          title
-          club {
-            id
-            name
-          }
-        }
-      }
-      total
-      hasMore
-    }
-  }
-`;
-
 export const SUPER_ADMIN_NEWS_ARTICLES = gql`
   query SuperAdminNewsArticles($filters: NewsFiltersInput, $page: Int, $limit: Int) {
     superAdminNewsArticles(filters: $filters, page: $page, limit: $limit) {

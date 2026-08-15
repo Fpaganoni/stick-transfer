@@ -108,32 +108,6 @@ export const GET_USER = gql`
   }
 `;
 
-// ============================================
-// USER FOLLOWERS/FOLLOWING QUERIES
-// ============================================
-
-export const GET_FOLLOWERS = gql`
-  query GetFollowers($entityType: String!, $entityId: String!) {
-    followers(entityType: $entityType, entityId: $entityId) {
-      id
-      followerType
-      followerId
-      createdAt
-    }
-  }
-`;
-
-export const GET_FOLLOWING = gql`
-  query GetFollowing($entityType: String!, $entityId: String!) {
-    following(entityType: $entityType, entityId: $entityId) {
-      id
-      followingType
-      followingId
-      createdAt
-    }
-  }
-`;
-
 export const GET_USER_BY_USERNAME = gql`
   query GetUserByUsername($username: String!) {
     getUserByUsername(username: $username) {

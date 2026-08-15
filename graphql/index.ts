@@ -61,6 +61,6 @@ export {
 } from "./admin/mutations";
 
 // REPORT
-export { GET_REPORTS, GET_REPORT } from "./report/queries";
+export { GET_REPORTS } from "./report/queries";
 
 export { CREATE_REPORT, UPDATE_REPORT_STATUS } from "./report/mutations";
