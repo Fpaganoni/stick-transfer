@@ -48,8 +48,16 @@ export function OpportunityListCard(opportunity: OpportunityListCardProps) {
 
   return (
     <div
+      role="button"
+      tabIndex={0}
       className="bg-background rounded-xl border border-border shadow-sm hover:shadow-md transition-shadow duration-200 cursor-pointer"
       onClick={handleOpenModal}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          handleOpenModal();
+        }
+      }}
     >
       <div className="p-4 flex gap-3 min-h-[120px]">
         {/* Club Logo */}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useLocale } from "next-intl";
 import { ChevronRight } from "lucide-react";
 import Image from "next/image";
@@ -26,7 +26,6 @@ function isNew(createdAt?: string): boolean {
 }
 
 export function ClubListCard(club: Club) {
-  const router = useRouter();
   const locale = useLocale();
   const flag = countryFlag(club.country);
   const initials = club.name.slice(0, 2).toUpperCase();
@@ -34,8 +33,8 @@ export function ClubListCard(club: Club) {
   const showNew = isNew(club.createdAt);
 
   return (
-    <div
-      onClick={() => router.push(`/${locale}/clubs/${club.id}`)}
+    <Link
+      href={`/${locale}/clubs/${club.id}`}
       className="relative flex flex-col items-center w-full h-[180px] sm:h-[200px] bg-surface border border-border rounded-xl p-3 cursor-pointer hover:border-primary/50 hover:shadow-md hover:scale-[1.02] transition duration-200"
     >
       {showNew && (
@@ -85,6 +84,6 @@ export function ClubListCard(club: Club) {
           {flag ?? club.country}
         </div>
       )}
-    </div>
+    </Link>
   );
 }

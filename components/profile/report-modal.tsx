@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCreateReport } from "@/hooks/useReport";
@@ -55,11 +55,20 @@ export function ReportModal({
     );
   };
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setReason("");
     setDescription("");
     onClose();
-  };
+  }, [onClose]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") handleClose();
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, handleClose]);
 
   return (
     <AnimatePresence>
@@ -69,8 +78,14 @@ export function ReportModal({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            role="button"
+            tabIndex={0}
+            aria-label="Close"
             className="absolute inset-0 bg-black/50 backdrop-blur-sm"
             onClick={handleClose}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") handleClose();
+            }}
           />
 
           <motion.div

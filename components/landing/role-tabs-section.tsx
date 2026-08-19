@@ -57,8 +57,9 @@ export function RoleTabsSection() {
 
           <div className="grid grid-cols-2 md:grid-cols-4 w-full mb-4 md:mb-10 bg-background rounded-lg p-1">
             {ROLES.map((role) => (
-              <div
+              <button
                 key={role}
+                type="button"
                 onClick={() => setActiveTab(role)}
                 className="relative py-3 text-sm font-medium text-center cursor-pointer select-none"
               >
@@ -76,7 +77,7 @@ export function RoleTabsSection() {
                 >
                   {t(`${role}.tab` as Parameters<typeof t>[0])}
                 </span>
-              </div>
+              </button>
             ))}
           </div>
 

@@ -77,7 +77,8 @@ export function ClubProfileHeader({
         <div className="flex justify-between items-start mb-4">
           <div className="flex items-start gap-3 flex-1 -mt-24 relative z-10">
             <div className="rounded-full shrink-0 mx-2">
-              <motion.div
+              <motion.button
+                type="button"
                 whileHover={isTouchDevice ? {} : { scale: 1.05 }}
                 transition={{ duration: 0.2, ease: "easeInOut" }}
                 onClick={() => setAvatarModalOpen(true)}
@@ -91,7 +92,7 @@ export function ClubProfileHeader({
                   sizes="(max-width: 640px) 96px, 128px"
                   className="object-cover"
                 />
-              </motion.div>
+              </motion.button>
             </div>
             <div className="pt-6 flex-1 min-w-0">
               <div className="flex items-center gap-2 flex-wrap min-w-0 overflow-hidden">

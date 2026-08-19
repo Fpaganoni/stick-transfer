@@ -477,7 +477,8 @@ export function ProfileHeader({
         <div className="flex justify-between items-start mb-4">
           <div className="flex flex-col items-center text-center sm:flex-row sm:items-start sm:text-start gap-3 flex-1 -mt-16 sm:-mt-20 md:-mt-24 relative z-10 min-w-0">
             <div className="rounded-full shrink-0 mx-2">
-              <motion.div
+              <motion.button
+                type="button"
                 whileHover={{ scale: 1.05 }}
                 transition={{ duration: 0.2, ease: "easeInOut" }}
                 onClick={() => setAvatarModalOpen(true)}
@@ -491,7 +492,7 @@ export function ProfileHeader({
                   sizes="(max-width: 640px) 112px, (max-width: 768px) 144px, 192px"
                   className="object-cover"
                 />
-              </motion.div>
+              </motion.button>
             </div>
 
             <div className="pt-1 sm:pt-6 flex-1 min-w-0 w-full">

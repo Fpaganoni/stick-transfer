@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
@@ -24,6 +25,15 @@ export function FollowersFollowingModal({
   const emptyText =
     mode === "followers" ? "No hay seguidores aún" : "No sigues a nadie aún";
 
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, onClose]);
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -33,8 +43,14 @@ export function FollowersFollowingModal({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            role="button"
+            tabIndex={0}
+            aria-label="Cerrar"
             className="absolute inset-0 bg-black/50 backdrop-blur-sm"
             onClick={onClose}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") onClose();
+            }}
           />
 
           {/* Modal */}
