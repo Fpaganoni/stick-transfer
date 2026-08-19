@@ -110,10 +110,11 @@ export function ReportModal({
 
             <div className="px-5 py-4 flex flex-col gap-4">
               <div className="flex flex-col gap-1.5">
-                <label className="text-sm font-medium text-foreground">
+                <label htmlFor="report-reason" className="text-sm font-medium text-foreground">
                   Reason
                 </label>
                 <select
+                  id="report-reason"
                   value={reason}
                   onChange={(e) => setReason(e.target.value)}
                   className="w-full h-(--input-button-height) px-3 rounded-lg border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary transition-colors"
@@ -128,13 +129,14 @@ export function ReportModal({
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label className="text-sm font-medium text-foreground">
+                <label htmlFor="report-description" className="text-sm font-medium text-foreground">
                   Description{" "}
                   <span className="text-foreground-muted font-normal">
                     (optional)
                   </span>
                 </label>
                 <textarea
+                  id="report-description"
                   value={description}
                   onChange={(e) =>
                     setDescription(e.target.value.slice(0, 500))

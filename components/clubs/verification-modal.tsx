@@ -75,6 +75,7 @@ export function VerificationModal({ clubId, onClose }: VerificationModalProps) {
           <button
             onClick={onClose}
             disabled={isPending || isSubmitting}
+            aria-label={t("close")}
             className="text-foreground/50 hover:text-foreground transition disabled:opacity-50"
           >
             <X className="w-6 h-6" />
@@ -85,10 +86,11 @@ export function VerificationModal({ clubId, onClose }: VerificationModalProps) {
           <p className="text-foreground/70">{t("description")}</p>
 
           <div>
-            <label className="block text-sm font-medium text-foreground mb-3">
+            <label htmlFor="verification-document" className="block text-sm font-medium text-foreground mb-3">
               {t("uploadDocument")}
             </label>
             <FileUploader
+              id="verification-document"
               onFileSelect={setDocumentUrl}
               isLoading={isPending || isSubmitting}
             />

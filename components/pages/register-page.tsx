@@ -384,6 +384,7 @@ function Step2BasicData({
           <button
             type="button"
             onClick={onTogglePassword}
+            aria-label={showPassword ? t("hidePassword") : t("showPassword")}
             className="absolute right-3 top-1/2 -translate-y-1/2 text-foreground cursor-pointer"
           >
             {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -412,6 +413,7 @@ function Step2BasicData({
           <button
             type="button"
             onClick={onToggleConfirmPassword}
+            aria-label={showConfirmPassword ? t("hidePassword") : t("showPassword")}
             className="absolute right-3 top-1/2 -translate-y-1/2 text-foreground cursor-pointer"
           >
             {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}

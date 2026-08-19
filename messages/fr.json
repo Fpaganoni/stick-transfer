@@ -62,6 +62,8 @@
     "email": "E-mail",
     "password": "Mot de passe",
     "confirmPassword": "Confirmer le Mot de passe",
+    "showPassword": "Afficher le mot de passe",
+    "hidePassword": "Masquer le mot de passe",
     "country": "Pays",
     "termsAndConditions": "J'accepte les Conditions Générales",
     "preferredPosition": "Position Préférée",
@@ -142,7 +144,9 @@
     "vacancies": "Postes",
     "joinUs": "Rejoignez-Nous",
     "signIn": "Se Connecter",
-    "signUp": "S'inscrire"
+    "signUp": "S'inscrire",
+    "openMenu": "Ouvrir le menu",
+    "closeMenu": "Fermer le menu"
   },
   "landing": {
     "hero": {
@@ -586,6 +590,7 @@
     },
     "verification": {
       "verifyClub": "Vérifier le Club",
+      "close": "Fermer",
       "unverifiedTitle": "Club Non Vérifié",
       "unverifiedDescription": "Votre club n'est pas vérifié. Vérifiez votre compte pour accéder aux fonctionnalités avancées et gagner la confiance des joueurs.",
       "pendingTitle": "Vérification en Attente",
@@ -593,6 +598,7 @@
       "verifyButton": "Vérifier le Club",
       "description": "Nous avons besoin d'un document officiel pour vérifier votre club. Veuillez télécharger un document légal (certificat de constitution, lettre officielle, etc.).",
       "uploadDocument": "Télécharger le Document",
+      "removeFile": "Supprimer le fichier",
       "dragOrClick": "Déposez votre document ici ou cliquez pour parcourir",
       "supportedFormats": "Formats acceptés: PDF, DOC, DOCX (Max 10MB)",
       "fileTooLarge": "Le fichier est trop volumineux. Taille maximale: 10MB",

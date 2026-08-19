@@ -155,6 +155,7 @@ export function NavbarLanding() {
         {/* Mobile Menu Button */}
         <button
           onClick={() => setIsMenuOpen(!isMenuOpen)}
+          aria-label={isMenuOpen ? t("closeMenu") : t("openMenu")}
           className="md:hidden p-2 hover:bg-primary/10 rounded-lg transition-colors"
         >
           {isMenuOpen ? (

@@ -8,12 +8,14 @@ interface FileUploaderProps {
   onFileSelect: (url: string) => void;
   isLoading?: boolean;
   accept?: string;
+  id?: string;
 }
 
 export function FileUploader({
   onFileSelect,
   isLoading,
   accept = ".pdf,.doc,.docx",
+  id,
 }: FileUploaderProps) {
   const t = useTranslations("clubs.verification");
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -108,6 +110,7 @@ export function FileUploader({
             <button
               onClick={handleRemove}
               disabled={isLoading}
+              aria-label={t("removeFile")}
               className="text-foreground/50 hover:text-foreground transition disabled:opacity-50"
             >
               <X className="w-5 h-5" />
@@ -120,6 +123,7 @@ export function FileUploader({
 
       <input
         ref={fileInputRef}
+        id={id}
         type="file"
         onChange={handleFileChange}
         accept={accept}

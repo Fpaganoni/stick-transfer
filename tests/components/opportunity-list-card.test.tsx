@@ -111,12 +111,9 @@ describe("OpportunityListCard", () => {
     expect(screen.getByText("H")).toBeInTheDocument();
   });
 
-  it("clicking card opens modal with correct opportunity", () => {
+  it("clicking see more opens modal with correct opportunity", () => {
     render(<OpportunityListCard {...baseOpportunity} />);
-    const card = screen
-      .getByText("Forward Player")
-      .closest('[class*="rounded-xl"]') as HTMLElement;
-    fireEvent.click(card);
+    fireEvent.click(screen.getByText("seeMore"));
     expect(mockSetSelectedOpportunity).toHaveBeenCalledWith(
       expect.objectContaining({ id: "opp-1" }),
     );

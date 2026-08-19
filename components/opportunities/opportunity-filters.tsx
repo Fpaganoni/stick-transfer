@@ -49,14 +49,14 @@ export function OpportunityFilters({
     <div className="flex flex-col gap-5 p-4 pt-6">
       {/* Level / Division */}
       <div className="flex flex-col gap-1.5">
-        <label className="text-xs font-semibold text-foreground-muted uppercase tracking-wide">
+        <label htmlFor="filter-level" className="text-xs font-semibold text-foreground-muted uppercase tracking-wide">
           {t("filters.experience")}
         </label>
         <Select
           value={filters.level || "ALL"}
           onValueChange={(v) => setFilters({ level: v === "ALL" ? null : v })}
         >
-          <SelectTrigger className={triggerClass}>
+          <SelectTrigger id="filter-level" className={triggerClass} aria-label={t("filters.experience")}>
             <SelectValue placeholder={t("filters.experience")} />
           </SelectTrigger>
           <SelectContent>
@@ -69,14 +69,14 @@ export function OpportunityFilters({
 
       {/* Status */}
       <div className="flex flex-col gap-1.5">
-        <label className="text-xs font-semibold text-foreground-muted uppercase tracking-wide">
+        <label htmlFor="filter-status" className="text-xs font-semibold text-foreground-muted uppercase tracking-wide">
           {t("open")} / {t("filled")}
         </label>
         <Select
           value={filters.status || "ALL"}
           onValueChange={(v) => setFilters({ status: v === "ALL" ? null : v })}
         >
-          <SelectTrigger className={triggerClass}>
+          <SelectTrigger id="filter-status" className={triggerClass} aria-label={`${t("open")} / ${t("filled")}`}>
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -90,14 +90,14 @@ export function OpportunityFilters({
 
       {/* Country */}
       <div className="flex flex-col gap-1.5">
-        <label className="text-xs font-semibold text-foreground-muted uppercase tracking-wide">
+        <label htmlFor="filter-country" className="text-xs font-semibold text-foreground-muted uppercase tracking-wide">
           {t("filters.location")}
         </label>
         <Select
           value={filters.country || "ALL"}
           onValueChange={(v) => setFilters({ country: v === "ALL" ? null : v })}
         >
-          <SelectTrigger className={triggerClass}>
+          <SelectTrigger id="filter-country" className={triggerClass} aria-label={t("filters.location")}>
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -113,7 +113,7 @@ export function OpportunityFilters({
 
       {/* Position Type */}
       <div className="flex flex-col gap-1.5">
-        <label className="text-xs font-semibold text-foreground-muted uppercase tracking-wide">
+        <label htmlFor="filter-position-type" className="text-xs font-semibold text-foreground-muted uppercase tracking-wide">
           {t("positionFilter")}
         </label>
         <Select
@@ -122,7 +122,7 @@ export function OpportunityFilters({
             setFilters({ positionType: v === "ALL" ? null : v })
           }
         >
-          <SelectTrigger className={triggerClass}>
+          <SelectTrigger id="filter-position-type" className={triggerClass} aria-label={t("positionFilter")}>
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
