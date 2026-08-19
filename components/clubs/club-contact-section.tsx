@@ -103,7 +103,7 @@ export function ClubContactSection({ club }: ClubContactSectionProps) {
                       href={href?.(club[field] as string)}
                       target={field === "website" ? "_blank" : undefined}
                       rel={field === "website" ? "noopener noreferrer" : undefined}
-                      className="flex items-center gap-3 p-3 rounded-lg bg-background border border-border hover:border-primary/50 hover:bg-primary/5 transition-all duration-200 cursor-pointer group overflow-hidden"
+                      className="flex items-center gap-3 p-3 rounded-lg bg-background border border-border hover:border-primary/50 hover:bg-primary/5 transition duration-200 cursor-pointer group overflow-hidden"
                     >
                       <div className="shrink-0 text-primary/70 group-hover:text-primary transition-colors">
                         {icon}
@@ -139,7 +139,7 @@ export function ClubContactSection({ club }: ClubContactSectionProps) {
                       href={href(club[field] as string)}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex flex-col items-center justify-center p-3 sm:p-6 rounded-lg bg-background border border-border hover:border-primary/50 hover:bg-primary/5 sm:hover:scale-105 transition-all duration-200 cursor-pointer group"
+                      className="flex flex-col items-center justify-center p-3 sm:p-6 rounded-lg bg-background border border-border hover:border-primary/50 hover:bg-primary/5 sm:hover:scale-105 transition duration-200 cursor-pointer group"
                     >
                       <div className="text-primary/70 group-hover:text-primary transition-colors mb-2">
                         {icon}

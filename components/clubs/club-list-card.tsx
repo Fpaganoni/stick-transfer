@@ -36,7 +36,7 @@ export function ClubListCard(club: Club) {
   return (
     <div
       onClick={() => router.push(`/${locale}/clubs/${club.id}`)}
-      className="relative flex flex-col items-center w-full h-[180px] sm:h-[200px] bg-surface border border-border rounded-xl p-3 cursor-pointer hover:border-primary/50 hover:shadow-md hover:scale-[1.02] transition-all duration-200"
+      className="relative flex flex-col items-center w-full h-[180px] sm:h-[200px] bg-surface border border-border rounded-xl p-3 cursor-pointer hover:border-primary/50 hover:shadow-md hover:scale-[1.02] transition duration-200"
     >
       {showNew && (
         <span className="absolute top-2 left-2 text-[10px] font-bold bg-error text-white px-1.5 py-0.5 rounded-full leading-none">

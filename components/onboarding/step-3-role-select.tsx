@@ -58,7 +58,7 @@ export function OnboardingStep3({ }: Step3Props) {
           <button
             key={id}
             onClick={() => handleRoleSelect(id)}
-            className="w-full p-4 rounded-lg border-2 border-border bg-surface hover:border-accent-bright hover:bg-surface-light transition-all text-left group"
+            className="w-full p-4 rounded-lg border-2 border-border bg-surface hover:border-accent-bright hover:bg-surface-light transition text-left group"
           >
             <div className="flex items-start gap-3">
               <div className="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center flex-shrink-0 group-hover:bg-accent/20 transition-colors">

@@ -160,7 +160,7 @@ function NotificationItem({ notification }: { notification: Notification }) {
         onClick={handleRemove}
         disabled={removeNotification.isPending}
         aria-label={t("remove")}
-        className="absolute top-2 right-2 p-1 rounded-md opacity-0 group-hover:opacity-100 hover:bg-muted transition-all disabled:opacity-30 text-muted-foreground hover:text-foreground"
+        className="absolute top-2 right-2 p-1 rounded-md opacity-0 group-hover:opacity-100 hover:bg-muted transition disabled:opacity-30 text-muted-foreground hover:text-foreground"
       >
         <X size={12} />
       </button>

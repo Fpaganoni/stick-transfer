@@ -26,7 +26,7 @@ export function NewsCard({ article }: NewsCardProps) {
 
   return (
     <Link href={`/${locale}/news/${article.slug}`} className="block group">
-      <article className="bg-surface border border-border rounded-xl overflow-hidden hover:shadow-md hover:scale-[1.02] transition-all duration-200 h-full flex flex-col">
+      <article className="bg-surface border border-border rounded-xl overflow-hidden hover:shadow-md hover:scale-[1.02] transition duration-200 h-full flex flex-col">
         <div className="relative aspect-video overflow-hidden">
           <Image
             src={article.coverImage}

@@ -85,7 +85,7 @@ export function UserApplications() {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: idx * 0.05 }}
-            className="bg-background rounded-xl overflow-hidden border border-border hover:shadow-lg transition-all duration-200 group"
+            className="bg-background rounded-xl overflow-hidden border border-border hover:shadow-lg transition duration-200 group"
           >
             <div className="p-4">
               {/* Header */}
