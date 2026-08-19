@@ -27,7 +27,8 @@ export function UserSavedJobs() {
 
   const savedOpportunities = useMemo(() => {
     if (!data?.jobOpportunities) return [];
-    return data.jobOpportunities.filter((opp) => savedIds.includes(opp.id));
+    const savedIdSet = new Set(savedIds);
+    return data.jobOpportunities.filter((opp) => savedIdSet.has(opp.id));
   }, [data, savedIds]);
 
   if (isLoading) {

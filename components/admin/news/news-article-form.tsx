@@ -207,6 +207,7 @@ function MetaSection({
   onRelatedOpenChange,
   onToggleRelated,
 }: MetaSectionProps) {
+  const relatedArticleIdSet = new Set(relatedArticleIds);
   return (
     <Card>
       <CardHeader>
@@ -348,7 +349,7 @@ function MetaSection({
                   <CommandEmpty>{t("form.relatedArticlesEmpty")}</CommandEmpty>
                   <CommandGroup>
                     {candidates.map((candidate) => {
-                      const selected = relatedArticleIds.includes(candidate.id);
+                      const selected = relatedArticleIdSet.has(candidate.id);
                       return (
                         <CommandItem key={candidate.id} onSelect={() => onToggleRelated(candidate.id)}>
                           <Check className={cn("size-4", selected ? "opacity-100" : "opacity-0")} />
