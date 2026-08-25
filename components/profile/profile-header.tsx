@@ -28,6 +28,15 @@ import { FollowersFollowingModal } from "./followers-following-modal";
 import { ReportModal } from "./report-modal";
 import { AvatarPhotoModal } from "../ui/avatar-photo-modal";
 
+interface FollowUser {
+  id: string;
+  name: string;
+  avatar?: string;
+  username?: string;
+}
+
+const EMPTY_FOLLOW_USERS: readonly FollowUser[] = [];
+
 type ProfileHeaderProps = Pick<
   User,
   | "id"
@@ -43,18 +52,8 @@ type ProfileHeaderProps = Pick<
 > & {
   isOwnProfile?: boolean;
   username?: string;
-  followers?: Array<{
-    id: string;
-    name: string;
-    avatar?: string;
-    username?: string;
-  }>;
-  following?: Array<{
-    id: string;
-    name: string;
-    avatar?: string;
-    username?: string;
-  }>;
+  followers?: FollowUser[];
+  following?: FollowUser[];
 };
 
 interface CoverImageSectionProps {
@@ -329,8 +328,8 @@ export function ProfileHeader({
   coverImagePosition,
   cvUrl,
   isOwnProfile = false,
-  followers = [],
-  following = [],
+  followers = EMPTY_FOLLOW_USERS,
+  following = EMPTY_FOLLOW_USERS,
 }: ProfileHeaderProps) {
   const t = useTranslations("profile");
   const router = useRouter();
