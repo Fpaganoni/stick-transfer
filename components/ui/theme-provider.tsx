@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { ThemeToggleButton, useThemeTransition } from "./toggleThemeRight";
-import { sidebarMenuButtonVariants } from "./sidebar";
+import { sidebarMenuButtonVariants } from "./sidebar-variants";
 import { cn } from "@/lib/utils";
 import { useHydrated } from "@/hooks/ui/use-hydrated";
 

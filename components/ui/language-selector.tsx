@@ -9,7 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { sidebarMenuButtonVariants } from "@/components/ui/sidebar";
+import { sidebarMenuButtonVariants } from "@/components/ui/sidebar-variants";
 import { cn } from "@/lib/utils";
 import { useHydrated } from "@/hooks/ui/use-hydrated";
 
