@@ -9,6 +9,27 @@ import { Loader2, MapPin, Award, Calendar, CheckCircle, Clock, XCircle } from "l
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
 
+function getStatusColor(status: string) {
+  const normalized = status.toLowerCase();
+  switch (normalized) {
+    case "accepted":
+      return "bg-success/30 text-foreground border-success/40";
+    case "rejected":
+      return "bg-error/30 text-foreground border-error/40";
+    case "pending":
+      return "bg-warning/30 text-foreground border-warning/40";
+    default:
+      return "bg-info/30 text-foreground border-info/40";
+  }
+}
+
+function getStatusIcon(status: string) {
+  const normalized = status.toLowerCase();
+  if (normalized === "accepted") return <CheckCircle size={16} />;
+  if (normalized === "rejected") return <XCircle size={16} />;
+  return <Clock size={16} />;
+}
+
 export function UserApplications() {
   const t = useTranslations("profile");
   const locale = useLocale() as "en" | "es" | "fr";
@@ -31,27 +52,6 @@ export function UserApplications() {
       [],
     );
   }, [applications, opportunitiesData]);
-
-  const getStatusColor = (status: string) => {
-    const normalized = status.toLowerCase();
-    switch (normalized) {
-      case "accepted":
-        return "bg-success/30 text-foreground border-success/40";
-      case "rejected":
-        return "bg-error/30 text-foreground border-error/40";
-      case "pending":
-        return "bg-warning/30 text-foreground border-warning/40";
-      default:
-        return "bg-info/30 text-foreground border-info/40";
-    }
-  };
-
-  const getStatusIcon = (status: string) => {
-    const normalized = status.toLowerCase();
-    if (normalized === "accepted") return <CheckCircle size={16} />;
-    if (normalized === "rejected") return <XCircle size={16} />;
-    return <Clock size={16} />;
-  };
 
   if (isLoadingApplications || isLoadingOpportunities) {
     return (
