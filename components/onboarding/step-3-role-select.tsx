@@ -7,29 +7,29 @@ interface Step3Props {
   onNext: () => void;
 }
 
+const ROLES = [
+  {
+    id: "player",
+    label: "Player",
+    description: "Find clubs, opportunities, and connect with teammates",
+    icon: Users,
+  },
+  {
+    id: "coach",
+    label: "Coach",
+    description: "Recruit talent, build your team, and manage players",
+    icon: Users2,
+  },
+  {
+    id: "club",
+    label: "Club",
+    description: "Post opportunities and build your organization",
+    icon: Building2,
+  },
+];
+
 export function OnboardingStep3({}: Step3Props) {
   const router = useRouter();
-
-  const roles = [
-    {
-      id: "player",
-      label: "Player",
-      description: "Find clubs, opportunities, and connect with teammates",
-      icon: Users,
-    },
-    {
-      id: "coach",
-      label: "Coach",
-      description: "Recruit talent, build your team, and manage players",
-      icon: Users2,
-    },
-    {
-      id: "club",
-      label: "Club",
-      description: "Post opportunities and build your organization",
-      icon: Building2,
-    },
-  ];
 
   const handleRoleSelect = (roleId: string) => {
     // Save role and redirect to home
@@ -56,7 +56,7 @@ export function OnboardingStep3({}: Step3Props) {
 
       {/* Role Selection Cards */}
       <div className="space-y-3 flex-1">
-        {roles.map(({ id, label, description, icon: Icon }) => (
+        {ROLES.map(({ id, label, description, icon: Icon }) => (
           <button
             key={id}
             onClick={() => handleRoleSelect(id)}

@@ -9,6 +9,26 @@ import { useExploreUsers } from "@/hooks/useExplore";
 import { Loader } from "../ui/loader";
 import { Error } from "../ui/error";
 
+const COUNTRY_OPTIONS = [
+  { value: "AR", label: "🇦🇷 Argentina" },
+  { value: "AT", label: "🇦🇹 Austria" },
+  { value: "BE", label: "🇧🇪 Belgium" },
+  { value: "CA", label: "🇨🇦 Canada" },
+  { value: "CL", label: "🇨🇱 Chile" },
+  { value: "DK", label: "🇩🇰 Denmark" },
+  { value: "FI", label: "🇫🇮 Finland" },
+  { value: "FR", label: "🇫🇷 France" },
+  { value: "DE", label: "🇩🇪 Germany" },
+  { value: "IT", label: "🇮🇹 Italy" },
+  { value: "NL", label: "🇳🇱 Netherlands" },
+  { value: "PT", label: "🇵🇹 Portugal" },
+  { value: "ES", label: "🇪🇸 Spain" },
+  { value: "SE", label: "🇸🇪 Sweden" },
+  { value: "CH", label: "🇨🇭 Switzerland" },
+  { value: "GB", label: "🇬🇧 UK" },
+  { value: "US", label: "🇺🇸 USA" },
+];
+
 // Debounce: only fire the query after the user stops typing for 400ms
 function useDebounce<T>(value: T, delay = 400): T {
   const [debounced, setDebounced] = useState(value);
@@ -68,26 +88,6 @@ export function ExplorePage() {
     { value: "AMATEUR", label: t("levels.amateur") },
   ];
 
-  const countryOptions = [
-    { value: "AR", label: "🇦🇷 Argentina" },
-    { value: "AT", label: "🇦🇹 Austria" },
-    { value: "BE", label: "🇧🇪 Belgium" },
-    { value: "CA", label: "🇨🇦 Canada" },
-    { value: "CL", label: "🇨🇱 Chile" },
-    { value: "DK", label: "🇩🇰 Denmark" },
-    { value: "FI", label: "🇫🇮 Finland" },
-    { value: "FR", label: "🇫🇷 France" },
-    { value: "DE", label: "🇩🇪 Germany" },
-    { value: "IT", label: "🇮🇹 Italy" },
-    { value: "NL", label: "🇳🇱 Netherlands" },
-    { value: "PT", label: "🇵🇹 Portugal" },
-    { value: "ES", label: "🇪🇸 Spain" },
-    { value: "SE", label: "🇸🇪 Sweden" },
-    { value: "CH", label: "🇨🇭 Switzerland" },
-    { value: "GB", label: "🇬🇧 UK" },
-    { value: "US", label: "🇺🇸 USA" },
-  ];
-
   return (
     <main className="max-w-2xl mx-auto pb-4">
       <div className="sticky top-16 bg-background/30 z-20 px-4 py-4 border-b border-border space-y-4 backdrop-blur-sm">
@@ -108,7 +108,7 @@ export function ExplorePage() {
           />
           <FilterButton
             label={t("filters.country")}
-            options={countryOptions}
+            options={COUNTRY_OPTIONS}
             activeValue={selectedFilters.country}
             onSelect={setFilter("country")}
             onClear={clearFilter("country")}

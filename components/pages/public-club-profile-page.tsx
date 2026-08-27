@@ -15,6 +15,13 @@ interface PublicClubProfilePageProps {
   username: string;
 }
 
+const VISITOR_ITEMS = [
+  { icon: Users, key: "visitor.item1" as const },
+  { icon: Briefcase, key: "visitor.item2" as const },
+  { icon: MessageCircle, key: "visitor.item3" as const },
+  { icon: Star, key: "visitor.item4" as const },
+];
+
 export function PublicClubProfilePage({
   username,
 }: PublicClubProfilePageProps) {
@@ -61,12 +68,6 @@ export function PublicClubProfilePage({
     videos: anyUser.videos as string[] | undefined,
   };
 
-  const visitorItems = [
-    { icon: Users, key: "visitor.item1" as const },
-    { icon: Briefcase, key: "visitor.item2" as const },
-    { icon: MessageCircle, key: "visitor.item3" as const },
-    { icon: Star, key: "visitor.item4" as const },
-  ];
 
   return (
     <main className="bg-overlay max-w-4xl mx-auto pb-24">
@@ -93,7 +94,7 @@ export function PublicClubProfilePage({
             {t("visitor.subtitle")}
           </p>
           <ul className="space-y-2 mb-5 text-left max-w-xs mx-auto">
-            {visitorItems.map(({ icon: Icon, key }) => (
+            {VISITOR_ITEMS.map(({ icon: Icon, key }) => (
               <li
                 key={key}
                 className="flex items-center gap-2 text-foreground text-sm"

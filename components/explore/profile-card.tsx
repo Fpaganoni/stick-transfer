@@ -10,6 +10,22 @@ import { User } from "@/types/models/user";
 import { useTranslations, useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
 
+const ROLE_COLORS: Record<
+  string,
+  { bg: string; text: string; badge: string }
+> = {
+  PLAYER: {
+    bg: "bg-success/20",
+    text: "text-success",
+    badge: "bg-success/20 text-foreground border-success",
+  },
+  COACH: {
+    bg: "bg-warning/20",
+    text: "text-warning",
+    badge: "bg-warning/20 text-foreground border-warning",
+  },
+};
+
 type ProfileCardProps = Pick<
   User,
   | "id"
@@ -42,23 +58,7 @@ export function ProfileCard({
   const handleViewProfile = () =>
     router.push(`/${locale}/profile/${username.replace(/\./g, "/")}`);
 
-  const roleColors: Record<
-    string,
-    { bg: string; text: string; badge: string }
-  > = {
-    PLAYER: {
-      bg: "bg-success/20",
-      text: "text-success",
-      badge: "bg-success/20 text-foreground border-success",
-    },
-    COACH: {
-      bg: "bg-warning/20",
-      text: "text-warning",
-      badge: "bg-warning/20 text-foreground border-warning",
-    },
-  };
-
-  const colors = roleColors[role] || roleColors.PLAYER;
+  const colors = ROLE_COLORS[role] || ROLE_COLORS.PLAYER;
 
   return (
     <motion.div

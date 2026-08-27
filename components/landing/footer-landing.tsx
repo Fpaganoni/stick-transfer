@@ -10,42 +10,42 @@ import { HockeyXTicks } from "@/components/ui/hockey-xtick";
 import { LanguageSelector } from "@/components/ui/language-selector";
 import { useTranslations } from "next-intl";
 
+const FOOTER_LINKS = {
+  product: ["features", "opportunities", "explore"],
+  company: ["about", "contact", "blog"],
+  legal: ["privacy", "terms", "cookies"],
+};
+
+const SOCIAL_LINKS = [
+  {
+    icon: FaInstagram,
+    href: "https://instagram.com",
+    label: "Instagram",
+    color: "var(--color-instagram)",
+  },
+  {
+    icon: FaFacebook,
+    href: "https://facebook.com",
+    label: "Facebook",
+    color: "var(--color-facebook)",
+  },
+  {
+    icon: FaXTwitter,
+    href: "https://twitter.com",
+    label: "Twitter",
+    color: "var(--color-x)",
+  },
+  {
+    icon: FaLinkedin,
+    href: "https://linkedin.com",
+    label: "LinkedIn",
+    color: "var(--color-linkedin)",
+  },
+];
+
 export function FooterLanding() {
   const currentYear = new Date().getFullYear();
   const t = useTranslations("landing.footer");
-
-  const footerLinks = {
-    product: ["features", "opportunities", "explore"],
-    company: ["about", "contact", "blog"],
-    legal: ["privacy", "terms", "cookies"],
-  };
-
-  const socialLinks = [
-    {
-      icon: FaInstagram,
-      href: "https://instagram.com",
-      label: "Instagram",
-      color: "var(--color-instagram)",
-    },
-    {
-      icon: FaFacebook,
-      href: "https://facebook.com",
-      label: "Facebook",
-      color: "var(--color-facebook)",
-    },
-    {
-      icon: FaXTwitter,
-      href: "https://twitter.com",
-      label: "Twitter",
-      color: "var(--color-x)",
-    },
-    {
-      icon: FaLinkedin,
-      href: "https://linkedin.com",
-      label: "LinkedIn",
-      color: "var(--color-linkedin)",
-    },
-  ];
 
   return (
     <footer className="bg-surface-elevated border-t border-border px-12">
@@ -66,7 +66,7 @@ export function FooterLanding() {
 
             {/* Social Links */}
             <div className="flex items-center gap-4">
-              {socialLinks.map((social) => {
+              {SOCIAL_LINKS.map((social) => {
                 const Icon = social.icon;
                 return (
                   <a
@@ -93,7 +93,7 @@ export function FooterLanding() {
               {t("product")}
             </h4>
             <ul className="space-y-2">
-              {footerLinks.product.map((link) => (
+              {FOOTER_LINKS.product.map((link) => (
                 <li key={link}>
                   <a
                     href={`#${link}`}
@@ -111,7 +111,7 @@ export function FooterLanding() {
               {t("company")}
             </h4>
             <ul className="space-y-2">
-              {footerLinks.company.map((link) => (
+              {FOOTER_LINKS.company.map((link) => (
                 <li key={link}>
                   <a
                     href={`#${link}`}
@@ -127,7 +127,7 @@ export function FooterLanding() {
           <div>
             <h4 className="font-semibold text-foreground mb-4">{t("legal")}</h4>
             <ul className="space-y-2">
-              {footerLinks.legal.map((link) => (
+              {FOOTER_LINKS.legal.map((link) => (
                 <li key={link}>
                   <a
                     href={`#${link}`}
