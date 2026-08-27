@@ -22,12 +22,14 @@ export function UserApplications() {
       opportunitiesData.jobOpportunities.map((opp) => [opp.id, opp])
     );
 
-    return applications
-      .map((app) => ({
-        ...app,
-        opportunity: opportunitiesMap.get(app.jobOpportunityId),
-      }))
-      .filter((app) => app.opportunity);
+    return applications.reduce<Array<(typeof applications)[number] & { opportunity: NonNullable<ReturnType<typeof opportunitiesMap.get>> }>>(
+      (acc, app) => {
+        const opportunity = opportunitiesMap.get(app.jobOpportunityId);
+        if (opportunity) acc.push({ ...app, opportunity });
+        return acc;
+      },
+      [],
+    );
   }, [applications, opportunitiesData]);
 
   const getStatusColor = (status: string) => {

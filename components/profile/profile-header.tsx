@@ -340,7 +340,7 @@ export function ProfileHeader({
   const [coverPos, setCoverPos] = useState<number>(
     coverImagePosition ? parseFloat(coverImagePosition) : 50,
   );
-  const [savedPos, setSavedPos] = useState<number>(
+  const savedPosRef = useRef<number>(
     coverImagePosition ? parseFloat(coverImagePosition) : 50,
   );
   const [followersModalOpen, setFollowersModalOpen] = useState(false);
@@ -363,7 +363,7 @@ export function ProfileHeader({
     const pos = coverImagePosition ? parseFloat(coverImagePosition) : 50;
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setCoverPos(pos);
-    setSavedPos(pos);
+    savedPosRef.current = pos;
   }, [coverImagePosition]);
 
   const handleCoverMouseDown = useCallback(
@@ -394,7 +394,7 @@ export function ProfileHeader({
       { id, coverImagePosition: `${Math.round(coverPos)}%` },
       {
         onSuccess: () => {
-          setSavedPos(coverPos);
+          savedPosRef.current = coverPos;
           setIsRepositioning(false);
           toast.success(
             t("coverPositionSaved", { fallback: "Cover position saved" }),
@@ -409,7 +409,7 @@ export function ProfileHeader({
   };
 
   const handleCancelReposition = () => {
-    setCoverPos(savedPos);
+    setCoverPos(savedPosRef.current);
     setIsRepositioning(false);
   };
 
