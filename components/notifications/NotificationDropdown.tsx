@@ -115,7 +115,12 @@ function NotificationItem({ notification }: { notification: Notification }) {
       role="button"
       tabIndex={0}
       onClick={handleClick}
-      onKeyDown={(e) => e.key === "Enter" && handleClick()}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          handleClick();
+        }
+      }}
       className={`relative w-full flex items-start gap-3 px-4 py-3 hover:bg-muted/50 transition-colors text-left cursor-pointer group ${
         !notification.isRead ? "bg-primary/5 border-l-2 border-l-primary" : ""
       }`}
