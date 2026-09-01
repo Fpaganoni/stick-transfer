@@ -112,6 +112,7 @@ export function OnboardingStep2({ onNext }: Step2Props) {
           <input
             type="email"
             placeholder="Email address"
+            aria-label="Email address"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="w-full pl-10 pr-4 py-3 bg-surface border border-border rounded-lg text-text placeholder-text-secondary focus:outline-none focus:border-accent transition-colors"
@@ -123,6 +124,7 @@ export function OnboardingStep2({ onNext }: Step2Props) {
           <input
             type={showPassword ? "text" : "password"}
             placeholder="Password"
+            aria-label="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="w-full pl-10 pr-10 py-3 bg-surface border border-border rounded-lg text-text placeholder-text-secondary focus:outline-none focus:border-accent transition-colors"
