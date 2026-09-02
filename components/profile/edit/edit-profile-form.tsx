@@ -363,7 +363,13 @@ function CvUploadSection({
                   <Upload className="w-4 h-4 mr-2" />
                   {t("cv.change", { fallback: "Change" })}
                 </Button>
-                <Button type="button" variant="ghost" size="icon" onClick={onDeleteExisting}>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  onClick={onDeleteExisting}
+                  aria-label={t("editForm.removeCv")}
+                >
                   <Trash2 className="w-4 h-4 text-error hover:text-error/70 transition-colors" />
                 </Button>
               </div>

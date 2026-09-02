@@ -346,6 +346,9 @@
     "positionNotSet": "Position non définie",
     "noBio": "Pas encore de bio",
     "editForm": {
+      "removeCv": "Supprimer le CV",
+      "removeVideo": "Supprimer la vidéo",
+      "removeTrajectory": "Supprimer le parcours",
       "basicInfo": "Informations de Base",
       "basicInfoDesc": "Mettez à jour vos détails personnels.",
       "name": "Nom",

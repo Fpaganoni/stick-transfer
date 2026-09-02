@@ -57,6 +57,7 @@ export function MultimediaFieldArray({
             size="icon"
             onClick={() => remove(index)}
             className="shrink-0"
+            aria-label={t("editForm.removeVideo")}
           >
             <Trash2 size={18} />
           </Button>

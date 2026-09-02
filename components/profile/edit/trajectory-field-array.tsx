@@ -44,6 +44,7 @@ export function TrajectoryFieldArray({
               size="icon"
               onClick={() => remove(index)}
               className="h-8 w-8"
+              aria-label={t("editForm.removeTrajectory")}
             >
               <Trash2 size={16} />
             </Button>
