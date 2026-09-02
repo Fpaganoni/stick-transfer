@@ -7,6 +7,7 @@ import { MapPin, Briefcase, Globe, Mail, Video, Plus, X } from "lucide-react";
 import { YoutubeWidget } from "@/components/ui/youtube-widget";
 import { OpportunityListCard } from "@/components/opportunities/opportunity-list-card";
 import { useJobOpportunities } from "@/hooks/useJobOpportunities";
+import type { JobOpportunity } from "@/types/models/job-opportunity";
 import {
   Empty,
   EmptyHeader,
@@ -38,6 +39,230 @@ interface ClubProfileTabsProps {
   activeTab: string;
   setActiveTab: (tab: string) => void;
   clubData: ClubData;
+}
+
+interface ProfileTabPanelProps {
+  t: (key: string) => string;
+  clubData: ClubData;
+}
+
+function ProfileTabPanel({ t, clubData }: ProfileTabPanelProps) {
+  const hasAnyDetail =
+    clubData.bio ||
+    clubData.city ||
+    clubData.country ||
+    clubData.website ||
+    clubData.email;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+      className="space-y-4 max-w-2xl"
+    >
+      <div className="bg-background rounded-xl p-6 border border-border">
+        <h3 className="font-bold text-foreground text-lg mb-4">
+          {t("about.title")}
+        </h3>
+
+        {(clubData.city || clubData.country) && (
+          <div className="flex items-start gap-3 mb-4">
+            <MapPin className="w-5 h-5 text-primary shrink-0 mt-1" />
+            <div>
+              <p className="text-foreground-muted text-sm font-medium">
+                {t("about.location")}
+              </p>
+              <p className="text-foreground text-sm">
+                {[clubData.city, clubData.country]
+                  .filter(Boolean)
+                  .join(", ") || t("about.noLocation")}
+              </p>
+            </div>
+          </div>
+        )}
+
+        {clubData.league && (
+          <div className="flex items-start gap-3 mb-4">
+            <Briefcase className="w-5 h-5 text-primary shrink-0 mt-1" />
+            <div>
+              <p className="text-foreground-muted text-sm font-medium">
+                {t("profile.category")}
+              </p>
+              <p className="text-foreground text-sm">{clubData.league}</p>
+            </div>
+          </div>
+        )}
+
+        {clubData.createdAt && (
+          <div className="flex items-start gap-3 mb-4">
+            <Briefcase className="w-5 h-5 text-primary shrink-0 mt-1" />
+            <div>
+              <p className="text-foreground-muted text-sm font-medium">
+                {t("profile.founded")}
+              </p>
+              <p className="text-foreground text-sm">
+                {new Date(clubData.createdAt).getFullYear()}
+              </p>
+            </div>
+          </div>
+        )}
+
+        {clubData.website && (
+          <div className="flex items-start gap-3 mb-4">
+            <Globe className="w-5 h-5 text-primary shrink-0 mt-1" />
+            <div>
+              <p className="text-foreground-muted text-sm font-medium">
+                {t("profile.website")}
+              </p>
+              <a
+                href={clubData.website}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary text-sm hover:underline"
+              >
+                {clubData.website}
+              </a>
+            </div>
+          </div>
+        )}
+
+        {clubData.email && (
+          <div className="flex items-start gap-3 mb-4">
+            <Mail className="w-5 h-5 text-primary shrink-0 mt-1" />
+            <div>
+              <p className="text-foreground-muted text-sm font-medium">
+                {t("profile.email")}
+              </p>
+              <a
+                href={`mailto:${clubData.email}`}
+                className="text-primary text-sm hover:underline"
+              >
+                {clubData.email}
+              </a>
+            </div>
+          </div>
+        )}
+
+        {clubData.bio && (
+          <div className="border-t border-border pt-4">
+            <p className="text-foreground-muted text-sm font-medium mb-2">
+              {t("profile.description")}
+            </p>
+            <p className="text-foreground text-sm leading-relaxed">
+              {clubData.bio}
+            </p>
+          </div>
+        )}
+
+        {!hasAnyDetail && (
+          <p className="text-foreground-muted text-sm text-center py-4">
+            {t("noBio")}
+          </p>
+        )}
+      </div>
+    </motion.div>
+  );
+}
+
+function PostsTabPanel({ t }: { t: (key: string) => string }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+      className="bg-surface-elevated/30 rounded-xl p-8"
+    >
+      <p className="text-foreground-muted text-center text-sm">
+        {t("posts.noPosts")}
+      </p>
+    </motion.div>
+  );
+}
+
+interface VacanciesTabPanelProps {
+  t: (key: string) => string;
+  isLoading: boolean;
+  vacancies: JobOpportunity[];
+}
+
+function VacanciesTabPanel({ t, isLoading, vacancies }: VacanciesTabPanelProps) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+      className="space-y-3"
+    >
+      {isLoading ? (
+        Array.from({ length: 3 }).map((_, i) => (
+          <div
+            key={i}
+            className="h-24 rounded-xl bg-surface-elevated animate-pulse"
+          />
+        ))
+      ) : vacancies.length === 0 ? (
+        <Empty className="border border-dashed border-border">
+          <EmptyMedia variant="icon">
+            <Briefcase />
+          </EmptyMedia>
+          <EmptyHeader>
+            <EmptyTitle>{t("vacancies.noVacancies")}</EmptyTitle>
+          </EmptyHeader>
+        </Empty>
+      ) : (
+        vacancies.map((opportunity) => (
+          <OpportunityListCard key={opportunity.id} {...opportunity} />
+        ))
+      )}
+    </motion.div>
+  );
+}
+
+interface VideosTabPanelProps {
+  t: (key: string) => string;
+  isAdmin?: boolean;
+  videos: string[];
+  onAddVideoClick: () => void;
+}
+
+function VideosTabPanel({ t, isAdmin, videos, onAddVideoClick }: VideosTabPanelProps) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+    >
+      {isAdmin && (
+        <div className="flex justify-end mb-4">
+          <button
+            onClick={onAddVideoClick}
+            className="flex items-center gap-2 px-4 py-2 bg-primary text-white-black font-semibold rounded-lg hover:bg-primary-hover transition-colors text-sm"
+          >
+            <Plus size={16} />
+            {t("videos.addVideo")}
+          </button>
+        </div>
+      )}
+
+      {videos.length === 0 ? (
+        <Empty className="border border-dashed border-border">
+          <EmptyMedia variant="icon">
+            <Video />
+          </EmptyMedia>
+          <EmptyHeader>
+            <EmptyTitle>{t("videos.noVideos")}</EmptyTitle>
+          </EmptyHeader>
+        </Empty>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {videos.map((url) => (
+            <YoutubeWidget key={url} url={url} />
+          ))}
+        </div>
+      )}
+    </motion.div>
+  );
 }
 
 export function ClubProfileTabs({
@@ -91,197 +316,26 @@ export function ClubProfileTabs({
 
       <div className="px-4 py-6">
         {activeTab === "profile" && (
-          <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
-            className="space-y-4 max-w-2xl"
-          >
-            <div className="bg-background rounded-xl p-6 border border-border">
-              <h3 className="font-bold text-foreground text-lg mb-4">
-                {t("about.title")}
-              </h3>
-
-              {(clubData.city || clubData.country) && (
-                <div className="flex items-start gap-3 mb-4">
-                  <MapPin className="w-5 h-5 text-primary shrink-0 mt-1" />
-                  <div>
-                    <p className="text-foreground-muted text-sm font-medium">
-                      {t("about.location")}
-                    </p>
-                    <p className="text-foreground text-sm">
-                      {[clubData.city, clubData.country]
-                        .filter(Boolean)
-                        .join(", ") || t("about.noLocation")}
-                    </p>
-                  </div>
-                </div>
-              )}
-
-              {clubData.league && (
-                <div className="flex items-start gap-3 mb-4">
-                  <Briefcase className="w-5 h-5 text-primary shrink-0 mt-1" />
-                  <div>
-                    <p className="text-foreground-muted text-sm font-medium">
-                      {t("profile.category")}
-                    </p>
-                    <p className="text-foreground text-sm">{clubData.league}</p>
-                  </div>
-                </div>
-              )}
-
-              {clubData.createdAt && (
-                <div className="flex items-start gap-3 mb-4">
-                  <Briefcase className="w-5 h-5 text-primary shrink-0 mt-1" />
-                  <div>
-                    <p className="text-foreground-muted text-sm font-medium">
-                      {t("profile.founded")}
-                    </p>
-                    <p className="text-foreground text-sm">
-                      {new Date(clubData.createdAt).getFullYear()}
-                    </p>
-                  </div>
-                </div>
-              )}
-
-              {clubData.website && (
-                <div className="flex items-start gap-3 mb-4">
-                  <Globe className="w-5 h-5 text-primary shrink-0 mt-1" />
-                  <div>
-                    <p className="text-foreground-muted text-sm font-medium">
-                      {t("profile.website")}
-                    </p>
-                    <a
-                      href={clubData.website}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-primary text-sm hover:underline"
-                    >
-                      {clubData.website}
-                    </a>
-                  </div>
-                </div>
-              )}
-
-              {clubData.email && (
-                <div className="flex items-start gap-3 mb-4">
-                  <Mail className="w-5 h-5 text-primary shrink-0 mt-1" />
-                  <div>
-                    <p className="text-foreground-muted text-sm font-medium">
-                      {t("profile.email")}
-                    </p>
-                    <a
-                      href={`mailto:${clubData.email}`}
-                      className="text-primary text-sm hover:underline"
-                    >
-                      {clubData.email}
-                    </a>
-                  </div>
-                </div>
-              )}
-
-              {clubData.bio && (
-                <div className="border-t border-border pt-4">
-                  <p className="text-foreground-muted text-sm font-medium mb-2">
-                    {t("profile.description")}
-                  </p>
-                  <p className="text-foreground text-sm leading-relaxed">
-                    {clubData.bio}
-                  </p>
-                </div>
-              )}
-
-              {!clubData.bio &&
-                !(clubData.city || clubData.country) &&
-                !clubData.website &&
-                !clubData.email && (
-                  <p className="text-foreground-muted text-sm text-center py-4">
-                    {t("noBio")}
-                  </p>
-                )}
-            </div>
-          </motion.div>
+          <ProfileTabPanel t={t} clubData={clubData} />
         )}
 
-        {activeTab === "posts" && (
-          <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
-            className="bg-surface-elevated/30 rounded-xl p-8"
-          >
-            <p className="text-foreground-muted text-center text-sm">
-              {t("posts.noPosts")}
-            </p>
-          </motion.div>
-        )}
+        {activeTab === "posts" && <PostsTabPanel t={t} />}
 
         {activeTab === "vacancies" && (
-          <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
-            className="space-y-3"
-          >
-            {vacanciesLoading ? (
-              Array.from({ length: 3 }).map((_, i) => (
-                <div
-                  key={i}
-                  className="h-24 rounded-xl bg-surface-elevated animate-pulse"
-                />
-              ))
-            ) : vacancies.length === 0 ? (
-              <Empty className="border border-dashed border-border">
-                <EmptyMedia variant="icon">
-                  <Briefcase />
-                </EmptyMedia>
-                <EmptyHeader>
-                  <EmptyTitle>{t("vacancies.noVacancies")}</EmptyTitle>
-                </EmptyHeader>
-              </Empty>
-            ) : (
-              vacancies.map((opportunity) => (
-                <OpportunityListCard key={opportunity.id} {...opportunity} />
-              ))
-            )}
-          </motion.div>
+          <VacanciesTabPanel
+            t={t}
+            isLoading={vacanciesLoading}
+            vacancies={vacancies}
+          />
         )}
 
         {activeTab === "videos" && (
-          <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            {clubData.isAdmin && (
-              <div className="flex justify-end mb-4">
-                <button
-                  onClick={() => setIsAddModalOpen(true)}
-                  className="flex items-center gap-2 px-4 py-2 bg-primary text-white-black font-semibold rounded-lg hover:bg-primary-hover transition-colors text-sm"
-                >
-                  <Plus size={16} />
-                  {t("videos.addVideo")}
-                </button>
-              </div>
-            )}
-
-            {videos.length === 0 ? (
-              <Empty className="border border-dashed border-border">
-                <EmptyMedia variant="icon">
-                  <Video />
-                </EmptyMedia>
-                <EmptyHeader>
-                  <EmptyTitle>{t("videos.noVideos")}</EmptyTitle>
-                </EmptyHeader>
-              </Empty>
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {videos.map((url) => (
-                  <YoutubeWidget key={url} url={url} />
-                ))}
-              </div>
-            )}
-          </motion.div>
+          <VideosTabPanel
+            t={t}
+            isAdmin={clubData.isAdmin}
+            videos={videos}
+            onAddVideoClick={() => setIsAddModalOpen(true)}
+          />
         )}
       </div>
 

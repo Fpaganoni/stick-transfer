@@ -407,6 +407,45 @@ function FormActions({ t, isSaving, onCancel, onSaveDraft, onPublish }: FormActi
   );
 }
 
+function getDefaultFormValues(article?: AdminNewsArticle): NewsFormValues {
+  return {
+    title: article?.title ?? "",
+    slug: article?.slug ?? "",
+    excerpt: article?.excerpt ?? "",
+    content: article?.content ?? "",
+    coverImage: article?.coverImage ?? "",
+    category: (article?.category as NewsCategory) ?? "NATIONAL",
+    publishedAt: article?.publishedAt ?? "",
+    readingTimeMinutes: article?.readingTimeMinutes ?? undefined,
+    author: {
+      name: article?.author?.name ?? "Stick Transfer",
+      avatar: article?.author?.avatar ?? "",
+    },
+    relatedArticleIds: article?.relatedArticles?.map((a) => a.id) ?? [],
+  };
+}
+
+function buildNewsArticleInput(
+  values: NewsFormValues,
+  candidates: NewsArticleCandidate[],
+): NewsArticleInput {
+  return {
+    slug: values.slug,
+    title: values.title,
+    excerpt: values.excerpt,
+    content: values.content,
+    coverImage: values.coverImage || undefined,
+    category: values.category,
+    publishedAt: values.publishedAt || undefined,
+    readingTimeMinutes: values.readingTimeMinutes,
+    authorName: values.author.name || undefined,
+    authorAvatar: values.author.avatar || undefined,
+    relatedSlugs: (values.relatedArticleIds ?? [])
+      .map((id) => candidates.find((c) => c.id === id)?.slug)
+      .filter((slug): slug is string => Boolean(slug)),
+  };
+}
+
 export function NewsArticleForm({ article, mode }: NewsArticleFormProps) {
   const t = useTranslations("admin.news");
   const router = useRouter();
@@ -429,21 +468,7 @@ export function NewsArticleForm({ article, mode }: NewsArticleFormProps) {
   const schema = createNewsFormSchema(t);
   const form = useForm<NewsFormValues>({
     resolver: zodResolver(schema),
-    defaultValues: {
-      title: article?.title ?? "",
-      slug: article?.slug ?? "",
-      excerpt: article?.excerpt ?? "",
-      content: article?.content ?? "",
-      coverImage: article?.coverImage ?? "",
-      category: (article?.category as NewsCategory) ?? "NATIONAL",
-      publishedAt: article?.publishedAt ?? "",
-      readingTimeMinutes: article?.readingTimeMinutes ?? undefined,
-      author: {
-        name: article?.author?.name ?? "Stick Transfer",
-        avatar: article?.author?.avatar ?? "",
-      },
-      relatedArticleIds: article?.relatedArticles?.map((a) => a.id) ?? [],
-    },
+    defaultValues: getDefaultFormValues(article),
   });
 
   const titleValue = useWatch({ control: form.control, name: "title" });
@@ -461,21 +486,7 @@ export function NewsArticleForm({ article, mode }: NewsArticleFormProps) {
   const isSaving = createMutation.isPending || updateMutation.isPending || publishMutation.isPending;
 
   async function submit(values: NewsFormValues, shouldPublish: boolean) {
-    const input: NewsArticleInput = {
-      slug: values.slug,
-      title: values.title,
-      excerpt: values.excerpt,
-      content: values.content,
-      coverImage: values.coverImage || undefined,
-      category: values.category,
-      publishedAt: values.publishedAt || undefined,
-      readingTimeMinutes: values.readingTimeMinutes,
-      authorName: values.author.name || undefined,
-      authorAvatar: values.author.avatar || undefined,
-      relatedSlugs: (values.relatedArticleIds ?? [])
-        .map((id) => candidates.find((c) => c.id === id)?.slug)
-        .filter((slug): slug is string => Boolean(slug)),
-    };
+    const input = buildNewsArticleInput(values, candidates);
 
     try {
       let articleId = article?.id;

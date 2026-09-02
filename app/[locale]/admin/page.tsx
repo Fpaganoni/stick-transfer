@@ -77,41 +77,20 @@ function bars(entries: [string, number][], colors: Record<string, string>): Stat
   }));
 }
 
-export default function AdminOverviewPage() {
-  const t = useTranslations("admin.overview");
-  const { data, isLoading, isError, refetch } = useAdminStats();
-  const stats = data?.adminDashboardStats;
+interface OverviewSectionProps {
+  t: (key: string, values?: Record<string, unknown>) => string;
+  stats?: NonNullable<ReturnType<typeof useAdminStats>["data"]>["adminDashboardStats"];
+  isLoading: boolean;
+}
 
-  if (isError) {
-    return (
-      <Empty>
-        <EmptyHeader>
-          <EmptyMedia variant="icon">
-            <RefreshCw className="size-6" />
-          </EmptyMedia>
-          <EmptyTitle>{t("errorTitle")}</EmptyTitle>
-          <EmptyDescription>{t("errorDescription")}</EmptyDescription>
-        </EmptyHeader>
-        <EmptyContent>
-          <Button onClick={() => refetch()}>{t("retry")}</Button>
-        </EmptyContent>
-      </Empty>
-    );
-  }
-
+function OverviewStatCards({ t, stats, isLoading }: OverviewSectionProps) {
   const totalJobs = stats
     ? stats.openJobsCount + stats.closedJobsCount + stats.filledJobsCount
     : 0;
   const totalNews = stats ? stats.publishedNewsCount + stats.draftNewsCount : 0;
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold">{t("title")}</h1>
-        <p className="text-sm text-foreground-muted">{t("subtitle")}</p>
-      </div>
-
-      {/* Stat cards */}
+    <>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard
           label={t("stats.totalUsers")}
@@ -192,150 +171,194 @@ export default function AdminOverviewPage() {
           isLoading={isLoading}
         />
       </div>
+    </>
+  );
+}
+
+function OverviewCharts({ t, stats, isLoading }: OverviewSectionProps) {
+  return (
+    <div className="space-y-4 lg:col-span-2">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle>{t("charts.usersByRole")}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {isLoading || !stats ? (
+              <Skeleton className="h-[260px] w-full" />
+            ) : (
+              <RoleDistributionChart
+                data={[
+                  { role: "PLAYER", count: stats.playersCount },
+                  { role: "COACH", count: stats.coachesCount },
+                  { role: "CLUB", count: stats.clubsCount },
+                  { role: "SUPERADMIN", count: stats.superAdminsCount },
+                ]}
+              />
+            )}
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>{t("charts.clubsByVerification")}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {isLoading || !stats ? (
+              <Skeleton className="h-60 w-full" />
+            ) : (
+              <StatusBarChart
+                data={bars(
+                  [
+                    ["VERIFIED", stats.verifiedClubsCount],
+                    ["PENDING", stats.pendingVerificationClubsCount],
+                    ["UNVERIFIED", stats.unverifiedClubsCount],
+                    ["REJECTED", stats.rejectedClubsCount],
+                  ],
+                  VERIFICATION_COLORS,
+                )}
+              />
+            )}
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle>{t("charts.jobsByStatus")}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {isLoading || !stats ? (
+              <Skeleton className="h-60 w-full" />
+            ) : (
+              <StatusBarChart
+                data={bars(
+                  [
+                    ["OPEN", stats.openJobsCount],
+                    ["CLOSED", stats.closedJobsCount],
+                    ["FILLED", stats.filledJobsCount],
+                  ],
+                  JOB_STATUS_COLORS,
+                )}
+              />
+            )}
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>{t("charts.applicationsByStatus")}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {isLoading || !stats ? (
+              <Skeleton className="h-60 w-full" />
+            ) : (
+              <StatusBarChart
+                data={bars(
+                  [
+                    ["PENDING", stats.pendingApplicationsCount],
+                    ["ACCEPTED", stats.acceptedApplicationsCount],
+                    ["REJECTED", stats.rejectedApplicationsCount],
+                  ],
+                  APPLICATION_COLORS,
+                )}
+              />
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+}
+
+function OverviewSidePanel({ t, stats, isLoading }: OverviewSectionProps) {
+  return (
+    <div className="space-y-4">
+      <Card>
+        <CardHeader>
+          <CardTitle>{t("charts.reportsByStatus")}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {isLoading || !stats ? (
+            <Skeleton className="h-60 w-full" />
+          ) : (
+            <StatusBarChart
+              data={bars(
+                [
+                  ["PENDING", stats.pendingReportsCount],
+                  ["REVIEWED", stats.reviewedReportsCount],
+                  ["ACTION_TAKEN", stats.actionTakenReportsCount],
+                ],
+                REPORT_STATUS_COLORS,
+              )}
+            />
+          )}
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>{t("memberships.title")}</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          {isLoading || !stats ? (
+            <div className="space-y-2">
+              <Skeleton className="h-6 w-full" />
+              <Skeleton className="h-6 w-full" />
+            </div>
+          ) : (
+            <>
+              <MembershipRow
+                label={t("memberships.pending")}
+                value={stats.pendingClubMembershipsCount}
+              />
+              <MembershipRow
+                label={t("memberships.active")}
+                value={stats.activeClubMembershipsCount}
+              />
+            </>
+          )}
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+export default function AdminOverviewPage() {
+  const t = useTranslations("admin.overview");
+  const { data, isLoading, isError, refetch } = useAdminStats();
+  const stats = data?.adminDashboardStats;
+
+  if (isError) {
+    return (
+      <Empty>
+        <EmptyHeader>
+          <EmptyMedia variant="icon">
+            <RefreshCw className="size-6" />
+          </EmptyMedia>
+          <EmptyTitle>{t("errorTitle")}</EmptyTitle>
+          <EmptyDescription>{t("errorDescription")}</EmptyDescription>
+        </EmptyHeader>
+        <EmptyContent>
+          <Button onClick={() => refetch()}>{t("retry")}</Button>
+        </EmptyContent>
+      </Empty>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-bold">{t("title")}</h1>
+        <p className="text-sm text-foreground-muted">{t("subtitle")}</p>
+      </div>
+
+      <OverviewStatCards t={t} stats={stats} isLoading={isLoading} />
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-        <div className="space-y-4 lg:col-span-2">
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <Card>
-              <CardHeader>
-                <CardTitle>{t("charts.usersByRole")}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                {isLoading || !stats ? (
-                  <Skeleton className="h-[260px] w-full" />
-                ) : (
-                  <RoleDistributionChart
-                    data={[
-                      { role: "PLAYER", count: stats.playersCount },
-                      { role: "COACH", count: stats.coachesCount },
-                      { role: "CLUB", count: stats.clubsCount },
-                      { role: "SUPERADMIN", count: stats.superAdminsCount },
-                    ]}
-                  />
-                )}
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>{t("charts.clubsByVerification")}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                {isLoading || !stats ? (
-                  <Skeleton className="h-60 w-full" />
-                ) : (
-                  <StatusBarChart
-                    data={bars(
-                      [
-                        ["VERIFIED", stats.verifiedClubsCount],
-                        ["PENDING", stats.pendingVerificationClubsCount],
-                        ["UNVERIFIED", stats.unverifiedClubsCount],
-                        ["REJECTED", stats.rejectedClubsCount],
-                      ],
-                      VERIFICATION_COLORS,
-                    )}
-                  />
-                )}
-              </CardContent>
-            </Card>
-          </div>
-
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <Card>
-              <CardHeader>
-                <CardTitle>{t("charts.jobsByStatus")}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                {isLoading || !stats ? (
-                  <Skeleton className="h-60 w-full" />
-                ) : (
-                  <StatusBarChart
-                    data={bars(
-                      [
-                        ["OPEN", stats.openJobsCount],
-                        ["CLOSED", stats.closedJobsCount],
-                        ["FILLED", stats.filledJobsCount],
-                      ],
-                      JOB_STATUS_COLORS,
-                    )}
-                  />
-                )}
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>{t("charts.applicationsByStatus")}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                {isLoading || !stats ? (
-                  <Skeleton className="h-60 w-full" />
-                ) : (
-                  <StatusBarChart
-                    data={bars(
-                      [
-                        ["PENDING", stats.pendingApplicationsCount],
-                        ["ACCEPTED", stats.acceptedApplicationsCount],
-                        ["REJECTED", stats.rejectedApplicationsCount],
-                      ],
-                      APPLICATION_COLORS,
-                    )}
-                  />
-                )}
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-
-        {/* Side panel */}
-        <div className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>{t("charts.reportsByStatus")}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              {isLoading || !stats ? (
-                <Skeleton className="h-60 w-full" />
-              ) : (
-                <StatusBarChart
-                  data={bars(
-                    [
-                      ["PENDING", stats.pendingReportsCount],
-                      ["REVIEWED", stats.reviewedReportsCount],
-                      ["ACTION_TAKEN", stats.actionTakenReportsCount],
-                    ],
-                    REPORT_STATUS_COLORS,
-                  )}
-                />
-              )}
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>{t("memberships.title")}</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {isLoading || !stats ? (
-                <div className="space-y-2">
-                  <Skeleton className="h-6 w-full" />
-                  <Skeleton className="h-6 w-full" />
-                </div>
-              ) : (
-                <>
-                  <MembershipRow
-                    label={t("memberships.pending")}
-                    value={stats.pendingClubMembershipsCount}
-                  />
-                  <MembershipRow
-                    label={t("memberships.active")}
-                    value={stats.activeClubMembershipsCount}
-                  />
-                </>
-              )}
-            </CardContent>
-          </Card>
-        </div>
+        <OverviewCharts t={t} stats={stats} isLoading={isLoading} />
+        <OverviewSidePanel t={t} stats={stats} isLoading={isLoading} />
       </div>
     </div>
   );

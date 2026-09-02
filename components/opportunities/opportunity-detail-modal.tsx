@@ -43,6 +43,86 @@ type OpportunityDetailModalProps = Pick<
   | "status"
 >;
 
+function getBenefitsArray(benefits: OpportunityDetailModalProps["benefits"]): string[] {
+  if (Array.isArray(benefits)) return benefits;
+  if (typeof benefits === "string") {
+    return benefits.split(",").map((b) => b.trim());
+  }
+  return [];
+}
+
+interface OpportunityActionButtonsProps {
+  t: (key: string) => string;
+  normalizedStatus: "open" | "closed" | "filled";
+  userAlreadyApplied: boolean;
+  isPending: boolean;
+  applyDisabled: boolean;
+  isLoadingApplications: boolean;
+  onApply: () => void;
+  isSaved: boolean;
+  onToggleSave: () => void;
+  onClose: () => void;
+}
+
+function OpportunityActionButtons({
+  t,
+  normalizedStatus,
+  userAlreadyApplied,
+  isPending,
+  applyDisabled,
+  isLoadingApplications,
+  onApply,
+  isSaved,
+  onToggleSave,
+  onClose,
+}: OpportunityActionButtonsProps) {
+  return (
+    <div className="flex gap-3 pt-4 border-t border-border">
+      {normalizedStatus === "filled" || userAlreadyApplied ? (
+        <button
+          disabled
+          className="flex-1 py-2 rounded-lg border-2 border-success bg-success/20 font-semibold text-foreground flex items-center justify-center gap-2 transition-colors duration-300 cursor-default"
+        >
+          <CheckCircle size={18} />
+          {t("applicationSent")}
+        </button>
+      ) : (
+        <button
+          onClick={onApply}
+          disabled={applyDisabled}
+          className="flex-1 py-2 rounded-lg bg-success/20 border border-border hover:bg-success disabled:opacity-50 disabled:cursor-not-allowed text-foreground hover:text-background font-semibold transition-colors duration-300 cursor-pointer hover:shadow-lg flex items-center justify-center gap-2"
+        >
+          {isPending || isLoadingApplications ? (
+            <>
+              <Loader size={18} className="animate-spin" />
+              {t("loading")}
+            </>
+          ) : (
+            t("applyWithProfile")
+          )}
+        </button>
+      )}
+      <button
+        onClick={onToggleSave}
+        className={`px-4 py-2 rounded-lg border transition-colors duration-200 flex items-center gap-2 font-semibold ${
+          isSaved
+            ? "bg-primary/10 border-primary text-primary"
+            : "bg-foreground/10 border-border text-foreground hover:bg-foreground/20"
+        }`}
+        aria-label="Bookmark"
+      >
+        <Bookmark size={18} fill={isSaved ? "currentColor" : "none"} />
+      </button>
+      <button
+        onClick={onClose}
+        className="px-6 py-2 rounded-lg bg-foreground/10 hover:bg-foreground/20 text-foreground font-semibold transition-colors duration-300"
+      >
+        {t("close")}
+      </button>
+    </div>
+  );
+}
+
 export function OpportunityDetailModal() {
   const t = useTranslations("opportunities");
   const locale = useLocale() as "en" | "es" | "fr";
@@ -65,12 +145,7 @@ export function OpportunityDetailModal() {
     | "closed"
     | "filled";
 
-  // Ensure benefits is always an array
-  const benefitsArray: string[] = Array.isArray(opportunity.benefits)
-    ? opportunity.benefits
-    : typeof opportunity.benefits === "string"
-      ? (opportunity.benefits as string).split(",").map((b: string) => b.trim())
-      : [];
+  const benefitsArray = getBenefitsArray(opportunity.benefits);
 
   const handleApply = () => {
     if (!user?.id) {
@@ -230,53 +305,18 @@ export function OpportunityDetailModal() {
             </div>
           )}
 
-          {/* Action Buttons */}
-          <div className="flex gap-3 pt-4 border-t border-border">
-            {normalizedStatus === "filled" || userAlreadyApplied ? (
-              <button
-                disabled
-                className="flex-1 py-2 rounded-lg border-2 border-success bg-success/20 font-semibold text-foreground flex items-center justify-center gap-2 transition-colors duration-300 cursor-default"
-              >
-                <CheckCircle size={18} />
-                {t("applicationSent")}
-              </button>
-            ) : (
-              <button
-                onClick={handleApply}
-                disabled={isPending || !user || isLoadingApplications}
-                className="flex-1 py-2 rounded-lg bg-success/20 border border-border hover:bg-success disabled:opacity-50 disabled:cursor-not-allowed text-foreground hover:text-background font-semibold transition-colors duration-300 cursor-pointer hover:shadow-lg flex items-center justify-center gap-2"
-              >
-                {isPending || isLoadingApplications ? (
-                  <>
-                    <Loader size={18} className="animate-spin" />
-                    {t("loading")}
-                  </>
-                ) : (
-                  t("applyWithProfile")
-                )}
-              </button>
-            )}
-            <button
-              onClick={() => toggleSave(opportunity.id)}
-              className={`px-4 py-2 rounded-lg border transition-colors duration-200 flex items-center gap-2 font-semibold ${
-                isSaved(opportunity.id)
-                  ? "bg-primary/10 border-primary text-primary"
-                  : "bg-foreground/10 border-border text-foreground hover:bg-foreground/20"
-              }`}
-              aria-label="Bookmark"
-            >
-              <Bookmark
-                size={18}
-                fill={isSaved(opportunity.id) ? "currentColor" : "none"}
-              />
-            </button>
-            <button
-              onClick={closeModal}
-              className="px-6 py-2 rounded-lg bg-foreground/10 hover:bg-foreground/20 text-foreground font-semibold transition-colors duration-300"
-            >
-              {t("close")}
-            </button>
-          </div>
+          <OpportunityActionButtons
+            t={t}
+            normalizedStatus={normalizedStatus}
+            userAlreadyApplied={userAlreadyApplied}
+            isPending={isPending}
+            applyDisabled={isPending || !user || isLoadingApplications}
+            isLoadingApplications={isLoadingApplications}
+            onApply={handleApply}
+            isSaved={isSaved(opportunity.id)}
+            onToggleSave={() => toggleSave(opportunity.id)}
+            onClose={closeModal}
+          />
         </div>
       </DialogContent>
     </Dialog>
