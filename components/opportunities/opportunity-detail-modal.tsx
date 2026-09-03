@@ -44,11 +44,7 @@ type OpportunityDetailModalProps = Pick<
 >;
 
 function getBenefitsArray(benefits: OpportunityDetailModalProps["benefits"]): string[] {
-  if (Array.isArray(benefits)) return benefits;
-  if (typeof benefits === "string") {
-    return benefits.split(",").map((b) => b.trim());
-  }
-  return [];
+  return Array.isArray(benefits) ? benefits : [];
 }
 
 interface OpportunityActionButtonsProps {

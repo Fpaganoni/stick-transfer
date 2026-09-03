@@ -35,7 +35,7 @@ interface FollowUser {
   username?: string;
 }
 
-const EMPTY_FOLLOW_USERS: readonly FollowUser[] = [];
+const EMPTY_FOLLOW_USERS: FollowUser[] = [];
 
 type ProfileHeaderProps = Pick<
   User,

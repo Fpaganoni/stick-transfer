@@ -188,7 +188,7 @@ function ContentSection({ control, t, excerptValue, onSlugTouched }: ContentSect
 
 interface MetaSectionProps {
   control: Control<NewsFormValues>;
-  t: (key: string) => string;
+  t: (key: string, values?: Record<string, string | number | Date>) => string;
   publishedAtValue: string | undefined;
   candidates: NewsArticleCandidate[];
   relatedArticleIds: string[];

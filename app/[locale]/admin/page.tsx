@@ -78,7 +78,7 @@ function bars(entries: [string, number][], colors: Record<string, string>): Stat
 }
 
 interface OverviewSectionProps {
-  t: (key: string, values?: Record<string, unknown>) => string;
+  t: (key: string, values?: Record<string, string | number | Date>) => string;
   stats?: NonNullable<ReturnType<typeof useAdminStats>["data"]>["adminDashboardStats"];
   isLoading: boolean;
 }
