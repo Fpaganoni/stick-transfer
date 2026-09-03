@@ -6,10 +6,9 @@ import {
   Table,
   TableBody,
   TableCell,
-  TableHead,
-  TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { AdminTableHeader } from "@/components/admin/admin-table-header";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -62,16 +61,16 @@ export function AdminReportsTable({ reports, isLoading, onView }: AdminReportsTa
   return (
     <div className="rounded-lg border border-border">
       <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>{t("table.reporter")}</TableHead>
-            <TableHead>{t("table.target")}</TableHead>
-            <TableHead>{t("table.reason")}</TableHead>
-            <TableHead>{t("table.status")}</TableHead>
-            <TableHead>{t("table.date")}</TableHead>
-            <TableHead className="text-right">{t("table.actions")}</TableHead>
-          </TableRow>
-        </TableHeader>
+        <AdminTableHeader
+          columns={[
+            { label: t("table.reporter") },
+            { label: t("table.target") },
+            { label: t("table.reason") },
+            { label: t("table.status") },
+            { label: t("table.date") },
+            { label: t("table.actions"), className: "text-right" },
+          ]}
+        />
         <TableBody>
           {reports.map((report) => {
             const targetHref = TARGET_HREF[report.targetType]?.(report.targetId);

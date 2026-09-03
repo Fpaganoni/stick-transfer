@@ -9,10 +9,9 @@ import {
   Table,
   TableBody,
   TableCell,
-  TableHead,
-  TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { AdminTableHeader } from "@/components/admin/admin-table-header";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -84,16 +83,16 @@ export function AdminNewsTable({ articles, isLoading, localePrefix }: AdminNewsT
     <>
       <div className="rounded-lg border border-border">
         <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>{t("table.article")}</TableHead>
-              <TableHead>{t("table.category")}</TableHead>
-              <TableHead>{t("table.status")}</TableHead>
-              <TableHead>{t("table.publishedAt")}</TableHead>
-              <TableHead>{t("table.author")}</TableHead>
-              <TableHead className="text-right">{t("table.actions")}</TableHead>
-            </TableRow>
-          </TableHeader>
+          <AdminTableHeader
+            columns={[
+              { label: t("table.article") },
+              { label: t("table.category") },
+              { label: t("table.status") },
+              { label: t("table.publishedAt") },
+              { label: t("table.author") },
+              { label: t("table.actions"), className: "text-right" },
+            ]}
+          />
           <TableBody>
             {articles.map((article) => (
               <TableRow key={article.id}>

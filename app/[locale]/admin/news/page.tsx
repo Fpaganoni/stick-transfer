@@ -9,13 +9,7 @@ import { AdminNewsTable } from "@/components/admin/news/admin-news-table";
 import { AdminPagination } from "@/components/admin/admin-pagination";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { AdminFilterSelect } from "@/components/admin/admin-filter-select";
 import { Card, CardContent } from "@/components/ui/card";
 import { SuperAdminNewsFilters } from "@/types/models/admin";
 import { NewsCategory } from "@/hooks/useNews";
@@ -88,42 +82,35 @@ export default function AdminNewsPage() {
             />
           </div>
 
-          <Select
+          <AdminFilterSelect
             value={category}
             onValueChange={(value) => {
               setCategory(value as (typeof CATEGORY_VALUES)[number]);
               setPage(1);
             }}
-          >
-            <SelectTrigger className="w-full sm:w-[180px]">
-              <SelectValue placeholder={t("filters.category")} />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="ALL">{t("filters.allCategories")}</SelectItem>
-              {CATEGORY_VALUES.filter((c) => c !== "ALL").map((c) => (
-                <SelectItem key={c} value={c}>
-                  {t(`categories.${c}`)}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+            placeholder={t("filters.category")}
+            options={[
+              { value: "ALL", label: t("filters.allCategories") },
+              ...CATEGORY_VALUES.filter((c) => c !== "ALL").map((c) => ({
+                value: c,
+                label: t(`categories.${c}`),
+              })),
+            ]}
+          />
 
-          <Select
+          <AdminFilterSelect
             value={status}
             onValueChange={(value) => {
               setStatus(value as StatusFilterValue);
               setPage(1);
             }}
-          >
-            <SelectTrigger className="w-full sm:w-[180px]">
-              <SelectValue placeholder={t("filters.status")} />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="ALL">{t("filters.allStatuses")}</SelectItem>
-              <SelectItem value="PUBLISHED">{t("status.published")}</SelectItem>
-              <SelectItem value="DRAFT">{t("status.draft")}</SelectItem>
-            </SelectContent>
-          </Select>
+            placeholder={t("filters.status")}
+            options={[
+              { value: "ALL", label: t("filters.allStatuses") },
+              { value: "PUBLISHED", label: t("status.published") },
+              { value: "DRAFT", label: t("status.draft") },
+            ]}
+          />
         </CardContent>
       </Card>
 

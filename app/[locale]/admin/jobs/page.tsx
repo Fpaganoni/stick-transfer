@@ -7,13 +7,7 @@ import { useAdminJobOpportunities } from "@/hooks/useAdminJobs";
 import { AdminJobOpportunitiesTable } from "@/components/admin/jobs/admin-job-opportunities-table";
 import { AdminPagination } from "@/components/admin/admin-pagination";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { AdminFilterSelect } from "@/components/admin/admin-filter-select";
 import { Card, CardContent } from "@/components/ui/card";
 import { AdminJobFilters } from "@/types/models/admin";
 
@@ -69,25 +63,21 @@ export default function AdminJobsPage() {
               className="pl-9"
             />
           </div>
-          <Select
+          <AdminFilterSelect
             value={status}
             onValueChange={(value) => {
               setStatus(value as (typeof OPPORTUNITY_STATUS_VALUES)[number]);
               setPage(1);
             }}
-          >
-            <SelectTrigger className="w-full sm:w-[180px]">
-              <SelectValue placeholder={t("opportunities.filters.status")} />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="ALL">{t("opportunities.filters.allStatuses")}</SelectItem>
-              {OPPORTUNITY_STATUS_VALUES.filter((s) => s !== "ALL").map((s) => (
-                <SelectItem key={s} value={s}>
-                  {t(`opportunities.status.${s}`)}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+            placeholder={t("opportunities.filters.status")}
+            options={[
+              { value: "ALL", label: t("opportunities.filters.allStatuses") },
+              ...OPPORTUNITY_STATUS_VALUES.filter((s) => s !== "ALL").map((s) => ({
+                value: s,
+                label: t(`opportunities.status.${s}`),
+              })),
+            ]}
+          />
         </CardContent>
       </Card>
 
