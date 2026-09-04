@@ -96,7 +96,7 @@ export function LoginPage() {
             id: userId,
           });
           const fullUser = response.user;
-          login(fullUser, token);
+          await login(fullUser, token);
           closeLoginModal();
           const localePrefix = locale === "en" ? "" : `/${locale}`;
           router.push(

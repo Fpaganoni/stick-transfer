@@ -45,11 +45,22 @@ async function goToOpportunitiesAndWaitForCards(page: Page) {
 /** Returns the card element for our single mock opportunity. */
 function getJobCard(page: Page) {
   // Filter by mock title so we match exactly the job card div, not other
-  // rounded/clickable elements (buttons, dropdowns, modal backdrop, etc.).
+  // rounded elements (dropdowns, modal backdrop, etc.).
   return page
-    .locator('[class*="rounded-xl"][class*="cursor-pointer"]')
+    .locator('[class*="rounded-xl"]')
     .filter({ hasText: MOCK_OPPORTUNITIES[0].title })
     .first();
+}
+
+/**
+ * Opens the opportunity detail modal for the mock card. The card itself
+ * isn't clickable — only its "See more" button opens the modal
+ * (see components/opportunities/opportunity-list-card.tsx).
+ */
+function openJobCard(page: Page) {
+  return getJobCard(page)
+    .getByRole("button", { name: /see more|ver más|voir plus/i })
+    .click();
 }
 
 // ── Tests ──────────────────────────────────────────────────────────────────
@@ -85,8 +96,7 @@ test.describe("Job Application Flow", () => {
     await loginUser(page);
     await goToOpportunitiesAndWaitForCards(page);
 
-    const card = getJobCard(page);
-    await card.click();
+    await openJobCard(page);
 
     await expect(page.getByRole("dialog")).toBeVisible({ timeout: 5_000 });
   });
@@ -95,8 +105,7 @@ test.describe("Job Application Flow", () => {
     await loginUser(page);
     await goToOpportunitiesAndWaitForCards(page);
 
-    const card = getJobCard(page);
-    await card.click();
+    await openJobCard(page);
 
     const dialog = page.getByRole("dialog");
     await expect(dialog).toBeVisible({ timeout: 5_000 });

@@ -800,7 +800,7 @@ export const RegisterPage = () => {
             id: userId,
           });
           const fullUser = response.user;
-          login(fullUser, token);
+          await login(fullUser, token);
           closeRegisterModal();
 
           if (isClub && fullUser.clubId) {

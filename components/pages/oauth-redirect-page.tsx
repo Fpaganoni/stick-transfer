@@ -46,7 +46,7 @@ export function OAuthRedirectPage() {
         if (ignore) return;
 
         // Save user in auth store (persisted via Zustand)
-        login(fullUser, token);
+        await login(fullUser, token);
 
         // Redirect to the main page
         router.replace("/");

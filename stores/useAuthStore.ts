@@ -11,8 +11,8 @@ interface AuthState {
   isLoggedIn: boolean;
 
   // ACTIONS
-  login: (user: User, token: string) => void;
-  logout: () => void;
+  login: (user: User, token: string) => Promise<void>;
+  logout: () => Promise<void>;
   register: (user: User, token: string) => void;
   updateUser: (data: UpdateUserInput) => void;
 }
@@ -27,18 +27,19 @@ export const useAuthStore = create<AuthState>()(
 
       //ACTIONS
 
-      login: (user: User, token: string) => {
+      login: async (user: User, token: string) => {
         if (typeof window !== "undefined") {
-          // best-effort cookie sync; middleware still gates on its own read
-          fetch("/api/auth/session", { method: "POST" }).catch(() => {});
+          // Must be awaited: the proxy gates protected routes (e.g.
+          // /opportunities) on this cookie. Pushing to a protected route
+          // before it lands races the middleware and bounces back to "/".
+          await fetch("/api/auth/session", { method: "POST" }).catch(() => {});
         }
         set({ user, token, isLoggedIn: true });
       },
 
-      logout: () => {
+      logout: async () => {
         if (typeof window !== "undefined") {
-          // best-effort cookie sync; middleware still gates on its own read
-          fetch("/api/auth/session", { method: "DELETE" }).catch(() => {});
+          await fetch("/api/auth/session", { method: "DELETE" }).catch(() => {});
         }
         set({ user: null, token: null, isLoggedIn: false });
       },
