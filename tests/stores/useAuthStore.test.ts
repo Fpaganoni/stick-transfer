@@ -23,26 +23,26 @@ describe("useAuthStore", () => {
     expect(isLoggedIn).toBe(false);
   });
 
-  it("login() sets user and flips isLoggedIn", () => {
-    act(() => useAuthStore.getState().login(mockUser, "mock-token"));
+  it("login() sets user and flips isLoggedIn", async () => {
+    await act(async () => useAuthStore.getState().login(mockUser, "mock-token"));
     const { user, isLoggedIn } = useAuthStore.getState();
     expect(user).toMatchObject({ id: "user-1", email: "franco@test.com" });
     expect(isLoggedIn).toBe(true);
   });
 
-  it("logout() clears user and resets isLoggedIn", () => {
-    act(() => {
-      useAuthStore.getState().login(mockUser, "mock-token");
-      useAuthStore.getState().logout();
+  it("logout() clears user and resets isLoggedIn", async () => {
+    await act(async () => {
+      await useAuthStore.getState().login(mockUser, "mock-token");
+      await useAuthStore.getState().logout();
     });
     const { user, isLoggedIn } = useAuthStore.getState();
     expect(user).toBeNull();
     expect(isLoggedIn).toBe(false);
   });
 
-  it("updateUser() merges partial data without overwriting unrelated fields", () => {
-    act(() => {
-      useAuthStore.getState().login(mockUser, "mock-token");
+  it("updateUser() merges partial data without overwriting unrelated fields", async () => {
+    await act(async () => {
+      await useAuthStore.getState().login(mockUser, "mock-token");
       useAuthStore.getState().updateUser({ bio: "Plays left wing" });
     });
     const { user } = useAuthStore.getState();
