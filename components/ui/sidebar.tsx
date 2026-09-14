@@ -480,6 +480,7 @@ function SidebarMenuButton({
   size = "default",
   tooltip,
   className,
+  children,
   ...props
 }: React.ComponentProps<"button"> & {
   asChild?: boolean;
@@ -497,7 +498,9 @@ function SidebarMenuButton({
       data-active={isActive}
       className={cn(sidebarMenuButtonVariants({ variant, size }), className)}
       {...props}
-    />
+    >
+      {children}
+    </Comp>
   );
 
   if (!tooltip) {
@@ -527,6 +530,7 @@ function SidebarMenuAction({
   className,
   asChild = false,
   showOnHover = false,
+  children,
   ...props
 }: React.ComponentProps<"button"> & {
   asChild?: boolean;
@@ -551,7 +555,9 @@ function SidebarMenuAction({
         className,
       )}
       {...props}
-    />
+    >
+      {children}
+    </Comp>
   );
 }
 

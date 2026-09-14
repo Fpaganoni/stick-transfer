@@ -14,7 +14,7 @@ interface PublicUserProfilePageProps {
 export function PublicUserProfilePage({
   username,
 }: PublicUserProfilePageProps) {
-  const [activeTab, setActiveTab] = useState("posts");
+  const [activeTab, setActiveTab] = useState("trajectory");
   const { data, isLoading, error } = useUserByUsername(username);
 
   if (isLoading) {
