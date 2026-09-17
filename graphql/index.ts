@@ -3,7 +3,7 @@
 // ============================================
 
 // USER
-export { GET_USERS, GET_USER, GET_USER_FOR_LOGIN } from "./user/queries";
+export { GET_USERS, GET_USER, ME } from "./user/queries";
 
 export {
   LOGIN,

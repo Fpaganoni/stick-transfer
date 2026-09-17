@@ -16,6 +16,7 @@ const PROTECTED_PATHS = [
   "/clubs",
   "/messages",
   "/onboarding",
+  "/admin",
 ];
 
 function isProtectedPath(pathname: string): boolean {

@@ -1,9 +1,11 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { graphqlClient } from "@/lib/graphql-client";
+import { useAuthStore } from "@/stores/useAuthStore";
 import {
   GET_USERS,
   GET_USER,
   GET_USER_BY_USERNAME,
+  ME,
 } from "@/graphql/user/queries";
 import {
   LOGIN,
@@ -50,6 +52,22 @@ export function useUser(userId: string | null) {
     queryFn: async () => graphqlClient.request(GET_USER, { id: userId }),
     // Only run query if userId is provided
     enabled: !!userId,
+  });
+}
+
+/**
+ * Hook to fetch the currently authenticated user.
+ * Resolved server-side from the JWT (no id passed) — safe source of
+ * truth for role-gated UI, unlike the persisted auth store.
+ */
+export function useMe() {
+  const token = useAuthStore((state) => state.token);
+
+  return useQuery<{ me: User }>({
+    queryKey: ["me"],
+    queryFn: async () => graphqlClient.request(ME),
+    enabled: !!token,
+    retry: false,
   });
 }
 

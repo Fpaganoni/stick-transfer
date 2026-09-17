@@ -19,9 +19,9 @@ export const GET_USERS = gql`
   }
 `;
 
-export const GET_USER_FOR_LOGIN = gql`
-  query GetUserForLogin($id: ID!) {
-    user(id: $id) {
+export const ME = gql`
+  query Me {
+    me {
       id
       email
       name

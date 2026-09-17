@@ -4,7 +4,7 @@ import { useState } from "react";
 import { ProfileHeader } from "@/components/profile/profile-header";
 import { ProfileTabs } from "@/components/profile/profile-tabs";
 import { useAuthStore } from "@/stores/useAuthStore";
-import { useUser } from "@/hooks/useUsers";
+import { useMe } from "@/hooks/useUsers";
 
 interface UserProfilePageProps {
   isOwnProfile?: boolean;
@@ -15,9 +15,9 @@ export function UserProfilePage({
 }: UserProfilePageProps) {
   const [activeTab, setActiveTab] = useState("trajectory");
   const { user: authUser } = useAuthStore();
-  const { data: freshData } = useUser(authUser?.id ?? null);
+  const { data: freshData } = useMe();
 
-  const user = freshData?.user ?? authUser;
+  const user = freshData?.me ?? authUser;
 
   if (!user) {
     return <div>PLEASE LOGIN</div>;

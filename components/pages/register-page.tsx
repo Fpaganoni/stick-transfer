@@ -18,9 +18,8 @@ import { motion } from "framer-motion";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useUserRegister } from "@/hooks/useUsers";
-import { jwtDecode } from "jwt-decode";
 import { graphqlClient, setAuthToken } from "@/lib/graphql-client";
-import { GET_USER_FOR_LOGIN } from "@/graphql/user/queries";
+import { ME } from "@/graphql/user/queries";
 import { useRouter } from "next/navigation";
 import { useLocale } from "next-intl";
 import { useAuthStore } from "@/stores/useAuthStore";
@@ -793,13 +792,8 @@ export const RegisterPage = () => {
         onSuccess: async (responseData) => {
           const token = responseData.register;
           setAuthToken(token);
-          const decoded = jwtDecode(token);
-          const userId = decoded.sub!;
-
-          const response = await graphqlClient.request(GET_USER_FOR_LOGIN, {
-            id: userId,
-          });
-          const fullUser = response.user;
+          const response = await graphqlClient.request(ME);
+          const fullUser = response.me;
           await login(fullUser, token);
           closeRegisterModal();
 

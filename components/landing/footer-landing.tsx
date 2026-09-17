@@ -6,9 +6,16 @@ import {
   FaFacebook,
   FaLinkedin,
 } from "react-icons/fa6";
+import Link from "next/link";
 import { HockeyXTicks } from "@/components/ui/hockey-xtick";
 import { LanguageSelector } from "@/components/ui/language-selector";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+
+const LEGAL_HREFS: Record<string, string> = {
+  privacy: "privacy",
+  terms: "terms",
+  cookies: "cookies",
+};
 
 const FOOTER_LINKS = {
   product: ["features", "opportunities", "explore"],
@@ -46,6 +53,7 @@ const SOCIAL_LINKS = [
 export function FooterLanding() {
   const currentYear = new Date().getFullYear();
   const t = useTranslations("landing.footer");
+  const locale = useLocale();
 
   return (
     <footer className="bg-surface-elevated border-t border-border px-12">
@@ -129,12 +137,12 @@ export function FooterLanding() {
             <ul className="space-y-2">
               {FOOTER_LINKS.legal.map((link) => (
                 <li key={link}>
-                  <a
-                    href={`#${link}`}
+                  <Link
+                    href={`/${locale}/legal/${LEGAL_HREFS[link]}`}
                     className="text-foreground-muted hover:text-primary transition-colors"
                   >
                     {t(`links.${link}`)}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>

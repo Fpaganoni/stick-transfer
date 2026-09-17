@@ -2,9 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { jwtDecode } from "jwt-decode";
-import { graphqlClient } from "@/lib/graphql-client";
-import { GET_USER_FOR_LOGIN } from "@/graphql/user/queries";
+import { graphqlClient, setAuthToken } from "@/lib/graphql-client";
+import { ME } from "@/graphql/user/queries";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useUIStore } from "@/stores/useUIStore";
 
@@ -28,20 +27,11 @@ export function OAuthRedirectPage() {
           return;
         }
 
-        // Decode the JWT to extract the user id (sub claim)
-        const decoded = jwtDecode<{ sub: string }>(token);
-        const userId = decoded.sub;
-
-        if (!userId) {
-          if (!ignore) setError("Invalid token: missing user identifier.");
-          return;
-        }
-
-        // Fetch full user data from GraphQL
-        const response = await graphqlClient.request(GET_USER_FOR_LOGIN, {
-          id: userId,
-        });
-        const fullUser = response.user;
+        // Attach the token before requesting `me` — it's resolved
+        // server-side from the JWT, no id needed or trusted from the client.
+        setAuthToken(token);
+        const response = await graphqlClient.request(ME);
+        const fullUser = response.me;
 
         if (ignore) return;
 

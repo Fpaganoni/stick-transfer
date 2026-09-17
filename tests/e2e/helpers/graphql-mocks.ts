@@ -89,11 +89,18 @@ export async function setupGraphQLMocks(page: Page): Promise<void> {
       });
     }
 
-    // GetUserForLogin + GetUser (both use `user(id: ...)` field)
-    if (
-      q.includes("GetUserForLogin") ||
-      (q.includes("user(id:") && !q.includes("users"))
-    ) {
+    // `me` — resolved server-side from the JWT, used right after
+    // login/register/oauth and for the own-profile page.
+    if (q.includes("query Me") || q.includes("me {") || q.includes("me{")) {
+      return route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({ data: { me: MOCK_USER } }),
+      });
+    }
+
+    // GetUser — viewing another user's profile by id.
+    if (q.includes("user(id:") && !q.includes("users")) {
       return route.fulfill({
         status: 200,
         contentType: "application/json",

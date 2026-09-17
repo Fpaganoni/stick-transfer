@@ -10,10 +10,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useUIStore } from "@/stores/useUIStore";
-import { jwtDecode } from "jwt-decode";
 import { useUserLogin } from "@/hooks/useUsers";
 import { graphqlClient, setAuthToken } from "@/lib/graphql-client";
-import { GET_USER_FOR_LOGIN } from "@/graphql/user/queries";
+import { ME } from "@/graphql/user/queries";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -90,12 +89,8 @@ export function LoginPage() {
         onSuccess: async (responseData) => {
           const token = responseData.login;
           setAuthToken(token);
-          const decoded = jwtDecode(token);
-          const userId = decoded.sub;
-          const response = await graphqlClient.request(GET_USER_FOR_LOGIN, {
-            id: userId,
-          });
-          const fullUser = response.user;
+          const response = await graphqlClient.request(ME);
+          const fullUser = response.me;
           await login(fullUser, token);
           closeLoginModal();
           const localePrefix = locale === "en" ? "" : `/${locale}`;

@@ -663,6 +663,144 @@
     "loading": "Loadingâ€¦",
     "empty": "No notifications yet"
   },
+  "legal": {
+    "backToHome": "Back to home",
+    "lastUpdated": "Last updated: {date}",
+    "privacy": {
+      "title": "Privacy Policy",
+      "intro": "Stick Transfer (\"we\", \"us\", \"our\") respects your privacy and is committed to protecting your personal data. This Privacy Policy explains how we collect, use, share, and safeguard your information when you use our hockey job board and professional network.",
+      "sections": [
+        {
+          "heading": "1. Information We Collect",
+          "body": "We collect information you provide directly, such as your name, email address, date of birth, profile details, CV/resume, club information, and messages you exchange with other users. We also automatically collect certain technical data, including IP address, browser type, device information, and usage data through cookies and similar technologies."
+        },
+        {
+          "heading": "2. How We Use Your Information",
+          "body": "We use your information to provide and improve our services, match players, coaches, and clubs, process job applications, send notifications, personalize your experience, maintain platform security, and communicate with you about your account or new features."
+        },
+        {
+          "heading": "3. Information Sharing",
+          "body": "We do not sell your personal data. We may share your information with clubs and users you interact with (e.g., when you apply to an opportunity), service providers who help us operate the platform, and authorities when required by law or to protect our rights and the safety of our community."
+        },
+        {
+          "heading": "4. Data Security",
+          "body": "We implement technical and organizational measures designed to protect your personal data against unauthorized access, alteration, disclosure, or destruction. However, no method of transmission over the internet is completely secure, and we cannot guarantee absolute security."
+        },
+        {
+          "heading": "5. Your Rights",
+          "body": "Depending on your jurisdiction, you may have the right to access, correct, delete, or export your personal data, and to object to or restrict certain processing. You can exercise most of these rights directly from your profile settings or by contacting us."
+        },
+        {
+          "heading": "6. Cookies",
+          "body": "We use cookies and similar technologies to keep you signed in, remember your preferences, and analyze platform usage. See our Cookie Policy for more details on the types of cookies we use and how to manage them."
+        },
+        {
+          "heading": "7. Children's Privacy",
+          "body": "Stick Transfer is not intended for individuals under the age of 16. We do not knowingly collect personal data from children. If you believe a child has provided us with personal data, please contact us so we can remove it."
+        },
+        {
+          "heading": "8. Changes to This Policy",
+          "body": "We may update this Privacy Policy from time to time. We will notify you of material changes by posting the updated policy on this page and updating the \"Last updated\" date."
+        },
+        {
+          "heading": "9. Contact Us",
+          "body": "If you have any questions about this Privacy Policy or how we handle your personal data, please contact us at privacy@sticktransfer.com."
+        }
+      ]
+    },
+    "terms": {
+      "title": "Terms and Conditions",
+      "intro": "These Terms and Conditions (\"Terms\") govern your access to and use of Stick Transfer. By creating an account or using our platform, you agree to be bound by these Terms.",
+      "sections": [
+        {
+          "heading": "1. Acceptance of Terms",
+          "body": "By accessing or using Stick Transfer, you confirm that you have read, understood, and agree to be bound by these Terms and our Privacy Policy. If you do not agree, you must not use the platform."
+        },
+        {
+          "heading": "2. Eligibility",
+          "body": "You must be at least 16 years old to create an account. By registering, you represent that you have the legal capacity to enter into these Terms, whether as an individual, a club, or an authorized representative of an organization."
+        },
+        {
+          "heading": "3. User Accounts",
+          "body": "You are responsible for maintaining the confidentiality of your account credentials and for all activities under your account. You agree to provide accurate and up-to-date information and to notify us promptly of any unauthorized use of your account."
+        },
+        {
+          "heading": "4. Acceptable Use",
+          "body": "You agree not to misuse the platform, including but not limited to: posting false or misleading information, harassing other users, publishing fraudulent job opportunities, scraping data without authorization, or attempting to interfere with the platform's security or operation."
+        },
+        {
+          "heading": "5. User Content",
+          "body": "You retain ownership of the content you submit (profile information, CVs, media, messages). By posting content, you grant Stick Transfer a non-exclusive, worldwide, royalty-free license to host, display, and distribute it as necessary to operate the platform."
+        },
+        {
+          "heading": "6. Job Postings and Applications",
+          "body": "Clubs are responsible for the accuracy of the job opportunities they post. Stick Transfer does not guarantee employment outcomes and is not a party to any agreement between clubs and players or coaches. We reserve the right to remove listings that violate these Terms."
+        },
+        {
+          "heading": "7. Intellectual Property",
+          "body": "The Stick Transfer platform, including its logo, design, and underlying software, is owned by us and protected by intellectual property laws. You may not copy, modify, or distribute our platform without prior written consent."
+        },
+        {
+          "heading": "8. Termination",
+          "body": "We may suspend or terminate your account if you violate these Terms, engage in fraudulent activity, or pose a risk to other users. You may also delete your account at any time from your profile settings."
+        },
+        {
+          "heading": "9. Disclaimer of Warranties",
+          "body": "The platform is provided \"as is\" and \"as available\" without warranties of any kind, express or implied. We do not warrant that the service will be uninterrupted, error-free, or free of harmful components."
+        },
+        {
+          "heading": "10. Limitation of Liability",
+          "body": "To the maximum extent permitted by law, Stick Transfer shall not be liable for any indirect, incidental, special, or consequential damages arising from your use of the platform."
+        },
+        {
+          "heading": "11. Governing Law",
+          "body": "These Terms are governed by applicable law without regard to conflict-of-law principles. Any disputes shall be resolved in the competent courts of the applicable jurisdiction."
+        },
+        {
+          "heading": "12. Changes to Terms",
+          "body": "We may update these Terms from time to time. Continued use of the platform after changes take effect constitutes acceptance of the revised Terms."
+        },
+        {
+          "heading": "13. Contact Us",
+          "body": "If you have questions about these Terms, please contact us at legal@sticktransfer.com."
+        }
+      ]
+    },
+    "cookies": {
+      "title": "Cookie Policy",
+      "intro": "This Cookie Policy explains how Stick Transfer uses cookies and similar tracking technologies when you visit our platform, and the choices available to you.",
+      "sections": [
+        {
+          "heading": "1. What Are Cookies",
+          "body": "Cookies are small text files stored on your device when you visit a website. They help websites remember your actions and preferences over time and enable core functionality such as staying signed in."
+        },
+        {
+          "heading": "2. How We Use Cookies",
+          "body": "We use cookies to keep you authenticated, remember your language and theme preferences, understand how you use the platform, and improve performance and security."
+        },
+        {
+          "heading": "3. Types of Cookies We Use",
+          "body": "Essential cookies: required for core functionality like login and security. Preference cookies: remember your language, theme, and saved filters. Analytics cookies: help us understand usage patterns to improve the platform."
+        },
+        {
+          "heading": "4. Managing Cookies",
+          "body": "Most browsers allow you to control cookies through their settings, including blocking or deleting them. Please note that disabling essential cookies may affect the functionality of the platform, including your ability to log in."
+        },
+        {
+          "heading": "5. Third-Party Cookies",
+          "body": "Some cookies may be set by third-party services we use for analytics or performance monitoring. These third parties have their own privacy and cookie policies, which we encourage you to review."
+        },
+        {
+          "heading": "6. Changes to This Policy",
+          "body": "We may update this Cookie Policy from time to time to reflect changes in technology or applicable law. We will post any updates on this page."
+        },
+        {
+          "heading": "7. Contact Us",
+          "body": "If you have any questions about our use of cookies, please contact us at privacy@sticktransfer.com."
+        }
+      ]
+    }
+  },
   "admin": {
     "nav": {
       "title": "Admin",
