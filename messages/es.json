@@ -663,6 +663,144 @@
     "loading": "Cargandoâ€¦",
     "empty": "No tienes notificaciones aÃºn"
   },
+  "legal": {
+    "backToHome": "Volver al inicio",
+    "lastUpdated": "Última actualización: {date}",
+    "privacy": {
+      "title": "Política de Privacidad",
+      "intro": "Stick Transfer (\"nosotros\", \"nuestro\") respeta tu privacidad y se compromete a proteger tus datos personales. Esta Política de Privacidad explica cómo recopilamos, usamos, compartimos y protegemos tu información cuando utilizas nuestra bolsa de trabajo y red profesional de hockey.",
+      "sections": [
+        {
+          "heading": "1. Información que recopilamos",
+          "body": "Recopilamos la información que nos proporcionas directamente, como tu nombre, correo electrónico, fecha de nacimiento, datos de perfil, CV/currículum, información del club y los mensajes que intercambias con otros usuarios. También recopilamos automáticamente ciertos datos técnicos, incluyendo dirección IP, tipo de navegador, información del dispositivo y datos de uso mediante cookies y tecnologías similares."
+        },
+        {
+          "heading": "2. Cómo usamos tu información",
+          "body": "Usamos tu información para prestar y mejorar nuestros servicios, conectar jugadores, entrenadores y clubes, procesar postulaciones a empleos, enviar notificaciones, personalizar tu experiencia, mantener la seguridad de la plataforma y comunicarnos contigo sobre tu cuenta o nuevas funciones."
+        },
+        {
+          "heading": "3. Compartir información",
+          "body": "No vendemos tus datos personales. Podemos compartir tu información con clubes y usuarios con los que interactúas (por ejemplo, al postularte a una oportunidad), con proveedores de servicios que nos ayudan a operar la plataforma, y con autoridades cuando lo exija la ley o para proteger nuestros derechos y la seguridad de la comunidad."
+        },
+        {
+          "heading": "4. Seguridad de los datos",
+          "body": "Implementamos medidas técnicas y organizativas diseñadas para proteger tus datos personales contra acceso no autorizado, alteración, divulgación o destrucción. Sin embargo, ningún método de transmisión por internet es completamente seguro y no podemos garantizar una seguridad absoluta."
+        },
+        {
+          "heading": "5. Tus derechos",
+          "body": "Según tu jurisdicción, puedes tener derecho a acceder, corregir, eliminar o exportar tus datos personales, y a oponerte o restringir ciertos tratamientos. Puedes ejercer la mayoría de estos derechos directamente desde la configuración de tu perfil o contactándonos."
+        },
+        {
+          "heading": "6. Cookies",
+          "body": "Usamos cookies y tecnologías similares para mantener tu sesión iniciada, recordar tus preferencias y analizar el uso de la plataforma. Consulta nuestra Política de Cookies para más detalles sobre los tipos de cookies que usamos y cómo gestionarlas."
+        },
+        {
+          "heading": "7. Privacidad de menores",
+          "body": "Stick Transfer no está destinado a menores de 16 años. No recopilamos conscientemente datos personales de menores. Si crees que un menor nos ha proporcionado datos personales, contáctanos para que podamos eliminarlos."
+        },
+        {
+          "heading": "8. Cambios a esta política",
+          "body": "Podemos actualizar esta Política de Privacidad periódicamente. Te notificaremos los cambios importantes publicando la política actualizada en esta página y actualizando la fecha de \"Última actualización\"."
+        },
+        {
+          "heading": "9. Contáctanos",
+          "body": "Si tienes preguntas sobre esta Política de Privacidad o sobre cómo manejamos tus datos personales, contáctanos en privacy@sticktransfer.com."
+        }
+      ]
+    },
+    "terms": {
+      "title": "Términos y Condiciones",
+      "intro": "Estos Términos y Condiciones (\"Términos\") rigen tu acceso y uso de Stick Transfer. Al crear una cuenta o usar nuestra plataforma, aceptas quedar vinculado por estos Términos.",
+      "sections": [
+        {
+          "heading": "1. Aceptación de los Términos",
+          "body": "Al acceder o usar Stick Transfer, confirmas que has leído, entendido y aceptas quedar vinculado por estos Términos y nuestra Política de Privacidad. Si no estás de acuerdo, no debes usar la plataforma."
+        },
+        {
+          "heading": "2. Elegibilidad",
+          "body": "Debes tener al menos 16 años para crear una cuenta. Al registrarte, declaras que tienes la capacidad legal para aceptar estos Términos, ya sea como individuo, club o representante autorizado de una organización."
+        },
+        {
+          "heading": "3. Cuentas de usuario",
+          "body": "Eres responsable de mantener la confidencialidad de tus credenciales de cuenta y de todas las actividades realizadas bajo tu cuenta. Aceptas proporcionar información precisa y actualizada, y notificarnos con prontitud cualquier uso no autorizado de tu cuenta."
+        },
+        {
+          "heading": "4. Uso aceptable",
+          "body": "Aceptas no hacer un mal uso de la plataforma, incluyendo, entre otros: publicar información falsa o engañosa, acosar a otros usuarios, publicar ofertas de empleo fraudulentas, extraer datos sin autorización o intentar interferir con la seguridad o el funcionamiento de la plataforma."
+        },
+        {
+          "heading": "5. Contenido del usuario",
+          "body": "Conservas la propiedad del contenido que publicas (información de perfil, CVs, medios, mensajes). Al publicar contenido, otorgas a Stick Transfer una licencia no exclusiva, mundial y libre de regalías para alojar, mostrar y distribuir dicho contenido según sea necesario para operar la plataforma."
+        },
+        {
+          "heading": "6. Ofertas de empleo y postulaciones",
+          "body": "Los clubes son responsables de la exactitud de las oportunidades de empleo que publican. Stick Transfer no garantiza resultados de contratación y no es parte de ningún acuerdo entre clubes y jugadores o entrenadores. Nos reservamos el derecho de eliminar publicaciones que violen estos Términos."
+        },
+        {
+          "heading": "7. Propiedad intelectual",
+          "body": "La plataforma Stick Transfer, incluyendo su logotipo, diseño y software subyacente, es de nuestra propiedad y está protegida por leyes de propiedad intelectual. No puedes copiar, modificar o distribuir nuestra plataforma sin consentimiento previo por escrito."
+        },
+        {
+          "heading": "8. Terminación",
+          "body": "Podemos suspender o cancelar tu cuenta si violas estos Términos, incurres en actividad fraudulenta o representas un riesgo para otros usuarios. También puedes eliminar tu cuenta en cualquier momento desde la configuración de tu perfil."
+        },
+        {
+          "heading": "9. Exención de garantías",
+          "body": "La plataforma se proporciona \"tal cual\" y \"según disponibilidad\" sin garantías de ningún tipo, expresas o implícitas. No garantizamos que el servicio sea ininterrumpido, libre de errores o de componentes dañinos."
+        },
+        {
+          "heading": "10. Limitación de responsabilidad",
+          "body": "En la máxima medida permitida por la ley, Stick Transfer no será responsable de daños indirectos, incidentales, especiales o consecuentes derivados del uso de la plataforma."
+        },
+        {
+          "heading": "11. Ley aplicable",
+          "body": "Estos Términos se rigen por la ley aplicable, sin tener en cuenta los principios de conflicto de leyes. Cualquier disputa se resolverá en los tribunales competentes de la jurisdicción correspondiente."
+        },
+        {
+          "heading": "12. Cambios a los Términos",
+          "body": "Podemos actualizar estos Términos periódicamente. El uso continuado de la plataforma después de que los cambios entren en vigor constituye la aceptación de los Términos revisados."
+        },
+        {
+          "heading": "13. Contáctanos",
+          "body": "Si tienes preguntas sobre estos Términos, contáctanos en legal@sticktransfer.com."
+        }
+      ]
+    },
+    "cookies": {
+      "title": "Política de Cookies",
+      "intro": "Esta Política de Cookies explica cómo Stick Transfer utiliza cookies y tecnologías de seguimiento similares cuando visitas nuestra plataforma, y las opciones disponibles para ti.",
+      "sections": [
+        {
+          "heading": "1. Qué son las cookies",
+          "body": "Las cookies son pequeños archivos de texto almacenados en tu dispositivo cuando visitas un sitio web. Ayudan a los sitios a recordar tus acciones y preferencias a lo largo del tiempo y permiten funciones esenciales como mantener tu sesión iniciada."
+        },
+        {
+          "heading": "2. Cómo usamos las cookies",
+          "body": "Usamos cookies para mantenerte autenticado, recordar tus preferencias de idioma y tema, entender cómo usas la plataforma y mejorar el rendimiento y la seguridad."
+        },
+        {
+          "heading": "3. Tipos de cookies que usamos",
+          "body": "Cookies esenciales: necesarias para funciones básicas como el inicio de sesión y la seguridad. Cookies de preferencias: recuerdan tu idioma, tema y filtros guardados. Cookies analíticas: nos ayudan a entender patrones de uso para mejorar la plataforma."
+        },
+        {
+          "heading": "4. Gestión de cookies",
+          "body": "La mayoría de los navegadores te permiten controlar las cookies desde su configuración, incluyendo bloquearlas o eliminarlas. Ten en cuenta que deshabilitar las cookies esenciales puede afectar el funcionamiento de la plataforma, incluida tu capacidad de iniciar sesión."
+        },
+        {
+          "heading": "5. Cookies de terceros",
+          "body": "Algunas cookies pueden ser establecidas por servicios de terceros que usamos para análisis o monitoreo de rendimiento. Estos terceros tienen sus propias políticas de privacidad y cookies, que te recomendamos revisar."
+        },
+        {
+          "heading": "6. Cambios a esta política",
+          "body": "Podemos actualizar esta Política de Cookies periódicamente para reflejar cambios en la tecnología o en la legislación aplicable. Publicaremos cualquier actualización en esta página."
+        },
+        {
+          "heading": "7. Contáctanos",
+          "body": "Si tienes preguntas sobre nuestro uso de cookies, contáctanos en privacy@sticktransfer.com."
+        }
+      ]
+    }
+  },
   "admin": {
     "nav": {
       "title": "Admin",
