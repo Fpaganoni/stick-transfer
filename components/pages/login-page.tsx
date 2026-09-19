@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useUIStore } from "@/stores/useUIStore";
 import { useUserLogin } from "@/hooks/useUsers";
-import { graphqlClient, setAuthToken } from "@/lib/graphql-client";
+import { graphqlClient } from "@/lib/graphql-client";
 import { ME } from "@/graphql/user/queries";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { z } from "zod";
@@ -86,12 +86,10 @@ export function LoginPage() {
     loginUser(
       { email: data.email, password: data.password },
       {
-        onSuccess: async (responseData) => {
-          const token = responseData.login;
-          setAuthToken(token);
+        onSuccess: async () => {
           const response = await graphqlClient.request(ME);
           const fullUser = response.me;
-          await login(fullUser, token);
+          await login(fullUser);
           closeLoginModal();
           const localePrefix = locale === "en" ? "" : `/${locale}`;
           router.push(

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { graphqlClient, setAuthToken } from "@/lib/graphql-client";
+import { graphqlClient } from "@/lib/graphql-client";
 import { ME } from "@/graphql/user/queries";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useUIStore } from "@/stores/useUIStore";
@@ -18,25 +18,16 @@ export function OAuthRedirectPage() {
 
     const handleOAuthRedirect = async () => {
       try {
-        // Read token from URL query params: /oauth-redirect?token=<JWT>
-        const params = new URLSearchParams(window.location.search);
-        const token = params.get("token");
-
-        if (!token) {
-          if (!ignore) setError("No authentication token received.");
-          return;
-        }
-
-        // Attach the token before requesting `me` — it's resolved
-        // server-side from the JWT, no id needed or trusted from the client.
-        setAuthToken(token);
+        // The backend sets its httpOnly session cookie before redirecting
+        // here; the browser already carries it, so `me` resolves without
+        // any token ever passing through the URL or client-side JS.
         const response = await graphqlClient.request(ME);
         const fullUser = response.me;
 
         if (ignore) return;
 
         // Save user in auth store (persisted via Zustand)
-        await login(fullUser, token);
+        await login(fullUser);
 
         // Redirect to the main page
         router.replace("/");

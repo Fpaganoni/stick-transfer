@@ -18,7 +18,7 @@ import { motion } from "framer-motion";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useUserRegister } from "@/hooks/useUsers";
-import { graphqlClient, setAuthToken } from "@/lib/graphql-client";
+import { graphqlClient } from "@/lib/graphql-client";
 import { ME } from "@/graphql/user/queries";
 import { useRouter } from "next/navigation";
 import { useLocale } from "next-intl";
@@ -789,12 +789,10 @@ export const RegisterPage = () => {
           : {}),
       },
       {
-        onSuccess: async (responseData) => {
-          const token = responseData.register;
-          setAuthToken(token);
+        onSuccess: async () => {
           const response = await graphqlClient.request(ME);
           const fullUser = response.me;
-          await login(fullUser, token);
+          await login(fullUser);
           closeRegisterModal();
 
           if (isClub && fullUser.clubId) {

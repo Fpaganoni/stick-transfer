@@ -61,12 +61,12 @@ export function useUser(userId: string | null) {
  * truth for role-gated UI, unlike the persisted auth store.
  */
 export function useMe() {
-  const token = useAuthStore((state) => state.token);
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
 
   return useQuery<{ me: User }>({
     queryKey: ["me"],
     queryFn: async () => graphqlClient.request(ME),
-    enabled: !!token,
+    enabled: isLoggedIn,
     retry: false,
   });
 }

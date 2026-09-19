@@ -5,21 +5,14 @@ import { locales } from "@/i18n/request";
 const endpoint =
   process.env.NEXT_PUBLIC_GRAPHQL_URL || "http://localhost:4000/graphql";
 
+// credentials: "include" sends the backend's httpOnly auth cookie on every
+// request; the JWT never lives in JS-accessible storage or headers.
 const client = new GraphQLClient(endpoint, {
   credentials: "include",
   headers: {
     "Content-Type": "application/json",
   },
 });
-
-// Helper function to add authorization token if needed
-export const setAuthToken = (token: string | null) => {
-  if (token) {
-    client.setHeader("Authorization", `Bearer ${token}`);
-  } else {
-    client.setHeader("Authorization", "");
-  }
-};
 
 function isUnauthenticatedError(error: unknown): boolean {
   if (!(error instanceof ClientError)) return false;

@@ -31,7 +31,6 @@ vi.mock("@/stores/useUIStore", () => ({
 
 vi.mock("@/lib/graphql-client", () => ({
   graphqlClient: { request: vi.fn() },
-  setAuthToken: vi.fn(),
 }));
 
 vi.mock("jwt-decode", () => ({

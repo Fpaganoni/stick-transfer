@@ -2,19 +2,19 @@
 
 import { useEffect } from "react";
 import { useAuthStore } from "@/stores/useAuthStore";
-import { setAuthToken } from "@/lib/graphql-client";
 import { useNotificationSocket } from "@/hooks/useNotificationSocket";
 
 export function AuthInitializer() {
-  const token = useAuthStore((state) => state.token);
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
 
   useEffect(() => {
-    setAuthToken(token);
-    // Sync cookie with hydrated Zustand state so middleware stays in sync
-    fetch("/api/auth/session", { method: token ? "POST" : "DELETE" }).catch(
-      () => {},
-    );
-  }, [token]);
+    // Sync the (flag-only) middleware cookie with hydrated Zustand state.
+    // Actual auth to the GraphQL backend rides on its own httpOnly cookie,
+    // sent automatically via credentials: "include".
+    fetch("/api/auth/session", {
+      method: isLoggedIn ? "POST" : "DELETE",
+    }).catch(() => {});
+  }, [isLoggedIn]);
 
   useNotificationSocket();
 
