@@ -36,6 +36,7 @@
     "loggingIn": "Connexion...",
     "loginFailed": "Échec de la connexion",
     "sessionExpired": "Votre session a expiré. Veuillez vous reconnecter.",
+    "cookieBlocked": "Votre navigateur a bloqué le cookie de session. Autorisez les cookies pour ce site (vérifiez les paramètres tiers/navigation privée) et réessayez.",
     "or": "ou",
     "continueWithGoogle": "Continuer avec Google",
     "continueWithApple": "Continuer avec Apple",

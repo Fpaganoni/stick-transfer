@@ -36,6 +36,7 @@
     "loggingIn": "Logging in...",
     "loginFailed": "Login failed",
     "sessionExpired": "Your session has expired. Please log in again.",
+    "cookieBlocked": "Your browser blocked the session cookie. Please allow cookies for this site (check third-party/incognito settings) and try again.",
     "or": "or",
     "continueWithGoogle": "Continue with Google",
     "continueWithApple": "Continue with Apple",

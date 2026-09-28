@@ -672,6 +672,7 @@ function Step3PlayerDataForm({
 
 export const RegisterPage = () => {
   const t = useTranslations("register");
+  const tAuth = useTranslations("auth");
   const tValidation = useTranslations("register.validation");
   const tExplore = useTranslations("explore");
   const locale = useLocale();
@@ -790,8 +791,17 @@ export const RegisterPage = () => {
       },
       {
         onSuccess: async () => {
-          const response = await graphqlClient.request(ME);
-          const fullUser = response.me;
+          // Registration succeeded, but the session cookie the backend set
+          // might still be rejected by the browser (Safari ITP, private
+          // browsing) — that's a different problem than a bad submission.
+          let fullUser;
+          try {
+            const response = await graphqlClient.request(ME);
+            fullUser = response.me;
+          } catch {
+            setError(tAuth("cookieBlocked"));
+            return;
+          }
           await login(fullUser);
           closeRegisterModal();
 

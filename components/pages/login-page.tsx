@@ -87,8 +87,18 @@ export function LoginPage() {
       { email: data.email, password: data.password },
       {
         onSuccess: async () => {
-          const response = await graphqlClient.request(ME);
-          const fullUser = response.me;
+          // Credentials were valid (mutation succeeded), but the session
+          // cookie the backend set might still be rejected by the browser
+          // (Safari ITP, private browsing) — that's a different problem
+          // than bad credentials, so it gets its own message.
+          let fullUser;
+          try {
+            const response = await graphqlClient.request(ME);
+            fullUser = response.me;
+          } catch {
+            setError(t("cookieBlocked"));
+            return;
+          }
           await login(fullUser);
           closeLoginModal();
           const localePrefix = locale === "en" ? "" : `/${locale}`;

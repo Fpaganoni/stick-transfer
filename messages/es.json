@@ -36,6 +36,7 @@
     "loggingIn": "Iniciando sesión...",
     "loginFailed": "Error al iniciar sesión",
     "sessionExpired": "Tu sesión expiró. Iniciá sesión de nuevo.",
+    "cookieBlocked": "Tu navegador bloqueó la cookie de sesión. Habilitá cookies para este sitio (revisá configuración de terceros/incógnito) e intentá de nuevo.",
     "or": "o",
     "continueWithGoogle": "Continuar con Google",
     "continueWithApple": "Continuar con Apple",

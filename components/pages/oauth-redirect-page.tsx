@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { graphqlClient } from "@/lib/graphql-client";
 import { ME } from "@/graphql/user/queries";
 import { useAuthStore } from "@/stores/useAuthStore";
@@ -9,6 +10,7 @@ import { useUIStore } from "@/stores/useUIStore";
 
 export function OAuthRedirectPage() {
   const router = useRouter();
+  const t = useTranslations("auth");
   const { openLoginModal } = useUIStore();
   const { login } = useAuthStore();
   const [error, setError] = useState("");
@@ -33,7 +35,10 @@ export function OAuthRedirectPage() {
         router.replace("/");
       } catch (err) {
         console.error("OAuth redirect error:", err);
-        if (!ignore) setError("Authentication failed. Please try again.");
+        // The only thing that runs here is `me` right after the OAuth
+        // callback set the session cookie, so a failure here means the
+        // browser rejected that cookie (Safari ITP, private browsing).
+        if (!ignore) setError(t("cookieBlocked"));
       }
     };
 
@@ -42,7 +47,7 @@ export function OAuthRedirectPage() {
     return () => {
       ignore = true;
     };
-  }, [login, router]);
+  }, [login, router, t]);
 
   if (error) {
     return (
