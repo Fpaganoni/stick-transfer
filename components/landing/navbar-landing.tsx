@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useTranslations, useLocale } from "next-intl";
 import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { HockeyXTicks } from "@/components/ui/hockey-xtick";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { LanguageSelector } from "@/components/ui/language-selector";
 import { ThemeToggleControl } from "@/components/ui/theme-provider";
@@ -14,6 +14,7 @@ import {
   DialogContent,
   DialogTrigger,
   DialogTitle,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import { LoginPage } from "@/components/pages/login-page";
 import { RegisterPage } from "@/components/pages/register-page";
@@ -55,12 +56,14 @@ export function NavbarLanding() {
             transition={{ duration: 0.2 }}
             className="flex items-center gap-2 cursor-pointer"
           >
-            <div className="w-8 h-8 flex items-center justify-center">
-              <HockeyXTicks size={28} className="text-foreground" />
-            </div>
-            <h1 className="text-xl font-bold text-foreground">
-              Stick Transfer
-            </h1>
+            <Image
+              src="/logo-og.png"
+              alt="Scordd"
+              width={180}
+              height={65}
+              className="h-11 w-auto"
+              priority
+            />
           </motion.div>
         </Link>
 
@@ -121,6 +124,9 @@ export function NavbarLanding() {
                   showCloseButton={false}
                 >
                   <DialogTitle className="sr-only">Sign In</DialogTitle>
+                  <DialogDescription className="sr-only">
+                    Sign in to your account
+                  </DialogDescription>
                   <LoginPage />
                 </DialogContent>
               </Dialog>
@@ -145,6 +151,9 @@ export function NavbarLanding() {
                   showCloseButton={false}
                 >
                   <DialogTitle className="sr-only">Sign Up</DialogTitle>
+                  <DialogDescription className="sr-only">
+                    Create a new account
+                  </DialogDescription>
                   <RegisterPage />
                 </DialogContent>
               </Dialog>
@@ -231,6 +240,9 @@ export function NavbarLanding() {
                         showCloseButton={false}
                       >
                         <DialogTitle className="sr-only">Sign In</DialogTitle>
+                        <DialogDescription className="sr-only">
+                          Sign in to your account
+                        </DialogDescription>
                         <LoginPage />
                       </DialogContent>
                     </Dialog>
@@ -256,6 +268,9 @@ export function NavbarLanding() {
                         showCloseButton={false}
                       >
                         <DialogTitle className="sr-only">Sign Up</DialogTitle>
+                        <DialogDescription className="sr-only">
+                          Create a new account
+                        </DialogDescription>
                         <RegisterPage />
                       </DialogContent>
                     </Dialog>
