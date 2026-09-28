@@ -35,6 +35,7 @@
     "registerTitle": "Crear una cuenta",
     "loggingIn": "Iniciando sesión...",
     "loginFailed": "Error al iniciar sesión",
+    "sessionExpired": "Tu sesión expiró. Iniciá sesión de nuevo.",
     "or": "o",
     "continueWithGoogle": "Continuar con Google",
     "continueWithApple": "Continuar con Apple",

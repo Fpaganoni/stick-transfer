@@ -1,6 +1,15 @@
 import { ClientError, GraphQLClient } from "graphql-request";
+import { toast } from "sonner";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { locales } from "@/i18n/request";
+
+// This module runs outside React, so it can't use the useTranslations hook.
+// Keep this in sync with auth.sessionExpired in messages/{en,es,fr}.json.
+const SESSION_EXPIRED_MESSAGE: Record<string, string> = {
+  en: "Your session has expired. Please log in again.",
+  es: "Tu sesión expiró. Iniciá sesión de nuevo.",
+  fr: "Votre session a expiré. Veuillez vous reconnecter.",
+};
 
 const endpoint =
   process.env.NEXT_PUBLIC_GRAPHQL_URL || "http://localhost:4000/graphql";
@@ -30,10 +39,11 @@ function handleUnauthenticated() {
   if (typeof window === "undefined") return;
 
   const [, maybeLocale] = window.location.pathname.split("/");
-  const localePrefix = locales.includes(maybeLocale as (typeof locales)[number])
-    ? `/${maybeLocale}`
-    : "";
+  const isKnownLocale = locales.includes(maybeLocale as (typeof locales)[number]);
+  const locale = isKnownLocale ? maybeLocale : "en";
+  const localePrefix = isKnownLocale ? `/${maybeLocale}` : "";
 
+  toast.error(SESSION_EXPIRED_MESSAGE[locale] ?? SESSION_EXPIRED_MESSAGE.en);
   window.location.href = `${localePrefix}/`;
 }
 
