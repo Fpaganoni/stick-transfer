@@ -73,7 +73,6 @@ export function SideNavigation() {
             className={
               state === "collapsed" ? "h-8 w-8 shrink-0" : "h-9 w-auto shrink-0"
             }
-            style={state === "collapsed" ? undefined : { width: "auto" }}
           />
         </Link>
       </SidebarHeader>

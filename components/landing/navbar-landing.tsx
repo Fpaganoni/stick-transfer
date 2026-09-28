@@ -62,7 +62,10 @@ export function NavbarLanding() {
               width={180}
               height={65}
               className="h-11 w-auto"
+<<<<<<< HEAD
               style={{ width: "auto" }}
+=======
+>>>>>>> de5eab64c4e3d84bb040772ab99ffd5640944196
               priority
             />
           </motion.div>
