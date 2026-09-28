@@ -38,6 +38,12 @@ export const REGISTER = gql`
   }
 `;
 
+export const LOGOUT = gql`
+  mutation Logout {
+    logout
+  }
+`;
+
 export const UPDATE_USER = gql`
   mutation UpdateUser(
     $id: ID!

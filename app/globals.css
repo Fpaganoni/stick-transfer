@@ -19,7 +19,9 @@
   --primary: oklch(
     0.52 0.18 65
   ); /* #B5691D - Naranja/Oro más oscuro para AAA */
-  --primary-hover: oklch(0.48 0.2 65); /* Versión más oscura al hover */
+  --primary-hover: oklch(
+    48.633% 0.15587 38.973
+  ); /* Versión más oscura al hover */
   --white-black: oklch(1 0 0); /* #FFFFFF - Texto blanco sobre primary */
   --primary-soft: oklch(0.95 0.05 65); /* #FEF3E8 - Fondos sutiles */
 

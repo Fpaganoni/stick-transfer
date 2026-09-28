@@ -8,6 +8,7 @@ export { GET_USERS, GET_USER, ME } from "./user/queries";
 export {
   LOGIN,
   REGISTER,
+  LOGOUT,
   UPDATE_USER,
   FOLLOW_USER,
   UNFOLLOW_USER,
