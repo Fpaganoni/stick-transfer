@@ -5,7 +5,6 @@ import { Mail, Lock, Eye, EyeOff, ArrowUpIcon } from "lucide-react";
 import { useTranslations, useLocale } from "next-intl";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { HockeyXTicks } from "@/components/ui/hockey-xtick";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuthStore } from "@/stores/useAuthStore";
@@ -105,7 +104,7 @@ export function LoginPage() {
           router.push(
             fullUser.role === Role.SUPERADMIN
               ? `${localePrefix}/admin`
-              : `${localePrefix}/opportunities`
+              : `${localePrefix}/opportunities`,
           );
         },
         onError: (err) => {
@@ -151,7 +150,13 @@ export function LoginPage() {
     <div className="w-full rounded-3xl border border-border bg-background p-5 sm:p-8 lg:p-10 shadow-xl">
       {/* Header */}
       <div className="flex flex-col items-center mb-4 sm:mb-7 lg:mb-9">
-        <HockeyXTicks size={40} className="text-primary lg:scale-110" />
+        <Image
+          src="/logo-og.png"
+          alt="Scordd"
+          width={160}
+          height={160}
+          className="rounded-md lg:scale-110"
+        />
         <h2 className="text-xl lg:text-2xl font-semibold text-foreground text-center mt-3 leading-snug">
           {t("loginWelcomeTitle")}
         </h2>

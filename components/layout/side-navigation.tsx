@@ -22,7 +22,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { HockeyXTicks } from "../ui/hockey-xtick";
+import Image from "next/image";
 
 export function SideNavigation() {
   const pathname = usePathname();
@@ -65,7 +65,16 @@ export function SideNavigation() {
           aria-label="Home"
           className="flex w-full items-center justify-center px-2 py-1.5 group-data-[collapsible=icon]:px-0"
         >
-          <HockeyXTicks size={state === "collapsed" ? 32 : 44} className="text-primary shrink-0" />
+          <Image
+            src="/logo-og.png"
+            alt="stick transfer logo"
+            width={state === "collapsed" ? 32 : 180}
+            height={state === "collapsed" ? 32 : 65}
+            className={
+              state === "collapsed" ? "h-8 w-8 shrink-0" : "h-9 w-auto shrink-0"
+            }
+            style={state === "collapsed" ? undefined : { width: "auto" }}
+          />
         </Link>
       </SidebarHeader>
       <SidebarContent>

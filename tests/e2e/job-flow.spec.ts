@@ -44,10 +44,8 @@ async function goToOpportunitiesAndWaitForCards(page: Page) {
 
 /** Returns the card element for our single mock opportunity. */
 function getJobCard(page: Page) {
-  // Filter by mock title so we match exactly the job card div, not other
-  // rounded elements (dropdowns, modal backdrop, etc.).
   return page
-    .locator('[class*="rounded-xl"]')
+    .getByTestId("opportunity-card")
     .filter({ hasText: MOCK_OPPORTUNITIES[0].title })
     .first();
 }

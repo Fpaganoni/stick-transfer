@@ -12,6 +12,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import {
   MapPin,
@@ -174,6 +175,9 @@ export function OpportunityDetailModal() {
           <DialogTitle className="text-2xl font-bold pr-6">
             {opportunity.title}
           </DialogTitle>
+          <DialogDescription className="sr-only">
+            Job opportunity details
+          </DialogDescription>
         </DialogHeader>
 
         {/* Club and Status */}

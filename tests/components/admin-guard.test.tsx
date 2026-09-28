@@ -5,9 +5,10 @@
  *      unauthenticated or non-superadmin users.
  */
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, waitFor } from "@testing-library/react";
+import { screen, waitFor } from "@testing-library/react";
 import { AdminGuard } from "@/components/admin/admin-guard";
 import { Role } from "@/types/enums";
+import { renderWithProviders } from "../test-utils";
 
 const { mockReplace, authState } = vi.hoisted(() => ({
   mockReplace: vi.fn(),
@@ -26,7 +27,16 @@ vi.mock("next-intl", () => ({
 }));
 
 vi.mock("@/stores/useAuthStore", () => ({
-  useAuthStore: () => authState,
+  useAuthStore: (selector?: (state: typeof authState) => unknown) =>
+    selector ? selector(authState) : authState,
+}));
+
+vi.mock("@/lib/graphql-client", () => ({
+  graphqlClient: {
+    request: vi.fn(() =>
+      Promise.resolve({ me: { role: authState.user?.role } })
+    ),
+  },
 }));
 
 describe("AdminGuard", () => {
@@ -37,7 +47,7 @@ describe("AdminGuard", () => {
   });
 
   it("redirects to locale home when there is no session", async () => {
-    render(
+    renderWithProviders(
       <AdminGuard>
         <div>secret content</div>
       </AdminGuard>
@@ -51,7 +61,7 @@ describe("AdminGuard", () => {
     authState.isLoggedIn = true;
     authState.user = { role: Role.PLAYER };
 
-    render(
+    renderWithProviders(
       <AdminGuard>
         <div>secret content</div>
       </AdminGuard>
@@ -65,7 +75,7 @@ describe("AdminGuard", () => {
     authState.isLoggedIn = true;
     authState.user = { role: Role.SUPERADMIN };
 
-    render(
+    renderWithProviders(
       <AdminGuard>
         <div>secret content</div>
       </AdminGuard>

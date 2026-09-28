@@ -19,6 +19,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
 } from "@/components/ui/dialog";
 
 interface ClubData {
@@ -343,6 +344,9 @@ export function ClubProfileTabs({
         <DialogContent>
           <DialogHeader>
             <DialogTitle>{t("videos.addVideoTitle")}</DialogTitle>
+            <DialogDescription className="sr-only">
+              {t("videos.addVideoTitle")}
+            </DialogDescription>
           </DialogHeader>
           <div className="flex flex-col gap-4 mt-2">
             <input

@@ -7,7 +7,7 @@ import {
   FaLinkedin,
 } from "react-icons/fa6";
 import Link from "next/link";
-import { HockeyXTicks } from "@/components/ui/hockey-xtick";
+import Image from "next/image";
 import { LanguageSelector } from "@/components/ui/language-selector";
 import { useLocale, useTranslations } from "next-intl";
 
@@ -63,10 +63,14 @@ export function FooterLanding() {
           {/* Brand Column */}
           <div className="lg:col-span-2">
             <div className="flex items-center gap-2 mb-4">
-              <HockeyXTicks size={32} className="text-primary" />
-              <h3 className="text-xl font-bold text-foreground">
-                Stick Transfer
-              </h3>
+              <Image
+                src="/logo-og.png"
+                alt="Scordd"
+                width={180}
+                height={65}
+                className="h-11 w-auto"
+                style={{ width: "auto" }}
+              />
             </div>
             <p className="text-foreground-muted mb-6 max-w-sm">
               {t("description")}
@@ -153,7 +157,7 @@ export function FooterLanding() {
         <div className="pt-8 border-t border-border">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <p className="text-foreground-muted text-sm">
-              © {currentYear} Stick Transfer. {t("copyright")}
+              © {currentYear} Scordd. {t("copyright")}
             </p>
             <LanguageSelector />
           </div>

@@ -9,7 +9,12 @@ import { useUIStore } from "@/stores/useUIStore";
 import { useJobOpportunities } from "@/hooks/useJobOpportunities";
 import { JobOpportunity } from "@/types/models/job-opportunity";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import { LoginPage } from "@/components/pages/login-page";
 import { RegisterPage } from "@/components/pages/register-page";
 
@@ -107,6 +112,9 @@ export function OpportunitiesPage({ initialData }: OpportunitiesPageProps) {
           showCloseButton={false}
         >
           <DialogTitle className="sr-only">Sign In</DialogTitle>
+          <DialogDescription className="sr-only">
+            Sign in to your account
+          </DialogDescription>
           <LoginPage />
         </DialogContent>
       </Dialog>
@@ -120,6 +128,9 @@ export function OpportunitiesPage({ initialData }: OpportunitiesPageProps) {
           showCloseButton={false}
         >
           <DialogTitle className="sr-only">Sign Up</DialogTitle>
+          <DialogDescription className="sr-only">
+            Create a new account
+          </DialogDescription>
           <RegisterPage />
         </DialogContent>
       </Dialog>

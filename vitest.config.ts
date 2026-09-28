@@ -14,7 +14,7 @@ export default defineConfig({
     globals: true,
     setupFiles: ["./tests/setup.ts"],
     // Excluye los tests de Playwright (E2E) para que Vitest no los ejecute
-    exclude: [...configDefaults.exclude, "tests/e2e/**"],
+    exclude: [...configDefaults.exclude, "tests/e2e/**", ".agents/**", ".claude/**"],
     coverage: {
       provider: "v8",
       reporter: ["text", "lcov"],
