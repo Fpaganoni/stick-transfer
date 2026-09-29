@@ -595,7 +595,35 @@
     "seeMore": "See more",
     "filterVacancies": "Vacancy filters",
     "positionFilter": "Position",
-    "applyFilters": "Apply Filters"
+    "applyFilters": "Apply Filters",
+    "postJob": "Post a job",
+    "create": {
+      "title": "Post a job opportunity",
+      "subtitle": "Publish a new opening for players and coaches to apply to.",
+      "titleLabel": "Job title",
+      "titlePlaceholder": "e.g. Head Coach for U18 team",
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "Describe the role, responsibilities and requirements",
+      "positionTypeLabel": "Position type",
+      "levelLabel": "Level",
+      "countryLabel": "Country",
+      "cityLabel": "City",
+      "salaryLabel": "Salary (optional)",
+      "currencyLabel": "Currency",
+      "benefitsLabel": "Benefits (comma separated, optional)",
+      "benefitsPlaceholder": "Housing, Travel, Health insurance",
+      "submit": "Publish opportunity",
+      "submitting": "Publishing...",
+      "successTitle": "Opportunity published",
+      "successDescription": "Your job opportunity is now live.",
+      "errorTitle": "Could not publish opportunity",
+      "activeLimitReached": "You already have 5 active openings. Close one before publishing a new one.",
+      "validation": {
+        "titleRequired": "Title is required.",
+        "descriptionRequired": "Description is required.",
+        "positionTypeRequired": "Position type is required."
+      }
+    }
   },
   "clubs": {
     "title": "Clubs",

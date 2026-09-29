@@ -595,7 +595,35 @@
     "seeMore": "Ver más",
     "filterVacancies": "Filtrar vacantes",
     "positionFilter": "Posición",
-    "applyFilters": "Aplicar Filtros"
+    "applyFilters": "Aplicar Filtros",
+    "postJob": "Publicar oferta",
+    "create": {
+      "title": "Publicar oferta laboral",
+      "subtitle": "Publicá una nueva vacante para que jugadores y coaches se postulen.",
+      "titleLabel": "Título de la oferta",
+      "titlePlaceholder": "ej. Entrenador para equipo Sub-18",
+      "descriptionLabel": "Descripción",
+      "descriptionPlaceholder": "Describí el rol, responsabilidades y requisitos",
+      "positionTypeLabel": "Tipo de posición",
+      "levelLabel": "Nivel",
+      "countryLabel": "País",
+      "cityLabel": "Ciudad",
+      "salaryLabel": "Salario (opcional)",
+      "currencyLabel": "Moneda",
+      "benefitsLabel": "Beneficios (separados por coma, opcional)",
+      "benefitsPlaceholder": "Vivienda, Viáticos, Obra social",
+      "submit": "Publicar oferta",
+      "submitting": "Publicando...",
+      "successTitle": "Oferta publicada",
+      "successDescription": "Tu oferta laboral ya está publicada.",
+      "errorTitle": "No se pudo publicar la oferta",
+      "activeLimitReached": "Ya tenés 5 ofertas activas. Cerrá una antes de publicar otra.",
+      "validation": {
+        "titleRequired": "El título es obligatorio.",
+        "descriptionRequired": "La descripción es obligatoria.",
+        "positionTypeRequired": "El tipo de posición es obligatorio."
+      }
+    }
   },
   "clubs": {
     "title": "Clubes",

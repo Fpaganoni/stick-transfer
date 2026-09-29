@@ -10,7 +10,9 @@ import {
   Newspaper,
   MessageSquare,
   User,
+  PlusCircle,
 } from "lucide-react";
+import { useRole } from "@/hooks/useRole";
 import {
   Sidebar,
   SidebarContent,
@@ -28,10 +30,15 @@ export function SideNavigation() {
   const pathname = usePathname();
   const locale = useLocale();
   const t = useTranslations("navigation");
+  const tOpportunities = useTranslations("opportunities");
   const { state } = useSidebar();
+  const { isClub } = useRole();
 
   const navItems = [
     { href: "/opportunities", label: t("opportunities"), icon: Target },
+    ...(isClub
+      ? [{ href: "/opportunities/new", label: tOpportunities("postJob"), icon: PlusCircle }]
+      : []),
     { href: "/explore", label: t("players"), icon: Compass },
     { href: "/clubs", label: t("clubs"), icon: Building2 },
     { href: "/news", label: t("news"), icon: Newspaper },

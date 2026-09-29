@@ -1,12 +1,14 @@
 "use client";
 
-import { Globe } from "lucide-react";
+import { Globe, PlusCircle } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { JobOpportunities } from "@/components/opportunities/job-opportunities";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useUIStore } from "@/stores/useUIStore";
 import { useJobOpportunities } from "@/hooks/useJobOpportunities";
+import { useRole } from "@/hooks/useRole";
 import { JobOpportunity } from "@/types/models/job-opportunity";
 import { Button } from "@/components/ui/button";
 import {
@@ -34,6 +36,7 @@ export function OpportunitiesPage({ initialData }: OpportunitiesPageProps) {
   } = useUIStore();
   const { data } = useJobOpportunities(undefined, initialData);
   const total = data?.jobOpportunities?.length ?? 0;
+  const { isClub } = useRole();
 
   return (
     <>
@@ -90,12 +93,22 @@ export function OpportunitiesPage({ initialData }: OpportunitiesPageProps) {
 
         {/* Main Content */}
         <main className="flex-1 min-w-0 pb-22">
-          <div className="flex items-center gap-3 mb-5">
-            <Globe className="text-foreground-muted shrink-0" size={20} />
-            <h1 className="text-base font-semibold text-foreground">
-              {t("allVacanciesLabel")}{" "}
-              <span className="text-primary font-bold">({total})</span>
-            </h1>
+          <div className="flex items-center justify-between gap-3 mb-5">
+            <div className="flex items-center gap-3">
+              <Globe className="text-foreground-muted shrink-0" size={20} />
+              <h1 className="text-base font-semibold text-foreground">
+                {t("allVacanciesLabel")}{" "}
+                <span className="text-primary font-bold">({total})</span>
+              </h1>
+            </div>
+            {isClub && (
+              <Button asChild size="sm" className="text-white shrink-0">
+                <Link href="/opportunities/new">
+                  <PlusCircle className="size-4 mr-1" />
+                  {t("postJob")}
+                </Link>
+              </Button>
+            )}
           </div>
 
           <JobOpportunities initialData={initialData} />

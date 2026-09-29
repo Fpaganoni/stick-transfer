@@ -595,7 +595,35 @@
     "seeMore": "Voir plus",
     "filterVacancies": "Filtrer les offres",
     "positionFilter": "Poste",
-    "applyFilters": "Appliquer les Filtres"
+    "applyFilters": "Appliquer les Filtres",
+    "postJob": "Publier une offre",
+    "create": {
+      "title": "Publier une offre d'emploi",
+      "subtitle": "Publiez une nouvelle offre pour que les joueurs et entraineurs postulent.",
+      "titleLabel": "Titre de l'offre",
+      "titlePlaceholder": "ex. Entraineur pour l'equipe U18",
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "Décrivez le rôle, les responsabilités et les prérequis",
+      "positionTypeLabel": "Type de poste",
+      "levelLabel": "Niveau",
+      "countryLabel": "Pays",
+      "cityLabel": "Ville",
+      "salaryLabel": "Salaire (optionnel)",
+      "currencyLabel": "Devise",
+      "benefitsLabel": "Avantages (séparés par une virgule, optionnel)",
+      "benefitsPlaceholder": "Logement, Frais de déplacement, Assurance santé",
+      "submit": "Publier l'offre",
+      "submitting": "Publication...",
+      "successTitle": "Offre publiée",
+      "successDescription": "Votre offre d'emploi est maintenant en ligne.",
+      "errorTitle": "Impossible de publier l'offre",
+      "activeLimitReached": "Vous avez déjà 5 offres actives. Fermez-en une avant d'en publier une nouvelle.",
+      "validation": {
+        "titleRequired": "Le titre est requis.",
+        "descriptionRequired": "La description est requise.",
+        "positionTypeRequired": "Le type de poste est requis."
+      }
+    }
   },
   "clubs": {
     "title": "Clubs",
