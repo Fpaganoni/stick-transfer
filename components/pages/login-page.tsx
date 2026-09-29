@@ -155,7 +155,7 @@ export function LoginPage() {
           alt="Scordd"
           width={160}
           height={160}
-          className="h-40 w-40 rounded-md lg:scale-110"
+          className="h-26 w-auto "
         />
         <h2 className="text-xl lg:text-2xl font-semibold text-foreground text-center mt-3 leading-snug">
           {t("loginWelcomeTitle")}

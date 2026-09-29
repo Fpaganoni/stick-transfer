@@ -34,7 +34,11 @@ export function RoleTabsSection() {
   }, [scrollYProgress]);
 
   return (
-    <div ref={containerRef} className="relative md:h-[400vh]" style={{ position: "relative" }}>
+    <div
+      ref={containerRef}
+      className="relative md:h-[400vh]"
+      style={{ position: "relative" }}
+    >
       <section
         id="roles"
         className="md:sticky md:top-0 md:h-screen md:overflow-hidden flex items-center px-4 py-16 md:py-0 bg-muted/30"
