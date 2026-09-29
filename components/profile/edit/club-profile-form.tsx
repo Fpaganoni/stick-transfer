@@ -33,6 +33,7 @@ import {
   BasicInfoSection,
   LocationSection,
   FormActions,
+  ImageUploadField,
 } from "./shared-sections";
 
 const createClubFormSchema = (t: (key: string) => string) =>
@@ -252,13 +253,11 @@ export function ClubProfileForm() {
               control={form.control}
               name="clubLogo"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t("editForm.club.logoUrl")}</FormLabel>
-                  <FormControl>
-                    <Input placeholder={t("editForm.club.placeholders.logoUrl")} {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
+                <ImageUploadField
+                  label={t("editForm.club.logoUrl")}
+                  value={field.value || ""}
+                  onChange={field.onChange}
+                />
               )}
             />
           </CardContent>

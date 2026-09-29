@@ -4,20 +4,46 @@ import { useRef, useState } from "react";
 import { Upload, X, Check } from "lucide-react";
 import { useTranslations } from "next-intl";
 
+interface FileUploaderLabels {
+  dragOrClick: string;
+  supportedFormats: string;
+  fileTooLarge: string;
+  invalidFileType: string;
+  uploading: string;
+  uploadFailed: string;
+  removeFile: string;
+}
+
 interface FileUploaderProps {
   onFileSelect: (url: string) => void;
   isLoading?: boolean;
   accept?: string;
   id?: string;
+  /** MIME types allowed; defaults to PDF/DOC/DOCX for the club verification doc use case. */
+  validTypes?: string[];
+  /** Max file size in MB; defaults to 10MB. */
+  maxSizeMB?: number;
+  /** Override the "clubs.verification" translation namespace strings. */
+  labels?: FileUploaderLabels;
 }
+
+const DEFAULT_VALID_TYPES = [
+  "application/pdf",
+  "application/msword",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+];
 
 export function FileUploader({
   onFileSelect,
   isLoading,
   accept = ".pdf,.doc,.docx",
   id,
+  validTypes = DEFAULT_VALID_TYPES,
+  maxSizeMB = 10,
+  labels,
 }: FileUploaderProps) {
   const t = useTranslations("clubs.verification");
+  const label = (key: keyof FileUploaderLabels) => labels?.[key] ?? t(key);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
@@ -29,16 +55,13 @@ export function FileUploader({
 
     setError(null);
 
-    // Validar tamaño (máx 10MB)
-    if (file.size > 10 * 1024 * 1024) {
-      setError(t("fileTooLarge"));
+    if (file.size > maxSizeMB * 1024 * 1024) {
+      setError(label("fileTooLarge"));
       return;
     }
 
-    // Validar tipo
-    const validTypes = ["application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"];
     if (!validTypes.includes(file.type)) {
-      setError(t("invalidFileType"));
+      setError(label("invalidFileType"));
       return;
     }
 
@@ -61,7 +84,7 @@ export function FileUploader({
       const data = await response.json();
       onFileSelect(data.url);
     } catch {
-      setError(t("uploadFailed"));
+      setError(label("uploadFailed"));
       setUploadedFile(null);
     } finally {
       setIsUploading(false);
@@ -90,10 +113,10 @@ export function FileUploader({
         >
           <Upload className="w-8 h-8 mx-auto mb-2 text-primary" />
           <p className="text-sm text-foreground/70">
-            {isUploading ? t("uploading") : t("dragOrClick")}
+            {isUploading ? label("uploading") : label("dragOrClick")}
           </p>
           <p className="text-xs text-foreground/50 mt-1">
-            {t("supportedFormats")}
+            {label("supportedFormats")}
           </p>
         </button>
       ) : (
@@ -110,7 +133,7 @@ export function FileUploader({
             <button
               onClick={handleRemove}
               disabled={isLoading}
-              aria-label={t("removeFile")}
+              aria-label={label("removeFile")}
               className="text-foreground/50 hover:text-foreground transition disabled:opacity-50"
             >
               <X className="w-5 h-5" />

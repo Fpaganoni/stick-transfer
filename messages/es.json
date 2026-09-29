@@ -359,6 +359,15 @@
       "bio": "Biografía",
       "avatarUrl": "URL de Avatar",
       "coverImageUrl": "URL de Foto de Portada",
+      "photo": {
+        "dragOrClick": "Arrastrá una imagen aquí o hacé clic para buscarla",
+        "supportedFormats": "Formatos soportados: JPG, PNG, WEBP (Máximo 5MB)",
+        "fileTooLarge": "La imagen es demasiado grande. Tamaño máximo: 5MB",
+        "invalidFileType": "Tipo de archivo inválido. Subí una imagen JPG, PNG o WEBP.",
+        "uploading": "Subiendo...",
+        "uploadFailed": "No se pudo subir la imagen. Intenta de nuevo.",
+        "removeFile": "Quitar imagen"
+      },
       "placeholders": {
         "name": "Tu nombre completo",
         "username": "nombre_usuario",

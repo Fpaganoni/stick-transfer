@@ -1,6 +1,9 @@
 "use client";
 
 import type { Control } from "react-hook-form";
+import Image from "next/image";
+import { useTranslations } from "next-intl";
+import { X } from "lucide-react";
 import {
   Form,
   FormControl,
@@ -19,6 +22,72 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
+import { FileUploader } from "@/components/clubs/file-uploader";
+
+const IMAGE_ACCEPT = ".jpg,.jpeg,.png,.webp";
+const IMAGE_VALID_TYPES = ["image/jpeg", "image/png", "image/webp"];
+const IMAGE_MAX_SIZE_MB = 5;
+
+interface ImageUploadFieldProps {
+  label: string;
+  value: string;
+  onChange: (url: string) => void;
+}
+
+/** Photo upload field restricted to JPG/PNG/WEBP, used for avatar, cover image and club logo. */
+export function ImageUploadField({ label, value, onChange }: ImageUploadFieldProps) {
+  const t = useTranslations("profile.editForm.photo");
+
+  if (value) {
+    return (
+      <FormItem>
+        <FormLabel>{label}</FormLabel>
+        <div className="flex items-center gap-3 border border-input rounded-md p-3 bg-muted/20">
+          <Image
+            src={value}
+            alt={label}
+            width={48}
+            height={48}
+            className="rounded-md object-cover h-12 w-12 shrink-0"
+            unoptimized
+          />
+          <span className="text-sm text-foreground-muted truncate flex-1">{value}</span>
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            aria-label={t("removeFile")}
+            onClick={() => onChange("")}
+          >
+            <X className="w-4 h-4 text-error" />
+          </Button>
+        </div>
+      </FormItem>
+    );
+  }
+
+  return (
+    <FormItem>
+      <FormLabel>{label}</FormLabel>
+      <FileUploader
+        accept={IMAGE_ACCEPT}
+        validTypes={IMAGE_VALID_TYPES}
+        maxSizeMB={IMAGE_MAX_SIZE_MB}
+        onFileSelect={onChange}
+        labels={{
+          dragOrClick: t("dragOrClick"),
+          supportedFormats: t("supportedFormats"),
+          fileTooLarge: t("fileTooLarge"),
+          invalidFileType: t("invalidFileType"),
+          uploading: t("uploading"),
+          uploadFailed: t("uploadFailed"),
+          removeFile: t("removeFile"),
+        }}
+      />
+      <FormMessage />
+    </FormItem>
+  );
+}
 
 export { Form };
 
@@ -103,13 +172,11 @@ export function BasicInfoSection({ control, t }: BasicInfoSectionProps) {
           control={control}
           name="avatar"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>{t("editForm.avatarUrl")}</FormLabel>
-              <FormControl>
-                <Input placeholder={t("editForm.placeholders.avatarUrl")} {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+            <ImageUploadField
+              label={t("editForm.avatarUrl")}
+              value={field.value || ""}
+              onChange={field.onChange}
+            />
           )}
         />
 
@@ -117,19 +184,11 @@ export function BasicInfoSection({ control, t }: BasicInfoSectionProps) {
           control={control}
           name="coverImage"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>{t("editForm.coverImageUrl") || "Cover Image URL"}</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder={
-                    t("editForm.placeholders.coverImageUrl") ||
-                    "https://example.com/cover.jpg"
-                  }
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+            <ImageUploadField
+              label={t("editForm.coverImageUrl") || "Cover Image URL"}
+              value={field.value || ""}
+              onChange={field.onChange}
+            />
           )}
         />
       </CardContent>

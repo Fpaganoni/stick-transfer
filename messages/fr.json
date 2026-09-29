@@ -359,6 +359,15 @@
       "bio": "Biographie",
       "avatarUrl": "URL de l'Avatar",
       "coverImageUrl": "URL de la photo de couverture",
+      "photo": {
+        "dragOrClick": "Glissez une image ici ou cliquez pour la choisir",
+        "supportedFormats": "Formats pris en charge : JPG, PNG, WEBP (Max 5MB)",
+        "fileTooLarge": "L'image est trop volumineuse. Taille maximale : 5MB",
+        "invalidFileType": "Type de fichier invalide. Veuillez télécharger une image JPG, PNG ou WEBP.",
+        "uploading": "Téléversement...",
+        "uploadFailed": "Échec du téléversement de l'image. Veuillez réessayer.",
+        "removeFile": "Supprimer l'image"
+      },
       "placeholders": {
         "name": "Votre nom complet",
         "username": "nom_utilisateur",

@@ -359,6 +359,15 @@
       "bio": "Bio",
       "avatarUrl": "Avatar URL",
       "coverImageUrl": "Cover Image URL",
+      "photo": {
+        "dragOrClick": "Drag and drop an image here or click to browse",
+        "supportedFormats": "Supported formats: JPG, PNG, WEBP (Max 5MB)",
+        "fileTooLarge": "Image is too large. Maximum size: 5MB",
+        "invalidFileType": "Invalid file type. Please upload a JPG, PNG or WEBP image.",
+        "uploading": "Uploading...",
+        "uploadFailed": "Failed to upload image. Please try again.",
+        "removeFile": "Remove image"
+      },
       "placeholders": {
         "name": "Your full name",
         "username": "username",
