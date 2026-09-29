@@ -34,7 +34,11 @@ export const REGISTER = gql`
       position: $position
       dateOfBirth: $dateOfBirth
       clubName: $clubName
-    )
+    ) {
+      id
+      email
+      role
+    }
   }
 `;
 
