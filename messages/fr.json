@@ -351,6 +351,7 @@
       "removeTrajectory": "Supprimer le parcours",
       "basicInfo": "Informations de Base",
       "basicInfoDesc": "Mettez à jour vos détails personnels.",
+      "playerDetails": "Détails du Joueur",
       "name": "Nom",
       "username": "Nom d'utilisateur",
       "position": "Position",
@@ -406,7 +407,30 @@
         "periodRequired": "La période est requise"
       },
       "saving": "Enregistrement...",
-      "saveChanges": "Enregistrer les modifications"
+      "saveChanges": "Enregistrer les modifications",
+      "club": {
+        "title": "Informations du Club",
+        "desc": "Mettez à jour le profil public de votre club.",
+        "name": "Nom du Club",
+        "description": "Description",
+        "logoUrl": "URL du Logo",
+        "managedByTitle": "Administrateur du Club",
+        "managedByDesc": "Personne en charge de la gestion de ce compte club.",
+        "managedByFirstName": "Prénom de l'Administrateur",
+        "managedByLastName": "Nom de l'Administrateur",
+        "placeholders": {
+          "name": "Nom de votre club",
+          "description": "Parlez de votre club aux joueurs",
+          "logoUrl": "https://exemple.com/logo.png",
+          "managedByFirstName": "Prénom",
+          "managedByLastName": "Nom"
+        },
+        "validation": {
+          "nameMin": "Le nom du club doit comporter au moins 2 caractères.",
+          "managedByFirstNameRequired": "Le prenom de l'administrateur est requis.",
+          "managedByLastNameRequired": "Le nom de l'administrateur est requis."
+        }
+      }
     },
     "bio": "Biographie",
     "following": "Abonné",

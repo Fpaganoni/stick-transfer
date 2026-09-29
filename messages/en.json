@@ -351,6 +351,7 @@
       "removeTrajectory": "Remove trajectory",
       "basicInfo": "Basic Information",
       "basicInfoDesc": "Update your personal details and display name.",
+      "playerDetails": "Player Details",
       "name": "Name",
       "username": "Username",
       "position": "Position",
@@ -406,7 +407,30 @@
         "periodRequired": "Period is required"
       },
       "saving": "Saving...",
-      "saveChanges": "Save Changes"
+      "saveChanges": "Save Changes",
+      "club": {
+        "title": "Club Information",
+        "desc": "Update your club's public profile.",
+        "name": "Club Name",
+        "description": "Description",
+        "logoUrl": "Logo URL",
+        "managedByTitle": "Club Administrator",
+        "managedByDesc": "Person in charge of managing this club account.",
+        "managedByFirstName": "Administrator First Name",
+        "managedByLastName": "Administrator Last Name",
+        "placeholders": {
+          "name": "Your club's name",
+          "description": "Tell players about your club",
+          "logoUrl": "https://example.com/logo.png",
+          "managedByFirstName": "First name",
+          "managedByLastName": "Last name"
+        },
+        "validation": {
+          "nameMin": "Club name must be at least 2 characters.",
+          "managedByFirstNameRequired": "Administrator first name is required.",
+          "managedByLastNameRequired": "Administrator last name is required."
+        }
+      }
     },
     "bio": "Bio",
     "following": "Following",
