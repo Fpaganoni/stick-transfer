@@ -37,6 +37,10 @@ export const GET_CLUB = gql`
       isVerified
       verificationStatus
       verificationDoc
+      managedBy {
+        firstName
+        lastName
+      }
       website
       email
       phone

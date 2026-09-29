@@ -157,6 +157,8 @@ export interface RegisterVariables {
   position?: string;
   dateOfBirth?: string;
   clubName?: string;
+  managedByFirstName?: string;
+  managedByLastName?: string;
 }
 
 export interface RegisterResponse {

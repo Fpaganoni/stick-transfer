@@ -22,6 +22,8 @@ export const REGISTER = gql`
     $position: String
     $dateOfBirth: String
     $clubName: String
+    $managedByFirstName: String
+    $managedByLastName: String
   ) {
     register(
       email: $email
@@ -34,6 +36,8 @@ export const REGISTER = gql`
       position: $position
       dateOfBirth: $dateOfBirth
       clubName: $clubName
+      managedByFirstName: $managedByFirstName
+      managedByLastName: $managedByLastName
     ) {
       id
       email

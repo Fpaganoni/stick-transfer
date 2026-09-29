@@ -13,6 +13,11 @@ export interface ClubMember {
   };
 }
 
+export interface ClubManagedBy {
+  firstName: string;
+  lastName: string;
+}
+
 export interface Club {
   id: string;
   name: string;
@@ -24,6 +29,7 @@ export interface Club {
   league?: string;
   type?: "Team" | "Organization" | "Brand";
   createdAt?: string;
+  managedBy?: ClubManagedBy;
   isVerified?: boolean;
   verificationStatus?: "UNVERIFIED" | "PENDING" | "VERIFIED" | "REJECTED";
   verificationDoc?: string;
@@ -44,3 +50,22 @@ export interface Club {
 }
 
 export type ClubBasic = Pick<Club, "id" | "name" | "logo">;
+
+export interface UpdateClubVariables {
+  id: string;
+  name?: string;
+  description?: string;
+  city?: string;
+  country?: string;
+  logo?: string;
+  coverImage?: string;
+  website?: string;
+  email?: string;
+  phone?: string;
+  instagram?: string;
+  twitter?: string;
+  facebook?: string;
+  tiktok?: string;
+  managedByFirstName?: string;
+  managedByLastName?: string;
+}

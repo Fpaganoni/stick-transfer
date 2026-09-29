@@ -1,7 +1,11 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { graphqlClient } from "@/lib/graphql-client";
 import { GET_JOB_OPPORTUNITIES } from "@/graphql/opportunity/queries";
-import { JobOpportunity } from "@/types/models/job-opportunity";
+import { CREATE_JOB_OPPORTUNITY } from "@/graphql/opportunity/mutations";
+import {
+  CreateJobOpportunityVariables,
+  JobOpportunity,
+} from "@/types/models/job-opportunity";
 
 interface GetJobOpportunitiesVariables {
   limit?: number;
@@ -32,5 +36,21 @@ export function useJobOpportunities(
       return data;
     },
     initialData,
+  });
+}
+
+export function useCreateJobOpportunity() {
+  const queryClient = useQueryClient();
+
+  return useMutation<
+    { createJobOpportunity: JobOpportunity },
+    Error,
+    CreateJobOpportunityVariables
+  >({
+    mutationFn: async (variables) =>
+      graphqlClient.request(CREATE_JOB_OPPORTUNITY, variables),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["jobOpportunities"] });
+    },
   });
 }

@@ -17,10 +17,12 @@ export {
 // CLUB
 export { GET_CLUBS, GET_CLUB } from "./club/queries";
 
+export { UPDATE_CLUB, REQUEST_CLUB_VERIFICATION } from "./club/mutations";
+
 // OPPORTUNITY
 export { GET_JOB_OPPORTUNITIES, GET_USER_APPLICATIONS } from "./opportunity/queries";
 
-export { APPLY_FOR_JOB } from "./opportunity/mutations";
+export { APPLY_FOR_JOB, CREATE_JOB_OPPORTUNITY } from "./opportunity/mutations";
 
 // NEWS
 export { GET_NEWS, GET_NEWS_ARTICLE } from "./news/queries";

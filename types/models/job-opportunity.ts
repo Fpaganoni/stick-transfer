@@ -48,3 +48,15 @@ export type CreateJobOpportunityInput = Omit<
 export type UpdateJobOpportunityInput = Partial<
   Omit<JobOpportunity, "id" | "createdAt">
 >;
+
+export interface CreateJobOpportunityVariables {
+  title: string;
+  description: string;
+  positionType: string;
+  level?: string;
+  country?: string;
+  city?: string;
+  salary?: number;
+  currency?: string;
+  benefits?: string[];
+}

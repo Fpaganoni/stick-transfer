@@ -7,6 +7,7 @@ import { useTranslations, useLocale } from "next-intl";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useApplyForJob, useUserApplications } from "@/hooks/useJobApplications";
 import { useSavedJobsStore } from "@/stores/useSavedJobsStore";
+import { useRole } from "@/hooks/useRole";
 import {
   Dialog,
   DialogContent,
@@ -59,6 +60,7 @@ interface OpportunityActionButtonsProps {
   isSaved: boolean;
   onToggleSave: () => void;
   onClose: () => void;
+  canApply: boolean;
 }
 
 function OpportunityActionButtons({
@@ -72,10 +74,11 @@ function OpportunityActionButtons({
   isSaved,
   onToggleSave,
   onClose,
+  canApply,
 }: OpportunityActionButtonsProps) {
   return (
     <div className="flex gap-3 pt-4 border-t border-border">
-      {normalizedStatus === "filled" || userAlreadyApplied ? (
+      {!canApply ? null : normalizedStatus === "filled" || userAlreadyApplied ? (
         <button
           disabled
           className="flex-1 py-2 rounded-lg border-2 border-success bg-success/20 font-semibold text-foreground flex items-center justify-center gap-2 transition-colors duration-300 cursor-default"
@@ -126,6 +129,7 @@ export function OpportunityDetailModal() {
   const { selectedOpportunity, isModalOpen, closeModal } =
     useOpportunitiesStore();
   const { user } = useAuthStore();
+  const { isClub, isSuperAdmin } = useRole();
   const { mutate: applyForJob, isPending } = useApplyForJob();
   const { hasAppliedTo, isLoading: isLoadingApplications } =
     useUserApplications();
@@ -316,6 +320,7 @@ export function OpportunityDetailModal() {
             isSaved={isSaved(opportunity.id)}
             onToggleSave={() => toggleSave(opportunity.id)}
             onClose={closeModal}
+            canApply={!isClub && !isSuperAdmin}
           />
         </div>
       </DialogContent>

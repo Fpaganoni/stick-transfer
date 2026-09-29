@@ -780,7 +780,12 @@ export const RegisterPage = () => {
         role: card.backendRole,
         country: step2Data.country,
         ...(isClub && "name" in step3Data
-          ? { clubName: step3Data.name, city: step3Data.city }
+          ? {
+              clubName: step3Data.name,
+              city: step3Data.city,
+              managedByFirstName: step2Data.firstName,
+              managedByLastName: step2Data.lastName,
+            }
           : {}),
         ...(!isClub && "position" in step3Data
           ? {
