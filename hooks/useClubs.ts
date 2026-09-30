@@ -1,8 +1,10 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { graphqlClient } from "@/lib/graphql-client";
 import { GET_CLUBS, GET_CLUB } from "@/graphql/club/queries";
-import { UPDATE_CLUB, REQUEST_CLUB_VERIFICATION } from "@/graphql/club/mutations";
+import { UPDATE_CLUB } from "@/graphql/club/mutations";
 import { Club, UpdateClubVariables } from "@/types/models/club";
+
+// Club verification mutations live in hooks/useClubMutations.ts
 
 export function useClubs(initialData?: { clubs: Club[] }) {
   return useQuery<{ clubs: Club[] }>({
@@ -31,26 +33,6 @@ export function useUpdateClub() {
         queryClient.invalidateQueries({ queryKey: ["club", data.updateClub.id] });
       }
       queryClient.invalidateQueries({ queryKey: ["clubs"] });
-    },
-  });
-}
-
-export function useRequestClubVerification() {
-  const queryClient = useQueryClient();
-
-  return useMutation<
-    { requestClubVerification: Club },
-    Error,
-    { clubId: string; documentUrl: string }
-  >({
-    mutationFn: async (variables) =>
-      graphqlClient.request(REQUEST_CLUB_VERIFICATION, variables),
-    onSuccess: (data) => {
-      if (data?.requestClubVerification?.id) {
-        queryClient.invalidateQueries({
-          queryKey: ["club", data.requestClubVerification.id],
-        });
-      }
     },
   });
 }

@@ -29,6 +29,18 @@ vi.mock("@/stores/useAuthStore", () => ({
   useAuthStore: () => ({ isLoggedIn: false, user: null }),
 }));
 
+vi.mock("@/hooks/useRole", () => ({
+  useRole: () => ({
+    role: undefined,
+    isLoading: false,
+    isPlayer: false,
+    isCoach: false,
+    isClub: false,
+    isSuperAdmin: false,
+    hasRole: () => false,
+  }),
+}));
+
 vi.mock("@/stores/useUIStore", () => ({
   useUIStore: () => ({
     openRegisterModal: vi.fn(),

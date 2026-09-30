@@ -11,6 +11,18 @@ vi.mock("next-intl", () => ({
   useTranslations: () => (key: string) => key,
 }));
 
+vi.mock("@/hooks/useRole", () => ({
+  useRole: () => ({
+    role: undefined,
+    isLoading: false,
+    isPlayer: false,
+    isCoach: false,
+    isClub: false,
+    isSuperAdmin: false,
+    hasRole: () => false,
+  }),
+}));
+
 vi.mock("next/image", () => ({
   default: (props: React.ImgHTMLAttributes<HTMLImageElement>) => (
     // eslint-disable-next-line @next/next/no-img-element
