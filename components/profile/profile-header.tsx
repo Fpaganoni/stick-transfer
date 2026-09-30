@@ -19,6 +19,7 @@ import { Badge } from "../ui/badge";
 import { User } from "@/types/models/user";
 import { useUpdateUser, useFollow, useUnfollow } from "@/hooks/useUsers";
 import { useAuthStore } from "@/stores/useAuthStore";
+import { useRole } from "@/hooks/useRole";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import Link from "next/link";
@@ -209,6 +210,7 @@ interface OtherProfileActionsProps {
   isHoveringUnfollow: boolean;
   onHoverUnfollowChange: (hovering: boolean) => void;
   onMessage: () => void;
+  canContact: boolean;
   onFollowToggle: () => void;
   onReport: () => void;
   followersCount: number;
@@ -225,6 +227,7 @@ function OtherProfileActions({
   isHoveringUnfollow,
   onHoverUnfollowChange,
   onMessage,
+  canContact,
   onFollowToggle,
   onReport,
   followersCount,
@@ -235,16 +238,18 @@ function OtherProfileActions({
   return (
     <div className="flex flex-col items-center sm:items-start gap-2 mt-3">
       <div className="flex gap-3 items-center justify-center sm:justify-start">
-        <motion.button
-          onClick={onMessage}
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          transition={{ duration: 0.2 }}
-          className="p-3 rounded-full border-2 border-primary text-foreground hover:bg-primary/10 transition-colors duration-200 flex items-center justify-center shadow-sm"
-          title={t("message")}
-        >
-          <MessageCircle className="w-5 h-5" />
-        </motion.button>
+        {canContact && (
+          <motion.button
+            onClick={onMessage}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            transition={{ duration: 0.2 }}
+            className="p-3 rounded-full border-2 border-primary text-foreground hover:bg-primary/10 transition-colors duration-200 flex items-center justify-center shadow-sm"
+            title={t("message")}
+          >
+            <MessageCircle className="w-5 h-5" />
+          </motion.button>
+        )}
 
         <motion.button
           onClick={onFollowToggle}
@@ -334,6 +339,8 @@ export function ProfileHeader({
   const t = useTranslations("profile");
   const router = useRouter();
   const { user: currentUser } = useAuthStore();
+  const { isClub, isSuperAdmin } = useRole();
+  const canContact = isClub || isSuperAdmin;
 
   const [isHoveringCover, setIsHoveringCover] = useState(false);
   const [isRepositioning, setIsRepositioning] = useState(false);
@@ -543,6 +550,7 @@ export function ProfileHeader({
                   isHoveringUnfollow={isHoveringUnfollow}
                   onHoverUnfollowChange={setIsHoveringUnfollow}
                   onMessage={handleMessage}
+                  canContact={canContact}
                   onFollowToggle={handleFollowToggle}
                   onReport={() => setReportModalOpen(true)}
                   followersCount={followers.length}

@@ -33,6 +33,8 @@ interface ChatMessage {
 interface ChatConversationProps {
   conversationId: number;
   onBack: () => void;
+  /** Overrides the mock contact name, used when opened from a profile's Contact button. */
+  contactName?: string;
 }
 
 const INITIAL_MESSAGES: ChatMessage[] = [
@@ -56,9 +58,11 @@ const INITIAL_MESSAGES: ChatMessage[] = [
   },
 ];
 
-export function ChatConversation({ onBack }: ChatConversationProps) {
+export function ChatConversation({ onBack, contactName }: ChatConversationProps) {
   const t = useTranslations("messages");
-  const [messages, setMessages] = useState<ChatMessage[]>(INITIAL_MESSAGES);
+  const [messages, setMessages] = useState<ChatMessage[]>(
+    contactName ? [] : INITIAL_MESSAGES,
+  );
   const [newMessage, setNewMessage] = useState("");
   const isTouchDevice = useMediaQuery("(hover: none)");
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -103,7 +107,7 @@ export function ChatConversation({ onBack }: ChatConversationProps) {
           draggable={false}
         />
         <div className="flex-1">
-          <p className="font-semibold text-foreground">Sarah Mitchell</p>
+          <p className="font-semibold text-foreground">{contactName || "Sarah Mitchell"}</p>
           <p className="text-xs text-foreground-muted">{t("activeNow")}</p>
         </div>
       </div>

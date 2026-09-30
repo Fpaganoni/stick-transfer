@@ -4,6 +4,7 @@ import { Edit, BadgeCheck, MoreHorizontal } from "lucide-react";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { useMediaQuery } from "@/hooks/ui/use-media-query";
+import { useRole } from "@/hooks/useRole";
 import { User } from "@/types/models/user";
 import { Badge } from "../ui/badge";
 import { useTranslations } from "next-intl";
@@ -46,6 +47,8 @@ export function ClubProfileHeader({
   const router = useRouter();
   const [avatarModalOpen, setAvatarModalOpen] = useState(false);
   const isTouchDevice = useMediaQuery("(hover: none)");
+  const { isClub, isSuperAdmin } = useRole();
+  const canContact = isClub || isSuperAdmin;
 
   const handleMessage = () => {
     router.push(`/messages?userId=${id}&name=${encodeURIComponent(name)}`);
@@ -154,9 +157,11 @@ export function ClubProfileHeader({
                   <DropdownMenuItem onClick={handleShare}>
                     {t("header.share")}
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={handleMessage}>
-                    {t("header.contact")}
-                  </DropdownMenuItem>
+                  {canContact && (
+                    <DropdownMenuItem onClick={handleMessage}>
+                      {t("header.contact")}
+                    </DropdownMenuItem>
+                  )}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem className="text-error">
                     {t("header.report")}
