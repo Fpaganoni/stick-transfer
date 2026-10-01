@@ -41,7 +41,7 @@ export function HeroSection() {
       {/* Dark overlay for text legibility */}
       <div className="absolute inset-0 bg-linear-to-b from-[#0d1b2e]/70 via-[#0d1b2e]/60 to-[#0d1b2e]/85" />
 
-      <div className="relative max-w-3xl mx-auto w-full">
+      <div className="relative max-w-3xl xl:max-w-5xl mx-auto w-full">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
@@ -59,12 +59,12 @@ export function HeroSection() {
             </span>
           </motion.div>
 
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-6 leading-tight">
             {t("title")}{" "}
             <span className="text-primary">{t("titleHighlight")}</span>
           </h1>
 
-          <p className="text-lg md:text-xl text-white/80 mb-10 max-w-xl mx-auto">
+          <p className="text-lg md:text-xl xl:text-2xl text-white/80 mb-10 max-w-xl xl:max-w-2xl mx-auto">
             {t("subtitle")}
           </p>
 
