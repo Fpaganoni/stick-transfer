@@ -177,7 +177,7 @@
     },
     "roleTabs": {
       "title": "Fait pour tous dans le hockey",
-      "subtitle": "Que vous jouiez, entraîniez, gériez un club ou souteniez le sport — il y a une place pour vous.",
+      "subtitle": "Que vous jouiez, entraîniez, arbitriez ou gériez un club — il y a une place pour vous.",
       "cta": "Créer un compte gratuit",
       "players": {
         "tab": "Joueurs",
@@ -200,12 +200,12 @@
         "bullet2": "Parcourez les profils de milliers de joueurs",
         "bullet3": "Gérez les candidatures en un seul endroit"
       },
-      "brands": {
-        "tab": "Marques",
-        "description": "Connectez-vous avec la communauté hockey mondiale. Partenariats avec joueurs et clubs pour développer votre marque.",
-        "bullet1": "Accédez à une audience hockey ciblée",
-        "bullet2": "Partenariat avec les meilleurs clubs et joueurs",
-        "bullet3": "Développez votre présence dans le sport"
+      "umpires": {
+        "tab": "Arbitres",
+        "description": "Créez votre profil d'arbitre. Mettez en valeur votre expérience, vos certifications et les matchs que vous avez arbitrés.",
+        "bullet1": "Créez un profil d'arbitre professionnel",
+        "bullet2": "Mettez en avant votre niveau, licence et historique de matchs",
+        "bullet3": "Soyez repéré par les clubs et associations"
       }
     },
     "features": {

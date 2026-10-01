@@ -177,7 +177,7 @@
     },
     "roleTabs": {
       "title": "Built for everyone in hockey",
-      "subtitle": "Whether you play, coach, manage a club, or support the game — there is a place for you.",
+      "subtitle": "Whether you play, coach, umpire, or manage a club — there is a place for you.",
       "cta": "Create free account",
       "players": {
         "tab": "Players",
@@ -200,12 +200,12 @@
         "bullet2": "Browse profiles of thousands of players",
         "bullet3": "Manage applications in one place"
       },
-      "brands": {
-        "tab": "Brands",
-        "description": "Connect with the global hockey community. Partner with players and clubs to grow your brand.",
-        "bullet1": "Access a targeted hockey audience",
-        "bullet2": "Partner with top clubs and players",
-        "bullet3": "Grow your presence in the sport"
+      "umpires": {
+        "tab": "Umpires",
+        "description": "Build your officiating profile. Showcase your experience, certifications, and the matches you have umpired.",
+        "bullet1": "Create a professional umpire profile",
+        "bullet2": "Highlight your level, license, and match history",
+        "bullet3": "Get found by clubs and associations"
       }
     },
     "features": {

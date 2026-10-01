@@ -8,7 +8,23 @@ import { Button } from "@/components/ui/button";
 import { useUIStore } from "@/stores/useUIStore";
 import { useRef, useState, useEffect } from "react";
 
-const ROLES = ["players", "coaches", "clubs", "brands"];
+const ROLES = ["players", "coaches", "clubs", "umpires"];
+
+const IMAGEKIT_BASE = "https://ik.imagekit.io/p2ho5d9bi/Stick%20Transfer";
+
+/*
+
+
+  https://ik.imagekit.io/p2ho5d9bi/Stick%20Transfer/662757631_1410679214410065_2302095168404186019_n.jpg
+
+*/
+
+const ROLE_IMAGES: Record<string, string> = {
+  players: `${IMAGEKIT_BASE}/Kampong%20vs%20Rot-Weiss-22.webp`,
+  coaches: `${IMAGEKIT_BASE}/coaches.jpg`,
+  clubs: `${IMAGEKIT_BASE}/662757631_1410679214410065_2302095168404186019_n.jpg`,
+  umpires: `${IMAGEKIT_BASE}/49811668_1964435660292766_6731999003233222656_n.jpg`,
+};
 const BULLETS = ["bullet1", "bullet2", "bullet3"];
 
 export function RoleTabsSection() {
@@ -64,8 +80,13 @@ export function RoleTabsSection() {
               <button
                 key={role}
                 type="button"
-                onClick={() => setActiveTab(role)}
-                className="relative py-3 text-sm font-medium text-center cursor-pointer select-none"
+                onClick={() => {
+                  // Desktop: tabs follow scroll only. Mobile has no sticky scroll, so clicks stay.
+                  if (window.matchMedia("(min-width: 768px)").matches) return;
+                  setActiveTab(role);
+                }}
+                tabIndex={-1}
+                className="relative py-3 text-sm font-medium text-center select-none cursor-pointer md:cursor-default md:pointer-events-none"
               >
                 {activeTab === role && (
                   <motion.div
@@ -120,9 +141,9 @@ export function RoleTabsSection() {
                 </div>
 
                 <div className="hidden lg:flex items-center justify-center">
-                  <div className="relative w-full h-64 rounded-2xl overflow-hidden border border-primary/20">
+                  <div className="relative w-full aspect-3/2 rounded-2xl overflow-hidden border border-primary/20">
                     <Image
-                      src={`/${role}.webp`}
+                      src={ROLE_IMAGES[role]}
                       alt={role}
                       fill
                       sizes="(min-width: 1024px) 50vw, 0px"
