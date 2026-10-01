@@ -15,25 +15,38 @@ export function HeroSection() {
   return (
     <section
       id="home"
-      className="relative min-h-[90vh] flex items-center justify-center px-4 py-20 overflow-hidden"
-      style={{
-        background:
-          "linear-gradient(135deg, #0d1b2e 0%, #162544 50%, #0d1b2e 100%)",
-      }}
+      className="relative min-h-svh flex items-center justify-center px-4 py-20 overflow-hidden bg-[#0d1b2e]"
     >
-      {/* Subtle background image overlay */}
-      <div
-        className="absolute inset-0 opacity-10 bg-cover bg-center"
-        style={{ backgroundImage: "url('/hockey-stadium.jpg')" }}
-      />
+      {/* Background image at natural ratio, full height, edges fade into brand color */}
+      <div className="absolute inset-0 flex justify-center">
+        <div
+          className="relative h-full min-w-full aspect-8/5"
+          style={{
+            maskImage:
+              "linear-gradient(to right, transparent, black 18%, black 82%, transparent)",
+            WebkitMaskImage:
+              "linear-gradient(to right, transparent, black 18%, black 82%, transparent)",
+          }}
+        >
+          <Image
+            src="/hockey-collection.avif"
+            alt=""
+            fill
+            sizes="100vw"
+            className="object-cover object-center"
+            priority
+          />
+        </div>
+      </div>
+      {/* Dark overlay for text legibility */}
+      <div className="absolute inset-0 bg-linear-to-b from-[#0d1b2e]/70 via-[#0d1b2e]/60 to-[#0d1b2e]/85" />
 
-      <div className="relative max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center w-full">
-        {/* Left Content */}
+      <div className="relative max-w-3xl mx-auto w-full">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-center lg:text-left"
+          className="text-center"
         >
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
@@ -51,11 +64,11 @@ export function HeroSection() {
             <span className="text-primary">{t("titleHighlight")}</span>
           </h1>
 
-          <p className="text-lg md:text-xl text-white/70 mb-10 max-w-xl mx-auto lg:mx-0">
+          <p className="text-lg md:text-xl text-white/80 mb-10 max-w-xl mx-auto">
             {t("subtitle")}
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button
               size="lg"
               className="group px-8 text-white"
@@ -76,30 +89,6 @@ export function HeroSection() {
               {tNav("signIn")}
             </Button>
           </div>
-        </motion.div>
-
-        {/* Right Content — Image */}
-        <motion.div
-          initial={{ opacity: 0, x: 24 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.7, delay: 0.2 }}
-          className="relative hidden lg:block"
-        >
-          <div className="relative w-full h-[min(500px,50vh)] rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
-            <Image
-              src="/hockey-collection.avif"
-              alt="Hockey Network"
-              fill
-              sizes="(min-width: 1024px) 50vw, 0px"
-              className="object-cover"
-              priority
-            />
-            <div className="absolute inset-0 bg-linear-to-t from-[#0d1b2e]/50 to-transparent" />
-          </div>
-
-          {/* Decorative blobs — clipped by parent section overflow-hidden */}
-          <div className="absolute -top-4 -right-4 w-28 h-28 bg-primary/25 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-primary/15 rounded-full blur-3xl pointer-events-none" />
         </motion.div>
       </div>
     </section>
