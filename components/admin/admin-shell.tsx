@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import {
@@ -95,10 +96,10 @@ export function AdminShell({ children }: AdminShellProps) {
                       isActive={isActive(item.href)}
                       tooltip={item.label}
                     >
-                      <a href={`${localePrefix}${item.href}`}>
+                      <Link href={`${localePrefix}${item.href}`}>
                         <item.icon />
                         <span>{item.label}</span>
-                      </a>
+                      </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}

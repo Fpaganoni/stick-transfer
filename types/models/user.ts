@@ -143,7 +143,7 @@ export interface LoginVariables {
 }
 
 export interface LoginResponse {
-  login: string;
+  login: Pick<User, "id" | "email" | "role">;
 }
 
 export interface RegisterVariables {
