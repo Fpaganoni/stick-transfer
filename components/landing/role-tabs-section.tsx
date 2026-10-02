@@ -12,17 +12,10 @@ const ROLES = ["players", "coaches", "clubs", "umpires"];
 
 const IMAGEKIT_BASE = "https://ik.imagekit.io/p2ho5d9bi/Stick%20Transfer";
 
-/*
-
-
-  https://ik.imagekit.io/p2ho5d9bi/Stick%20Transfer/662757631_1410679214410065_2302095168404186019_n.jpg
-
-*/
-
 const ROLE_IMAGES: Record<string, string> = {
   players: `${IMAGEKIT_BASE}/Kampong%20vs%20Rot-Weiss-22.webp`,
   coaches: `${IMAGEKIT_BASE}/coaches.jpg`,
-  clubs: `${IMAGEKIT_BASE}/662757631_1410679214410065_2302095168404186019_n.jpg`,
+  clubs: `${IMAGEKIT_BASE}/JVB_3808.jpg`,
   umpires: `${IMAGEKIT_BASE}/49811668_1964435660292766_6731999003233222656_n.jpg`,
 };
 const BULLETS = ["bullet1", "bullet2", "bullet3"];
@@ -148,6 +141,7 @@ export function RoleTabsSection() {
                       fill
                       sizes="(min-width: 1024px) 50vw, 0px"
                       className="object-cover"
+                      loading="eager"
                     />
                   </div>
                 </div>

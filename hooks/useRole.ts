@@ -11,6 +11,7 @@ export function useRole() {
     isPlayer: role === Role.PLAYER,
     isCoach: role === Role.COACH,
     isClub: role === Role.CLUB,
+    isUmpire: role === Role.UMPIRE,
     isSuperAdmin: role === Role.SUPERADMIN,
     hasRole: (roles: Role[]) => !!role && roles.includes(role),
   };

@@ -65,7 +65,7 @@ export function ClubProfilePage({
           city: clubData.city,
           country: clubData.country,
           website: clubData.website,
-          email: clubData.email,
+          email: clubData.email ?? undefined,
           league: clubData.league,
           type: clubData.type,
           createdAt: clubData.createdAt,

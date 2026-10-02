@@ -39,6 +39,20 @@ describe("useRole", () => {
     expect(result.current.isClub).toBe(false);
   });
 
+  it("exposes isUmpire=true and the other role flags false for an UMPIRE user", () => {
+    mockUseMe.mockReturnValue({ data: { me: { role: Role.UMPIRE } }, isLoading: false });
+
+    const { result } = renderHook(() => useRole());
+
+    expect(result.current.role).toBe(Role.UMPIRE);
+    expect(result.current.isUmpire).toBe(true);
+    expect(result.current.isPlayer).toBe(false);
+    expect(result.current.isCoach).toBe(false);
+    expect(result.current.isClub).toBe(false);
+    expect(result.current.isSuperAdmin).toBe(false);
+    expect(result.current.hasRole([Role.UMPIRE])).toBe(true);
+  });
+
   it("returns all flags false and role undefined when logged out", () => {
     mockUseMe.mockReturnValue({ data: undefined, isLoading: false });
 
@@ -48,6 +62,7 @@ describe("useRole", () => {
     expect(result.current.isPlayer).toBe(false);
     expect(result.current.isCoach).toBe(false);
     expect(result.current.isClub).toBe(false);
+    expect(result.current.isUmpire).toBe(false);
     expect(result.current.isSuperAdmin).toBe(false);
     expect(result.current.hasRole([Role.CLUB, Role.SUPERADMIN])).toBe(false);
   });

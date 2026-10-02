@@ -1,4 +1,12 @@
-import { Role, Position, Level } from "../enums";
+import {
+  Role,
+  Position,
+  Level,
+  UmpireLicenseLevel,
+  TravelAvailability,
+  UmpireModality,
+  UmpireCategory,
+} from "../enums";
 import { Club } from "./club";
 
 // Tipos relacionados con User
@@ -37,9 +45,19 @@ export interface TrajectoryItem {
   club?: Club;
 }
 
+export interface UmpireCertification {
+  id?: string;
+  name: string;
+  issuer: string;
+  issuedAt?: string | null;
+  fileUrl?: string | null;
+  order?: number;
+}
+
 export interface User {
   id: string;
-  email: string;
+  /** Null for third parties: only the owner and SUPERADMIN receive it. */
+  email: string | null;
   name: string;
   username: string;
   role: Role;
@@ -57,6 +75,20 @@ export interface User {
   yearsOfExperience?: number;
   cvUrl?: string;
   multimedia?: string[];
+  isVerified?: boolean;
+
+  // Umpire-only (backend rejects these on non-UMPIRE users)
+  licenseLevel?: UmpireLicenseLevel | null;
+  certifyingBody?: string | null;
+  /** Visible only to the umpire and SUPERADMIN. */
+  licenseNumber?: string | null;
+  certificationYear?: number | null;
+  matchesOfficiated?: number | null;
+  travelAvailability?: TravelAvailability | null;
+  languages?: string[];
+  modalities?: UmpireModality[];
+  umpireCategories?: UmpireCategory[];
+  umpireCertifications?: UmpireCertification[];
 
   // Relations
   clubId?: string;
@@ -91,6 +123,11 @@ export type ExploreUser = Pick<
   | "avatar"
   | "bio"
   | "level"
+  | "licenseLevel"
+  | "travelAvailability"
+  | "modalities"
+  | "umpireCategories"
+  | "matchesOfficiated"
 > & {
   isVerified?: boolean;
   club?: { id: string; name: string; logo?: string };
@@ -118,6 +155,17 @@ export interface UpdateUserVariables {
   city?: string;
   yearsOfExperience?: number;
   trajectories?: TrajectoryItem[];
+  // Umpire-only: omit these keys entirely for other roles (backend answers 400 otherwise)
+  licenseLevel?: UmpireLicenseLevel;
+  certifyingBody?: string;
+  licenseNumber?: string;
+  certificationYear?: number;
+  matchesOfficiated?: number;
+  travelAvailability?: TravelAvailability;
+  languages?: string[];
+  modalities?: UmpireModality[];
+  umpireCategories?: UmpireCategory[];
+  umpireCertifications?: UmpireCertification[];
 }
 
 export interface UploadCvVariables {
