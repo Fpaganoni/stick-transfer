@@ -20,6 +20,14 @@ const ROLE_IMAGES: Record<string, string> = {
 };
 const BULLETS = ["bullet1", "bullet2", "bullet3"];
 
+// Register role card each tab leads to
+const REGISTER_ROLE: Record<string, string> = {
+  players: "player",
+  coaches: "coach",
+  clubs: "clubAdmin",
+  umpires: "umpire",
+};
+
 export function RoleTabsSection() {
   const t = useTranslations("landing.roleTabs");
   const { openRegisterModal } = useUIStore();
@@ -127,7 +135,7 @@ export function RoleTabsSection() {
                   <Button
                     size="lg"
                     className="text-white"
-                    onClick={openRegisterModal}
+                    onClick={() => openRegisterModal(REGISTER_ROLE[role])}
                   >
                     {t("cta")}
                   </Button>

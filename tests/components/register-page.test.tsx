@@ -5,7 +5,8 @@ import userEvent from "@testing-library/user-event";
 import { RegisterPage } from "@/components/pages/register-page";
 import { renderWithProviders } from "../test-utils";
 
-const { mockRegister, mockPush, mockLogin, mockRequest } = vi.hoisted(() => ({
+const { mockRegister, mockPush, mockLogin, mockRequest, uiState } = vi.hoisted(() => ({
+  uiState: { registerInitialRole: null as string | null },
   mockRegister: vi.fn(),
   mockPush: vi.fn(),
   mockLogin: vi.fn(),
@@ -35,6 +36,7 @@ vi.mock("@/stores/useUIStore", () => ({
     openLoginModal: vi.fn(),
     openRegisterModal: vi.fn(),
     closeRegisterModal: vi.fn(),
+    registerInitialRole: uiState.registerInitialRole,
   }),
 }));
 
@@ -86,6 +88,7 @@ describe("RegisterPage", () => {
     mockPush.mockReset();
     mockLogin.mockReset();
     mockRequest.mockReset();
+    uiState.registerInitialRole = null;
   });
 
   it("step 1 renders the role cards including umpire", () => {
@@ -193,5 +196,64 @@ describe("RegisterPage", () => {
       expect(variables).not.toHaveProperty("city");
       await waitFor(() => expect(mockPush).toHaveBeenCalledWith("/en/opportunities"));
     });
+  });
+});
+
+describe("RegisterPage with a preselected role", () => {
+  beforeEach(() => {
+    mockRegister.mockReset();
+    uiState.registerInitialRole = null;
+  });
+
+  it("starts on step 1 when no role was preselected", () => {
+    renderWithProviders(<RegisterPage />);
+
+    expect(screen.getByTestId("role-card-umpire")).toBeDefined();
+  });
+
+  it("skips the role picker and goes straight to the basic data step", () => {
+    uiState.registerInitialRole = "umpire";
+    renderWithProviders(<RegisterPage />);
+
+    expect(screen.queryByTestId("role-card-umpire")).toBeNull();
+    expect(screen.getByLabelText("firstName")).toBeDefined();
+  });
+
+  it("goes on to the umpire step 3 and registers with role UMPIRE", async () => {
+    uiState.registerInitialRole = "umpire";
+    const user = userEvent.setup();
+    renderWithProviders(<RegisterPage />);
+
+    await user.type(screen.getByLabelText("firstName"), "Ana");
+    await user.type(screen.getByLabelText("lastName"), "Referee");
+    await user.type(screen.getByLabelText("username"), "ana_ref");
+    await user.type(screen.getByLabelText("email"), "ana@x.com");
+    await user.type(screen.getByLabelText("password"), "Password1!");
+    await user.type(screen.getByLabelText("confirmPassword"), "Password1!");
+    await user.selectOptions(screen.getByLabelText("country"), "Spain");
+    await user.click(screen.getByLabelText("termsAndConditions"));
+    await user.click(screen.getByText("next"));
+    await user.type(await screen.findByLabelText("city"), "Madrid");
+    await user.click(screen.getByText("createProfile"));
+
+    await waitFor(() => expect(mockRegister).toHaveBeenCalledTimes(1));
+    expect(mockRegister.mock.calls[0][0]).toMatchObject({ role: "UMPIRE", city: "Madrid" });
+  });
+
+  it("lets the visitor go back and pick another role", async () => {
+    uiState.registerInitialRole = "umpire";
+    const user = userEvent.setup();
+    renderWithProviders(<RegisterPage />);
+
+    await user.click(screen.getByText("back"));
+
+    expect(screen.getByTestId("role-card-player")).toBeDefined();
+  });
+
+  it("ignores a preselected role that is not one of the cards", () => {
+    uiState.registerInitialRole = "scout";
+    renderWithProviders(<RegisterPage />);
+
+    expect(screen.getByTestId("role-card-umpire")).toBeDefined();
   });
 });

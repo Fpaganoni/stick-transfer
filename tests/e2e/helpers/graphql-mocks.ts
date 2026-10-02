@@ -68,7 +68,21 @@ export const MOCK_OPPORTUNITIES = [
  *   3. Do NOT let unhandled requests fall through to route.continue() — that hits
  *      the real backend, which is not running in E2E, causing ECONNREFUSED.
  */
-export async function setupGraphQLMocks(page: Page): Promise<void> {
+export interface GraphQLMockOverrides {
+  /** Replaces the `me` payload (e.g. to log in as an umpire). */
+  me?: Record<string, unknown>;
+  /** Replaces the opportunities list. */
+  jobOpportunities?: unknown[];
+  /** Rows returned by `exploreUsers`, regardless of the filters sent. */
+  exploreUsers?: unknown[];
+  /** Payload returned by `getUserByUsername`. */
+  getUserByUsername?: Record<string, unknown>;
+}
+
+export async function setupGraphQLMocks(
+  page: Page,
+  overrides: GraphQLMockOverrides = {},
+): Promise<void> {
   await page.route("**/graphql", (route) => {
     let body: { query?: string } | null = null;
     try {
@@ -89,13 +103,33 @@ export async function setupGraphQLMocks(page: Page): Promise<void> {
       });
     }
 
+    // ── Overrides used by the umpire flows ───────────────────────────────────
+    // Checked before `me`: their documents also contain "me {" style fragments.
+    if (overrides.exploreUsers && q.includes("exploreUsers")) {
+      return route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({ data: { exploreUsers: overrides.exploreUsers } }),
+      });
+    }
+
+    if (overrides.getUserByUsername && q.includes("getUserByUsername")) {
+      return route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({
+          data: { getUserByUsername: overrides.getUserByUsername },
+        }),
+      });
+    }
+
     // `me` — resolved server-side from the JWT, used right after
     // login/register/oauth and for the own-profile page.
     if (q.includes("query Me") || q.includes("me {") || q.includes("me{")) {
       return route.fulfill({
         status: 200,
         contentType: "application/json",
-        body: JSON.stringify({ data: { me: MOCK_USER } }),
+        body: JSON.stringify({ data: { me: overrides.me ?? MOCK_USER } }),
       });
     }
 
@@ -113,7 +147,9 @@ export async function setupGraphQLMocks(page: Page): Promise<void> {
       return route.fulfill({
         status: 200,
         contentType: "application/json",
-        body: JSON.stringify({ data: { jobOpportunities: MOCK_OPPORTUNITIES } }),
+        body: JSON.stringify({
+          data: { jobOpportunities: overrides.jobOpportunities ?? MOCK_OPPORTUNITIES },
+        }),
       });
     }
 
@@ -175,3 +211,110 @@ export async function setupGraphQLMocks(page: Page): Promise<void> {
     });
   });
 }
+
+// ── Umpire fixtures ─────────────────────────────────────────────────────────
+
+/** Logged-in umpire as returned by `me` (own data, licence number included). */
+export const MOCK_UMPIRE_ME = {
+  ...MOCK_USER,
+  id: "umpire-me-1",
+  email: "ref@sticktransfer.com",
+  name: "Ana Referee",
+  username: "ana_ref",
+  position: null,
+  role: "UMPIRE",
+  isVerified: false,
+  yearsOfExperience: null,
+  licenseLevel: null,
+  certifyingBody: null,
+  licenseNumber: null,
+  certificationYear: null,
+  matchesOfficiated: null,
+  travelAvailability: null,
+  languages: [],
+  modalities: [],
+  umpireCategories: [],
+  umpireCertifications: [],
+  trajectories: [],
+  multimedia: [],
+};
+
+/** Logged-in player: can browse but must not be offered umpire applications. */
+export const MOCK_PLAYER_ME = { ...MOCK_USER, role: "PLAYER" };
+
+/** Public umpire profile as a third party sees it (licence number hidden). */
+export const MOCK_PUBLIC_UMPIRE = {
+  id: "umpire-1",
+  name: "Javier García",
+  username: "umpire_garcia",
+  email: null,
+  avatar: null,
+  coverImage: null,
+  coverImagePosition: "50%",
+  bio: "Fair play first",
+  role: "UMPIRE",
+  position: null,
+  country: "ES",
+  city: "Madrid",
+  cvUrl: null,
+  multimedia: [],
+  isVerified: true,
+  yearsOfExperience: 14,
+  licenseLevel: "INTERNACIONAL",
+  certifyingBody: "Real Federación Española de Hockey",
+  licenseNumber: null,
+  certificationYear: 2012,
+  matchesOfficiated: 640,
+  travelAvailability: "REGIONAL",
+  languages: ["Español", "English"],
+  modalities: ["CESPED", "SALA"],
+  umpireCategories: ["MAYORES", "FEMENINO"],
+  umpireCertifications: [
+    {
+      id: "c1",
+      name: "Licencia de umpire internacional",
+      issuer: "Real Federación Española de Hockey",
+      issuedAt: "2012-05-31T22:00:00.000Z",
+      fileUrl: null,
+      order: 0,
+    },
+  ],
+  trajectories: [],
+  followers: [],
+  following: [],
+};
+
+export const MOCK_EXPLORE_UMPIRES = [
+  {
+    id: "umpire-1",
+    name: "Javier García",
+    username: "umpire_garcia",
+    avatar: null,
+    role: "UMPIRE",
+    position: null,
+    level: null,
+    country: "ES",
+    city: "Madrid",
+    bio: "Fair play first",
+    isVerified: true,
+    cvUrl: null,
+    licenseLevel: "INTERNACIONAL",
+    travelAvailability: "REGIONAL",
+    modalities: ["CESPED"],
+    umpireCategories: ["MAYORES"],
+    matchesOfficiated: 640,
+    club: null,
+  },
+];
+
+export const MOCK_UMPIRE_OPPORTUNITY = {
+  ...MOCK_OPPORTUNITIES[0],
+  id: "opp-umpire-1",
+  title: "Umpire - Division de Honor",
+  positionType: "UMPIRE",
+  licenseLevelRequired: "NACIONAL",
+  modality: "CESPED",
+  umpireCategory: "MASCULINO",
+  matchDate: "2026-11-15T10:00:00.000Z",
+  status: "open",
+};

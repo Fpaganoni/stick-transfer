@@ -751,11 +751,14 @@ export const RegisterPage = () => {
   const locale = useLocale();
   const router = useRouter();
   const { login } = useAuthStore();
-  const { openLoginModal, closeRegisterModal } = useUIStore();
+  const { openLoginModal, closeRegisterModal, registerInitialRole } = useUIStore();
   const { mutate: registerUser, isPending: isRegistering } = useUserRegister();
 
-  const [step, setStep] = useState(1);
-  const [selectedRole, setSelectedRole] = useState<RoleCardId | null>(null);
+  // A landing CTA may already have chosen the role: skip the role picker
+  const initialRole =
+    ROLE_CARDS.find((card) => card.id === registerInitialRole)?.id ?? null;
+  const [step, setStep] = useState(initialRole ? 2 : 1);
+  const [selectedRole, setSelectedRole] = useState<RoleCardId | null>(initialRole);
   const [roleError, setRoleError] = useState(false);
   const [error, setError] = useState("");
 
