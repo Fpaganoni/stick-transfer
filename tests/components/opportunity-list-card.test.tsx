@@ -132,3 +132,56 @@ describe("OpportunityListCard", () => {
     expect(screen.getByText(/published/i)).toBeInTheDocument();
   });
 });
+
+describe("OpportunityListCard umpire opportunities", () => {
+  const umpireJob: JobOpportunity = {
+    ...baseOpportunity,
+    title: "Umpire - Division de Honor",
+    positionType: "UMPIRE",
+    licenseLevelRequired: "NACIONAL" as never,
+    modality: "CESPED" as never,
+    umpireCategory: "MASCULINO" as never,
+    matchDate: "2026-11-15T10:00:00Z",
+  };
+
+  it("shows the position type as a translated label", () => {
+    render(<OpportunityListCard {...umpireJob} />);
+    expect(screen.getByText(/positionTypes\.UMPIRE/)).toBeInTheDocument();
+  });
+
+  it("shows the licence, modality and category it requires", () => {
+    render(<OpportunityListCard {...umpireJob} />);
+    expect(screen.getByText("licenseLevels.NACIONAL")).toBeInTheDocument();
+    expect(screen.getByText("modalities.CESPED")).toBeInTheDocument();
+    expect(screen.getByText("categories.MASCULINO")).toBeInTheDocument();
+  });
+
+  it("shows the match date", () => {
+    render(<OpportunityListCard {...umpireJob} />);
+    expect(screen.getByText(/2026/, { selector: "[data-testid='match-date']" })).toBeInTheDocument();
+  });
+
+  it("shows nothing extra for an umpire job with no requirements", () => {
+    const { container } = render(
+      <OpportunityListCard
+        {...umpireJob}
+        licenseLevelRequired={null}
+        modality={null}
+        umpireCategory={null}
+        matchDate={null}
+      />,
+    );
+    expect(screen.queryByTestId("umpire-job-details")).not.toBeInTheDocument();
+    expect(container.textContent).not.toMatch(/null|undefined/);
+  });
+
+  it("does not show umpire details on other opportunities", () => {
+    render(<OpportunityListCard {...baseOpportunity} />);
+    expect(screen.queryByTestId("umpire-job-details")).not.toBeInTheDocument();
+  });
+
+  it("keeps showing legacy free-text position types untouched", () => {
+    render(<OpportunityListCard {...baseOpportunity} />);
+    expect(screen.getByText(/Full-Time/)).toBeInTheDocument();
+  });
+});

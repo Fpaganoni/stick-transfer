@@ -27,6 +27,8 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { formatRelativeTime } from "@/lib/date-utils";
+import { getPositionTypeLabel, isUmpireJob } from "@/lib/job-position-type";
+import { UmpireJobDetails } from "./umpire-job-details";
 
 type OpportunityDetailModalProps = Pick<
   JobOpportunity,
@@ -43,6 +45,10 @@ type OpportunityDetailModalProps = Pick<
   | "createdAt"
   | "level"
   | "status"
+  | "licenseLevelRequired"
+  | "modality"
+  | "umpireCategory"
+  | "matchDate"
 >;
 
 function getBenefitsArray(benefits: OpportunityDetailModalProps["benefits"]): string[] {
@@ -129,7 +135,7 @@ export function OpportunityDetailModal() {
   const { selectedOpportunity, isModalOpen, closeModal } =
     useOpportunitiesStore();
   const { user } = useAuthStore();
-  const { isClub, isSuperAdmin } = useRole();
+  const { isClub, isSuperAdmin, isUmpire } = useRole();
   const { mutate: applyForJob, isPending } = useApplyForJob();
   const { hasAppliedTo, isLoading: isLoadingApplications } =
     useUserApplications();
@@ -147,6 +153,15 @@ export function OpportunityDetailModal() {
     | "filled";
 
   const benefitsArray = getBenefitsArray(opportunity.benefits);
+
+  // The backend rejects (403) anyone but umpires applying to UMPIRE opportunities.
+  // Visitors still see the (disabled) button so they are prompted to sign in.
+  const isUmpireOpportunity = isUmpireJob(opportunity.positionType);
+  const canApply = isUmpireOpportunity
+    ? isUmpire || !user
+    : !isClub && !isSuperAdmin;
+  const showUmpireOnlyNotice =
+    isUmpireOpportunity && !!user && !isUmpire && !isClub && !isSuperAdmin;
 
   const handleApply = () => {
     if (!user?.id) {
@@ -268,7 +283,7 @@ export function OpportunityDetailModal() {
                   {t("positionType")}
                 </p>
                 <p className="text-sm font-semibold text-foreground">
-                  {opportunity.positionType}
+                  {getPositionTypeLabel(t, opportunity.positionType)}
                 </p>
               </div>
             </div>
@@ -291,6 +306,10 @@ export function OpportunityDetailModal() {
               {opportunity.description}
             </p>
           </div>
+
+          {isUmpireOpportunity && (
+            <UmpireJobDetails opportunity={opportunity} variant="detail" />
+          )}
 
           {/* Benefits */}
           {benefitsArray.length > 0 && (
@@ -320,8 +339,13 @@ export function OpportunityDetailModal() {
             isSaved={isSaved(opportunity.id)}
             onToggleSave={() => toggleSave(opportunity.id)}
             onClose={closeModal}
-            canApply={!isClub && !isSuperAdmin}
+            canApply={canApply}
           />
+          {showUmpireOnlyNotice && (
+            <p className="text-sm text-foreground-muted text-center">
+              {t("umpireJob.onlyUmpires")}
+            </p>
+          )}
         </div>
       </DialogContent>
     </Dialog>

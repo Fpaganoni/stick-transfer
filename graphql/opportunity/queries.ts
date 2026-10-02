@@ -25,6 +25,10 @@ export const GET_JOB_OPPORTUNITIES = gql`
       currency
       benefits
       status
+      licenseLevelRequired
+      modality
+      umpireCategory
+      matchDate
       createdAt
     }
   }

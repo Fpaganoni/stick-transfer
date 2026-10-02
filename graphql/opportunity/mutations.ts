@@ -15,6 +15,10 @@ export const CREATE_JOB_OPPORTUNITY = gql`
     $salary: Float
     $currency: String
     $benefits: [String!]
+    $licenseLevelRequired: UmpireLicenseLevel
+    $modality: UmpireModality
+    $umpireCategory: UmpireCategory
+    $matchDate: String
   ) {
     createJobOpportunity(
       title: $title
@@ -26,6 +30,10 @@ export const CREATE_JOB_OPPORTUNITY = gql`
       salary: $salary
       currency: $currency
       benefits: $benefits
+      licenseLevelRequired: $licenseLevelRequired
+      modality: $modality
+      umpireCategory: $umpireCategory
+      matchDate: $matchDate
     ) {
       id
       title
@@ -38,6 +46,10 @@ export const CREATE_JOB_OPPORTUNITY = gql`
       currency
       benefits
       status
+      licenseLevelRequired
+      modality
+      umpireCategory
+      matchDate
       createdAt
       club {
         id

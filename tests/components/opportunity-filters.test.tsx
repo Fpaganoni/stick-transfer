@@ -93,3 +93,111 @@ describe("OpportunityFilters", () => {
     expect(buttons.length).toBe(2);
   });
 });
+
+describe("OpportunityFilters position types and umpire filters", () => {
+  beforeEach(resetStore);
+
+  async function openPositionType() {
+    const comboboxes = screen.getAllByRole("combobox");
+    fireEvent.click(comboboxes[3]);
+  }
+
+  it("offers exactly the position types the backend accepts", async () => {
+    render(<OpportunityFilters {...defaultProps} />);
+    await openPositionType();
+
+    for (const type of ["PLAYER", "COACH", "STAFF", "UMPIRE", "OTHER"]) {
+      expect(await screen.findByRole("option", { name: `positionTypes.${type}` })).toBeInTheDocument();
+    }
+    // Old free-text values would be rejected with a 400 by the backend
+    expect(screen.queryByRole("option", { name: "Goalkeeper" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("option", { name: "Umpire" })).not.toBeInTheDocument();
+  });
+
+  it("stores the enum value, not the label", async () => {
+    render(<OpportunityFilters {...defaultProps} />);
+    await openPositionType();
+    fireEvent.click(await screen.findByRole("option", { name: "positionTypes.COACH" }));
+
+    expect(useOpportunitiesStore.getState().filters.positionType).toBe("COACH");
+  });
+
+  it("hides the umpire filters for other position types", () => {
+    render(<OpportunityFilters {...defaultProps} />);
+
+    expect(screen.getAllByRole("combobox")).toHaveLength(4);
+  });
+
+  it("shows licence, modality and category filters when UMPIRE is selected", async () => {
+    render(<OpportunityFilters {...defaultProps} />);
+    await openPositionType();
+    fireEvent.click(await screen.findByRole("option", { name: "positionTypes.UMPIRE" }));
+
+    expect(useOpportunitiesStore.getState().filters.positionType).toBe("UMPIRE");
+    expect(screen.getAllByRole("combobox")).toHaveLength(7);
+    expect(screen.getByLabelText("umpireJob.licenseLevel")).toBeInTheDocument();
+    expect(screen.getByLabelText("umpireJob.modality")).toBeInTheDocument();
+    expect(screen.getByLabelText("umpireJob.category")).toBeInTheDocument();
+  });
+
+  it("stores the umpire filters as backend enum values", async () => {
+    act(() => {
+      useOpportunitiesStore.getState().setFilters({ positionType: "UMPIRE" });
+    });
+    render(<OpportunityFilters {...defaultProps} />);
+
+    fireEvent.click(screen.getByLabelText("umpireJob.licenseLevel"));
+    fireEvent.click(await screen.findByRole("option", { name: "licenseLevels.NACIONAL" }));
+    fireEvent.click(screen.getByLabelText("umpireJob.modality"));
+    fireEvent.click(await screen.findByRole("option", { name: "modalities.SALA" }));
+    fireEvent.click(screen.getByLabelText("umpireJob.category"));
+    fireEvent.click(await screen.findByRole("option", { name: "categories.FEMENINO" }));
+
+    expect(useOpportunitiesStore.getState().filters).toMatchObject({
+      licenseLevelRequired: "NACIONAL",
+      modality: "SALA",
+      umpireCategory: "FEMENINO",
+    });
+  });
+
+  it("clears the umpire filters when switching away from UMPIRE", async () => {
+    act(() => {
+      useOpportunitiesStore.getState().setFilters({
+        positionType: "UMPIRE",
+        licenseLevelRequired: "NACIONAL",
+        modality: "SALA",
+        umpireCategory: "FEMENINO",
+      });
+    });
+    render(<OpportunityFilters {...defaultProps} />);
+
+    fireEvent.click(screen.getByLabelText("positionFilter"));
+    fireEvent.click(await screen.findByRole("option", { name: "positionTypes.PLAYER" }));
+
+    expect(useOpportunitiesStore.getState().filters).toMatchObject({
+      positionType: "PLAYER",
+      licenseLevelRequired: null,
+      modality: null,
+      umpireCategory: null,
+    });
+    expect(screen.getAllByRole("combobox")).toHaveLength(4);
+  });
+
+  it("clears the umpire filters when position type goes back to all", async () => {
+    act(() => {
+      useOpportunitiesStore.getState().setFilters({
+        positionType: "UMPIRE",
+        modality: "CESPED",
+      });
+    });
+    render(<OpportunityFilters {...defaultProps} />);
+
+    fireEvent.click(screen.getByLabelText("positionFilter"));
+    fireEvent.click(await screen.findByRole("option", { name: "All Positions" }));
+
+    expect(useOpportunitiesStore.getState().filters).toMatchObject({
+      positionType: null,
+      modality: null,
+    });
+  });
+});

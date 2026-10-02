@@ -1,4 +1,9 @@
 import { Club } from "./club";
+import {
+  UmpireLicenseLevel,
+  UmpireModality,
+  UmpireCategory,
+} from "../enums";
 
 export interface JobOpportunity {
   id: string;
@@ -12,6 +17,12 @@ export interface JobOpportunity {
   currency: string;
   benefits: string[];
   status: "open" | "closed" | "filled";
+
+  // Only set when positionType is UMPIRE
+  licenseLevelRequired?: UmpireLicenseLevel | null;
+  modality?: UmpireModality | null;
+  umpireCategory?: UmpireCategory | null;
+  matchDate?: string | null;
 
   // Relations
   club: Club;
@@ -59,4 +70,9 @@ export interface CreateJobOpportunityVariables {
   salary?: number;
   currency?: string;
   benefits?: string[];
+  // UMPIRE only: the backend answers 400 if these are sent for any other positionType
+  licenseLevelRequired?: UmpireLicenseLevel;
+  modality?: UmpireModality;
+  umpireCategory?: UmpireCategory;
+  matchDate?: string;
 }

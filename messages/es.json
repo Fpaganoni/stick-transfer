@@ -654,6 +654,23 @@
     "startConversation": "Iniciar una nueva conversación"
   },
   "opportunities": {
+    "positionTypes": {
+      "PLAYER": "Jugador",
+      "COACH": "Entrenador",
+      "STAFF": "Cuerpo técnico",
+      "UMPIRE": "Árbitro",
+      "OTHER": "Otro"
+    },
+    "umpireJob": {
+      "title": "Requisitos para árbitros",
+      "licenseLevel": "Licencia requerida",
+      "modality": "Modalidad",
+      "category": "Categoría",
+      "matchDate": "Fecha del partido",
+      "any": "Cualquiera",
+      "createHint": "Opcional. Ayuda a los árbitros a ver si encajan antes de postularse.",
+      "onlyUmpires": "Solo los árbitros pueden postularse a esta oportunidad."
+    },
     "availablePositions": "Posiciones Disponibles",
     "filters": {
       "experience": "Experiencia",

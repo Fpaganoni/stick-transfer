@@ -654,6 +654,23 @@
     "startConversation": "Start a new conversation"
   },
   "opportunities": {
+    "positionTypes": {
+      "PLAYER": "Player",
+      "COACH": "Coach",
+      "STAFF": "Staff",
+      "UMPIRE": "Umpire",
+      "OTHER": "Other"
+    },
+    "umpireJob": {
+      "title": "Umpire requirements",
+      "licenseLevel": "Required licence",
+      "modality": "Modality",
+      "category": "Category",
+      "matchDate": "Match date",
+      "any": "Any",
+      "createHint": "Optional. Help umpires check they fit before applying.",
+      "onlyUmpires": "Only umpires can apply to this opportunity."
+    },
     "availablePositions": "Available Positions",
     "filters": {
       "experience": "Experience",

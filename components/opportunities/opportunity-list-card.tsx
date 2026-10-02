@@ -12,6 +12,8 @@ import { useUserApplications } from "@/hooks/useJobApplications";
 import { useSavedJobsStore } from "@/stores/useSavedJobsStore";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useUIStore } from "@/stores/useUIStore";
+import { getPositionTypeLabel, isUmpireJob } from "@/lib/job-position-type";
+import { UmpireJobDetails } from "./umpire-job-details";
 
 type OpportunityListCardProps = JobOpportunity;
 
@@ -101,7 +103,7 @@ export function OpportunityListCard(opportunity: OpportunityListCardProps) {
               <span className="text-xs text-foreground-muted">{country}</span>
               {positionType && (
                 <span className="text-xs text-foreground-muted">
-                  · {positionType}
+                  · {getPositionTypeLabel(t, positionType)}
                 </span>
               )}
               {level && (
@@ -127,6 +129,8 @@ export function OpportunityListCard(opportunity: OpportunityListCardProps) {
               )}
             </div>
           </div>
+
+          {isUmpireJob(positionType) && <UmpireJobDetails opportunity={opportunity} />}
 
           {/* Footer */}
           <div className="flex items-center justify-between mt-3">

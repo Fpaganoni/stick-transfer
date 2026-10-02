@@ -10,6 +10,7 @@ import { useSavedJobsStore } from "@/stores/useSavedJobsStore";
 import { useJobOpportunities } from "@/hooks/useJobOpportunities";
 import { Badge } from "@/components/ui/badge";
 import { formatRelativeTime } from "@/lib/date-utils";
+import { getPositionTypeLabel } from "@/lib/job-position-type";
 import {
   Empty,
   EmptyHeader,
@@ -139,7 +140,7 @@ export function UserSavedJobs() {
                       </div>
                       {positionType && (
                         <span className="text-xs text-foreground-muted">
-                          · {positionType}
+                          · {getPositionTypeLabel(tOpp, positionType)}
                         </span>
                       )}
                       {level && (

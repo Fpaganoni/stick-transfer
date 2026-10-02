@@ -10,6 +10,10 @@ interface OpportunitiesStore {
     status: string | null;
     country: string | null;
     positionType: string | null;
+    // Umpire-only filters; meaningful when positionType is UMPIRE
+    licenseLevelRequired?: string | null;
+    modality?: string | null;
+    umpireCategory?: string | null;
   };
 
   setSelectedOpportunity: (opportunity: JobOpportunity | null) => void;
@@ -29,6 +33,9 @@ export const useOpportunitiesStore = create<OpportunitiesStore>((set) => ({
     status: null,
     country: null,
     positionType: null,
+    licenseLevelRequired: null,
+    modality: null,
+    umpireCategory: null,
   },
 
   setSelectedOpportunity: (opportunity) =>
@@ -47,6 +54,9 @@ export const useOpportunitiesStore = create<OpportunitiesStore>((set) => ({
         status: null,
         country: null,
         positionType: null,
+        licenseLevelRequired: null,
+        modality: null,
+        umpireCategory: null,
       },
     }),
   closeModal: () => set({ isModalOpen: false, selectedOpportunity: null }),

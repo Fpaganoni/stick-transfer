@@ -101,9 +101,20 @@ export function JobOpportunities({ initialData }: JobOpportunitiesProps) {
         return false;
       if (
         filters.positionType &&
-        !opportunity.positionType
-          .toLowerCase()
-          .includes(filters.positionType.toLowerCase())
+        opportunity.positionType.toLowerCase() !==
+          filters.positionType.toLowerCase()
+      )
+        return false;
+      if (
+        filters.licenseLevelRequired &&
+        opportunity.licenseLevelRequired !== filters.licenseLevelRequired
+      )
+        return false;
+      if (filters.modality && opportunity.modality !== filters.modality)
+        return false;
+      if (
+        filters.umpireCategory &&
+        opportunity.umpireCategory !== filters.umpireCategory
       )
         return false;
       return true;

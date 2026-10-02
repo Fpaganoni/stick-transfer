@@ -1,14 +1,22 @@
 "use client";
 
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
+import type { Control } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { useCreateJobOpportunity } from "@/hooks/useJobOpportunities";
-import { Level } from "@/types/enums";
+import {
+  Level,
+  UmpireLicenseLevel,
+  UmpireModality,
+  UmpireCategory,
+} from "@/types/enums";
+import { POSITION_TYPES, isUmpireJob } from "@/lib/job-position-type";
+import type { CreateJobOpportunityVariables } from "@/types/models/job-opportunity";
 import {
   Form,
   FormControl,
@@ -35,16 +43,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-const POSITION_TYPES = [
-  "Goalkeeper",
-  "Defender",
-  "Midfielder",
-  "Attacker",
-  "Coach",
-  "Umpire",
-  "Other",
-];
-
 const ACTIVE_LIMIT_ERROR_HINT = "limit";
 
 const createOpportunitySchema = (t: (key: string) => string) =>
@@ -62,6 +60,11 @@ const createOpportunitySchema = (t: (key: string) => string) =>
     salary: z.coerce.number().min(0).optional(),
     currency: z.string().optional(),
     benefits: z.string().optional(),
+    // UMPIRE only; "" means not set
+    licenseLevelRequired: z.string().optional(),
+    modality: z.string().optional(),
+    umpireCategory: z.string().optional(),
+    matchDate: z.string().optional(),
   });
 
 type OpportunityFormValues = z.infer<ReturnType<typeof createOpportunitySchema>>;
@@ -69,6 +72,7 @@ type OpportunityFormValues = z.infer<ReturnType<typeof createOpportunitySchema>>
 export function CreateOpportunityForm() {
   const router = useRouter();
   const t = useTranslations("opportunities");
+  const tUmpire = useTranslations("umpire");
   const tCommon = useTranslations("common");
   const { mutateAsync: createJobOpportunity } = useCreateJobOpportunity();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -85,8 +89,15 @@ export function CreateOpportunityForm() {
       city: "",
       currency: "USD",
       benefits: "",
+      licenseLevelRequired: "",
+      modality: "",
+      umpireCategory: "",
+      matchDate: "",
     },
   });
+  const isUmpire = isUmpireJob(
+    useWatch({ control: form.control, name: "positionType" }),
+  );
 
   async function onSubmit(data: OpportunityFormValues) {
     setIsSubmitting(true);
@@ -94,6 +105,20 @@ export function CreateOpportunityForm() {
       const benefits = data.benefits
         ? data.benefits.split(",").map((b) => b.trim()).filter(Boolean)
         : [];
+
+      // Only for UMPIRE jobs, and only what was filled in: the backend
+      // answers 400 if these arrive on any other position type.
+      const umpireFields: Partial<CreateJobOpportunityVariables> = {};
+      if (isUmpireJob(data.positionType)) {
+        if (data.licenseLevelRequired)
+          umpireFields.licenseLevelRequired =
+            data.licenseLevelRequired as UmpireLicenseLevel;
+        if (data.modality) umpireFields.modality = data.modality as UmpireModality;
+        if (data.umpireCategory)
+          umpireFields.umpireCategory = data.umpireCategory as UmpireCategory;
+        if (data.matchDate)
+          umpireFields.matchDate = new Date(data.matchDate).toISOString();
+      }
 
       await createJobOpportunity({
         title: data.title,
@@ -105,6 +130,7 @@ export function CreateOpportunityForm() {
         salary: data.salary,
         currency: data.currency,
         benefits,
+        ...umpireFields,
       });
 
       toast.success(t("create.successTitle"), {
@@ -187,7 +213,7 @@ export function CreateOpportunityForm() {
                       <SelectContent>
                         {POSITION_TYPES.map((pos) => (
                           <SelectItem key={pos} value={pos}>
-                            {pos}
+                            {t(`positionTypes.${pos}`)}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -278,6 +304,65 @@ export function CreateOpportunityForm() {
               />
             </div>
 
+            {isUmpire && (
+              <div className="space-y-4 rounded-md border border-input p-4">
+                <div>
+                  <h3 className="text-sm font-semibold">{t("umpireJob.title")}</h3>
+                  <p className="text-xs text-foreground-muted">
+                    {t("umpireJob.createHint")}
+                  </p>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <UmpireSelectField
+                    control={form.control}
+                    name="licenseLevelRequired"
+                    label={t("umpireJob.licenseLevel")}
+                    anyLabel={t("umpireJob.any")}
+                    triggerClass={triggerClass}
+                    options={Object.values(UmpireLicenseLevel).map((v) => ({
+                      value: v,
+                      label: tUmpire(`licenseLevels.${v}`),
+                    }))}
+                  />
+                  <UmpireSelectField
+                    control={form.control}
+                    name="modality"
+                    label={t("umpireJob.modality")}
+                    anyLabel={t("umpireJob.any")}
+                    triggerClass={triggerClass}
+                    options={Object.values(UmpireModality).map((v) => ({
+                      value: v,
+                      label: tUmpire(`modalities.${v}`),
+                    }))}
+                  />
+                  <UmpireSelectField
+                    control={form.control}
+                    name="umpireCategory"
+                    label={t("umpireJob.category")}
+                    anyLabel={t("umpireJob.any")}
+                    triggerClass={triggerClass}
+                    options={Object.values(UmpireCategory).map((v) => ({
+                      value: v,
+                      label: tUmpire(`categories.${v}`),
+                    }))}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="matchDate"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{t("umpireJob.matchDate")}</FormLabel>
+                        <FormControl>
+                          <Input type="datetime-local" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
+            )}
+
             <FormField
               control={form.control}
               name="benefits"
@@ -309,5 +394,55 @@ export function CreateOpportunityForm() {
         </div>
       </form>
     </Form>
+  );
+}
+
+interface UmpireSelectFieldProps {
+  control: Control<OpportunityFormValues>;
+  name: "licenseLevelRequired" | "modality" | "umpireCategory";
+  label: string;
+  anyLabel: string;
+  triggerClass: string;
+  options: { value: string; label: string }[];
+}
+
+/** Optional enum select; "any" clears it so nothing is sent for that field. */
+function UmpireSelectField({
+  control,
+  name,
+  label,
+  anyLabel,
+  triggerClass,
+  options,
+}: UmpireSelectFieldProps) {
+  return (
+    <FormField
+      control={control}
+      name={name}
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>{label}</FormLabel>
+          <Select
+            value={field.value || "ANY"}
+            onValueChange={(v) => field.onChange(v === "ANY" ? "" : v)}
+          >
+            <FormControl>
+              <SelectTrigger className={triggerClass}>
+                <SelectValue />
+              </SelectTrigger>
+            </FormControl>
+            <SelectContent>
+              <SelectItem value="ANY">{anyLabel}</SelectItem>
+              {options.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
   );
 }
