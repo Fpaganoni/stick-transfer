@@ -74,6 +74,7 @@
     "stepRoleTitle": "Choose your role",
     "stepBasicTitle": "Basic Information",
     "stepRoleDataTitle": "Complete your profile",
+    "umpireProfileHint": "Your licence, certifications and match experience are added next, from your profile.",
     "next": "Next",
     "back": "Back",
     "createProfile": "Create Profile",
@@ -123,6 +124,7 @@
       "player": "Player",
       "goalkeeper": "Goalkeeper",
       "coach": "Coach",
+      "umpire": "Umpire",
       "clubAdmin": "Club Admin",
       "scout": "Scout",
       "agent": "Agent",
@@ -132,6 +134,7 @@
       "player": "Field player seeking a club",
       "goalkeeper": "Goalkeeper looking for opportunities",
       "coach": "Coach ready to lead a team",
+      "umpire": "Umpire officiating matches",
       "clubAdmin": "Club managing players and coaches",
       "scout": "Scout identifying top talent",
       "agent": "Agent representing hockey players"

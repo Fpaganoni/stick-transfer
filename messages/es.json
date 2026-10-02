@@ -74,6 +74,7 @@
     "stepRoleTitle": "Elige tu rol",
     "stepBasicTitle": "Información Básica",
     "stepRoleDataTitle": "Completa tu perfil",
+    "umpireProfileHint": "Tu licencia, certificaciones y experiencia se cargan a continuación desde tu perfil.",
     "next": "Siguiente",
     "back": "Volver",
     "createProfile": "Crear Perfil",
@@ -123,6 +124,7 @@
       "player": "Jugador",
       "goalkeeper": "Portero",
       "coach": "Entrenador",
+      "umpire": "Árbitro",
       "clubAdmin": "Admin de Club",
       "scout": "Scout",
       "agent": "Agente",
@@ -132,6 +134,7 @@
       "player": "Jugador de campo buscando club",
       "goalkeeper": "Portero en busca de oportunidades",
       "coach": "Entrenador listo para liderar un equipo",
+      "umpire": "Árbitro que dirige partidos",
       "clubAdmin": "Club que gestiona jugadores y entrenadores",
       "scout": "Scout identificando talento",
       "agent": "Agente representando jugadores de hockey"

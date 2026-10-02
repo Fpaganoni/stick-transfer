@@ -31,7 +31,7 @@ import { useUIStore } from "@/stores/useUIStore";
 // Role card definitions
 // ---------------------------------------------------------------------------
 
-type RoleCardId = "player" | "coach" | "clubAdmin";
+type RoleCardId = "player" | "coach" | "umpire" | "clubAdmin";
 
 interface RoleCard {
   id: RoleCardId;
@@ -42,6 +42,7 @@ interface RoleCard {
 const ROLE_CARDS: RoleCard[] = [
   { id: "player", icon: "🏃", backendRole: "PLAYER" },
   { id: "coach", icon: "📋", backendRole: "COACH" },
+  { id: "umpire", icon: "🏁", backendRole: "UMPIRE" },
   { id: "clubAdmin", icon: "🏟️", backendRole: "CLUB" },
 ];
 
@@ -172,6 +173,7 @@ type Step2Data = {
 
 type Step3PlayerData = { position: string; dateOfBirth?: string };
 type Step3ClubData = { name: string; city: string; country: string };
+type Step3UmpireData = { city: string; dateOfBirth?: string };
 
 // ---------------------------------------------------------------------------
 // Step 1: Role selection
@@ -199,7 +201,7 @@ function Step1RoleSelect({
       <h3 className="text-base font-semibold text-foreground mb-4">
         {t("stepRoleTitle")}
       </h3>
-      <div className="grid grid-cols-3 gap-3 mb-4">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
         {ROLE_CARDS.map((card) => {
           const isSelected = selectedRole === card.id;
           return (
@@ -666,6 +668,77 @@ function Step3PlayerDataForm({
   );
 }
 
+interface Step3UmpireDataProps {
+  t: (key: string) => string;
+  form: UseFormReturn<Step3UmpireData>;
+  isRegistering: boolean;
+  onBack: () => void;
+  onSubmit: SubmitHandler<Step3UmpireData>;
+}
+
+function Step3UmpireDataForm({
+  t,
+  form,
+  isRegistering,
+  onBack,
+  onSubmit,
+}: Step3UmpireDataProps) {
+  return (
+    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
+      <p className="text-xs text-foreground/60">{t("umpireProfileHint")}</p>
+
+      {/* City */}
+      <div>
+        <Label htmlFor="umpireCity" className="mb-1 text-sm">
+          {t("city")}
+        </Label>
+        <Input
+          {...form.register("city")}
+          id="umpireCity"
+          placeholder={t("placeholders.city")}
+          className="h-9 text-sm"
+        />
+        <FieldError message={form.formState.errors.city?.message} />
+      </div>
+
+      {/* Date of birth */}
+      <div>
+        <Label htmlFor="umpireDateOfBirth" className="mb-1 text-sm">
+          {t("dateOfBirth")}
+        </Label>
+        <Input
+          {...form.register("dateOfBirth")}
+          id="umpireDateOfBirth"
+          type="date"
+          className="h-9 text-sm"
+        />
+        <FieldError message={form.formState.errors.dateOfBirth?.message} />
+      </div>
+
+      <div className="flex gap-2 pt-2">
+        <motion.button
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.97 }}
+          type="button"
+          onClick={onBack}
+          className="h-9 px-4 border border-border rounded-lg text-sm font-medium hover:bg-border/30 transition-colors cursor-pointer flex items-center gap-1"
+        >
+          <ChevronLeft size={16} /> {t("back")}
+        </motion.button>
+        <motion.button
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.97 }}
+          type="submit"
+          disabled={isRegistering}
+          className="flex-1 h-9 bg-primary text-white font-semibold rounded-lg hover:bg-primary-hover transition-colors cursor-pointer disabled:opacity-50 text-sm"
+        >
+          {isRegistering ? t("creatingProfile") : t("createProfile")}
+        </motion.button>
+      </div>
+    </form>
+  );
+}
+
 // ---------------------------------------------------------------------------
 // Main component
 // ---------------------------------------------------------------------------
@@ -687,6 +760,7 @@ export const RegisterPage = () => {
   const [error, setError] = useState("");
 
   const isClub = selectedRole === "clubAdmin";
+  const isUmpire = selectedRole === "umpire";
 
   // Step 2 schema
   const step2Schema = z
@@ -739,11 +813,19 @@ export const RegisterPage = () => {
     country: z.string().min(1, tValidation("countryRequired")),
   });
 
+  const step3UmpireSchema = z.object({
+    city: z.string().min(1, tValidation("cityRequired")),
+    dateOfBirth: z.string().optional(),
+  });
+
   const step3PlayerForm = useForm<Step3PlayerData>({
     resolver: zodResolver(step3PlayerSchema),
   });
   const step3ClubForm = useForm<Step3ClubData>({
     resolver: zodResolver(step3ClubSchema),
+  });
+  const step3UmpireForm = useForm<Step3UmpireData>({
+    resolver: zodResolver(step3UmpireSchema),
   });
 
   const [showPassword, setShowPassword] = useState(false);
@@ -766,7 +848,9 @@ export const RegisterPage = () => {
   const handleBack = () => setStep((s) => s - 1);
 
   // Final submit
-  const submitStep3 = async (step3Data: Step3PlayerData | Step3ClubData) => {
+  const submitStep3 = async (
+    step3Data: Step3PlayerData | Step3ClubData | Step3UmpireData,
+  ) => {
     const step2Data = step2Form.getValues();
     const card = ROLE_CARDS.find((r) => r.id === selectedRole)!;
     const fullName = `${step2Data.firstName} ${step2Data.lastName}`;
@@ -787,7 +871,13 @@ export const RegisterPage = () => {
               managedByLastName: step2Data.lastName,
             }
           : {}),
-        ...(!isClub && "position" in step3Data
+        ...(isUmpire && !("name" in step3Data) && !("position" in step3Data)
+          ? {
+              city: step3Data.city,
+              dateOfBirth: step3Data.dateOfBirth || undefined,
+            }
+          : {}),
+        ...(!isClub && !isUmpire && "position" in step3Data
           ? {
               position: step3Data.position,
               dateOfBirth: step3Data.dateOfBirth,
@@ -812,6 +902,12 @@ export const RegisterPage = () => {
 
           if (isClub && fullUser.clubId) {
             router.push(`/${locale}/clubs/${fullUser.clubId}`);
+            return;
+          }
+
+          // Licence data is loaded after registering (backend takes it via updateUser)
+          if (isUmpire) {
+            router.push(`/${locale}/profile/edit`);
             return;
           }
 
@@ -841,6 +937,7 @@ export const RegisterPage = () => {
 
   const onSubmitStep3Player: SubmitHandler<Step3PlayerData> = submitStep3;
   const onSubmitStep3Club: SubmitHandler<Step3ClubData> = submitStep3;
+  const onSubmitStep3Umpire: SubmitHandler<Step3UmpireData> = submitStep3;
 
   return (
     <div className="rounded-2xl border border-border bg-background p-4 sm:p-6 shadow-xl">
@@ -892,6 +989,14 @@ export const RegisterPage = () => {
               isRegistering={isRegistering}
               onBack={handleBack}
               onSubmit={onSubmitStep3Club}
+            />
+          ) : isUmpire ? (
+            <Step3UmpireDataForm
+              t={t}
+              form={step3UmpireForm}
+              isRegistering={isRegistering}
+              onBack={handleBack}
+              onSubmit={onSubmitStep3Umpire}
             />
           ) : (
             <Step3PlayerDataForm
