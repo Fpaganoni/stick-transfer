@@ -24,6 +24,7 @@ import { CvUploadSection } from "./cv-upload-section";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { TrajectoryFieldArray } from "./trajectory-field-array";
 import { MultimediaFieldArray } from "./multimedia-field-array";
+import { formatTrajectories } from "./profile-form-utils";
 
 // We'll move validation translations inside the component to use the hook
 const createProfileFormSchema = (t: (key: string) => string) =>
@@ -128,32 +129,7 @@ export function PlayerCoachProfileForm() {
     setIsSaving(true);
     try {
       const multimediaUrls = data.multimedia?.map((m) => m.url) || [];
-      const updatedTrajectories = data.trajectories?.map((t) => {
-        let formattedStartDate = undefined;
-        if (t.startDate && t.startDate.trim() !== "") {
-          formattedStartDate = !isNaN(Number(t.startDate))
-            ? new Date(Number(t.startDate)).toISOString()
-            : t.startDate;
-        }
-
-        let formattedEndDate = undefined;
-        if (t.endDate && t.endDate.trim() !== "") {
-          formattedEndDate = !isNaN(Number(t.endDate))
-            ? new Date(Number(t.endDate)).toISOString()
-            : t.endDate;
-        }
-
-        return {
-          id: t.id,
-          title: t.title,
-          organization: t.organization,
-          period: t.period,
-          description: t.description || "",
-          startDate: formattedStartDate,
-          endDate: formattedEndDate,
-          isCurrent: t.isCurrent,
-        };
-      });
+      const updatedTrajectories = formatTrajectories(data.trajectories);
 
       let finalCvUrl = user.cvUrl;
 

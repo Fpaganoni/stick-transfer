@@ -9,6 +9,31 @@
     "edit": "Modifier",
     "search": "Rechercher"
   },
+    "umpire": {
+      "licenseLevels": {
+        "REGIONAL": "Régional",
+        "NACIONAL": "National",
+        "INTERNACIONAL": "International"
+      },
+      "travelAvailability": {
+        "LOCAL": "Local",
+        "REGIONAL": "Régional",
+        "NACIONAL": "National",
+        "INTERNACIONAL": "International"
+      },
+      "modalities": {
+        "CESPED": "Gazon",
+        "SALA": "Salle",
+        "INDOOR": "Indoor"
+      },
+      "categories": {
+        "JUVENIL": "Jeunes",
+        "MAYORES": "Seniors",
+        "MASCULINO": "Hommes",
+        "FEMENINO": "Femmes",
+        "VETERANOS": "Vétérans"
+      }
+    },
   "navigation": {
     "opportunities": "Opportunités",
     "players": "Joueurs/Coaches",
@@ -349,6 +374,48 @@
     "positionNotSet": "Position non définie",
     "noBio": "Pas encore de bio",
     "editForm": {
+      "umpire": {
+        "title": "Informations d'arbitre",
+        "description": "Votre licence, votre expérience et les matchs que vous pouvez arbitrer.",
+        "select": "Sélectionner...",
+        "licenseLevel": "Niveau de licence",
+        "certifyingBody": "Organisme certificateur",
+        "licenseNumber": "Numéro de licence",
+        "licenseNumberHint": "Seuls vous et les administrateurs pouvez voir ce numéro.",
+        "certificationYear": "Année de certification",
+        "matchesOfficiated": "Matchs arbitrés",
+        "travelAvailability": "Disponibilité pour voyager",
+        "languages": "Langues",
+        "languagesHint": "Séparez les langues par des virgules.",
+        "modalities": "Modalités",
+        "categories": "Catégories",
+        "placeholders": {
+          "certifyingBody": "Ex : Fédération Française de Hockey",
+          "languages": "Français, English"
+        },
+        "certifications": {
+          "title": "Certifications",
+          "description": "Licences et formations que vous avez suivies.",
+          "add": "Ajouter une certification",
+          "remove": "Supprimer",
+          "name": "Nom",
+          "issuer": "Organisme émetteur",
+          "issuedAt": "Date d'émission",
+          "fileUrl": "URL du document (facultatif)"
+        },
+        "validation": {
+          "yearRange": "L'année doit être comprise entre 1950 et 2100",
+          "nonNegative": "Doit être un entier, 0 ou plus",
+          "certNameRequired": "Le nom de la certification est obligatoire",
+          "issuerRequired": "L'organisme émetteur est obligatoire"
+        },
+        "verificationWarning": {
+          "title": "Votre vérification sera réinitialisée",
+          "description": "Modifier le niveau de licence, l'organisme certificateur ou le numéro de licence retire votre badge vérifié jusqu'à un nouvel examen par un administrateur. Continuer ?",
+          "confirm": "Enregistrer",
+          "cancel": "Retour"
+        }
+      },
       "removeCv": "Supprimer le CV",
       "removeVideo": "Supprimer la vidéo",
       "removeTrajectory": "Supprimer le parcours",

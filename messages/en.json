@@ -9,6 +9,31 @@
     "edit": "Edit",
     "search": "Search"
   },
+    "umpire": {
+      "licenseLevels": {
+        "REGIONAL": "Regional",
+        "NACIONAL": "National",
+        "INTERNACIONAL": "International"
+      },
+      "travelAvailability": {
+        "LOCAL": "Local",
+        "REGIONAL": "Regional",
+        "NACIONAL": "National",
+        "INTERNACIONAL": "International"
+      },
+      "modalities": {
+        "CESPED": "Turf",
+        "SALA": "Indoor (sala)",
+        "INDOOR": "Indoor"
+      },
+      "categories": {
+        "JUVENIL": "Youth",
+        "MAYORES": "Senior",
+        "MASCULINO": "Men",
+        "FEMENINO": "Women",
+        "VETERANOS": "Veterans"
+      }
+    },
   "navigation": {
     "opportunities": "Opportunities",
     "players": "Players/Coaches",
@@ -349,6 +374,48 @@
     "positionNotSet": "Position not set",
     "noBio": "No bio yet",
     "editForm": {
+      "umpire": {
+        "title": "Umpire Details",
+        "description": "Your licence, experience and the matches you can officiate.",
+        "select": "Select...",
+        "licenseLevel": "Licence level",
+        "certifyingBody": "Certifying body",
+        "licenseNumber": "Licence number",
+        "licenseNumberHint": "Only you and administrators can see this number.",
+        "certificationYear": "Certification year",
+        "matchesOfficiated": "Matches officiated",
+        "travelAvailability": "Travel availability",
+        "languages": "Languages",
+        "languagesHint": "Separate languages with commas.",
+        "modalities": "Modalities",
+        "categories": "Categories",
+        "placeholders": {
+          "certifyingBody": "e.g. National Hockey Confederation",
+          "languages": "English, Spanish"
+        },
+        "certifications": {
+          "title": "Certifications",
+          "description": "Licences and courses you have completed.",
+          "add": "Add certification",
+          "remove": "Remove",
+          "name": "Name",
+          "issuer": "Issuer",
+          "issuedAt": "Issue date",
+          "fileUrl": "Document URL (optional)"
+        },
+        "validation": {
+          "yearRange": "Year must be between 1950 and 2100",
+          "nonNegative": "Must be a whole number, 0 or more",
+          "certNameRequired": "Certification name is required",
+          "issuerRequired": "Issuer is required"
+        },
+        "verificationWarning": {
+          "title": "Your verification will be reset",
+          "description": "Changing your licence level, certifying body or licence number removes your verified badge until an administrator reviews it again. Continue?",
+          "confirm": "Save changes",
+          "cancel": "Go back"
+        }
+      },
       "removeCv": "Remove CV",
       "removeVideo": "Remove video",
       "removeTrajectory": "Remove trajectory",

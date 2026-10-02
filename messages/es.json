@@ -9,6 +9,31 @@
     "edit": "Editar",
     "search": "Buscar"
   },
+    "umpire": {
+      "licenseLevels": {
+        "REGIONAL": "Regional",
+        "NACIONAL": "Nacional",
+        "INTERNACIONAL": "Internacional"
+      },
+      "travelAvailability": {
+        "LOCAL": "Local",
+        "REGIONAL": "Regional",
+        "NACIONAL": "Nacional",
+        "INTERNACIONAL": "Internacional"
+      },
+      "modalities": {
+        "CESPED": "Césped",
+        "SALA": "Sala",
+        "INDOOR": "Indoor"
+      },
+      "categories": {
+        "JUVENIL": "Juvenil",
+        "MAYORES": "Mayores",
+        "MASCULINO": "Masculino",
+        "FEMENINO": "Femenino",
+        "VETERANOS": "Veteranos"
+      }
+    },
   "navigation": {
     "opportunities": "Oportunidades",
     "players": "Jugadores/Coaches",
@@ -349,6 +374,48 @@
     "positionNotSet": "Posición no establecida",
     "noBio": "Sin biografía aún",
     "editForm": {
+      "umpire": {
+        "title": "Datos de árbitro",
+        "description": "Tu licencia, experiencia y los partidos que puedes dirigir.",
+        "select": "Seleccionar...",
+        "licenseLevel": "Nivel de licencia",
+        "certifyingBody": "Ente certificador",
+        "licenseNumber": "Número de licencia",
+        "licenseNumberHint": "Solo tú y los administradores pueden ver este número.",
+        "certificationYear": "Año de certificación",
+        "matchesOfficiated": "Partidos dirigidos",
+        "travelAvailability": "Disponibilidad para viajar",
+        "languages": "Idiomas",
+        "languagesHint": "Separa los idiomas con comas.",
+        "modalities": "Modalidades",
+        "categories": "Categorías",
+        "placeholders": {
+          "certifyingBody": "Ej: Confederación Argentina de Hockey",
+          "languages": "Español, English"
+        },
+        "certifications": {
+          "title": "Certificaciones",
+          "description": "Licencias y cursos que completaste.",
+          "add": "Agregar certificación",
+          "remove": "Quitar",
+          "name": "Nombre",
+          "issuer": "Entidad emisora",
+          "issuedAt": "Fecha de emisión",
+          "fileUrl": "URL del documento (opcional)"
+        },
+        "validation": {
+          "yearRange": "El año debe estar entre 1950 y 2100",
+          "nonNegative": "Debe ser un número entero, 0 o más",
+          "certNameRequired": "El nombre de la certificación es obligatorio",
+          "issuerRequired": "La entidad emisora es obligatoria"
+        },
+        "verificationWarning": {
+          "title": "Tu verificación se reiniciará",
+          "description": "Cambiar el nivel de licencia, el ente certificador o el número de licencia quita tu insignia de verificado hasta que un administrador lo revise de nuevo. ¿Continuar?",
+          "confirm": "Guardar cambios",
+          "cancel": "Volver"
+        }
+      },
       "removeCv": "Quitar CV",
       "removeVideo": "Quitar video",
       "removeTrajectory": "Quitar trayectoria",
