@@ -126,3 +126,52 @@ describe("useAdminChangeUserRole", () => {
     });
   });
 });
+
+describe("useAdminUsers umpires", () => {
+  beforeEach(() => mockRequest.mockReset());
+
+  const umpireRow = {
+    ...mockUserRow,
+    id: "user-3",
+    name: "Javier Garcia",
+    username: "umpire_garcia",
+    email: "garcia@test.com",
+    role: Role.UMPIRE,
+  };
+
+  it("lists only umpires when filtering by the UMPIRE role", async () => {
+    mockRequest.mockResolvedValueOnce({ users: [mockUserRow, otherUserRow, umpireRow] });
+
+    const { result } = renderHook(() => useAdminUsers({ role: Role.UMPIRE }, 1, 20), {
+      wrapper: wrapper(),
+    });
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(result.current.data?.adminUsers.items.map((u) => u.id)).toEqual(["user-3"]);
+    expect(result.current.data?.adminUsers.total).toBe(1);
+  });
+
+  it("combines the UMPIRE role with the verified filter", async () => {
+    mockRequest.mockResolvedValueOnce({
+      users: [umpireRow, { ...umpireRow, id: "user-4", isVerified: true }],
+    });
+
+    const { result } = renderHook(
+      () => useAdminUsers({ role: Role.UMPIRE, isVerified: false }, 1, 20),
+      { wrapper: wrapper() },
+    );
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(result.current.data?.adminUsers.items.map((u) => u.id)).toEqual(["user-3"]);
+  });
+
+  it("changes a role to UMPIRE with the strict enum value", async () => {
+    mockRequest.mockResolvedValueOnce({ adminChangeUserRole: { id: "user-1", role: "UMPIRE" } });
+
+    const { result } = renderHook(() => useAdminChangeUserRole(), { wrapper: wrapper() });
+    result.current.mutate({ userId: "user-1", role: Role.UMPIRE });
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(mockRequest.mock.calls[0][1]).toMatchObject({ userId: "user-1", role: "UMPIRE" });
+  });
+});

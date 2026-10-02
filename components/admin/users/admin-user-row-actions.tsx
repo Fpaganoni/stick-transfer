@@ -36,7 +36,7 @@ import {
 import { AdminUserRow } from "@/types/models/admin";
 import { Role } from "@/types/enums";
 
-const ROLE_OPTIONS = [Role.PLAYER, Role.COACH, Role.CLUB, Role.SUPERADMIN];
+const ROLE_OPTIONS = [Role.PLAYER, Role.COACH, Role.CLUB, Role.UMPIRE, Role.SUPERADMIN];
 
 interface AdminUserRowActionsProps {
   user: AdminUserRow;
@@ -153,6 +153,9 @@ export function AdminUserRowActions({ user }: AdminUserRowActionsProps) {
                 ))}
               </SelectContent>
             </Select>
+            {pendingRole === Role.UMPIRE && (
+              <p className="text-sm text-foreground-muted">{t("changeRoleUmpireNote")}</p>
+            )}
             <p className="text-sm font-medium text-error">{t("changeRoleWarning")}</p>
           </div>
 

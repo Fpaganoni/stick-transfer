@@ -20,10 +20,11 @@ import { useLocale } from "next-intl";
 import { AdminUserRow } from "@/types/models/admin";
 import { AdminUserRowActions } from "./admin-user-row-actions";
 
-const ROLE_BADGE_VARIANT: Record<string, "player" | "club" | "coach" | "outline"> = {
+const ROLE_BADGE_VARIANT: Record<string, "player" | "club" | "coach" | "umpire" | "outline"> = {
   PLAYER: "player",
   COACH: "coach",
   CLUB: "club",
+  UMPIRE: "umpire",
   SUPERADMIN: "outline",
 };
 
@@ -34,6 +35,7 @@ interface AdminUsersTableProps {
 
 export function AdminUsersTable({ users, isLoading }: AdminUsersTableProps) {
   const t = useTranslations("admin.users");
+  const tUmpire = useTranslations("umpire");
   const locale = useLocale() as "en" | "es" | "fr";
 
   if (isLoading) {
@@ -90,6 +92,20 @@ export function AdminUsersTable({ users, isLoading }: AdminUsersTableProps) {
                 <Badge variant={ROLE_BADGE_VARIANT[user.role as string] ?? "outline"}>
                   {user.role}
                 </Badge>
+                {user.role === "UMPIRE" &&
+                  (user.licenseLevel || user.certifyingBody || user.licenseNumber) && (
+                    <div className="mt-1 flex flex-col text-xs text-foreground-muted">
+                      {user.licenseLevel && (
+                        <span>{tUmpire(`licenseLevels.${user.licenseLevel}`)}</span>
+                      )}
+                      {user.certifyingBody && <span>{user.certifyingBody}</span>}
+                      {user.licenseNumber && (
+                        <span>
+                          {t("table.licenseNumber")}: {user.licenseNumber}
+                        </span>
+                      )}
+                    </div>
+                  )}
               </TableCell>
               <TableCell className="text-foreground-muted">
                 {[user.city, user.country].filter(Boolean).join(", ") || "—"}

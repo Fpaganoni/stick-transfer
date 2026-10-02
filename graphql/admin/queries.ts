@@ -7,6 +7,7 @@ export const ADMIN_DASHBOARD_STATS = gql`
       playersCount
       coachesCount
       clubsCount
+      umpiresCount
       superAdminsCount
       activeUsersCount
       verifiedClubsCount
@@ -16,6 +17,8 @@ export const ADMIN_DASHBOARD_STATS = gql`
       openJobsCount
       closedJobsCount
       filledJobsCount
+      umpireJobsCount
+      umpireApplicationsCount
       totalApplicationsCount
       pendingApplicationsCount
       acceptedApplicationsCount
@@ -52,6 +55,9 @@ export const ADMIN_USERS = gql`
       isActive
       isVerified
       isEmailVerified
+      licenseLevel
+      certifyingBody
+      licenseNumber
       createdAt
     }
   }

@@ -11,10 +11,12 @@ import {
   UserPlus,
   ClipboardList,
   Flag,
+  Medal,
 } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useAdminStats } from "@/hooks/useAdminStats";
 import { StatCard } from "@/components/admin/stat-card";
+import { buildRoleDistribution } from "@/components/admin/charts/role-distribution-data";
 import type { StatusBarDatum } from "@/components/admin/charts/status-bar-chart";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -171,6 +173,30 @@ function OverviewStatCards({ t, stats, isLoading }: OverviewSectionProps) {
           isLoading={isLoading}
         />
       </div>
+
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <StatCard
+          label={t("stats.totalUmpires")}
+          value={stats?.umpiresCount}
+          icon={Medal}
+          iconClassName="bg-success/10 text-success"
+          isLoading={isLoading}
+        />
+        <StatCard
+          label={t("stats.umpireJobs")}
+          value={stats?.umpireJobsCount}
+          icon={Briefcase}
+          iconClassName="bg-info/10 text-info"
+          isLoading={isLoading}
+        />
+        <StatCard
+          label={t("stats.umpireApplications")}
+          value={stats?.umpireApplicationsCount}
+          icon={ClipboardList}
+          iconClassName="bg-warning/10 text-warning"
+          isLoading={isLoading}
+        />
+      </div>
     </>
   );
 }
@@ -188,12 +214,7 @@ function OverviewCharts({ t, stats, isLoading }: OverviewSectionProps) {
               <Skeleton className="h-[260px] w-full" />
             ) : (
               <RoleDistributionChart
-                data={[
-                  { role: "PLAYER", count: stats.playersCount },
-                  { role: "COACH", count: stats.coachesCount },
-                  { role: "CLUB", count: stats.clubsCount },
-                  { role: "SUPERADMIN", count: stats.superAdminsCount },
-                ]}
+                data={buildRoleDistribution(stats)}
               />
             )}
           </CardContent>

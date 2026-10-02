@@ -991,6 +991,9 @@
       "title": "Aperçu",
       "subtitle": "Statistiques et activité de la plateforme en un coup d'œil.",
       "stats": {
+        "totalUmpires": "Arbitres",
+        "umpireJobs": "Opportunités d'arbitres",
+        "umpireApplications": "Candidatures d'arbitres",
         "totalUsers": "Utilisateurs au total",
         "activeUsers": "Utilisateurs actifs",
         "totalClubs": "Clubs au total",
@@ -1024,6 +1027,7 @@
       "title": "Utilisateurs",
       "subtitle": "Gérez les comptes joueurs, entraîneurs, clubs et administrateurs.",
       "table": {
+        "licenseNumber": "N° de licence",
         "name": "Nom",
         "email": "E-mail",
         "role": "Rôle",
@@ -1051,6 +1055,7 @@
         "unverified": "Non vérifiés"
       },
       "actions": {
+        "changeRoleUmpireNote": "L'utilisateur devra compléter les détails de sa licence depuis son profil.",
         "openMenu": "Ouvrir le menu",
         "activate": "Activer",
         "deactivate": "Désactiver",

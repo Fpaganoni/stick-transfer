@@ -15,6 +15,7 @@ export interface AdminDashboardStats {
   playersCount: number;
   coachesCount: number;
   clubsCount: number;
+  umpiresCount: number;
   superAdminsCount: number;
   activeUsersCount: number;
   verifiedClubsCount: number;
@@ -24,6 +25,8 @@ export interface AdminDashboardStats {
   openJobsCount: number;
   closedJobsCount: number;
   filledJobsCount: number;
+  umpireJobsCount: number;
+  umpireApplicationsCount: number;
   totalApplicationsCount: number;
   pendingApplicationsCount: number;
   acceptedApplicationsCount: number;
@@ -56,6 +59,10 @@ export interface AdminUserRow {
   isActive: boolean;
   isVerified: boolean;
   isEmailVerified: boolean;
+  // Umpire-only; the admin also receives the private licence number
+  licenseLevel?: string | null;
+  certifyingBody?: string | null;
+  licenseNumber?: string | null;
   // GAP backend: User no expone authProvider. Queda undefined hasta que el
   // backend lo agregue; la UI debe tolerar ausencia.
   authProvider?: string;

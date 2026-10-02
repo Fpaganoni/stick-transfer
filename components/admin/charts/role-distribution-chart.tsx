@@ -15,6 +15,7 @@ const ROLE_COLORS: Record<string, string> = {
   PLAYER: "var(--primary)",
   COACH: "var(--accent)",
   CLUB: "var(--info)",
+  UMPIRE: "var(--success)",
   SUPERADMIN: "var(--warning)",
 };
 
@@ -22,6 +23,7 @@ const chartConfig = {
   PLAYER: { label: "Player", color: ROLE_COLORS.PLAYER },
   COACH: { label: "Coach", color: ROLE_COLORS.COACH },
   CLUB: { label: "Club", color: ROLE_COLORS.CLUB },
+  UMPIRE: { label: "Umpire", color: ROLE_COLORS.UMPIRE },
   SUPERADMIN: { label: "Superadmin", color: ROLE_COLORS.SUPERADMIN },
 } satisfies ChartConfig;
 

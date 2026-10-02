@@ -20,7 +20,14 @@ import { Role } from "@/types/enums";
 
 const PAGE_SIZE = 20;
 
-const ROLE_FILTER_VALUES = ["ALL", Role.PLAYER, Role.COACH, Role.CLUB, Role.SUPERADMIN] as const;
+const ROLE_FILTER_VALUES = [
+  "ALL",
+  Role.PLAYER,
+  Role.COACH,
+  Role.CLUB,
+  Role.UMPIRE,
+  Role.SUPERADMIN,
+] as const;
 
 type RoleFilterValue = (typeof ROLE_FILTER_VALUES)[number];
 type BoolFilterValue = "ALL" | "true" | "false";
