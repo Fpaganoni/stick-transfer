@@ -12,6 +12,7 @@ import {
   UserPlus,
   UserCheck,
   UserMinus,
+  BadgeCheck,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { useState, useRef, useCallback, useEffect } from "react";
@@ -21,6 +22,7 @@ import { useUpdateUser, useFollow, useUnfollow } from "@/hooks/useUsers";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useRole } from "@/hooks/useRole";
 import { useTranslations } from "next-intl";
+import { Role } from "@/types/enums";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -50,6 +52,8 @@ type ProfileHeaderProps = Pick<
   | "country"
   | "bio"
   | "cvUrl"
+  | "isVerified"
+  | "licenseLevel"
 > & {
   isOwnProfile?: boolean;
   username?: string;
@@ -332,15 +336,20 @@ export function ProfileHeader({
   coverImage,
   coverImagePosition,
   cvUrl,
+  isVerified,
+  licenseLevel,
   isOwnProfile = false,
   followers = EMPTY_FOLLOW_USERS,
   following = EMPTY_FOLLOW_USERS,
 }: ProfileHeaderProps) {
   const t = useTranslations("profile");
+  const tUmpire = useTranslations("umpire");
   const router = useRouter();
   const { user: currentUser } = useAuthStore();
   const { isClub, isSuperAdmin } = useRole();
-  const canContact = isClub || isSuperAdmin;
+  const isUmpire = role === Role.UMPIRE;
+  // Clubs and admins can message anyone; umpires are open to every user
+  const canContact = isClub || isSuperAdmin || isUmpire;
 
   const [isHoveringCover, setIsHoveringCover] = useState(false);
   const [isRepositioning, setIsRepositioning] = useState(false);
@@ -511,10 +520,29 @@ export function ProfileHeader({
                 </span>
               </div>
               <div className="flex items-center justify-center sm:justify-start gap-2 mt-1 flex-wrap">
-                {role && <Badge variant="player">{role}</Badge>}
-                <span className="text-foreground font-semibold text-sm">
-                  {position || t("positionNotSet")}
-                </span>
+                {role && (
+                  <Badge variant={isUmpire ? "umpire" : "player"}>{role}</Badge>
+                )}
+                {isUmpire ? (
+                  <>
+                    {licenseLevel && (
+                      <span className="text-foreground font-semibold text-sm">
+                        {tUmpire(`licenseLevels.${licenseLevel}`)}
+                      </span>
+                    )}
+                    {isVerified && (
+                      <BadgeCheck
+                        className="w-5 h-5 text-accent shrink-0"
+                        data-testid="verified-badge"
+                        aria-label={t("umpire.verified")}
+                      />
+                    )}
+                  </>
+                ) : (
+                  <span className="text-foreground font-semibold text-sm">
+                    {position || t("positionNotSet")}
+                  </span>
+                )}
               </div>
               <p className="text-foreground-muted text-sm text-center sm:text-start my-2 leading-relaxed">
                 {bio || t("noBio")}

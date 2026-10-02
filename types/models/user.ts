@@ -72,7 +72,7 @@ export interface User {
   country?: string;
   city?: string;
   level?: Level;
-  yearsOfExperience?: number;
+  yearsOfExperience?: number | null;
   cvUrl?: string;
   multimedia?: string[];
   isVerified?: boolean;

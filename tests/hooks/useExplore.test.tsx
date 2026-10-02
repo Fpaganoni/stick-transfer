@@ -69,6 +69,25 @@ describe("useExploreUsers", () => {
     expect(variables.umpireCategory).toBeUndefined();
   });
 
+  it("keeps the previous results visible while a bigger page loads", async () => {
+    mockRequest.mockResolvedValueOnce({ exploreUsers: [{ id: "a" }] });
+    const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+    const Wrapper = ({ children }: { children: React.ReactNode }) => (
+      <QueryClientProvider client={qc}>{children}</QueryClientProvider>
+    );
+    const { result, rerender } = renderHook(({ limit }) => useExploreUsers({ limit }), {
+      wrapper: Wrapper,
+      initialProps: { limit: 50 },
+    });
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+
+    mockRequest.mockReturnValueOnce(new Promise(() => {})); // never resolves
+    rerender({ limit: 100 });
+
+    await waitFor(() => expect(result.current.isPlaceholderData).toBe(true));
+    expect(result.current.data?.exploreUsers).toEqual([{ id: "a" }]);
+  });
+
   it("keeps cache entries separate per umpire filter", async () => {
     const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
     const Wrapper = ({ children }: { children: React.ReactNode }) => (

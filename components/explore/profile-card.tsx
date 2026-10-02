@@ -3,10 +3,11 @@
 import Image from "next/image";
 
 // Keep existing imports below...
-import { ArrowRight, MapPin, Star } from "lucide-react";
+import { ArrowRight, BadgeCheck, MapPin, Star } from "lucide-react";
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { User } from "@/types/models/user";
+import { Role } from "@/types/enums";
 import { useTranslations, useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
 
@@ -24,6 +25,11 @@ const ROLE_COLORS: Record<
     text: "text-warning",
     badge: "bg-warning/20 text-foreground border-warning",
   },
+  UMPIRE: {
+    bg: "bg-primary/10",
+    text: "text-primary",
+    badge: "bg-primary/20 text-foreground border-primary",
+  },
 };
 
 type ProfileCardProps = Pick<
@@ -38,7 +44,11 @@ type ProfileCardProps = Pick<
   | "level"
   | "bio"
   | "avatar"
->;
+  | "licenseLevel"
+  | "matchesOfficiated"
+  | "modalities"
+  | "umpireCategories"
+> & { isVerified?: boolean };
 
 export function ProfileCard({
   name,
@@ -50,8 +60,14 @@ export function ProfileCard({
   country,
   level,
   bio,
+  isVerified,
+  licenseLevel,
+  matchesOfficiated,
+  modalities,
+  umpireCategories,
 }: ProfileCardProps) {
   const t = useTranslations("explore");
+  const tUmpire = useTranslations("umpire");
   const locale = useLocale();
   const router = useRouter();
 
@@ -59,6 +75,11 @@ export function ProfileCard({
     router.push(`/${locale}/profile/${username.replace(/\./g, "/")}`);
 
   const colors = ROLE_COLORS[role] || ROLE_COLORS.PLAYER;
+  const isUmpire = role === Role.UMPIRE;
+  const umpireTags = [
+    ...(modalities ?? []).map((m) => tUmpire(`modalities.${m}`)),
+    ...(umpireCategories ?? []).map((c) => tUmpire(`categories.${c}`)),
+  ];
 
   return (
     <motion.div
@@ -83,16 +104,54 @@ export function ProfileCard({
               <h3 className="font-medium text-foreground truncate">{name}</h3>
               <span className="shrink-0">{country}</span>
               <Badge className={`${colors.badge}`}>{role}</Badge>
+              {isUmpire && isVerified && (
+                <BadgeCheck
+                  className="w-4 h-4 text-accent shrink-0"
+                  data-testid="verified-badge"
+                />
+              )}
             </div>
-            <p className="text-sm text-foreground-muted mb-1 truncate">
-              {position}
-            </p>
-            <div className="flex items-center gap-2">
-              <Star size={14} className="text-warning shrink-0" />
-              <span className="text-xs text-foreground-muted">
-                {level} {t("level")}
-              </span>
-            </div>
+            {isUmpire ? (
+              <>
+                {licenseLevel && (
+                  <p className="text-sm text-foreground-muted mb-1 truncate">
+                    {tUmpire(`licenseLevels.${licenseLevel}`)}
+                  </p>
+                )}
+                {matchesOfficiated !== null && matchesOfficiated !== undefined && (
+                  <div className="flex items-center gap-2">
+                    <Star size={14} className="text-warning shrink-0" />
+                    <span className="text-xs text-foreground-muted">
+                      {t("matchesCount", { count: matchesOfficiated })}
+                    </span>
+                  </div>
+                )}
+                {umpireTags.length > 0 && (
+                  <ul className="flex flex-wrap gap-1.5 mt-1.5">
+                    {umpireTags.map((tag) => (
+                      <li
+                        key={tag}
+                        className="rounded-full border border-primary/40 bg-background/60 px-2 py-0.5 text-xs text-foreground"
+                      >
+                        {tag}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </>
+            ) : (
+              <>
+                <p className="text-sm text-foreground-muted mb-1 truncate">
+                  {position}
+                </p>
+                <div className="flex items-center gap-2">
+                  <Star size={14} className="text-warning shrink-0" />
+                  <span className="text-xs text-foreground-muted">
+                    {level} {t("level")}
+                  </span>
+                </div>
+              </>
+            )}
             <p className="text-xs text-foreground-muted mt-1 line-clamp-1">
               {bio}
             </p>

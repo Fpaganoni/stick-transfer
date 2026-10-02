@@ -326,6 +326,9 @@
     }
   },
   "explore": {
+    "loadMore": "Charger plus",
+    "loadingMore": "Chargement...",
+    "matchesCount": "{count} matchs arbitrés",
     "searchPlaceholder": "Rechercher par nom, club, ville...",
     "noResults": "Aucun résultat pour",
     "viewProfile": "Voir",
@@ -335,12 +338,16 @@
       "role": "Rôle",
       "country": "Pays",
       "level": "Niveau",
+      "licenseLevel": "Licence",
+      "modality": "Modalité",
+      "category": "Catégorie",
       "position": "Position",
       "season": "Saison"
     },
     "roles": {
       "player": "Joueur",
       "coach": "Entraîneur",
+      "umpire": "Arbitre",
       "clubAdmin": "Admin de Club"
     },
     "levels": {
@@ -360,6 +367,24 @@
     }
   },
   "profile": {
+    "umpire": {
+      "verified": "Arbitre vérifié",
+      "licenseLevel": "Niveau de licence",
+      "certifyingBody": "Organisme certificateur",
+      "licenseNumber": "Numéro de licence",
+      "certificationYear": "Certifié depuis",
+      "matchesOfficiated": "Matchs arbitrés",
+      "yearsOfExperience": "Années d'expérience",
+      "travelAvailability": "Disponibilité pour voyager",
+      "languages": "Langues",
+      "modalities": "Modalités",
+      "categories": "Catégories",
+      "certifications": "Certifications",
+      "viewDocument": "Voir le document",
+      "noInfo": "Cet arbitre n'a pas encore ajouté les détails de sa licence.",
+      "noInfoOwn": "Ajoutez votre licence, votre expérience et vos disponibilités pour que les clubs vous trouvent.",
+      "completeProfile": "Complétez votre profil"
+    },
     "followers": "Abonnés",
     "following": "Abonnements",
     "follow": "Suivre",
@@ -519,6 +544,7 @@
     "message": "Message",
     "errorLoadData": "Erreur de chargement des données",
     "tabs": {
+      "umpire": "Arbitrage",
       "posts": "Publications",
       "trajectory": "Trajectoire",
       "multimedia": "Multimédia",

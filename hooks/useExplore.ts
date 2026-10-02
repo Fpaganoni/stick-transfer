@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { EXPLORE_USERS_QUERY } from "@/graphql/user/queries";
 import { graphqlClient } from "@/lib/graphql-client";
 import { ExploreUser } from "@/types/models/user";
@@ -61,5 +61,7 @@ export function useExploreUsers(filters: ExploreFilters = {}) {
         limit,
         offset,
       }),
+    // "Load more" re-queries with a bigger limit; keep the current list on screen meanwhile
+    placeholderData: keepPreviousData,
   });
 }

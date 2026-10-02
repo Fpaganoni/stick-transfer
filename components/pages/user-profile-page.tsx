@@ -5,6 +5,7 @@ import { ProfileHeader } from "@/components/profile/profile-header";
 import { ProfileTabs } from "@/components/profile/profile-tabs";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useMe } from "@/hooks/useUsers";
+import { Role } from "@/types/enums";
 
 interface UserProfilePageProps {
   isOwnProfile?: boolean;
@@ -13,7 +14,7 @@ interface UserProfilePageProps {
 export function UserProfilePage({
   isOwnProfile = false,
 }: UserProfilePageProps) {
-  const [activeTab, setActiveTab] = useState("trajectory");
+  const [selectedTab, setSelectedTab] = useState<string | null>(null);
   const { user: authUser } = useAuthStore();
   const { data: freshData } = useMe();
 
@@ -22,6 +23,10 @@ export function UserProfilePage({
   if (!user) {
     return <div>PLEASE LOGIN</div>;
   }
+
+  // Umpires land on their officiating data; everyone else on trajectory
+  const activeTab =
+    selectedTab ?? (user.role === Role.UMPIRE ? "umpire" : "trajectory");
 
   const userData = {
     id: user.id,
@@ -33,6 +38,8 @@ export function UserProfilePage({
     coverImage: user.coverImage || "",
     bio: user.bio,
     cvUrl: user.cvUrl,
+    isVerified: user.isVerified,
+    licenseLevel: user.licenseLevel,
     coverImagePosition: user.coverImagePosition || "50%",
     trajectories:
       user.trajectories?.map((t) => ({
@@ -42,6 +49,19 @@ export function UserProfilePage({
         title: t.title,
       })) || [],
     multimedia: user.multimedia || [],
+    umpire: {
+      licenseLevel: user.licenseLevel,
+      certifyingBody: user.certifyingBody,
+      licenseNumber: user.licenseNumber,
+      certificationYear: user.certificationYear,
+      matchesOfficiated: user.matchesOfficiated,
+      yearsOfExperience: user.yearsOfExperience,
+      travelAvailability: user.travelAvailability,
+      languages: user.languages,
+      modalities: user.modalities,
+      umpireCategories: user.umpireCategories,
+      umpireCertifications: user.umpireCertifications,
+    },
   };
 
   return (
@@ -54,7 +74,7 @@ export function UserProfilePage({
         />
       <ProfileTabs
         activeTab={activeTab}
-        setActiveTab={setActiveTab}
+        setActiveTab={setSelectedTab}
         userData={userData}
         isOwnProfile={isOwnProfile}
       />

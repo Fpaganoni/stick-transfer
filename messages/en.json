@@ -326,6 +326,9 @@
     }
   },
   "explore": {
+    "loadMore": "Load more",
+    "loadingMore": "Loading...",
+    "matchesCount": "{count} matches officiated",
     "searchPlaceholder": "Search by name, club, city...",
     "noResults": "No results for",
     "viewProfile": "View",
@@ -335,12 +338,16 @@
       "role": "Role",
       "country": "Country",
       "level": "Level",
+      "licenseLevel": "Licence",
+      "modality": "Modality",
+      "category": "Category",
       "position": "Position",
       "season": "Season"
     },
     "roles": {
       "player": "Player",
       "coach": "Coach",
+      "umpire": "Umpire",
       "clubAdmin": "Club Admin"
     },
     "levels": {
@@ -360,6 +367,24 @@
     }
   },
   "profile": {
+    "umpire": {
+      "verified": "Verified umpire",
+      "licenseLevel": "Licence level",
+      "certifyingBody": "Certifying body",
+      "licenseNumber": "Licence number",
+      "certificationYear": "Certified since",
+      "matchesOfficiated": "Matches officiated",
+      "yearsOfExperience": "Years of experience",
+      "travelAvailability": "Travel availability",
+      "languages": "Languages",
+      "modalities": "Modalities",
+      "categories": "Categories",
+      "certifications": "Certifications",
+      "viewDocument": "View document",
+      "noInfo": "This umpire has not added licence details yet.",
+      "noInfoOwn": "Add your licence, experience and availability so clubs can find you.",
+      "completeProfile": "Complete your profile"
+    },
     "followers": "Followers",
     "following": "Following",
     "follow": "Follow",
@@ -519,6 +544,7 @@
     "message": "Message",
     "errorLoadData": "Error loading data",
     "tabs": {
+      "umpire": "Officiating",
       "posts": "Posts",
       "trajectory": "Trajectory",
       "multimedia": "Multimedia",

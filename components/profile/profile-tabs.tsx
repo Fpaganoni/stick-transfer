@@ -7,6 +7,7 @@ import { YoutubeWidget } from "@/components/ui/youtube-widget";
 import { UserApplications } from "./user-applications";
 import { UserSavedJobs } from "./user-saved-jobs";
 import { Download, FileText } from "lucide-react";
+import { UmpireInfoSection, type UmpireInfo } from "./umpire-info-section";
 
 interface UserData {
   id: string;
@@ -14,6 +15,8 @@ interface UserData {
   cvUrl?: string;
   trajectories: TrajectoryItem[];
   multimedia?: string[];
+  /** Licence and availability data; only meaningful when role is UMPIRE. */
+  umpire?: Partial<UmpireInfo>;
 }
 
 interface ProfileTabsProps {
@@ -31,11 +34,12 @@ export function ProfileTabs({
 }: ProfileTabsProps) {
   const t = useTranslations("profile");
 
-  const showCvTab =
-    userData.role?.toUpperCase() === "PLAYER" ||
-    userData.role?.toUpperCase() === "COACH";
+  const role = userData.role?.toUpperCase();
+  const isUmpire = role === "UMPIRE";
+  const showCvTab = role === "PLAYER" || role === "COACH" || isUmpire;
 
   const tabs = [
+    ...(isUmpire ? [{ id: "umpire", label: t("tabs.umpire") }] : []),
     { id: "trajectory", label: t("tabs.trajectory") },
     { id: "multimedia", label: t("tabs.multimedia") },
     ...(showCvTab ? [{ id: "cv", label: t("tabs.cv") }] : []),
@@ -70,6 +74,13 @@ export function ProfileTabs({
       </div>
 
       <div className="px-4 py-6">
+        {activeTab === "umpire" && isUmpire && (
+          <UmpireInfoSection
+            info={userData.umpire ?? {}}
+            isOwnProfile={isOwnProfile}
+          />
+        )}
+
         {activeTab === "trajectory" && (
           <div className="space-y-4">
             {userData.trajectories && userData.trajectories.length > 0 ? (

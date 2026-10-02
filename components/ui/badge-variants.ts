@@ -16,6 +16,7 @@ export const badgeVariants = cva(
         player: "text-foreground bg-info/30 border border-info",
         club: "text-foreground bg-success/30 border border-success",
         coach: "text-foreground bg-warning/30 border border-warning",
+        umpire: "text-foreground bg-primary/20 border border-primary",
       },
     },
     defaultVariants: {
