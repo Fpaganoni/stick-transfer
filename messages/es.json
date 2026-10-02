@@ -360,6 +360,24 @@
     }
   },
   "profile": {
+    "umpire": {
+      "verified": "Árbitro verificado",
+      "licenseLevel": "Nivel de licencia",
+      "certifyingBody": "Ente certificador",
+      "licenseNumber": "Número de licencia",
+      "certificationYear": "Certificado desde",
+      "matchesOfficiated": "Partidos dirigidos",
+      "yearsOfExperience": "Años de experiencia",
+      "travelAvailability": "Disponibilidad para viajar",
+      "languages": "Idiomas",
+      "modalities": "Modalidades",
+      "categories": "Categorías",
+      "certifications": "Certificaciones",
+      "viewDocument": "Ver documento",
+      "noInfo": "Este árbitro todavía no cargó los datos de su licencia.",
+      "noInfoOwn": "Agrega tu licencia, experiencia y disponibilidad para que los clubes te encuentren.",
+      "completeProfile": "Completa tu perfil"
+    },
     "followers": "Seguidores",
     "following": "Siguiendo",
     "follow": "Seguir",
@@ -519,6 +537,7 @@
     "message": "Mensaje",
     "errorLoadData": "Error al cargar datos",
     "tabs": {
+      "umpire": "Arbitraje",
       "posts": "Publicaciones",
       "trajectory": "Trayectoria",
       "multimedia": "Multimedia",

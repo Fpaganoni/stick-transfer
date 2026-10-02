@@ -6,6 +6,7 @@ import { ProfileTabs } from "@/components/profile/profile-tabs";
 import { useUserByUsername } from "@/hooks/useUsers";
 import { Loader } from "@/components/ui/loader";
 import { Error } from "@/components/ui/error";
+import { Role } from "@/types/enums";
 
 interface PublicUserProfilePageProps {
   username: string;
@@ -14,7 +15,7 @@ interface PublicUserProfilePageProps {
 export function PublicUserProfilePage({
   username,
 }: PublicUserProfilePageProps) {
-  const [activeTab, setActiveTab] = useState("trajectory");
+  const [selectedTab, setSelectedTab] = useState<string | null>(null);
   const { data, isLoading, error } = useUserByUsername(username);
 
   if (isLoading) {
@@ -35,6 +36,10 @@ export function PublicUserProfilePage({
 
   const user = data.getUserByUsername;
 
+  // Umpires land on their officiating data; everyone else on trajectory
+  const activeTab =
+    selectedTab ?? (user.role === Role.UMPIRE ? "umpire" : "trajectory");
+
   const userData = {
     id: user.id,
     name: user.name,
@@ -45,6 +50,8 @@ export function PublicUserProfilePage({
     coverImage: user.coverImage || "",
     bio: user.bio,
     cvUrl: user.cvUrl,
+    isVerified: user.isVerified,
+    licenseLevel: user.licenseLevel,
     coverImagePosition: user.coverImagePosition || "50%",
     trajectories:
       user.trajectories?.map((t) => ({
@@ -54,6 +61,19 @@ export function PublicUserProfilePage({
         title: t.title,
       })) || [],
     multimedia: user.multimedia || [],
+    umpire: {
+      licenseLevel: user.licenseLevel,
+      certifyingBody: user.certifyingBody,
+      licenseNumber: user.licenseNumber,
+      certificationYear: user.certificationYear,
+      matchesOfficiated: user.matchesOfficiated,
+      yearsOfExperience: user.yearsOfExperience,
+      travelAvailability: user.travelAvailability,
+      languages: user.languages,
+      modalities: user.modalities,
+      umpireCategories: user.umpireCategories,
+      umpireCertifications: user.umpireCertifications,
+    },
   };
 
   return (
@@ -67,7 +87,7 @@ export function PublicUserProfilePage({
         />
       <ProfileTabs
         activeTab={activeTab}
-        setActiveTab={setActiveTab}
+        setActiveTab={setSelectedTab}
         userData={userData}
       />
     </main>
