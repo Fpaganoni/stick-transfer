@@ -73,6 +73,16 @@ export const UPDATE_USER = gql`
     $city: String
     $yearsOfExperience: Int
     $trajectories: [TrajectoryInput!]
+    $licenseLevel: UmpireLicenseLevel
+    $certifyingBody: String
+    $licenseNumber: String
+    $certificationYear: Int
+    $matchesOfficiated: Int
+    $travelAvailability: TravelAvailability
+    $languages: [String!]
+    $modalities: [UmpireModality!]
+    $umpireCategories: [UmpireCategory!]
+    $umpireCertifications: [UmpireCertificationInput!]
   ) {
     updateUser(
       id: $id
@@ -90,6 +100,16 @@ export const UPDATE_USER = gql`
       city: $city
       yearsOfExperience: $yearsOfExperience
       trajectories: $trajectories
+      licenseLevel: $licenseLevel
+      certifyingBody: $certifyingBody
+      licenseNumber: $licenseNumber
+      certificationYear: $certificationYear
+      matchesOfficiated: $matchesOfficiated
+      travelAvailability: $travelAvailability
+      languages: $languages
+      modalities: $modalities
+      umpireCategories: $umpireCategories
+      umpireCertifications: $umpireCertifications
     ) {
       id
       name
@@ -104,6 +124,24 @@ export const UPDATE_USER = gql`
       country
       city
       yearsOfExperience
+      isVerified
+      licenseLevel
+      certifyingBody
+      licenseNumber
+      certificationYear
+      matchesOfficiated
+      travelAvailability
+      languages
+      modalities
+      umpireCategories
+      umpireCertifications {
+        id
+        name
+        issuer
+        issuedAt
+        fileUrl
+        order
+      }
       trajectories {
         title
         organization

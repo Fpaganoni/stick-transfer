@@ -116,6 +116,7 @@ export function useUpdateUser() {
       queryClient.invalidateQueries({ queryKey: ["users"] });
       // We could also invalidate the current authenticated user query if there is one
       queryClient.invalidateQueries({ queryKey: ["user"] });
+      queryClient.invalidateQueries({ queryKey: ["me"] });
     },
   });
 }

@@ -8,7 +8,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { renderHook, waitFor } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React from "react";
-import { useUser, useUsers } from "@/hooks/useUsers";
+import { useUser, useUsers, useUpdateUser } from "@/hooks/useUsers";
 import { mockUser } from "../test-utils";
 
 // ── Mock graphqlClient ────────────────────────────────────────────────────────
@@ -43,6 +43,45 @@ describe("useUsers", () => {
     const { result } = renderHook(() => useUsers(), { wrapper: wrapper() });
     await waitFor(() => expect(result.current.isError).toBe(true));
     expect(result.current.error?.message).toBe("Network error");
+  });
+});
+
+describe("useUpdateUser", () => {
+  beforeEach(() => mockRequest.mockReset());
+
+  it("sends the umpire variables untouched", async () => {
+    mockRequest.mockResolvedValueOnce({ updateUser: { id: "user-1" } });
+    const { result } = renderHook(() => useUpdateUser(), { wrapper: wrapper() });
+
+    result.current.mutate({
+      id: "user-1",
+      licenseLevel: "NACIONAL" as never,
+      umpireCertifications: [{ name: "Licencia", issuer: "CAH", order: 0 }],
+    });
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+
+    expect(mockRequest.mock.calls[0][1]).toMatchObject({
+      id: "user-1",
+      licenseLevel: "NACIONAL",
+      umpireCertifications: [{ name: "Licencia", issuer: "CAH", order: 0 }],
+    });
+  });
+
+  it("invalidates the me query so role-gated UI reflects the saved profile", async () => {
+    mockRequest.mockResolvedValueOnce({ updateUser: { id: "user-1" } });
+    const qc = new QueryClient({
+      defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
+    });
+    const spy = vi.spyOn(qc, "invalidateQueries");
+    const Wrapper = ({ children }: { children: React.ReactNode }) => (
+      <QueryClientProvider client={qc}>{children}</QueryClientProvider>
+    );
+    const { result } = renderHook(() => useUpdateUser(), { wrapper: Wrapper });
+
+    result.current.mutate({ id: "user-1", bio: "x" });
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+
+    expect(spy).toHaveBeenCalledWith({ queryKey: ["me"] });
   });
 });
 

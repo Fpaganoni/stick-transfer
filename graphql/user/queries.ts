@@ -1,6 +1,33 @@
 import { gql } from "graphql-request";
 
 // ============================================
+// SHARED SELECTIONS
+// ============================================
+
+// Umpire-only fields. Always safe to select: non-umpires get null / [].
+// licenseNumber is private (owner + SUPERADMIN); everyone else receives null.
+const UMPIRE_FIELDS = `
+      isVerified
+      yearsOfExperience
+      licenseLevel
+      certifyingBody
+      licenseNumber
+      certificationYear
+      matchesOfficiated
+      travelAvailability
+      languages
+      modalities
+      umpireCategories
+      umpireCertifications {
+        id
+        name
+        issuer
+        issuedAt
+        fileUrl
+        order
+      }`;
+
+// ============================================
 // USER QUERIES
 // ============================================
 
@@ -37,6 +64,7 @@ export const ME = gql`
       city
       cvUrl
       multimedia
+      ${UMPIRE_FIELDS}
       club {
         name
         logo
@@ -74,6 +102,7 @@ export const GET_USER = gql`
       clubId
       cvUrl
       multimedia
+      ${UMPIRE_FIELDS}
       club {
         id
         name
@@ -125,6 +154,7 @@ export const GET_USER_BY_USERNAME = gql`
       city
       cvUrl
       multimedia
+      ${UMPIRE_FIELDS}
       followers {
         id
         name
@@ -161,6 +191,9 @@ export const EXPLORE_USERS_QUERY = gql`
     $position: String
     $level: String
     $country: String
+    $licenseLevel: UmpireLicenseLevel
+    $modality: UmpireModality
+    $umpireCategory: UmpireCategory
     $limit: Int
     $offset: Int
   ) {
@@ -170,6 +203,9 @@ export const EXPLORE_USERS_QUERY = gql`
       position: $position
       level: $level
       country: $country
+      licenseLevel: $licenseLevel
+      modality: $modality
+      umpireCategory: $umpireCategory
       limit: $limit
       offset: $offset
     ) {
@@ -185,6 +221,11 @@ export const EXPLORE_USERS_QUERY = gql`
       bio
       isVerified
       cvUrl
+      licenseLevel
+      travelAvailability
+      modalities
+      umpireCategories
+      matchesOfficiated
       club {
         id
         name
