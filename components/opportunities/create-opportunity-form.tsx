@@ -54,9 +54,9 @@ const createOpportunitySchema = (t: (key: string) => string) =>
     positionType: z
       .string()
       .min(1, { message: t("create.validation.positionTypeRequired") }),
-    level: z.string().optional(),
-    country: z.string().optional(),
-    city: z.string().optional(),
+    level: z.string().min(1),
+    country: z.string().min(1, { message: t("create.validation.countryRequired") }),
+    city: z.string().min(1, { message: t("create.validation.cityRequired") }),
     salary: z.coerce.number().min(0).optional(),
     currency: z.string().optional(),
     benefits: z.string().optional(),
@@ -103,8 +103,10 @@ export function CreateOpportunityForm() {
     setIsSubmitting(true);
     try {
       const benefits = data.benefits
-        ? data.benefits.split(",").map((b) => b.trim()).filter(Boolean)
-        : [];
+        ?.split(",")
+        .map((b) => b.trim())
+        .filter(Boolean)
+        .join(", ");
 
       // Only for UMPIRE jobs, and only what was filled in: the backend
       // answers 400 if these arrive on any other position type.
@@ -283,7 +285,16 @@ export function CreateOpportunityForm() {
                   <FormItem>
                     <FormLabel>{t("create.salaryLabel")}</FormLabel>
                     <FormControl>
-                      <Input type="number" {...field} />
+                      <Input
+                        type="number"
+                        {...field}
+                        value={(field.value as number | undefined) ?? ""}
+                        onChange={(e) =>
+                          field.onChange(
+                            e.target.value === "" ? undefined : e.target.value,
+                          )
+                        }
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

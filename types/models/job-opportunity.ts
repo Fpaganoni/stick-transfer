@@ -64,12 +64,13 @@ export interface CreateJobOpportunityVariables {
   title: string;
   description: string;
   positionType: string;
-  level?: string;
-  country?: string;
-  city?: string;
+  level: string;
+  country: string;
+  city: string;
   salary?: number;
   currency?: string;
-  benefits?: string[];
+  // Comma separated; the backend takes a single String
+  benefits?: string;
   // UMPIRE only: the backend answers 400 if these are sent for any other positionType
   licenseLevelRequired?: UmpireLicenseLevel;
   modality?: UmpireModality;

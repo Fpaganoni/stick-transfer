@@ -40,6 +40,8 @@ const positionTrigger = () => screen.getAllByRole("combobox")[0];
 async function fillBasics(user: ReturnType<typeof userEvent.setup>) {
   await user.type(screen.getByLabelText("create.titleLabel"), "Umpire - Division de Honor");
   await user.type(screen.getByLabelText("create.descriptionLabel"), "Primera division");
+  await user.type(screen.getByLabelText("create.countryLabel"), "Spain");
+  await user.type(screen.getByLabelText("create.cityLabel"), "Madrid");
 }
 
 const submit = () => screen.getByRole("button", { name: "create.submit" });
@@ -186,6 +188,33 @@ describe("CreateOpportunityForm", () => {
       const payload = mockCreate.mock.calls[0][0];
       expect(payload.positionType).toBe("STAFF");
       expect(payload).not.toHaveProperty("modality");
+    });
+
+    it("requires country and city, which the backend marks as non-null", async () => {
+      const user = userEvent.setup();
+      render(<CreateOpportunityForm />);
+
+      await user.type(screen.getByLabelText("create.titleLabel"), "Umpire");
+      await user.type(screen.getByLabelText("create.descriptionLabel"), "Match");
+      await choose(user, positionTrigger(), "positionTypes.UMPIRE");
+      await user.click(submit());
+
+      expect(await screen.findByText("create.validation.countryRequired")).toBeInTheDocument();
+      expect(screen.getByText("create.validation.cityRequired")).toBeInTheDocument();
+      expect(mockCreate).not.toHaveBeenCalled();
+    });
+
+    it("sends benefits as one comma separated string", async () => {
+      const user = userEvent.setup();
+      render(<CreateOpportunityForm />);
+
+      await fillBasics(user);
+      await choose(user, positionTrigger(), "positionTypes.COACH");
+      await user.type(screen.getByLabelText("create.benefitsLabel"), "housing,  car ");
+      await user.click(submit());
+
+      await waitFor(() => expect(mockCreate).toHaveBeenCalledTimes(1));
+      expect(mockCreate.mock.calls[0][0].benefits).toBe("housing, car");
     });
 
     it("goes back to the list after publishing", async () => {

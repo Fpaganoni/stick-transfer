@@ -36,7 +36,7 @@
     },
   "navigation": {
     "opportunities": "Oportunidades",
-    "players": "Jugadores/Coaches",
+    "players": "Jugadores/Coaches/Árbitros",
     "clubs": "Clubes",
     "news": "Noticias",
     "messages": "Mensajes",
@@ -750,7 +750,9 @@
       "validation": {
         "titleRequired": "El título es obligatorio.",
         "descriptionRequired": "La descripción es obligatoria.",
-        "positionTypeRequired": "El tipo de posición es obligatorio."
+        "positionTypeRequired": "El tipo de posición es obligatorio.",
+        "countryRequired": "El país es obligatorio.",
+        "cityRequired": "La ciudad es obligatoria."
       }
     }
   },

@@ -36,7 +36,7 @@
     },
   "navigation": {
     "opportunities": "Opportunities",
-    "players": "Players/Coaches",
+    "players": "Players/Coaches/Umpires",
     "clubs": "Clubs",
     "news": "News",
     "messages": "Messages",
@@ -750,7 +750,9 @@
       "validation": {
         "titleRequired": "Title is required.",
         "descriptionRequired": "Description is required.",
-        "positionTypeRequired": "Position type is required."
+        "positionTypeRequired": "Position type is required.",
+        "countryRequired": "Country is required.",
+        "cityRequired": "City is required."
       }
     }
   },

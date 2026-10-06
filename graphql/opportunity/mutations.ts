@@ -9,12 +9,12 @@ export const CREATE_JOB_OPPORTUNITY = gql`
     $title: String!
     $description: String!
     $positionType: String!
-    $level: String
-    $country: String
-    $city: String
+    $level: String!
+    $country: String!
+    $city: String!
     $salary: Float
     $currency: String
-    $benefits: [String!]
+    $benefits: String
     $licenseLevelRequired: UmpireLicenseLevel
     $modality: UmpireModality
     $umpireCategory: UmpireCategory
