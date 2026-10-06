@@ -46,6 +46,19 @@ export const GET_USERS = gql`
   }
 `;
 
+// Availability checks for the register form (rate limited: 10/min).
+export const IS_EMAIL_AVAILABLE = gql`
+  query IsEmailAvailable($email: String!) {
+    isEmailAvailable(email: $email)
+  }
+`;
+
+export const IS_USERNAME_AVAILABLE = gql`
+  query IsUsernameAvailable($username: String!) {
+    isUsernameAvailable(username: $username)
+  }
+`;
+
 export const ME = gql`
   query Me {
     me {

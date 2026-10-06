@@ -10,6 +10,8 @@ import {
   ArrowUpIcon,
   ChevronLeft,
   ChevronRight,
+  AlertCircle,
+  X,
 } from "lucide-react";
 import { useForm, UseFormReturn, SubmitHandler } from "react-hook-form";
 import { z } from "zod";
@@ -19,11 +21,21 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useUserRegister } from "@/hooks/useUsers";
 import { graphqlClient } from "@/lib/graphql-client";
-import { ME } from "@/graphql/user/queries";
+import {
+  ME,
+  IS_EMAIL_AVAILABLE,
+  IS_USERNAME_AVAILABLE,
+} from "@/graphql/user/queries";
 import { useRouter } from "next/navigation";
 import { useLocale } from "next-intl";
 import { useAuthStore } from "@/stores/useAuthStore";
-import { GraphQLError } from "@/types/graphql-error";
+import {
+  byteLength,
+  FIELD_ERROR_MESSAGE_KEY,
+  parseApiError,
+  RATE_LIMIT_COOLDOWN_SECONDS,
+} from "@/lib/auth-errors";
+import { useCooldown } from "@/hooks/useCooldown";
 import { useTranslations } from "next-intl";
 import { useUIStore } from "@/stores/useUIStore";
 
@@ -266,6 +278,7 @@ interface Step2BasicDataProps {
   onToggleConfirmPassword: () => void;
   onBack: () => void;
   onNext: () => void;
+  onCheckAvailability: (field: "email" | "username") => void;
 }
 
 function Step2BasicData({
@@ -277,7 +290,15 @@ function Step2BasicData({
   onToggleConfirmPassword,
   onBack,
   onNext,
+  onCheckAvailability,
 }: Step2BasicDataProps) {
+  // A server-side error (taken, rate limit...) is stale once the user edits
+  const clearServerError = (field: "email" | "username") => {
+    if (form.formState.errors[field]?.type === "server") {
+      form.clearErrors(field);
+    }
+  };
+
   return (
     <form className="space-y-3">
       <h3 className="text-base font-semibold text-foreground mb-1">
@@ -335,7 +356,12 @@ function Step2BasicData({
             size={16}
           />
           <Input
-            {...form.register("username")}
+            {...form.register("username", {
+              onChange: () => clearServerError("username"),
+              onBlur: () => onCheckAvailability("username"),
+            })}
+            autoComplete="username"
+            autoCapitalize="none"
             id="username"
             placeholder={t("placeholders.username")}
             className="pl-9 h-9 text-sm"
@@ -355,7 +381,11 @@ function Step2BasicData({
             size={16}
           />
           <Input
-            {...form.register("email")}
+            {...form.register("email", {
+              onChange: () => clearServerError("email"),
+              onBlur: () => onCheckAvailability("email"),
+            })}
+            autoComplete="email"
             id="reg-email"
             type="email"
             placeholder={t("placeholders.email")}
@@ -377,6 +407,7 @@ function Step2BasicData({
           />
           <Input
             {...form.register("password")}
+            autoComplete="new-password"
             id="reg-password"
             type={showPassword ? "text" : "password"}
             placeholder={t("placeholders.password")}
@@ -406,6 +437,7 @@ function Step2BasicData({
           />
           <Input
             {...form.register("confirmPassword")}
+            autoComplete="new-password"
             id="confirmPassword"
             type={showConfirmPassword ? "text" : "password"}
             placeholder={t("placeholders.password")}
@@ -761,6 +793,7 @@ export const RegisterPage = () => {
   const [selectedRole, setSelectedRole] = useState<RoleCardId | null>(initialRole);
   const [roleError, setRoleError] = useState(false);
   const [error, setError] = useState("");
+  const cooldown = useCooldown();
 
   const isClub = selectedRole === "clubAdmin";
   const isUmpire = selectedRole === "umpire";
@@ -768,25 +801,46 @@ export const RegisterPage = () => {
   // Step 2 schema
   const step2Schema = z
     .object({
-      firstName: z.string().min(2, tValidation("firstNameMin")),
-      lastName: z.string().min(2, tValidation("lastNameMin")),
+      // The backend stores the full name (max 100) as "first last".
+      firstName: z
+        .string()
+        .trim()
+        .min(2, tValidation("firstNameMin"))
+        .max(49, tValidation("nameTooLong")),
+      lastName: z
+        .string()
+        .trim()
+        .min(2, tValidation("lastNameMin"))
+        .max(50, tValidation("nameTooLong")),
+      // Optional; backend lowercases it and checks duplicates case-insensitively
       username: z
         .string()
-        .min(6, tValidation("usernameMin"))
-        .max(30, tValidation("usernameMax")),
+        .trim()
+        .refine((v) => v === "" || v.length >= 3, tValidation("usernameMin"))
+        .refine((v) => v.length <= 20, tValidation("usernameMax"))
+        .refine(
+          (v) => v === "" || /^[a-zA-Z0-9_]+$/.test(v),
+          tValidation("usernameInvalid"),
+        ),
       email: z
         .string()
+        .trim()
+        .min(1, tValidation("emailInvalid"))
+        .max(254, tValidation("emailTooLong"))
         .email(tValidation("emailInvalid"))
         .regex(
           /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
           tValidation("emailValid"),
         ),
+      // 8-72 *bytes* (bcrypt limit): an accent or emoji counts as more than 1
       password: z
         .string()
-        .min(6, tValidation("passwordMin"))
+        .min(8, tValidation("passwordMin"))
+        .regex(/[a-z]/, tValidation("passwordLowercase"))
         .regex(/[A-Z]/, tValidation("passwordUppercase"))
         .regex(/[0-9]/, tValidation("passwordNumber"))
-        .regex(/[@$!%*?&#]/, tValidation("passwordSpecial")),
+        .regex(/[^A-Za-z0-9\s]/, tValidation("passwordSpecial"))
+        .refine((v) => byteLength(v) <= 72, tValidation("passwordMax")),
       confirmPassword: z
         .string()
         .min(1, tValidation("confirmPasswordRequired")),
@@ -850,19 +904,138 @@ export const RegisterPage = () => {
 
   const handleBack = () => setStep((s) => s - 1);
 
+  const serverMessage = (code: string): string | null => {
+    const key = FIELD_ERROR_MESSAGE_KEY[code];
+    return key ? tValidation(key) : null;
+  };
+
+  // Maps the backend's extensions.code / fields onto the right input. Step 2
+  // fields send the user back to step 2; step 3 fields stay where they are.
+  const handleRegisterError = (err: unknown) => {
+    const parsed = parseApiError(err);
+    const opts = { type: "server" } as const;
+    const focusStep2 = (field: keyof Step2Data) => {
+      setStep(2);
+      // the step 2 inputs remount; wait a tick before focusing
+      setTimeout(() => step2Form.setFocus(field), 0);
+    };
+
+    switch (parsed.code) {
+      case "EMAIL_TAKEN":
+        step2Form.setError("email", {
+          ...opts,
+          message: tValidation("emailTaken"),
+        });
+        focusStep2("email");
+        return;
+      case "USERNAME_TAKEN":
+        step2Form.setError("username", {
+          ...opts,
+          message: tValidation("usernameTaken"),
+        });
+        focusStep2("username");
+        return;
+      case "VALIDATION_ERROR": {
+        let firstStep2Field: keyof Step2Data | null = null;
+        let unplaced = false;
+
+        for (const { field, code } of parsed.fields) {
+          const message = serverMessage(code);
+          const step2Field: keyof Step2Data | undefined = (
+            {
+              email: "email",
+              password: "password",
+              username: "username",
+              name: "firstName",
+              country: "country",
+              managedByFirstName: "firstName",
+              managedByLastName: "lastName",
+            } as const
+          )[field as string];
+
+          if (message && step2Field) {
+            step2Form.setError(step2Field, { ...opts, message });
+            firstStep2Field ??= step2Field;
+          } else if (message && field === "clubName" && isClub) {
+            step3ClubForm.setError("name", { ...opts, message });
+          } else if (message && field === "city" && isClub) {
+            step3ClubForm.setError("city", { ...opts, message });
+          } else if (message && field === "city" && isUmpire) {
+            step3UmpireForm.setError("city", { ...opts, message });
+          } else if (message && field === "position" && !isClub && !isUmpire) {
+            step3PlayerForm.setError("position", { ...opts, message });
+          } else {
+            unplaced = true;
+          }
+        }
+
+        if (firstStep2Field) focusStep2(firstStep2Field);
+        if (unplaced || parsed.fields.length === 0) {
+          setError(t("registrationFailed"));
+        }
+        return;
+      }
+      case "RATE_LIMITED":
+        cooldown.start(RATE_LIMIT_COOLDOWN_SECONDS);
+        setError(tAuth("tooManyAttempts"));
+        return;
+      case "NETWORK_ERROR":
+        setError(tAuth("networkError"));
+        return;
+      default:
+        setError(tAuth("serverError"));
+    }
+  };
+
+  // onBlur availability check. Failures (incl. RATE_LIMITED) are ignored on
+  // purpose: the final register call validates again anyway.
+  const checkAvailability = async (field: "email" | "username") => {
+    const value = step2Form.getValues(field).trim();
+    if (!value || !(await step2Form.trigger(field))) return;
+
+    try {
+      const response =
+        field === "email"
+          ? await graphqlClient.request<{ isEmailAvailable: boolean }>(
+              IS_EMAIL_AVAILABLE,
+              { email: value },
+            )
+          : await graphqlClient.request<{ isUsernameAvailable: boolean }>(
+              IS_USERNAME_AVAILABLE,
+              { username: value },
+            );
+      const available =
+        field === "email"
+          ? (response as { isEmailAvailable: boolean }).isEmailAvailable
+          : (response as { isUsernameAvailable: boolean }).isUsernameAvailable;
+
+      if (available === false) {
+        step2Form.setError(field, {
+          type: "server",
+          message: tValidation(
+            field === "email" ? "emailTaken" : "usernameTaken",
+          ),
+        });
+      }
+    } catch {
+      /* ignore */
+    }
+  };
+
   // Final submit
   const submitStep3 = async (
     step3Data: Step3PlayerData | Step3ClubData | Step3UmpireData,
   ) => {
     const step2Data = step2Form.getValues();
     const card = ROLE_CARDS.find((r) => r.id === selectedRole)!;
-    const fullName = `${step2Data.firstName} ${step2Data.lastName}`;
+    const fullName = `${step2Data.firstName.trim()} ${step2Data.lastName.trim()}`;
 
+    setError("");
     registerUser(
       {
-        email: step2Data.email,
+        email: step2Data.email.trim(),
         name: fullName,
-        username: step2Data.username,
+        username: step2Data.username.trim() || undefined,
         password: step2Data.password,
         role: card.backendRole,
         country: step2Data.country,
@@ -916,24 +1089,7 @@ export const RegisterPage = () => {
 
           router.push(`/${locale}/opportunities`);
         },
-        onError: (err) => {
-          const msg =
-            (err as GraphQLError)?.response?.errors?.[0]?.message ||
-            t("registrationFailed");
-
-          if (msg.includes("email already exists")) {
-            setStep(2);
-            step2Form.setError("email", { message: msg });
-            return;
-          }
-          if (msg.includes("username already exists")) {
-            setStep(2);
-            step2Form.setError("username", { message: msg });
-            return;
-          }
-
-          setError(msg);
-        },
+        onError: (err) => handleRegisterError(err),
       },
     );
   };
@@ -947,9 +1103,23 @@ export const RegisterPage = () => {
       <StepIndicator currentStep={step} />
 
       {error && (
-        <div className="text-error bg-error/20 font-semibold py-2 px-4 text-xs rounded-lg mb-4">
-          <p className="text-error text-sm">{error}</p>
-        </div>
+        <motion.div
+          role="alert"
+          initial={{ opacity: 0, y: -4 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex items-start gap-2 text-error bg-error/20 border border-error/40 font-semibold py-2.5 px-4 rounded-lg mb-4"
+        >
+          <AlertCircle size={18} className="shrink-0 mt-0.5" />
+          <p className="flex-1 text-sm">{error}</p>
+          <button
+            type="button"
+            onClick={() => setError("")}
+            aria-label={tAuth("dismissError")}
+            className="shrink-0 opacity-70 hover:opacity-100 cursor-pointer"
+          >
+            <X size={16} />
+          </button>
+        </motion.div>
       )}
 
       {step === 1 && (
@@ -976,6 +1146,7 @@ export const RegisterPage = () => {
           onToggleConfirmPassword={() => setShowConfirmPassword((v) => !v)}
           onBack={handleBack}
           onNext={handleNext}
+          onCheckAvailability={checkAvailability}
         />
       )}
 
@@ -989,7 +1160,7 @@ export const RegisterPage = () => {
             <Step3ClubDataForm
               t={t}
               form={step3ClubForm}
-              isRegistering={isRegistering}
+              isRegistering={isRegistering || cooldown.active}
               onBack={handleBack}
               onSubmit={onSubmitStep3Club}
             />
@@ -997,7 +1168,7 @@ export const RegisterPage = () => {
             <Step3UmpireDataForm
               t={t}
               form={step3UmpireForm}
-              isRegistering={isRegistering}
+              isRegistering={isRegistering || cooldown.active}
               onBack={handleBack}
               onSubmit={onSubmitStep3Umpire}
             />
@@ -1006,7 +1177,7 @@ export const RegisterPage = () => {
               t={t}
               tExplore={tExplore}
               form={step3PlayerForm}
-              isRegistering={isRegistering}
+              isRegistering={isRegistering || cooldown.active}
               onBack={handleBack}
               onSubmit={onSubmitStep3Player}
             />

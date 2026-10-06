@@ -13,11 +13,42 @@ import { AuthInitializer } from "@/components/auth/auth-initializer";
 import { Toaster } from "@/components/ui/sonner";
 import { locales } from "@/i18n/request";
 
+const title = "Stick Transfer - Hockey Job Board";
+const description =
+  "Connecting hockey talent with opportunities. Find jobs, trials, and clubs worldwide.";
+
 export const metadata: Metadata = {
-  title: "Stick Transfer - Hockey Job Board",
-  description:
-    "Connecting hockey talent with opportunities. Find jobs, trials, and clubs worldwide.",
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.sticktransfer.com",
+  ),
+  title,
+  description,
   generator: "v0.app",
+  icons: {
+    icon: [
+      { url: "/icon-32.png", sizes: "32x32", type: "image/png" },
+      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icon-512.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
+  },
+  openGraph: {
+    type: "website",
+    siteName: "Stick Transfer",
+    title,
+    description,
+    images: [
+      { url: "/og-16x9.jpg", width: 1200, height: 675, alt: title },
+      { url: "/og-21x9.jpg", width: 1680, height: 720, alt: title },
+      { url: "/og-1x1.jpg", width: 600, height: 600, alt: title },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title,
+    description,
+    images: ["/og-16x9.jpg"],
+  },
 };
 
 export const viewport: Viewport = {

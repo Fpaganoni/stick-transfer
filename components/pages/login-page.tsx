@@ -1,7 +1,15 @@
 "use client";
 
-import { useState } from "react";
-import { Mail, Lock, Eye, EyeOff, ArrowUpIcon } from "lucide-react";
+import { useEffect, useState } from "react";
+import {
+  Mail,
+  Lock,
+  Eye,
+  EyeOff,
+  ArrowUpIcon,
+  AlertCircle,
+  X,
+} from "lucide-react";
 import { useTranslations, useLocale } from "next-intl";
 import { motion } from "framer-motion";
 import Image from "next/image";
@@ -16,7 +24,11 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { GraphQLError } from "@/types/graphql-error";
+import {
+  getLoginErrorKey,
+  RATE_LIMIT_COOLDOWN_SECONDS,
+} from "@/lib/auth-errors";
+import { useCooldown } from "@/hooks/useCooldown";
 import { Role } from "@/types/enums";
 
 const BACKEND_URL =
@@ -53,19 +65,37 @@ export function LoginPage() {
 
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
+  const [credentialsInvalid, setCredentialsInvalid] = useState(false);
   const { login } = useAuthStore();
   const { mutate: loginUser, isPending } = useUserLogin();
   const router = useRouter();
+  const cooldown = useCooldown();
 
   const {
     register,
     handleSubmit,
+    watch,
+    resetField,
+    setFocus,
     formState: { errors },
   } = useForm<LoginData>({
     resolver: zodResolver(loginSchema),
   });
 
+  // Editing either field makes the previous server error stale.
+  useEffect(() => {
+    const sub = watch((_value, { type }) => {
+      // Only real user input; resetField() must not clear the fresh error.
+      if (type !== "change") return;
+      setError("");
+      setCredentialsInvalid(false);
+    });
+    return () => sub.unsubscribe();
+  }, [watch]);
+
   const onSubmit: SubmitHandler<LoginData> = (data) => {
+    setError("");
+    setCredentialsInvalid(false);
     loginUser(
       { email: data.email, password: data.password },
       {
@@ -92,10 +122,17 @@ export function LoginPage() {
           );
         },
         onError: (err) => {
-          const errorMsj =
-            (err as GraphQLError)?.response?.errors?.[0]?.message ||
-            t("loginFailed");
-          setError(errorMsj);
+          const key = getLoginErrorKey(err);
+          setError(t(key));
+          if (key === "tooManyAttempts") {
+            cooldown.start(RATE_LIMIT_COOLDOWN_SECONDS);
+          }
+          if (key === "invalidCredentials") {
+            // Don't say which field is wrong; flag both and let the user retype.
+            setCredentialsInvalid(true);
+            resetField("password");
+            setFocus("password");
+          }
         },
       },
     );
@@ -135,9 +172,23 @@ export function LoginPage() {
       </div>
 
       {error && (
-        <div className="text-error bg-error/20 font-semibold py-2 px-4 text-xs rounded-lg mb-5">
-          <p className="text-error text-sm">{error}</p>
-        </div>
+        <motion.div
+          role="alert"
+          initial={{ opacity: 0, y: -4 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex items-start gap-2 text-error bg-error/20 border border-error/40 font-semibold py-2.5 px-4 rounded-lg mb-5"
+        >
+          <AlertCircle size={18} className="shrink-0 mt-0.5" />
+          <p className="flex-1 text-sm">{error}</p>
+          <button
+            type="button"
+            onClick={() => setError("")}
+            aria-label={t("dismissError")}
+            className="shrink-0 opacity-70 hover:opacity-100 cursor-pointer"
+          >
+            <X size={16} />
+          </button>
+        </motion.div>
       )}
 
       {/* Two-column body: OAuth | divider | form */}
@@ -194,7 +245,11 @@ export function LoginPage() {
                 id="email"
                 type="email"
                 placeholder="your@email.com"
-                className="pl-9 h-10 text-sm"
+                autoComplete="email"
+                aria-invalid={!!errors.email || credentialsInvalid}
+                className={`pl-9 h-10 text-sm ${
+                  errors.email || credentialsInvalid ? "border-error" : ""
+                }`}
               />
             </div>
             {errors.email && (
@@ -224,7 +279,11 @@ export function LoginPage() {
                 id="password"
                 type={showPassword ? "text" : "password"}
                 placeholder="••••••••"
-                className="pl-9 pr-9 h-10 text-sm"
+                autoComplete="current-password"
+                aria-invalid={!!errors.password || credentialsInvalid}
+                className={`pl-9 pr-9 h-10 text-sm ${
+                  errors.password || credentialsInvalid ? "border-error" : ""
+                }`}
               />
               <button
                 type="button"
@@ -253,10 +312,14 @@ export function LoginPage() {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.97 }}
               type="submit"
-              disabled={isPending}
+              disabled={isPending || cooldown.active}
               className="flex-1 h-10 px-4 bg-primary text-white font-semibold rounded-xl hover:bg-primary-hover transition-colors cursor-pointer disabled:opacity-50 text-sm"
             >
-              {isPending ? t("loggingIn") : t("login")}
+              {cooldown.active
+                ? t("retryIn", { seconds: cooldown.seconds })
+                : isPending
+                  ? t("loggingIn")
+                  : t("login")}
             </motion.button>
             <button
               type="button"
