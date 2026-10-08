@@ -29,7 +29,9 @@ export const createUmpireProfileSchema = (t: Translate) =>
     name: z.string().min(2, { message: t("editForm.validation.nameMin") }),
     username: z
       .string()
-      .min(2, { message: t("editForm.validation.usernameMin") }),
+      .regex(/^[a-zA-Z0-9_]{3,20}$/, {
+        message: t("editForm.validation.usernameMin"),
+      }),
     avatar: z
       .string()
       .url({ message: t("editForm.validation.urlInvalid") })

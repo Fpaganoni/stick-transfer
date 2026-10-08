@@ -520,7 +520,7 @@
       },
       "validation": {
         "nameMin": "Le nom doit avoir au moins 2 caractères.",
-        "usernameMin": "Le nom d'utilisateur doit avoir au moins 2 caractères.",
+        "usernameMin": "Le nom d'utilisateur doit avoir 3-20 caracteres : lettres, chiffres et _",
         "urlInvalid": "Veuillez entrer une URL valide.",
         "bioMax": "La biographie ne peut dépasser 500 caractères.",
         "titleRequired": "Le titre est requis",

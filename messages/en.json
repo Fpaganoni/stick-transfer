@@ -520,7 +520,7 @@
       },
       "validation": {
         "nameMin": "Name must be at least 2 characters.",
-        "usernameMin": "Username must be at least 2 characters.",
+        "usernameMin": "Username must be 3-20 characters: letters, numbers and _",
         "urlInvalid": "Please enter a valid URL.",
         "bioMax": "Bio cannot exceed 500 characters.",
         "titleRequired": "Title is required",
