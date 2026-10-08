@@ -303,9 +303,11 @@
 
 /* Smooth transitions */
 
-button,
-a {
-  @apply cursor-pointer;
+@layer base {
+  button:not(:disabled),
+  a {
+    @apply cursor-pointer;
+  }
 }
 
 /* Social media icon hover effects */

@@ -140,12 +140,14 @@ export function LoginPage() {
 
   const socialButtons = [
     {
+      id: "facebook",
       label: t("loginWithFacebook"),
       bg: "#1877F2",
       icon: <FacebookIcon />,
       href: `${BACKEND_URL}/auth/facebook`,
     },
     {
+      id: "google",
       label: t("loginWithGoogle"),
       bg: "#4285F4",
       icon: (
@@ -195,25 +197,31 @@ export function LoginPage() {
       <div className="flex flex-col sm:flex-row sm:gap-0 gap-5 sm:items-stretch">
         {/* Left: OAuth buttons */}
         <div className="flex flex-col gap-2.5 lg:gap-3.5 sm:flex-1 justify-center">
-          {socialButtons.map((btn) => (
-            <motion.button
-              key={btn.label}
-              type="button"
-              whileHover={{ scale: 1.015 }}
-              whileTap={{ scale: 0.975 }}
-              transition={{ duration: 0.15 }}
-              onClick={() => {
-                window.location.href = btn.href;
-              }}
-              style={{ backgroundColor: btn.bg }}
-              className="w-full h-9 sm:h-11 lg:h-12 px-4 lg:px-5 rounded-xl text-white font-medium text-sm lg:text-base flex items-center gap-3 cursor-pointer transition-opacity hover:opacity-90"
-            >
-              <span className="shrink-0 w-5 flex items-center justify-center">
-                {btn.icon}
-              </span>
-              <span className="flex-1 text-left">{btn.label}</span>
-            </motion.button>
-          ))}
+          {socialButtons.map((btn) => {
+            const isDisabled = btn.id === "facebook";
+            return (
+              <motion.button
+                key={btn.label}
+                type="button"
+                disabled={isDisabled}
+                aria-disabled={isDisabled}
+                whileHover={isDisabled ? undefined : { scale: 1.015 }}
+                whileTap={isDisabled ? undefined : { scale: 0.975 }}
+                transition={{ duration: 0.15 }}
+                onClick={() => {
+                  if (isDisabled) return;
+                  window.location.href = btn.href;
+                }}
+                style={{ backgroundColor: btn.bg }}
+                className={`w-full h-9 sm:h-11 lg:h-12 px-4 lg:px-5 rounded-xl text-white font-medium text-sm lg:text-base flex items-center gap-3 cursor-pointer transition-opacity hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:opacity-50`}
+              >
+                <span className="shrink-0 w-5 flex items-center justify-center">
+                  {btn.icon}
+                </span>
+                <span className="flex-1 text-left">{btn.label}</span>
+              </motion.button>
+            );
+          })}
         </div>
 
         {/* OR divider — vertical on desktop, horizontal on mobile */}
