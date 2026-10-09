@@ -16,6 +16,14 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Position } from "@/types/enums";
+import {
   Card,
   CardContent,
   CardHeader,
@@ -196,28 +204,57 @@ export function BasicInfoSection({ control, t }: BasicInfoSectionProps) {
   );
 }
 
+/** Positions the backend accepts, labelled with explore.positions.* (attacker reads "Forward"). */
+export const POSITION_OPTIONS = [
+  { value: Position.GOALKEEPER, labelKey: "goalkeeper" },
+  { value: Position.DEFENDER, labelKey: "defender" },
+  { value: Position.MIDFIELDER, labelKey: "midfielder" },
+  { value: Position.ATTACKER, labelKey: "forward" },
+] as const;
+
 interface PlayerDetailsSectionProps {
   control: AnyControl;
   t: (key: string) => string;
+  tExplore: (key: string) => string;
+  /** Only PLAYER has a position; the backend ignores it for every other role. */
+  showPosition: boolean;
 }
 
-/** Position and years of experience — only meaningful for PLAYER/COACH. */
-export function PlayerDetailsSection({ control, t }: PlayerDetailsSectionProps) {
+/** Position (players only) and years of experience for PLAYER/COACH. */
+export function PlayerDetailsSection({
+  control,
+  t,
+  tExplore,
+  showPosition,
+}: PlayerDetailsSectionProps) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <FormField
-        control={control}
-        name="position"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>{t("editForm.position")}</FormLabel>
-            <FormControl>
-              <Input placeholder={t("editForm.placeholders.position")} {...field} />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
+      {showPosition && (
+        <FormField
+          control={control}
+          name="position"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>{t("editForm.position")}</FormLabel>
+              <Select value={field.value ?? ""} onValueChange={field.onChange}>
+                <FormControl>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder={t("editForm.placeholders.position")} />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {POSITION_OPTIONS.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {tExplore(`positions.${option.labelKey}`)}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      )}
       <FormField
         control={control}
         name="yearsOfExperience"

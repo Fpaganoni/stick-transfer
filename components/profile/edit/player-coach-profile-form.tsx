@@ -8,7 +8,7 @@ import * as z from "zod";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useUpdateUser, useUploadCv, useDeleteCv } from "@/hooks/useUsers";
 import { TrajectoryItem } from "@/types/models/user";
-import { Position } from "@/types/enums";
+import { Position, Role } from "@/types/enums";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
@@ -82,11 +82,19 @@ const createProfileFormSchema = (t: (key: string) => string) =>
 
 type ProfileFormValues = z.infer<ReturnType<typeof createProfileFormSchema>>;
 
-/** Profile edit form for PLAYER and COACH accounts: position, CV, trajectories, multimedia. */
+const POSITION_VALUES: readonly string[] = Object.values(Position);
+
+/** Legacy rows may hold free text ("Forward"); only enum values reach the select. */
+function toKnownPosition(value: string | undefined): string {
+  return value && POSITION_VALUES.includes(value) ? value : "";
+}
+
+/** Profile edit form for PLAYER and COACH accounts: position (players only), CV, trajectories, multimedia. */
 export function PlayerCoachProfileForm() {
   const router = useRouter();
   const t = useTranslations("profile");
   const tCommon = useTranslations("common");
+  const tExplore = useTranslations("explore");
   const { user, updateUser } = useAuthStore();
   const { mutateAsync: updateProfile } = useUpdateUser();
   const uploadCv = useUploadCv();
@@ -97,6 +105,7 @@ export function PlayerCoachProfileForm() {
   const [isSaving, setIsSaving] = useState(false);
 
   const profileFormSchema = createProfileFormSchema(t);
+  const isPlayer = user?.role === Role.PLAYER;
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
@@ -106,7 +115,7 @@ export function PlayerCoachProfileForm() {
       avatar: user?.avatar || "",
       coverImage: user?.coverImage || "",
       bio: user?.bio || "",
-      position: user?.position || "",
+      position: toKnownPosition(user?.position),
       yearsOfExperience: user?.yearsOfExperience || 0,
       country: user?.country || "",
       city: user?.city || "",
@@ -132,6 +141,9 @@ export function PlayerCoachProfileForm() {
     try {
       const multimediaUrls = data.multimedia?.map((m) => m.url) || [];
       const updatedTrajectories = formatTrajectories(data.trajectories);
+      // Only players have a position; an empty one would be POSITION_INVALID
+      const position =
+        isPlayer && data.position ? (data.position as Position) : undefined;
 
       let finalCvUrl = user.cvUrl;
 
@@ -153,7 +165,7 @@ export function PlayerCoachProfileForm() {
         bio: data.bio,
         avatar: data.avatar,
         coverImage: data.coverImage,
-        position: data.position,
+        ...(position ? { position } : {}),
         country: data.country,
         city: data.city,
         cvUrl: finalCvUrl,
@@ -168,7 +180,7 @@ export function PlayerCoachProfileForm() {
         avatar: data.avatar,
         coverImage: data.coverImage,
         bio: data.bio,
-        position: data.position as Position | undefined,
+        ...(position ? { position } : {}),
         yearsOfExperience: data.yearsOfExperience,
         country: data.country,
         city: data.city,
@@ -204,7 +216,12 @@ export function PlayerCoachProfileForm() {
             <CardDescription>{t("editForm.basicInfoDesc")}</CardDescription>
           </CardHeader>
           <CardContent>
-            <PlayerDetailsSection control={form.control} t={t} />
+            <PlayerDetailsSection
+              control={form.control}
+              t={t}
+              tExplore={tExplore}
+              showPosition={isPlayer}
+            />
           </CardContent>
         </Card>
 
