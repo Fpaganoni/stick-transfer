@@ -22,9 +22,8 @@
         "INTERNACIONAL": "Internacional"
       },
       "modalities": {
-        "CESPED": "Césped",
-        "SALA": "Sala",
-        "INDOOR": "Indoor"
+        "OUTDOOR": "Césped (outdoor)",
+        "INDOOR": "Sala (indoor)"
       },
       "categories": {
         "JUVENIL": "Juvenil",

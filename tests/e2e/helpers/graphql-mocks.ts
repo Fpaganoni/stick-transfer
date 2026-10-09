@@ -434,7 +434,7 @@ export const MOCK_PUBLIC_UMPIRE = {
   matchesOfficiated: 640,
   travelAvailability: "REGIONAL",
   languages: ["Español", "English"],
-  modalities: ["CESPED", "SALA"],
+  modalities: ["OUTDOOR", "INDOOR"],
   umpireCategories: ["MAYORES", "FEMENINO"],
   umpireCertifications: [
     {
@@ -467,7 +467,7 @@ export const MOCK_EXPLORE_UMPIRES = [
     cvUrl: null,
     licenseLevel: "INTERNACIONAL",
     travelAvailability: "REGIONAL",
-    modalities: ["CESPED"],
+    modalities: ["OUTDOOR"],
     umpireCategories: ["MAYORES"],
     matchesOfficiated: 640,
     club: null,
@@ -480,7 +480,7 @@ export const MOCK_UMPIRE_OPPORTUNITY = {
   title: "Umpire - Division de Honor",
   positionType: "UMPIRE",
   licenseLevelRequired: "NACIONAL",
-  modality: "CESPED",
+  modality: "OUTDOOR",
   umpireCategory: "MASCULINO",
   matchDate: "2026-11-15T10:00:00.000Z",
   status: "open",

@@ -20,8 +20,7 @@ export enum TravelAvailability {
 }
 
 export enum UmpireModality {
-  CESPED = "CESPED",
-  SALA = "SALA",
+  OUTDOOR = "OUTDOOR",
   INDOOR = "INDOOR",
 }
 

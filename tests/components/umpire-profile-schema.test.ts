@@ -261,7 +261,7 @@ describe("buildUmpireUpdateFields", () => {
       {
         ...baseValues,
         languages: "Español, English",
-        modalities: [UmpireModality.CESPED, UmpireModality.SALA],
+        modalities: [UmpireModality.OUTDOOR, UmpireModality.INDOOR],
         umpireCategories: [UmpireCategory.MAYORES, UmpireCategory.FEMENINO],
         travelAvailability: TravelAvailability.REGIONAL,
         umpireCertifications: [
@@ -273,7 +273,7 @@ describe("buildUmpireUpdateFields", () => {
     );
 
     expect(fields.languages).toEqual(["Español", "English"]);
-    expect(fields.modalities).toEqual(["CESPED", "SALA"]);
+    expect(fields.modalities).toEqual(["OUTDOOR", "INDOOR"]);
     expect(fields.umpireCategories).toEqual(["MAYORES", "FEMENINO"]);
     expect(fields.travelAvailability).toBe("REGIONAL");
     expect(fields.umpireCertifications).toEqual([

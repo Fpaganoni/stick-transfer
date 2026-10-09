@@ -70,7 +70,7 @@ const umpireJob: JobOpportunity = {
   title: "Umpire - Division de Honor",
   positionType: "UMPIRE",
   licenseLevelRequired: "NACIONAL" as never,
-  modality: "CESPED" as never,
+  modality: "OUTDOOR" as never,
   umpireCategory: "MASCULINO" as never,
   matchDate: "2026-11-15T10:00:00Z",
 };
@@ -215,7 +215,7 @@ describe("OpportunityDetailModal", () => {
       open(umpireJob);
 
       expect(screen.getByText("licenseLevels.NACIONAL")).toBeInTheDocument();
-      expect(screen.getByText("modalities.CESPED")).toBeInTheDocument();
+      expect(screen.getByText("modalities.OUTDOOR")).toBeInTheDocument();
       expect(screen.getByText("categories.MASCULINO")).toBeInTheDocument();
       expect(screen.getByText(/2026/)).toBeInTheDocument();
     });

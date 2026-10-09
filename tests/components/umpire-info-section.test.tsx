@@ -34,7 +34,7 @@ const fullInfo = {
   yearsOfExperience: 14,
   travelAvailability: TravelAvailability.REGIONAL,
   languages: ["Español", "English", "Français"],
-  modalities: [UmpireModality.CESPED, UmpireModality.SALA],
+  modalities: [UmpireModality.OUTDOOR, UmpireModality.INDOOR],
   umpireCategories: [UmpireCategory.MAYORES, UmpireCategory.FEMENINO],
   umpireCertifications: [
     {
@@ -74,9 +74,8 @@ describe("UmpireInfoSection", () => {
     expect(screen.getByText("Español")).toBeInTheDocument();
     expect(screen.getByText("English")).toBeInTheDocument();
     expect(screen.getByText("Français")).toBeInTheDocument();
-    expect(screen.getByText("modalities.CESPED")).toBeInTheDocument();
-    expect(screen.getByText("modalities.SALA")).toBeInTheDocument();
-    expect(screen.queryByText("modalities.INDOOR")).not.toBeInTheDocument();
+    expect(screen.getByText("modalities.OUTDOOR")).toBeInTheDocument();
+    expect(screen.getByText("modalities.INDOOR")).toBeInTheDocument();
     expect(screen.getByText("categories.MAYORES")).toBeInTheDocument();
     expect(screen.getByText("categories.FEMENINO")).toBeInTheDocument();
   });

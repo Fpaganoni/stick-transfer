@@ -149,13 +149,13 @@ describe("OpportunityFilters position types and umpire filters", () => {
     fireEvent.click(screen.getByLabelText("umpireJob.licenseLevel"));
     fireEvent.click(await screen.findByRole("option", { name: "licenseLevels.NACIONAL" }));
     fireEvent.click(screen.getByLabelText("umpireJob.modality"));
-    fireEvent.click(await screen.findByRole("option", { name: "modalities.SALA" }));
+    fireEvent.click(await screen.findByRole("option", { name: "modalities.INDOOR" }));
     fireEvent.click(screen.getByLabelText("umpireJob.category"));
     fireEvent.click(await screen.findByRole("option", { name: "categories.FEMENINO" }));
 
     expect(useOpportunitiesStore.getState().filters).toMatchObject({
       licenseLevelRequired: "NACIONAL",
-      modality: "SALA",
+      modality: "INDOOR",
       umpireCategory: "FEMENINO",
     });
   });
@@ -165,7 +165,7 @@ describe("OpportunityFilters position types and umpire filters", () => {
       useOpportunitiesStore.getState().setFilters({
         positionType: "UMPIRE",
         licenseLevelRequired: "NACIONAL",
-        modality: "SALA",
+        modality: "INDOOR",
         umpireCategory: "FEMENINO",
       });
     });
@@ -187,7 +187,7 @@ describe("OpportunityFilters position types and umpire filters", () => {
     act(() => {
       useOpportunitiesStore.getState().setFilters({
         positionType: "UMPIRE",
-        modality: "CESPED",
+        modality: "OUTDOOR",
       });
     });
     render(<OpportunityFilters {...defaultProps} />);

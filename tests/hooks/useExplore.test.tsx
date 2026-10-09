@@ -36,7 +36,7 @@ describe("useExploreUsers", () => {
         useExploreUsers({
           role: "UMPIRE",
           licenseLevel: "INTERNACIONAL",
-          modality: "CESPED",
+          modality: "OUTDOOR",
           umpireCategory: "FEMENINO",
           limit: 20,
           offset: 40,
@@ -49,7 +49,7 @@ describe("useExploreUsers", () => {
     expect(variables).toMatchObject({
       role: "UMPIRE",
       licenseLevel: "INTERNACIONAL",
-      modality: "CESPED",
+      modality: "OUTDOOR",
       umpireCategory: "FEMENINO",
       limit: 20,
       offset: 40,

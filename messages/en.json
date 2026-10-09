@@ -22,8 +22,7 @@
         "INTERNACIONAL": "International"
       },
       "modalities": {
-        "CESPED": "Turf",
-        "SALA": "Indoor (sala)",
+        "OUTDOOR": "Outdoor",
         "INDOOR": "Indoor"
       },
       "categories": {

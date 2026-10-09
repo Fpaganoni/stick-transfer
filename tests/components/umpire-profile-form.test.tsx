@@ -61,7 +61,7 @@ function makeUser(overrides: Record<string, unknown> = {}) {
     licenseNumber: "RFEH-001",
     travelAvailability: TravelAvailability.INTERNACIONAL,
     languages: ["Español", "English"],
-    modalities: [UmpireModality.CESPED],
+    modalities: [UmpireModality.OUTDOOR],
     umpireCategories: [UmpireCategory.MAYORES],
     umpireCertifications: [
       {
@@ -116,8 +116,8 @@ describe("UmpireProfileForm", () => {
       expect(screen.getByLabelText("editForm.yearsOfExperience")).toHaveValue(14);
       expect(screen.getByLabelText("editForm.umpire.travelAvailability")).toHaveValue("INTERNACIONAL");
       expect(screen.getByLabelText("editForm.umpire.languages")).toHaveValue("Español, English");
-      expect(screen.getByLabelText("modalities.CESPED")).toBeChecked();
-      expect(screen.getByLabelText("modalities.SALA")).not.toBeChecked();
+      expect(screen.getByLabelText("modalities.OUTDOOR")).toBeChecked();
+      expect(screen.getByLabelText("modalities.INDOOR")).not.toBeChecked();
       expect(screen.getByLabelText("categories.MAYORES")).toBeChecked();
       expect(screen.getByDisplayValue("Licencia internacional")).toBeInTheDocument();
       expect(screen.getByDisplayValue("2012-05-31")).toBeInTheDocument();
@@ -142,7 +142,7 @@ describe("UmpireProfileForm", () => {
       expect(screen.getByLabelText("editForm.umpire.licenseLevel")).toHaveValue("");
       expect(screen.getByLabelText("editForm.umpire.certifyingBody")).toHaveValue("");
       expect(screen.getByLabelText("editForm.umpire.matchesOfficiated")).toHaveValue(null);
-      expect(screen.getByLabelText("modalities.CESPED")).not.toBeChecked();
+      expect(screen.getByLabelText("modalities.OUTDOOR")).not.toBeChecked();
     });
   });
 
@@ -178,7 +178,7 @@ describe("UmpireProfileForm", () => {
       const user = userEvent.setup();
       render(<UmpireProfileForm />);
 
-      await user.click(screen.getByLabelText("modalities.SALA"));
+      await user.click(screen.getByLabelText("modalities.INDOOR"));
       await user.click(screen.getByLabelText("categories.FEMENINO"));
       const matches = screen.getByLabelText("editForm.umpire.matchesOfficiated");
       await user.clear(matches);
@@ -195,7 +195,7 @@ describe("UmpireProfileForm", () => {
         certificationYear: 2012,
         travelAvailability: "INTERNACIONAL",
         languages: ["Español", "English"],
-        modalities: ["CESPED", "SALA"],
+        modalities: ["OUTDOOR", "INDOOR"],
         umpireCategories: ["MAYORES", "FEMENINO"],
         umpireCertifications: [
           {
@@ -250,7 +250,7 @@ describe("UmpireProfileForm", () => {
       await waitFor(() => expect(mockPush).toHaveBeenCalledWith("/profile"));
       expect(mockToast.success).toHaveBeenCalled();
       expect(mockStoreUpdate).toHaveBeenCalledWith(
-        expect.objectContaining({ modalities: ["CESPED", "INDOOR"], languages: ["Español", "English"] }),
+        expect.objectContaining({ modalities: ["OUTDOOR", "INDOOR"], languages: ["Español", "English"] }),
       );
     });
 
@@ -286,7 +286,7 @@ describe("UmpireProfileForm", () => {
       const user = userEvent.setup();
       render(<UmpireProfileForm />);
 
-      await user.click(screen.getByLabelText("modalities.SALA"));
+      await user.click(screen.getByLabelText("modalities.INDOOR"));
       await user.click(saveButton());
 
       await waitFor(() => expect(mockUpdateProfile).toHaveBeenCalledTimes(1));

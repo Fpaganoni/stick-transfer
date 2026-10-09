@@ -22,9 +22,8 @@
         "INTERNACIONAL": "International"
       },
       "modalities": {
-        "CESPED": "Gazon",
-        "SALA": "Salle",
-        "INDOOR": "Indoor"
+        "OUTDOOR": "Extérieur",
+        "INDOOR": "Salle"
       },
       "categories": {
         "JUVENIL": "Jeunes",

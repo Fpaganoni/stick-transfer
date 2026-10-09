@@ -141,7 +141,7 @@ describe("CreateOpportunityForm", () => {
       await fillBasics(user);
       await choose(user, positionTrigger(), "positionTypes.UMPIRE");
       await choose(user, screen.getByLabelText("umpireJob.licenseLevel"), "licenseLevels.NACIONAL");
-      await choose(user, screen.getByLabelText("umpireJob.modality"), "modalities.CESPED");
+      await choose(user, screen.getByLabelText("umpireJob.modality"), "modalities.OUTDOOR");
       await choose(user, screen.getByLabelText("umpireJob.category"), "categories.MASCULINO");
       fireEvent.change(screen.getByLabelText("umpireJob.matchDate"), {
         target: { value: "2026-11-15T10:00" },
@@ -152,7 +152,7 @@ describe("CreateOpportunityForm", () => {
       expect(mockCreate.mock.calls[0][0]).toMatchObject({
         positionType: "UMPIRE",
         licenseLevelRequired: "NACIONAL",
-        modality: "CESPED",
+        modality: "OUTDOOR",
         umpireCategory: "MASCULINO",
         matchDate: new Date("2026-11-15T10:00").toISOString(),
       });
@@ -180,7 +180,7 @@ describe("CreateOpportunityForm", () => {
 
       await fillBasics(user);
       await choose(user, positionTrigger(), "positionTypes.UMPIRE");
-      await choose(user, screen.getByLabelText("umpireJob.modality"), "modalities.SALA");
+      await choose(user, screen.getByLabelText("umpireJob.modality"), "modalities.INDOOR");
       await choose(user, positionTrigger(), "positionTypes.STAFF");
       await user.click(submit());
 

@@ -143,12 +143,12 @@ describe("ExplorePage", () => {
       render(<ExplorePage />);
 
       await pick(user, "filters.role", "roles.umpire");
-      await pick(user, "filters.modality", "modalities.CESPED");
+      await pick(user, "filters.modality", "modalities.OUTDOOR");
       await pick(user, "filters.category", "categories.FEMENINO");
 
       expect(lastFilters()).toMatchObject({
         role: "UMPIRE",
-        modality: "CESPED",
+        modality: "OUTDOOR",
         umpireCategory: "FEMENINO",
       });
     });
@@ -174,7 +174,7 @@ describe("ExplorePage", () => {
 
       await pick(user, "filters.role", "roles.umpire");
       await pick(user, "filters.licenseLevel", "licenseLevels.NACIONAL");
-      await pick(user, "filters.modality", "modalities.SALA");
+      await pick(user, "filters.modality", "modalities.INDOOR");
       // The active role button is now labelled with the selected role
       await pick(user, "roles.umpire", "roles.player");
 

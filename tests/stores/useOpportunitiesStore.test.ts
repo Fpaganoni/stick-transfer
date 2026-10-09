@@ -29,11 +29,11 @@ describe("useOpportunitiesStore filters", () => {
   it("setFilters merges without losing other filters", () => {
     const { setFilters } = useOpportunitiesStore.getState();
     setFilters({ positionType: "UMPIRE" });
-    setFilters({ modality: "CESPED" });
+    setFilters({ modality: "OUTDOOR" });
 
     expect(useOpportunitiesStore.getState().filters).toMatchObject({
       positionType: "UMPIRE",
-      modality: "CESPED",
+      modality: "OUTDOOR",
     });
   });
 
@@ -42,7 +42,7 @@ describe("useOpportunitiesStore filters", () => {
     setFilters({
       positionType: "UMPIRE",
       licenseLevelRequired: "NACIONAL",
-      modality: "SALA",
+      modality: "INDOOR",
       umpireCategory: "MAYORES",
     });
     setSearchQuery("madrid");

@@ -51,7 +51,7 @@ const umpire = {
   isVerified: true,
   licenseLevel: UmpireLicenseLevel.INTERNACIONAL,
   matchesOfficiated: 640,
-  modalities: [UmpireModality.CESPED, UmpireModality.SALA],
+  modalities: [UmpireModality.OUTDOOR, UmpireModality.INDOOR],
   umpireCategories: [UmpireCategory.MAYORES],
 };
 
@@ -77,8 +77,8 @@ describe("ProfileCard", () => {
     it("lists modalities and categories", () => {
       render(<ProfileCard {...umpire} />);
 
-      expect(screen.getByText("modalities.CESPED")).toBeInTheDocument();
-      expect(screen.getByText("modalities.SALA")).toBeInTheDocument();
+      expect(screen.getByText("modalities.OUTDOOR")).toBeInTheDocument();
+      expect(screen.getByText("modalities.INDOOR")).toBeInTheDocument();
       expect(screen.getByText("categories.MAYORES")).toBeInTheDocument();
     });
 

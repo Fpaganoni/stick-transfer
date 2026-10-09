@@ -57,7 +57,7 @@ const jobs = [
     title: "Umpire national turf men",
     positionType: "UMPIRE",
     licenseLevelRequired: "NACIONAL" as never,
-    modality: "CESPED" as never,
+    modality: "OUTDOOR" as never,
     umpireCategory: "MASCULINO" as never,
   }),
   job({
@@ -154,14 +154,14 @@ describe("JobOpportunities filtering", () => {
   });
 
   it("hides umpire jobs without requirements once a requirement filter is on", () => {
-    applyFilters({ positionType: "UMPIRE", modality: "CESPED" });
+    applyFilters({ positionType: "UMPIRE", modality: "OUTDOOR" });
     render(<JobOpportunities />);
 
     expect(shown()).not.toContain("Umpire no requirements");
   });
 
   it("never lets non-umpire jobs through a requirement filter", () => {
-    applyFilters({ modality: "CESPED" });
+    applyFilters({ modality: "OUTDOOR" });
     render(<JobOpportunities />);
 
     expect(shown()).toEqual(["Umpire national turf men"]);
