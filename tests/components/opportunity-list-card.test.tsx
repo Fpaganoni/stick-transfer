@@ -18,16 +18,20 @@ vi.mock("@/hooks/useJobApplications", () => ({
   useUserApplications: () => ({ hasAppliedTo: () => false }),
 }));
 
+let mockIsLoggedIn = false;
+
 vi.mock("@/stores/useAuthStore", () => ({
-  useAuthStore: () => ({ isLoggedIn: false }),
+  useAuthStore: () => ({ isLoggedIn: mockIsLoggedIn }),
 }));
 
 vi.mock("@/stores/useUIStore", () => ({
   useUIStore: () => ({ openLoginModal: mockOpenLoginModal }),
 }));
 
-vi.mock("@/stores/useSavedJobsStore", () => ({
-  useSavedJobsStore: () => ({ toggleSave: vi.fn(), isSaved: () => false }),
+const mockToggleSave = vi.fn();
+
+vi.mock("@/hooks/useSavedJobs", () => ({
+  useToggleSaveJob: () => ({ mutate: mockToggleSave }),
 }));
 
 vi.mock("next-intl", () => ({
@@ -83,6 +87,8 @@ describe("OpportunityListCard", () => {
     mockSetSelectedOpportunity.mockReset();
     mockSetIsModalOpen.mockReset();
     mockOpenLoginModal.mockReset();
+    mockToggleSave.mockReset();
+    mockIsLoggedIn = false;
   });
 
   it("renders without errors", () => {
@@ -125,6 +131,41 @@ describe("OpportunityListCard", () => {
     const bookmarkBtn = screen.getByLabelText("Bookmark");
     fireEvent.click(bookmarkBtn);
     expect(mockOpenLoginModal).toHaveBeenCalled();
+    expect(mockToggleSave).not.toHaveBeenCalled();
+  });
+
+  it("bookmark click saves the job on the server when authenticated", () => {
+    mockIsLoggedIn = true;
+    render(<OpportunityListCard {...baseOpportunity} />);
+
+    fireEvent.click(screen.getByLabelText("Bookmark"));
+
+    expect(mockToggleSave).toHaveBeenCalledWith({
+      job: expect.objectContaining({ id: "opp-1" }),
+      save: true,
+    });
+    expect(mockOpenLoginModal).not.toHaveBeenCalled();
+  });
+
+  it("shows the saved state from isSavedByCurrentUser and unsaves on click", () => {
+    mockIsLoggedIn = true;
+    render(<OpportunityListCard {...baseOpportunity} isSavedByCurrentUser />);
+
+    const bookmark = screen.getByLabelText("Bookmark");
+    expect(bookmark).toHaveAttribute("aria-pressed", "true");
+
+    fireEvent.click(bookmark);
+
+    expect(mockToggleSave).toHaveBeenCalledWith({
+      job: expect.objectContaining({ id: "opp-1" }),
+      save: false,
+    });
+  });
+
+  it("shows the job as not saved when the flag is missing", () => {
+    render(<OpportunityListCard {...baseOpportunity} />);
+
+    expect(screen.getByLabelText("Bookmark")).toHaveAttribute("aria-pressed", "false");
   });
 
   it("shows published date", () => {

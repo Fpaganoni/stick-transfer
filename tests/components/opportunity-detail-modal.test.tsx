@@ -6,7 +6,7 @@
  *      fail, while keeping the existing rules for every other opportunity.
  */
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, act } from "@testing-library/react";
+import { render, screen, act, fireEvent } from "@testing-library/react";
 import { OpportunityDetailModal } from "@/components/opportunities/opportunity-detail-modal";
 import { useOpportunitiesStore } from "@/stores/useOpportunitiesStore";
 import type { JobOpportunity } from "@/types/models/job-opportunity";
@@ -32,8 +32,17 @@ vi.mock("@/hooks/useJobApplications", () => ({
   useUserApplications: () => ({ hasAppliedTo: () => false, isLoading: false }),
 }));
 
-vi.mock("@/stores/useSavedJobsStore", () => ({
-  useSavedJobsStore: () => ({ toggleSave: vi.fn(), isSaved: () => false }),
+const { toggleSaveMock, openLoginModalMock } = vi.hoisted(() => ({
+  toggleSaveMock: vi.fn(),
+  openLoginModalMock: vi.fn(),
+}));
+
+vi.mock("@/hooks/useSavedJobs", () => ({
+  useToggleSaveJob: () => ({ mutate: toggleSaveMock }),
+}));
+
+vi.mock("@/stores/useUIStore", () => ({
+  useUIStore: () => ({ openLoginModal: openLoginModalMock }),
 }));
 
 vi.mock("@/lib/date-utils", () => ({
@@ -82,6 +91,46 @@ describe("OpportunityDetailModal", () => {
     roleState.isUmpire = false;
     authState.user = { id: "viewer-1", cvUrl: null };
     useOpportunitiesStore.setState({ selectedOpportunity: null, isModalOpen: false });
+    toggleSaveMock.mockReset();
+    openLoginModalMock.mockReset();
+  });
+
+  describe("saving the opportunity", () => {
+    const bookmark = () => screen.getByRole("button", { name: "Bookmark" });
+
+    it("saves it on the server for a logged-in user", () => {
+      open(base);
+
+      fireEvent.click(bookmark());
+
+      expect(toggleSaveMock).toHaveBeenCalledWith({
+        job: expect.objectContaining({ id: "job-1" }),
+        save: true,
+      });
+      expect(openLoginModalMock).not.toHaveBeenCalled();
+    });
+
+    it("reflects isSavedByCurrentUser and unsaves on click", () => {
+      open({ ...base, isSavedByCurrentUser: true });
+
+      expect(bookmark()).toHaveAttribute("aria-pressed", "true");
+      fireEvent.click(bookmark());
+
+      expect(toggleSaveMock).toHaveBeenCalledWith({
+        job: expect.objectContaining({ id: "job-1" }),
+        save: false,
+      });
+    });
+
+    it("asks visitors to sign in instead of saving", () => {
+      authState.user = null;
+      open(base);
+
+      fireEvent.click(bookmark());
+
+      expect(openLoginModalMock).toHaveBeenCalled();
+      expect(toggleSaveMock).not.toHaveBeenCalled();
+    });
   });
 
   describe("applying to an UMPIRE opportunity", () => {

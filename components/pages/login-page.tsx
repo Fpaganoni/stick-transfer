@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Mail,
   Lock,
@@ -74,7 +74,6 @@ export function LoginPage() {
   const {
     register,
     handleSubmit,
-    watch,
     resetField,
     setFocus,
     formState: { errors },
@@ -82,16 +81,13 @@ export function LoginPage() {
     resolver: zodResolver(loginSchema),
   });
 
-  // Editing either field makes the previous server error stale.
-  useEffect(() => {
-    const sub = watch((_value, { type }) => {
-      // Only real user input; resetField() must not clear the fresh error.
-      if (type !== "change") return;
-      setError("");
-      setCredentialsInvalid(false);
-    });
-    return () => sub.unsubscribe();
-  }, [watch]);
+  // Editing either field makes the previous server error stale. Registered
+  // onChange only fires on real user input; resetField() must not clear the
+  // fresh error.
+  const clearServerError = () => {
+    setError("");
+    setCredentialsInvalid(false);
+  };
 
   const onSubmit: SubmitHandler<LoginData> = (data) => {
     setError("");
@@ -249,7 +245,7 @@ export function LoginPage() {
                 size={16}
               />
               <Input
-                {...register("email")}
+                {...register("email", { onChange: clearServerError })}
                 id="email"
                 type="email"
                 placeholder="your@email.com"
@@ -283,7 +279,7 @@ export function LoginPage() {
                 size={16}
               />
               <Input
-                {...register("password")}
+                {...register("password", { onChange: clearServerError })}
                 id="password"
                 type={showPassword ? "text" : "password"}
                 placeholder="••••••••"

@@ -1,13 +1,11 @@
 "use client";
 
-import { useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { Bookmark, MapPin, Briefcase, Loader2 } from "lucide-react";
 import { useTranslations, useLocale } from "next-intl";
-import { useSavedJobsStore } from "@/stores/useSavedJobsStore";
-import { useJobOpportunities } from "@/hooks/useJobOpportunities";
+import { useSavedJobs, useToggleSaveJob } from "@/hooks/useSavedJobs";
 import { Badge } from "@/components/ui/badge";
 import { formatRelativeTime } from "@/lib/date-utils";
 import { getPositionTypeLabel } from "@/lib/job-position-type";
@@ -23,14 +21,10 @@ export function UserSavedJobs() {
   const t = useTranslations("profile");
   const tOpp = useTranslations("opportunities");
   const locale = useLocale() as "en" | "es" | "fr";
-  const { savedIds, toggleSave, isSaved } = useSavedJobsStore();
-  const { data, isLoading } = useJobOpportunities();
+  const { data, isLoading } = useSavedJobs();
+  const { mutate: toggleSave } = useToggleSaveJob();
 
-  const savedOpportunities = useMemo(() => {
-    if (!data?.jobOpportunities) return [];
-    const savedIdSet = new Set(savedIds);
-    return data.jobOpportunities.filter((opp) => savedIdSet.has(opp.id));
-  }, [data, savedIds]);
+  const savedOpportunities = data?.savedJobOpportunities ?? [];
 
   if (isLoading) {
     return (
@@ -66,7 +60,6 @@ export function UserSavedJobs() {
         const { id, title, club, country, city, positionType, level, status, createdAt } =
           opportunity;
         const normalizedStatus = status.toLowerCase() as "open" | "closed" | "filled";
-        const saved = isSaved(id);
 
         return (
           <motion.div
@@ -116,17 +109,12 @@ export function UserSavedJobs() {
                         onClick={(e) => {
                           e.preventDefault();
                           e.stopPropagation();
-                          toggleSave(id);
+                          toggleSave({ job: opportunity, save: false });
                         }}
-                        className={`shrink-0 p-1 rounded hover:bg-foreground/10 transition-colors ${
-                          saved ? "text-primary" : "text-foreground-muted"
-                        }`}
+                        className="shrink-0 p-1 rounded hover:bg-foreground/10 transition-colors text-primary"
                         aria-label="Remove bookmark"
                       >
-                        <Bookmark
-                          size={16}
-                          fill={saved ? "currentColor" : "none"}
-                        />
+                        <Bookmark size={16} fill="currentColor" />
                       </button>
                     </div>
 

@@ -6,7 +6,8 @@ import { useOpportunitiesStore } from "@/stores/useOpportunitiesStore";
 import { useTranslations, useLocale } from "next-intl";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useApplyForJob, useUserApplications } from "@/hooks/useJobApplications";
-import { useSavedJobsStore } from "@/stores/useSavedJobsStore";
+import { useToggleSaveJob } from "@/hooks/useSavedJobs";
+import { useUIStore } from "@/stores/useUIStore";
 import { useRole } from "@/hooks/useRole";
 import {
   Dialog,
@@ -116,6 +117,7 @@ function OpportunityActionButtons({
             : "bg-foreground/10 border-border text-foreground hover:bg-foreground/20"
         }`}
         aria-label="Bookmark"
+        aria-pressed={isSaved}
       >
         <Bookmark size={18} fill={isSaved ? "currentColor" : "none"} />
       </button>
@@ -139,7 +141,8 @@ export function OpportunityDetailModal() {
   const { mutate: applyForJob, isPending } = useApplyForJob();
   const { hasAppliedTo, isLoading: isLoadingApplications } =
     useUserApplications();
-  const { toggleSave, isSaved } = useSavedJobsStore();
+  const { mutate: toggleSave } = useToggleSaveJob();
+  const { openLoginModal } = useUIStore();
   const [hasAppliedLocalState, setHasAppliedLocalState] = useState(false);
 
   if (!selectedOpportunity) {
@@ -153,6 +156,16 @@ export function OpportunityDetailModal() {
     | "filled";
 
   const benefitsArray = getBenefitsArray(opportunity.benefits);
+
+  const isSaved = Boolean(selectedOpportunity.isSavedByCurrentUser);
+
+  const handleToggleSave = () => {
+    if (!user) {
+      openLoginModal();
+      return;
+    }
+    toggleSave({ job: selectedOpportunity, save: !isSaved });
+  };
 
   // The backend rejects (403) anyone but umpires applying to UMPIRE opportunities.
   // Visitors still see the (disabled) button so they are prompted to sign in.
@@ -336,8 +349,8 @@ export function OpportunityDetailModal() {
             applyDisabled={isPending || !user || isLoadingApplications}
             isLoadingApplications={isLoadingApplications}
             onApply={handleApply}
-            isSaved={isSaved(opportunity.id)}
-            onToggleSave={() => toggleSave(opportunity.id)}
+            isSaved={isSaved}
+            onToggleSave={handleToggleSave}
             onClose={closeModal}
             canApply={canApply}
           />

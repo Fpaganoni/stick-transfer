@@ -9,7 +9,7 @@ import { formatRelativeTime } from "@/lib/date-utils";
 import { useTranslations, useLocale } from "next-intl";
 import { useOpportunitiesStore } from "@/stores/useOpportunitiesStore";
 import { useUserApplications } from "@/hooks/useJobApplications";
-import { useSavedJobsStore } from "@/stores/useSavedJobsStore";
+import { useToggleSaveJob } from "@/hooks/useSavedJobs";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useUIStore } from "@/stores/useUIStore";
 import { getPositionTypeLabel, isUmpireJob } from "@/lib/job-position-type";
@@ -22,14 +22,23 @@ export function OpportunityListCard(opportunity: OpportunityListCardProps) {
   const locale = useLocale() as "en" | "es" | "fr";
   const { setSelectedOpportunity, setIsModalOpen } = useOpportunitiesStore();
   const { hasAppliedTo } = useUserApplications();
-  const { toggleSave, isSaved } = useSavedJobsStore();
+  const { mutate: toggleSave } = useToggleSaveJob();
   const { isLoggedIn } = useAuthStore();
   const { openLoginModal } = useUIStore();
 
-  const { id, title, club, country, positionType, status, level, createdAt } =
-    opportunity;
+  const {
+    id,
+    title,
+    club,
+    country,
+    positionType,
+    status,
+    level,
+    createdAt,
+    isSavedByCurrentUser,
+  } = opportunity;
 
-  const saved = isSaved(id);
+  const saved = Boolean(isSavedByCurrentUser);
 
   const handleOpenModal = () => {
     setSelectedOpportunity(opportunity);
@@ -42,7 +51,7 @@ export function OpportunityListCard(opportunity: OpportunityListCardProps) {
       openLoginModal();
       return;
     }
-    toggleSave(id);
+    toggleSave({ job: opportunity, save: !saved });
   };
 
   const normalizedStatus = status.toLowerCase() as "open" | "closed" | "filled";
@@ -93,6 +102,7 @@ export function OpportunityListCard(opportunity: OpportunityListCardProps) {
                   saved ? "text-primary" : "text-foreground-muted"
                 }`}
                 aria-label="Bookmark"
+                aria-pressed={saved}
               >
                 <Bookmark size={16} fill={saved ? "currentColor" : "none"} />
               </button>
