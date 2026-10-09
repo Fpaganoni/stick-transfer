@@ -22,13 +22,14 @@ function getToastIcon(type: Notification["type"]): string {
 }
 
 export function useNotificationSocket() {
-  const { user } = useAuthStore();
+  // Only the id matters: editing the profile must not tear the socket down.
+  const userId = useAuthStore((state) => state.user?.id);
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    if (!user?.id) return;
+    if (!userId) return;
 
-    connectSocket(user.id);
+    connectSocket();
     const socket = getSocket();
 
     function handleNotification(notification: Notification) {
@@ -38,7 +39,7 @@ export function useNotificationSocket() {
 
       // Prepend to first page of infinite list
       queryClient.setQueryData<InfiniteData<NotificationsPage>>(
-        notificationsQueryKey(user!.id),
+        notificationsQueryKey(userId),
         (old) => {
           if (!old) return old;
           const [firstPage, ...rest] = old.pages;
@@ -56,7 +57,7 @@ export function useNotificationSocket() {
 
       // Increment unread count
       queryClient.setQueryData<UnreadCountResponse>(
-        notificationsCountQueryKey(user!.id),
+        notificationsCountQueryKey(userId),
         (old) => ({
           unreadNotificationsCount: (old?.unreadNotificationsCount ?? 0) + 1,
         })
@@ -69,5 +70,5 @@ export function useNotificationSocket() {
       socket.off("notification", handleNotification);
       disconnectSocket();
     };
-  }, [user, queryClient]);
+  }, [userId, queryClient]);
 }

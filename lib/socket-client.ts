@@ -10,25 +10,24 @@ export function getSocket(): Socket {
     socket = io(SOCKET_URL, {
       autoConnect: false,
       transports: ["websocket"],
+      // The backend identifies the user from the session cookie sent in the
+      // handshake and joins the right room itself; without credentials it
+      // drops the socket.
+      withCredentials: true,
     });
   }
   return socket;
 }
 
-export function connectSocket(userId: string): void {
+export function connectSocket(): void {
   const s = getSocket();
   if (!s.connected) {
     s.connect();
-    s.once("connect", () => {
-      s.emit("join", { userId });
-    });
-  } else {
-    s.emit("join", { userId });
   }
 }
 
 export function disconnectSocket(): void {
-  if (socket?.connected) {
-    socket.disconnect();
-  }
+  // Also covers a socket that is still in its handshake: it would otherwise
+  // finish connecting with the session that is being closed.
+  socket?.disconnect();
 }
