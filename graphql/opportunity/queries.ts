@@ -29,6 +29,39 @@ export const GET_JOB_OPPORTUNITIES = gql`
       modality
       umpireCategory
       matchDate
+      isSavedByCurrentUser
+      createdAt
+    }
+  }
+`;
+
+export const GET_SAVED_JOBS = gql`
+  query GetSavedJobs {
+    savedJobOpportunities {
+      id
+      title
+      description
+      positionType
+      club {
+        id
+        name
+        city
+        country
+        logo
+        isVerified
+      }
+      level
+      country
+      city
+      salary
+      currency
+      benefits
+      status
+      licenseLevelRequired
+      modality
+      umpireCategory
+      matchDate
+      isSavedByCurrentUser
       createdAt
     }
   }

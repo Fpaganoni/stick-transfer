@@ -59,6 +59,19 @@ export const CREATE_JOB_OPPORTUNITY = gql`
   }
 `;
 
+// Both mutations are idempotent on the backend and return a Boolean.
+export const SAVE_JOB = gql`
+  mutation SaveJobOpportunity($jobOpportunityId: ID!) {
+    saveJobOpportunity(jobOpportunityId: $jobOpportunityId)
+  }
+`;
+
+export const UNSAVE_JOB = gql`
+  mutation UnsaveJobOpportunity($jobOpportunityId: ID!) {
+    unsaveJobOpportunity(jobOpportunityId: $jobOpportunityId)
+  }
+`;
+
 export const APPLY_FOR_JOB = gql`
   mutation ApplyForJob(
     $jobOpportunityId: String!
