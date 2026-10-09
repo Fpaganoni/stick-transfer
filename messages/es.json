@@ -159,6 +159,10 @@
       "termsRequired": "Debes aceptar los términos y condiciones",
       "cityRequired": "La ciudad es obligatoria",
       "positionRequired": "La posición es obligatoria",
+      "positionInvalid": "Selecciona una posición válida",
+      "dobInvalid": "Ingresa una fecha de nacimiento válida",
+      "dobTooYoung": "Debes tener al menos 16 años para registrarte",
+      "dobTooOld": "La fecha de nacimiento no puede ser de hace más de 100 años",
       "clubNameRequired": "El nombre del club debe tener al menos 2 caracteres"
     },
     "roles": {

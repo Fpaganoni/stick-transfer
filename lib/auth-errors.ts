@@ -108,6 +108,10 @@ export const FIELD_ERROR_MESSAGE_KEY: Record<string, string> = {
   NAME_TOO_LONG: "nameTooLong",
   ROLE_INVALID: "roleInvalid",
   FIELD_REQUIRED: "fieldRequired",
+  DATE_OF_BIRTH_INVALID: "dobInvalid",
+  DATE_OF_BIRTH_TOO_YOUNG: "dobTooYoung",
+  DATE_OF_BIRTH_TOO_OLD: "dobTooOld",
+  POSITION_INVALID: "positionInvalid",
 };
 
 /** Seconds the UI keeps the submit button disabled after RATE_LIMITED. */
