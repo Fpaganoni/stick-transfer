@@ -186,6 +186,15 @@ describe("ExplorePage", () => {
       expect(screen.queryByRole("button", { name: "filters.licenseLevel" })).not.toBeInTheDocument();
     });
 
+    it("sends the attacker enum value when forward is picked", async () => {
+      const user = userEvent.setup();
+      render(<ExplorePage />);
+
+      await pick(user, "filters.position", "positions.forward");
+
+      expect(lastFilters()).toMatchObject({ position: "attacker" });
+    });
+
     it("drops position and level from the query when switching to umpire", async () => {
       const user = userEvent.setup();
       render(<ExplorePage />);

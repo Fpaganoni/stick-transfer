@@ -22,7 +22,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Position } from "@/types/enums";
+import { POSITION_OPTIONS } from "@/lib/positions";
 import {
   Card,
   CardContent,
@@ -203,14 +203,6 @@ export function BasicInfoSection({ control, t }: BasicInfoSectionProps) {
     </Card>
   );
 }
-
-/** Positions the backend accepts, labelled with explore.positions.* (attacker reads "Forward"). */
-export const POSITION_OPTIONS = [
-  { value: Position.GOALKEEPER, labelKey: "goalkeeper" },
-  { value: Position.DEFENDER, labelKey: "defender" },
-  { value: Position.MIDFIELDER, labelKey: "midfielder" },
-  { value: Position.ATTACKER, labelKey: "forward" },
-] as const;
 
 interface PlayerDetailsSectionProps {
   control: AnyControl;

@@ -41,6 +41,7 @@ import {
   RATE_LIMIT_COOLDOWN_SECONDS,
 } from "@/lib/auth-errors";
 import { dateOfBirthSchema, getDobBounds } from "@/lib/date-of-birth";
+import { POSITION_OPTIONS } from "@/lib/positions";
 import { useCooldown } from "@/hooks/useCooldown";
 import { useTranslations } from "next-intl";
 import { useUIStore } from "@/stores/useUIStore";
@@ -93,13 +94,6 @@ const HOCKEY_COUNTRIES = [
   "United States",
   "Uruguay",
   "Wales",
-];
-
-const POSITIONS = [
-  { value: "goalkeeper", labelKey: "goalkeeper" },
-  { value: "defender", labelKey: "defender" },
-  { value: "midfielder", labelKey: "midfielder" },
-  { value: "attacker", labelKey: "forward" },
 ];
 
 // ---------------------------------------------------------------------------
@@ -709,7 +703,7 @@ function Step3PlayerDataForm({
           <option value="" disabled>
             {t("placeholders.preferredPosition")}
           </option>
-          {POSITIONS.map((p) => (
+          {POSITION_OPTIONS.map((p) => (
             <option key={p.value} value={p.value}>
               {tExplore(`positions.${p.labelKey}`)}
             </option>

@@ -13,6 +13,7 @@ import {
   UmpireModality,
   UmpireCategory,
 } from "@/types/enums";
+import { POSITION_OPTIONS } from "@/lib/positions";
 
 const PAGE_SIZE = 50;
 const UMPIRE_ROLE = "UMPIRE";
@@ -132,12 +133,10 @@ export function ExplorePage() {
     label: tUmpire(`categories.${v}`),
   }));
 
-  const positionOptions = [
-    { value: "attacker", label: t("positions.forward") },
-    { value: "midfielder", label: t("positions.midfielder") },
-    { value: "defender", label: t("positions.defender") },
-    { value: "goalkeeper", label: t("positions.goalkeeper") },
-  ];
+  const positionOptions = POSITION_OPTIONS.map((p) => ({
+    value: p.value,
+    label: t(`positions.${p.labelKey}`),
+  }));
 
   const levelOptions = [
     { value: "PROFESSIONAL", label: t("levels.professional") },

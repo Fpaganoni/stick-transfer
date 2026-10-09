@@ -9,6 +9,7 @@ import { useAuthStore } from "@/stores/useAuthStore";
 import { useUpdateUser, useUploadCv, useDeleteCv } from "@/hooks/useUsers";
 import { TrajectoryItem } from "@/types/models/user";
 import { Position, Role } from "@/types/enums";
+import { toKnownPosition } from "@/lib/positions";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
@@ -81,13 +82,6 @@ const createProfileFormSchema = (t: (key: string) => string) =>
   });
 
 type ProfileFormValues = z.infer<ReturnType<typeof createProfileFormSchema>>;
-
-const POSITION_VALUES: readonly string[] = Object.values(Position);
-
-/** Legacy rows may hold free text ("Forward"); only enum values reach the select. */
-function toKnownPosition(value: string | undefined): string {
-  return value && POSITION_VALUES.includes(value) ? value : "";
-}
 
 /** Profile edit form for PLAYER and COACH accounts: position (players only), CV, trajectories, multimedia. */
 export function PlayerCoachProfileForm() {
