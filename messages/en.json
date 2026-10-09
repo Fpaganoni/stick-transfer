@@ -486,7 +486,7 @@
       "placeholders": {
         "name": "Your full name",
         "username": "username",
-        "position": "e.g. Forward",
+        "position": "Select your position",
         "yearsOfExperience": "12",
         "bio": "Tell us a little bit about yourself",
         "avatarUrl": "https://example.com/avatar.jpg",

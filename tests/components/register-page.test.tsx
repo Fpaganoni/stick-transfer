@@ -232,14 +232,21 @@ describe("RegisterPage", () => {
     });
 
     it("limits the native date picker to the 16 to 100 years range", async () => {
-      const user = userEvent.setup();
-      renderWithProviders(<RegisterPage />);
+      // Only Date is faked so userEvent timers keep running
+      vi.useFakeTimers({ toFake: ["Date"] });
+      vi.setSystemTime(new Date(2026, 9, 9));
+      try {
+        const user = userEvent.setup();
+        renderWithProviders(<RegisterPage />);
 
-      await fillUntilStep3(user, "player");
-      const input = await screen.findByLabelText("dateOfBirth");
+        await fillUntilStep3(user, "player");
+        const input = await screen.findByLabelText("dateOfBirth");
 
-      expect(input.getAttribute("min")).toMatch(/^\d{4}-\d{2}-\d{2}$/);
-      expect(input.getAttribute("max")).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+        expect(input.getAttribute("min")).toBe("1925-10-10");
+        expect(input.getAttribute("max")).toBe("2010-10-09");
+      } finally {
+        vi.useRealTimers();
+      }
     });
   });
 
@@ -318,6 +325,38 @@ describe("RegisterPage", () => {
         expect(screen.queryByText("registrationFailed")).toBeNull();
       },
     );
+
+    it("shows DATE_OF_BIRTH_TOO_OLD on the player date of birth field", async () => {
+      mockRegister.mockImplementation((_vars, opts) =>
+        opts.onError(validationError("dateOfBirth", "DATE_OF_BIRTH_TOO_OLD")),
+      );
+      const user = userEvent.setup();
+      renderWithProviders(<RegisterPage />);
+
+      await fillUntilStep3(user, "player");
+      await user.selectOptions(await screen.findByLabelText("preferredPosition"), "defender");
+      await user.type(screen.getByLabelText("dateOfBirth"), "1990-05-20");
+      await user.click(screen.getByText("createProfile"));
+
+      expect(await screen.findByText("dobTooOld")).toBeDefined();
+      expect(screen.queryByText("registrationFailed")).toBeNull();
+    });
+
+    it("falls back to the generic message for a date of birth error on a club", async () => {
+      mockRegister.mockImplementation((_vars, opts) =>
+        opts.onError(validationError("dateOfBirth", "DATE_OF_BIRTH_INVALID")),
+      );
+      const user = userEvent.setup();
+      renderWithProviders(<RegisterPage />);
+
+      await fillUntilStep3(user, "clubAdmin");
+      await user.type(await screen.findByLabelText("clubName"), "HC Madrid");
+      await user.type(screen.getByLabelText("city"), "Madrid");
+      await user.selectOptions(screen.getByLabelText("country"), "Spain");
+      await user.click(screen.getByText("createProfile"));
+
+      expect(await screen.findByText("registrationFailed")).toBeDefined();
+    });
 
     it("shows POSITION_INVALID on the player position field", async () => {
       mockRegister.mockImplementation((_vars, opts) =>
