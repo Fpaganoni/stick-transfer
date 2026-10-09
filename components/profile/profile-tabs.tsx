@@ -37,11 +37,15 @@ export function ProfileTabs({
   const role = userData.role?.toUpperCase();
   const isUmpire = role === "UMPIRE";
   const showCvTab = role === "PLAYER" || role === "COACH" || isUmpire;
+  // Umpires cannot store videos (backend: FIELD_NOT_ALLOWED)
+  const showMultimediaTab = !isUmpire;
 
   const tabs = [
     ...(isUmpire ? [{ id: "umpire", label: t("tabs.umpire") }] : []),
     { id: "trajectory", label: t("tabs.trajectory") },
-    { id: "multimedia", label: t("tabs.multimedia") },
+    ...(showMultimediaTab
+      ? [{ id: "multimedia", label: t("tabs.multimedia") }]
+      : []),
     ...(showCvTab ? [{ id: "cv", label: t("tabs.cv") }] : []),
     ...(isOwnProfile
       ? [
@@ -112,7 +116,7 @@ export function ProfileTabs({
           </div>
         )}
 
-        {activeTab === "multimedia" && (
+        {activeTab === "multimedia" && showMultimediaTab && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {userData.multimedia && userData.multimedia.length > 0 ? (
               userData.multimedia.map((url, i) => (
@@ -125,7 +129,7 @@ export function ProfileTabs({
             ) : (
               <div className="col-span-full py-8 text-center border-2 border-dashed border-foreground dark:border-border rounded-xl">
                 <p className="text-foreground dark:text-foreground-muted font-medium">
-                  No multimedia available
+                  {t("noMultimedia")}
                 </p>
               </div>
             )}

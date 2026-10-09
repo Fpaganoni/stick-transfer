@@ -573,6 +573,7 @@
     },
     "noPosts": "Aún no hay publicaciones",
     "noTrajectory": "Aún no hay trayectoria",
+    "noMultimedia": "No hay multimedia disponible",
     "media": "Multimedia",
     "cv": {
       "label": "CV:",

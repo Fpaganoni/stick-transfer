@@ -19,7 +19,6 @@ import {
 } from "./shared-sections";
 import { CvUploadSection } from "./cv-upload-section";
 import { TrajectoryFieldArray } from "./trajectory-field-array";
-import { MultimediaFieldArray } from "./multimedia-field-array";
 import {
   UmpireDetailsSection,
   UmpireCertificationsSection,
@@ -53,7 +52,8 @@ import {
 
 /**
  * Profile edit form for UMPIRE accounts: licence data, certifications,
- * CV, trajectories and multimedia. Position/club fields do not apply.
+ * CV and trajectories. Position/club fields and multimedia do not apply
+ * (the backend rejects multimedia for umpires with FIELD_NOT_ALLOWED).
  */
 export function UmpireProfileForm() {
   const router = useRouter();
@@ -110,7 +110,6 @@ export function UmpireProfileForm() {
           endDate: tr.endDate || "",
           isCurrent: tr.isCurrent || false,
         })) || [],
-      multimedia: user?.multimedia?.map((m) => ({ url: m })) || [],
     },
   });
 
@@ -119,8 +118,6 @@ export function UmpireProfileForm() {
 
     setIsSaving(true);
     try {
-      const multimediaUrls = data.multimedia?.map((m) => m.url) || [];
-
       let finalCvUrl = user.cvUrl;
 
       if (cvDeleted && !cvFile) {
@@ -146,7 +143,6 @@ export function UmpireProfileForm() {
         country: data.country,
         city: data.city,
         cvUrl: finalCvUrl,
-        multimedia: multimediaUrls,
         trajectories: formatTrajectories(data.trajectories),
         ...umpireFields,
       });
@@ -163,7 +159,6 @@ export function UmpireProfileForm() {
         city: data.city,
         cvUrl: finalCvUrl,
         trajectories: data.trajectories as TrajectoryItem[],
-        multimedia: multimediaUrls,
         yearsOfExperience: umpireFields.yearsOfExperience ?? user.yearsOfExperience,
         certificationYear: umpireFields.certificationYear ?? user.certificationYear,
         matchesOfficiated: umpireFields.matchesOfficiated ?? user.matchesOfficiated,
@@ -234,19 +229,6 @@ export function UmpireProfileForm() {
           </CardHeader>
           <CardContent>
             <TrajectoryFieldArray
-              control={form.control as unknown as Control<FieldValues>}
-              t={t}
-            />
-          </CardContent>
-        </Card>
-
-        <Card className="bg-background">
-          <CardHeader>
-            <CardTitle>{t("editForm.multimedia")}</CardTitle>
-            <CardDescription>{t("editForm.multimediaDesc")}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <MultimediaFieldArray
               control={form.control as unknown as Control<FieldValues>}
               t={t}
             />

@@ -44,17 +44,12 @@ const tabLabels = () =>
   screen.getAllByRole("button").map((b) => b.textContent);
 
 describe("ProfileTabs", () => {
-  it("gives an umpire the officiating tab first, then trajectory, multimedia and CV", () => {
+  it("gives an umpire the officiating tab first, then trajectory and CV (no multimedia)", () => {
     render(
       <ProfileTabs activeTab="umpire" setActiveTab={vi.fn()} userData={umpireData} />,
     );
 
-    expect(tabLabels()).toEqual([
-      "tabs.umpire",
-      "tabs.trajectory",
-      "tabs.multimedia",
-      "tabs.cv",
-    ]);
+    expect(tabLabels()).toEqual(["tabs.umpire", "tabs.trajectory", "tabs.cv"]);
   });
 
   it("adds applications and saved jobs on an umpire's own profile", () => {
@@ -70,7 +65,6 @@ describe("ProfileTabs", () => {
     expect(tabLabels()).toEqual([
       "tabs.umpire",
       "tabs.trajectory",
-      "tabs.multimedia",
       "tabs.cv",
       "tabs.applications",
       "tabs.savedJobs",
@@ -101,6 +95,32 @@ describe("ProfileTabs", () => {
 
     expect(screen.queryByText("licenseLevels.NACIONAL")).not.toBeInTheDocument();
     expect(screen.getByText("noTrajectory")).toBeInTheDocument();
+  });
+
+  it.each([false, true])(
+    "never renders multimedia for an umpire, even with stored videos (own profile: %s)",
+    (isOwnProfile) => {
+      render(
+        <ProfileTabs
+          activeTab="multimedia"
+          setActiveTab={vi.fn()}
+          userData={{ ...umpireData, multimedia: ["https://youtu.be/legacy"] }}
+          isOwnProfile={isOwnProfile}
+        />,
+      );
+
+      expect(screen.queryByText("tabs.multimedia")).not.toBeInTheDocument();
+      expect(screen.queryByText("youtube")).not.toBeInTheDocument();
+      expect(screen.queryByText("noMultimedia")).not.toBeInTheDocument();
+    },
+  );
+
+  it("shows a translated empty state when a player has no multimedia", () => {
+    render(
+      <ProfileTabs activeTab="multimedia" setActiveTab={vi.fn()} userData={playerData} />,
+    );
+
+    expect(screen.getByText("noMultimedia")).toBeInTheDocument();
   });
 
   it("reports the clicked tab", async () => {

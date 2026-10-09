@@ -103,6 +103,13 @@ describe("UmpireProfileForm", () => {
       expect(screen.queryByText("editForm.club.name")).not.toBeInTheDocument();
     });
 
+    it("has no multimedia section (umpires cannot store videos)", () => {
+      render(<UmpireProfileForm />);
+
+      expect(screen.queryByText("editForm.multimedia")).not.toBeInTheDocument();
+      expect(screen.queryByText("editForm.addYoutubeUrl")).not.toBeInTheDocument();
+    });
+
     it("prefills every umpire field from the stored profile", () => {
       render(<UmpireProfileForm />);
 
@@ -252,6 +259,18 @@ describe("UmpireProfileForm", () => {
       expect(mockStoreUpdate).toHaveBeenCalledWith(
         expect.objectContaining({ modalities: ["OUTDOOR", "INDOOR"], languages: ["Español", "English"] }),
       );
+    });
+
+    it("never sends multimedia, even when the stored profile still has videos", async () => {
+      state.user = makeUser({ multimedia: ["https://youtu.be/legacy"] });
+      const user = userEvent.setup();
+      render(<UmpireProfileForm />);
+
+      await user.click(saveButton());
+
+      await waitFor(() => expect(mockUpdateProfile).toHaveBeenCalledTimes(1));
+      expect(mockUpdateProfile.mock.calls[0][0]).not.toHaveProperty("multimedia");
+      expect(mockStoreUpdate.mock.calls[0][0]).not.toHaveProperty("multimedia");
     });
 
     it("shows an error toast and stays on the page when the API fails", async () => {

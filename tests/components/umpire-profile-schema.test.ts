@@ -43,7 +43,6 @@ const baseValues: UmpireProfileFormValues = {
   umpireCategories: [],
   umpireCertifications: [],
   trajectories: [],
-  multimedia: [],
 };
 
 const noLicense = { licenseLevel: null, certifyingBody: null, licenseNumber: null };
@@ -53,6 +52,12 @@ describe("createUmpireProfileSchema", () => {
 
   it("accepts a profile with all optional numbers left empty", () => {
     expect(schema.safeParse(baseValues).success).toBe(true);
+  });
+
+  it("has no multimedia field and strips one if present", () => {
+    const parsed = schema.parse({ ...baseValues, multimedia: [{ url: "not-a-url" }] });
+
+    expect(parsed).not.toHaveProperty("multimedia");
   });
 
   it.each(["1949", "2101", "abc", "2000.5"])(

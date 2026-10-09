@@ -114,13 +114,6 @@ export const createUmpireProfileSchema = (t: Translate) =>
         }),
       )
       .optional(),
-    multimedia: z
-      .array(
-        z.object({
-          url: z.string().url({ message: t("editForm.validation.urlInvalid") }),
-        }),
-      )
-      .optional(),
   });
 
 export type UmpireProfileFormValues = z.infer<
