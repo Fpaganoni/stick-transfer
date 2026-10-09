@@ -96,7 +96,7 @@
     "showPassword": "Afficher le mot de passe",
     "hidePassword": "Masquer le mot de passe",
     "country": "Pays",
-    "termsAndConditions": "J'accepte les Conditions Générales",
+    "termsAndConditions": "J'accepte les <terms>Conditions Générales</terms> et la <privacy>Politique de confidentialité</privacy>",
     "preferredPosition": "Position Préférée",
     "city": "Ville",
     "clubName": "Nom du Club",

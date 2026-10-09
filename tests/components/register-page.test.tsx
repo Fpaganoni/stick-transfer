@@ -13,10 +13,20 @@ const { mockRegister, mockPush, mockLogin, mockRequest, uiState } = vi.hoisted((
   mockRequest: vi.fn(),
 }));
 
-vi.mock("next-intl", () => ({
-  useTranslations: () => (key: string) => key,
-  useLocale: () => "en",
-}));
+vi.mock("next-intl", () => {
+  type Tag = (chunks: React.ReactNode) => React.ReactNode;
+  // t.rich renders the key followed by each tag, so links can be queried by name
+  const t = Object.assign((key: string) => key, {
+    rich: (key: string, tags: Record<string, Tag> = {}) =>
+      React.createElement(
+        React.Fragment,
+        null,
+        key,
+        ...Object.entries(tags).map(([name, render]) => [" ", render(name)]).flat(),
+      ),
+  });
+  return { useTranslations: () => t, useLocale: () => "en" };
+});
 
 vi.mock("next/navigation", () => ({
   useRouter: () => ({ push: mockPush }),
@@ -78,8 +88,17 @@ async function fillUntilStep3(user: ReturnType<typeof userEvent.setup>, roleCard
   await user.type(screen.getByLabelText("password"), "Password1!");
   await user.type(screen.getByLabelText("confirmPassword"), "Password1!");
   await user.selectOptions(screen.getByLabelText("country"), "Spain");
-  await user.click(screen.getByLabelText("termsAndConditions"));
+  await user.click(screen.getByLabelText(/termsAndConditions/));
   await user.click(screen.getByText("next"));
+}
+
+/** GraphQL error as graphql-request throws it for a backend VALIDATION_ERROR. */
+function validationError(field: string, code: string) {
+  return {
+    response: {
+      errors: [{ extensions: { code: "VALIDATION_ERROR", fields: [{ field, code }] } }],
+    },
+  };
 }
 
 describe("RegisterPage", () => {
@@ -194,7 +213,143 @@ describe("RegisterPage", () => {
       const variables = mockRegister.mock.calls[0][0];
       expect(variables).toMatchObject({ role: "PLAYER", position: "defender" });
       expect(variables).not.toHaveProperty("city");
+      // The backend answers dateOfBirth: "" with DATE_OF_BIRTH_INVALID
+      expect(variables).not.toHaveProperty("dateOfBirth");
       await waitFor(() => expect(mockPush).toHaveBeenCalledWith("/en/opportunities"));
+    });
+
+    it("rejects a date of birth more than 100 years ago", async () => {
+      const user = userEvent.setup();
+      renderWithProviders(<RegisterPage />);
+
+      await fillUntilStep3(user, "player");
+      await user.selectOptions(await screen.findByLabelText("preferredPosition"), "defender");
+      await user.type(screen.getByLabelText("dateOfBirth"), "1800-01-01");
+      await user.click(screen.getByText("createProfile"));
+
+      expect(await screen.findByText("dobTooOld")).toBeDefined();
+      expect(mockRegister).not.toHaveBeenCalled();
+    });
+
+    it("limits the native date picker to the 16 to 100 years range", async () => {
+      const user = userEvent.setup();
+      renderWithProviders(<RegisterPage />);
+
+      await fillUntilStep3(user, "player");
+      const input = await screen.findByLabelText("dateOfBirth");
+
+      expect(input.getAttribute("min")).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+      expect(input.getAttribute("max")).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    });
+  });
+
+  describe("coach flow", () => {
+    it("step 3 asks only for an optional date of birth, never a position", async () => {
+      const user = userEvent.setup();
+      renderWithProviders(<RegisterPage />);
+
+      await fillUntilStep3(user, "coach");
+
+      expect(await screen.findByLabelText("dateOfBirth")).toBeDefined();
+      expect(screen.queryByLabelText("preferredPosition")).toBeNull();
+    });
+
+    it("registers with role COACH without position or an empty date of birth", async () => {
+      const user = userEvent.setup();
+      renderWithProviders(<RegisterPage />);
+
+      await fillUntilStep3(user, "coach");
+      await user.click(await screen.findByText("createProfile"));
+
+      await waitFor(() => expect(mockRegister).toHaveBeenCalledTimes(1));
+      const variables = mockRegister.mock.calls[0][0];
+      expect(variables).toMatchObject({ role: "COACH" });
+      expect(variables).not.toHaveProperty("position");
+      expect(variables).not.toHaveProperty("dateOfBirth");
+    });
+
+    it("sends the date of birth when the coach fills it in", async () => {
+      const user = userEvent.setup();
+      renderWithProviders(<RegisterPage />);
+
+      await fillUntilStep3(user, "coach");
+      await user.type(await screen.findByLabelText("dateOfBirth"), "1980-03-15");
+      await user.click(screen.getByText("createProfile"));
+
+      await waitFor(() => expect(mockRegister).toHaveBeenCalledTimes(1));
+      expect(mockRegister.mock.calls[0][0]).toMatchObject({
+        role: "COACH",
+        dateOfBirth: "1980-03-15",
+      });
+    });
+
+    it("rejects a date of birth younger than 16 years", async () => {
+      const user = userEvent.setup();
+      renderWithProviders(<RegisterPage />);
+
+      await fillUntilStep3(user, "coach");
+      await user.type(await screen.findByLabelText("dateOfBirth"), "2030-01-01");
+      await user.click(screen.getByText("createProfile"));
+
+      expect(await screen.findByText("dobTooYoung")).toBeDefined();
+      expect(mockRegister).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("server field errors", () => {
+    it.each([
+      ["coach", null],
+      ["umpire", "Madrid"],
+    ])(
+      "shows DATE_OF_BIRTH_TOO_YOUNG on the %s date of birth field",
+      async (roleCardId, city) => {
+        mockRegister.mockImplementation((_vars, opts) =>
+          opts.onError(validationError("dateOfBirth", "DATE_OF_BIRTH_TOO_YOUNG")),
+        );
+        const user = userEvent.setup();
+        renderWithProviders(<RegisterPage />);
+
+        await fillUntilStep3(user, roleCardId);
+        if (city) await user.type(await screen.findByLabelText("city"), city);
+        await user.type(await screen.findByLabelText("dateOfBirth"), "1990-05-20");
+        await user.click(screen.getByText("createProfile"));
+
+        expect(await screen.findByText("dobTooYoung")).toBeDefined();
+        expect(screen.queryByText("registrationFailed")).toBeNull();
+      },
+    );
+
+    it("shows POSITION_INVALID on the player position field", async () => {
+      mockRegister.mockImplementation((_vars, opts) =>
+        opts.onError(validationError("position", "POSITION_INVALID")),
+      );
+      const user = userEvent.setup();
+      renderWithProviders(<RegisterPage />);
+
+      await fillUntilStep3(user, "player");
+      await user.selectOptions(await screen.findByLabelText("preferredPosition"), "defender");
+      await user.click(screen.getByText("createProfile"));
+
+      expect(await screen.findByText("positionInvalid")).toBeDefined();
+      expect(screen.queryByText("registrationFailed")).toBeNull();
+    });
+  });
+
+  describe("terms and conditions", () => {
+    it.each([
+      ["terms", "/en/legal/terms"],
+      ["privacy", "/en/legal/privacy"],
+    ])("links %s to %s in a new tab", async (name, href) => {
+      const user = userEvent.setup();
+      renderWithProviders(<RegisterPage />);
+
+      await user.click(screen.getByTestId("role-card-player"));
+      await user.click(screen.getByText("next"));
+
+      const link = screen.getByRole("link", { name });
+      expect(link.getAttribute("href")).toBe(href);
+      expect(link.getAttribute("target")).toBe("_blank");
+      expect(link.getAttribute("rel")).toBe("noopener noreferrer");
     });
   });
 });
@@ -231,7 +386,7 @@ describe("RegisterPage with a preselected role", () => {
     await user.type(screen.getByLabelText("password"), "Password1!");
     await user.type(screen.getByLabelText("confirmPassword"), "Password1!");
     await user.selectOptions(screen.getByLabelText("country"), "Spain");
-    await user.click(screen.getByLabelText("termsAndConditions"));
+    await user.click(screen.getByLabelText(/termsAndConditions/));
     await user.click(screen.getByText("next"));
     await user.type(await screen.findByLabelText("city"), "Madrid");
     await user.click(screen.getByText("createProfile"));

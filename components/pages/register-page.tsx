@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import {
   Mail,
   Lock,
@@ -13,7 +13,12 @@ import {
   AlertCircle,
   X,
 } from "lucide-react";
-import { useForm, UseFormReturn, SubmitHandler } from "react-hook-form";
+import {
+  useForm,
+  UseFormReturn,
+  UseFormRegisterReturn,
+  SubmitHandler,
+} from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
@@ -35,6 +40,7 @@ import {
   parseApiError,
   RATE_LIMIT_COOLDOWN_SECONDS,
 } from "@/lib/auth-errors";
+import { dateOfBirthSchema, getDobBounds } from "@/lib/date-of-birth";
 import { useCooldown } from "@/hooks/useCooldown";
 import { useTranslations } from "next-intl";
 import { useUIStore } from "@/stores/useUIStore";
@@ -184,6 +190,7 @@ type Step2Data = {
 // ---------------------------------------------------------------------------
 
 type Step3PlayerData = { position: string; dateOfBirth?: string };
+type Step3CoachData = { dateOfBirth?: string };
 type Step3ClubData = { name: string; city: string; country: string };
 type Step3UmpireData = { city: string; dateOfBirth?: string };
 
@@ -269,8 +276,24 @@ function Step1RoleSelect({
 // Step 2: Basic data
 // ---------------------------------------------------------------------------
 
+/** Opens in a new tab so the data typed in the register modal is not lost. */
+function LegalLink({ href, children }: { href: string; children: ReactNode }) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-primary hover:underline"
+    >
+      {children}
+    </a>
+  );
+}
+
 interface Step2BasicDataProps {
   t: (key: string) => string;
+  /** Rich text with the terms and privacy links (needs t.rich, built by the parent). */
+  termsLabel: ReactNode;
   form: UseFormReturn<Step2Data>;
   showPassword: boolean;
   showConfirmPassword: boolean;
@@ -283,6 +306,7 @@ interface Step2BasicDataProps {
 
 function Step2BasicData({
   t,
+  termsLabel,
   form,
   showPassword,
   showConfirmPassword,
@@ -490,7 +514,7 @@ function Step2BasicData({
           htmlFor="terms"
           className="text-xs text-foreground/70 cursor-pointer leading-relaxed"
         >
-          {t("termsAndConditions")}
+          {termsLabel}
         </Label>
       </div>
       {form.formState.errors.terms && (
@@ -527,6 +551,38 @@ function Step2BasicData({
 // ---------------------------------------------------------------------------
 // Step 3: Role-specific data
 // ---------------------------------------------------------------------------
+
+interface DateOfBirthFieldProps {
+  id: string;
+  label: string;
+  registration: UseFormRegisterReturn<"dateOfBirth">;
+  error?: string;
+}
+
+/**
+ * Optional birth date; the native picker only offers the 16 to 100 years range.
+ * Forms using it set noValidate so a typed out of range date shows the
+ * translated zod message instead of the browser bubble.
+ */
+function DateOfBirthField({ id, label, registration, error }: DateOfBirthFieldProps) {
+  const { min, max } = getDobBounds();
+  return (
+    <div>
+      <Label htmlFor={id} className="mb-1 text-sm">
+        {label}
+      </Label>
+      <Input
+        {...registration}
+        id={id}
+        type="date"
+        min={min}
+        max={max}
+        className="h-9 text-sm"
+      />
+      <FieldError message={error} />
+    </div>
+  );
+}
 
 interface Step3ClubDataProps {
   t: (key: string) => string;
@@ -638,7 +694,7 @@ function Step3PlayerDataForm({
   onSubmit,
 }: Step3PlayerDataProps) {
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
+    <form onSubmit={form.handleSubmit(onSubmit)} noValidate className="space-y-3">
       {/* Preferred position */}
       <div>
         <Label htmlFor="position" className="mb-1 text-sm">
@@ -662,19 +718,61 @@ function Step3PlayerDataForm({
         <FieldError message={form.formState.errors.position?.message} />
       </div>
 
-      {/* Date of birth */}
-      <div>
-        <Label htmlFor="dateOfBirth" className="mb-1 text-sm">
-          {t("dateOfBirth")}
-        </Label>
-        <Input
-          {...form.register("dateOfBirth")}
-          id="dateOfBirth"
-          type="date"
-          className="h-9 text-sm"
-        />
-        <FieldError message={form.formState.errors.dateOfBirth?.message} />
+      <DateOfBirthField
+        id="dateOfBirth"
+        label={t("dateOfBirth")}
+        registration={form.register("dateOfBirth")}
+        error={form.formState.errors.dateOfBirth?.message}
+      />
+
+      <div className="flex gap-2 pt-2">
+        <motion.button
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.97 }}
+          type="button"
+          onClick={onBack}
+          className="h-9 px-4 border border-border rounded-lg text-sm font-medium hover:bg-border/30 transition-colors cursor-pointer flex items-center gap-1"
+        >
+          <ChevronLeft size={16} /> {t("back")}
+        </motion.button>
+        <motion.button
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.97 }}
+          type="submit"
+          disabled={isRegistering}
+          className="flex-1 h-9 bg-primary text-white font-semibold rounded-lg hover:bg-primary-hover transition-colors cursor-pointer disabled:opacity-50 text-sm"
+        >
+          {isRegistering ? t("creatingProfile") : t("createProfile")}
+        </motion.button>
       </div>
+    </form>
+  );
+}
+
+interface Step3CoachDataProps {
+  t: (key: string) => string;
+  form: UseFormReturn<Step3CoachData>;
+  isRegistering: boolean;
+  onBack: () => void;
+  onSubmit: SubmitHandler<Step3CoachData>;
+}
+
+/** Coaches have no playing position: the backend only stores it for PLAYER. */
+function Step3CoachDataForm({
+  t,
+  form,
+  isRegistering,
+  onBack,
+  onSubmit,
+}: Step3CoachDataProps) {
+  return (
+    <form onSubmit={form.handleSubmit(onSubmit)} noValidate className="space-y-3">
+      <DateOfBirthField
+        id="coachDateOfBirth"
+        label={t("dateOfBirth")}
+        registration={form.register("dateOfBirth")}
+        error={form.formState.errors.dateOfBirth?.message}
+      />
 
       <div className="flex gap-2 pt-2">
         <motion.button
@@ -716,7 +814,7 @@ function Step3UmpireDataForm({
   onSubmit,
 }: Step3UmpireDataProps) {
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
+    <form onSubmit={form.handleSubmit(onSubmit)} noValidate className="space-y-3">
       <p className="text-xs text-foreground/60">{t("umpireProfileHint")}</p>
 
       {/* City */}
@@ -733,19 +831,12 @@ function Step3UmpireDataForm({
         <FieldError message={form.formState.errors.city?.message} />
       </div>
 
-      {/* Date of birth */}
-      <div>
-        <Label htmlFor="umpireDateOfBirth" className="mb-1 text-sm">
-          {t("dateOfBirth")}
-        </Label>
-        <Input
-          {...form.register("dateOfBirth")}
-          id="umpireDateOfBirth"
-          type="date"
-          className="h-9 text-sm"
-        />
-        <FieldError message={form.formState.errors.dateOfBirth?.message} />
-      </div>
+      <DateOfBirthField
+        id="umpireDateOfBirth"
+        label={t("dateOfBirth")}
+        registration={form.register("dateOfBirth")}
+        error={form.formState.errors.dateOfBirth?.message}
+      />
 
       <div className="flex gap-2 pt-2">
         <motion.button
@@ -797,6 +888,8 @@ export const RegisterPage = () => {
 
   const isClub = selectedRole === "clubAdmin";
   const isUmpire = selectedRole === "umpire";
+  const isCoach = selectedRole === "coach";
+  const isPlayer = selectedRole === "player";
 
   // Step 2 schema
   const step2Schema = z
@@ -860,10 +953,12 @@ export const RegisterPage = () => {
   });
 
   // Step 3 schemas
+  const dateOfBirth = dateOfBirthSchema((key) => tValidation(key));
   const step3PlayerSchema = z.object({
     position: z.string().min(1, tValidation("positionRequired")),
-    dateOfBirth: z.string().optional(),
+    dateOfBirth,
   });
+  const step3CoachSchema = z.object({ dateOfBirth });
   const step3ClubSchema = z.object({
     name: z.string().min(2, tValidation("clubNameRequired")),
     city: z.string().min(1, tValidation("cityRequired")),
@@ -872,11 +967,14 @@ export const RegisterPage = () => {
 
   const step3UmpireSchema = z.object({
     city: z.string().min(1, tValidation("cityRequired")),
-    dateOfBirth: z.string().optional(),
+    dateOfBirth,
   });
 
   const step3PlayerForm = useForm<Step3PlayerData>({
     resolver: zodResolver(step3PlayerSchema),
+  });
+  const step3CoachForm = useForm<Step3CoachData>({
+    resolver: zodResolver(step3CoachSchema),
   });
   const step3ClubForm = useForm<Step3ClubData>({
     resolver: zodResolver(step3ClubSchema),
@@ -914,6 +1012,12 @@ export const RegisterPage = () => {
   const handleRegisterError = (err: unknown) => {
     const parsed = parseApiError(err);
     const opts = { type: "server" } as const;
+    // Player, coach and umpire each own a separate step 3 form with a birth date
+    const setDateOfBirthError = (message: string) => {
+      if (isPlayer) step3PlayerForm.setError("dateOfBirth", { ...opts, message });
+      if (isCoach) step3CoachForm.setError("dateOfBirth", { ...opts, message });
+      if (isUmpire) step3UmpireForm.setError("dateOfBirth", { ...opts, message });
+    };
     const focusStep2 = (field: keyof Step2Data) => {
       setStep(2);
       // the step 2 inputs remount; wait a tick before focusing
@@ -962,8 +1066,10 @@ export const RegisterPage = () => {
             step3ClubForm.setError("city", { ...opts, message });
           } else if (message && field === "city" && isUmpire) {
             step3UmpireForm.setError("city", { ...opts, message });
-          } else if (message && field === "position" && !isClub && !isUmpire) {
+          } else if (message && field === "position" && isPlayer) {
             step3PlayerForm.setError("position", { ...opts, message });
+          } else if (message && field === "dateOfBirth" && !isClub) {
+            setDateOfBirthError(message);
           } else {
             unplaced = true;
           }
@@ -1024,11 +1130,14 @@ export const RegisterPage = () => {
 
   // Final submit
   const submitStep3 = async (
-    step3Data: Step3PlayerData | Step3ClubData | Step3UmpireData,
+    step3Data: Step3PlayerData | Step3CoachData | Step3ClubData | Step3UmpireData,
   ) => {
     const step2Data = step2Form.getValues();
     const card = ROLE_CARDS.find((r) => r.id === selectedRole)!;
     const fullName = `${step2Data.firstName.trim()} ${step2Data.lastName.trim()}`;
+    // The backend rejects dateOfBirth: "" (DATE_OF_BIRTH_INVALID): omit it instead
+    const dateOfBirth =
+      "dateOfBirth" in step3Data ? step3Data.dateOfBirth : undefined;
 
     setError("");
     registerUser(
@@ -1047,18 +1156,14 @@ export const RegisterPage = () => {
               managedByLastName: step2Data.lastName,
             }
           : {}),
-        ...(isUmpire && !("name" in step3Data) && !("position" in step3Data)
-          ? {
-              city: step3Data.city,
-              dateOfBirth: step3Data.dateOfBirth || undefined,
-            }
+        ...(isUmpire && "city" in step3Data && !("name" in step3Data)
+          ? { city: step3Data.city }
           : {}),
-        ...(!isClub && !isUmpire && "position" in step3Data
-          ? {
-              position: step3Data.position,
-              dateOfBirth: step3Data.dateOfBirth,
-            }
+        // Position is only stored for PLAYER (POSITION_INVALID otherwise)
+        ...(isPlayer && "position" in step3Data
+          ? { position: step3Data.position }
           : {}),
+        ...(dateOfBirth ? { dateOfBirth } : {}),
       },
       {
         onSuccess: async () => {
@@ -1095,8 +1200,18 @@ export const RegisterPage = () => {
   };
 
   const onSubmitStep3Player: SubmitHandler<Step3PlayerData> = submitStep3;
+  const onSubmitStep3Coach: SubmitHandler<Step3CoachData> = submitStep3;
   const onSubmitStep3Club: SubmitHandler<Step3ClubData> = submitStep3;
   const onSubmitStep3Umpire: SubmitHandler<Step3UmpireData> = submitStep3;
+
+  const termsLabel = t.rich("termsAndConditions", {
+    terms: (chunks) => (
+      <LegalLink href={`/${locale}/legal/terms`}>{chunks}</LegalLink>
+    ),
+    privacy: (chunks) => (
+      <LegalLink href={`/${locale}/legal/privacy`}>{chunks}</LegalLink>
+    ),
+  });
 
   return (
     <div className="rounded-2xl border border-border bg-background p-4 sm:p-6 shadow-xl">
@@ -1139,6 +1254,7 @@ export const RegisterPage = () => {
       {step === 2 && (
         <Step2BasicData
           t={t}
+          termsLabel={termsLabel}
           form={step2Form}
           showPassword={showPassword}
           showConfirmPassword={showConfirmPassword}
@@ -1171,6 +1287,14 @@ export const RegisterPage = () => {
               isRegistering={isRegistering || cooldown.active}
               onBack={handleBack}
               onSubmit={onSubmitStep3Umpire}
+            />
+          ) : isCoach ? (
+            <Step3CoachDataForm
+              t={t}
+              form={step3CoachForm}
+              isRegistering={isRegistering || cooldown.active}
+              onBack={handleBack}
+              onSubmit={onSubmitStep3Coach}
             />
           ) : (
             <Step3PlayerDataForm
