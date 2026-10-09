@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { graphqlClient } from "@/lib/graphql-client";
 import { GET_JOB_OPPORTUNITIES } from "@/graphql/opportunity/queries";
 import { CREATE_JOB_OPPORTUNITY } from "@/graphql/opportunity/mutations";
+import { useAuthStore } from "@/stores/useAuthStore";
 import {
   CreateJobOpportunityVariables,
   JobOpportunity,
@@ -18,6 +19,7 @@ export function useJobOpportunities(
   initialData?: { jobOpportunities: JobOpportunity[] }
 ) {
   const { clubId, ...queryVars } = variables ?? {};
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
 
   return useQuery<{ jobOpportunities: JobOpportunity[] }>({
     queryKey: ["jobOpportunities", variables],
@@ -36,6 +38,10 @@ export function useJobOpportunities(
       return data;
     },
     initialData,
+    // The server render has no session cookie, so per-user fields such as
+    // isSavedByCurrentUser come back false. Mark the data as stale with a
+    // session so it is refetched on mount instead of trusted for staleTime.
+    initialDataUpdatedAt: initialData && isLoggedIn ? 0 : undefined,
   });
 }
 
