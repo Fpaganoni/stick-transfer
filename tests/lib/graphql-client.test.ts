@@ -93,6 +93,17 @@ describe("graphqlClient UNAUTHENTICATED handling", () => {
     expect(clearClientSessionMock).toHaveBeenCalledTimes(1);
   });
 
+  it("still logs the user out locally when the session cleanup itself fails", async () => {
+    clearClientSessionMock.mockRejectedValue(new Error("chunk failed to load"));
+    requestMock.mockRejectedValue(unauthenticatedError());
+
+    await expect(graphqlClient.request("query { me { id } }")).rejects.toBeInstanceOf(
+      ClientError,
+    );
+
+    await vi.waitFor(() => expect(useAuthStore.getState().isLoggedIn).toBe(false));
+  });
+
   it("ignores UNAUTHENTICATED answers when nobody is logged in", async () => {
     useAuthStore.setState({ user: null, isLoggedIn: false });
     const error = unauthenticatedError();

@@ -716,6 +716,7 @@
     "applicationSubmittedDescription": "Votre demande a été soumise avec succès",
     "alreadyApplied": "Vous avez déjà postulé",
     "opportunityNotFound": "Cette opportunité n'est plus disponible",
+    "saveJobError": "Impossible de mettre à jour vos offres enregistrées. Veuillez réessayer.",
     "applicationFailed": "Erreur lors de l'envoi de la demande",
     "visitor": "Visiteur",
     "createYourProfile": "Créer Votre Profil",

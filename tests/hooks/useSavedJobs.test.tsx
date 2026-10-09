@@ -7,6 +7,7 @@
 import { renderHook, waitFor, act } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactNode } from "react";
+import { toast } from "sonner";
 import { vi, describe, it, expect, beforeEach } from "vitest";
 import { useSavedJobs, useToggleSaveJob } from "@/hooks/useSavedJobs";
 import { graphqlClient } from "@/lib/graphql-client";
@@ -17,6 +18,7 @@ import type { JobOpportunity } from "@/types/models/job-opportunity";
 import { mockUser } from "../test-utils";
 
 vi.mock("@/lib/graphql-client");
+vi.mock("sonner", () => ({ toast: { error: vi.fn() } }));
 
 function buildJob(id: string, isSavedByCurrentUser: boolean): JobOpportunity {
   return {
@@ -211,6 +213,78 @@ describe("useToggleSaveJob", () => {
     await waitFor(() => expect(result.current.isError).toBe(true));
 
     expect(useOpportunitiesStore.getState().selectedOpportunity?.isSavedByCurrentUser).toBe(false);
+  });
+
+  it("keeps the modal on the job the user opened while the request was in flight", async () => {
+    const pending = deferred<boolean>();
+    vi.mocked(graphqlClient).request = vi.fn().mockReturnValue(pending.promise);
+    const { Wrapper } = createHarness();
+    const job = buildJob("job-1", false);
+    const { result } = renderHook(() => useToggleSaveJob(), { wrapper: Wrapper });
+
+    act(() => {
+      result.current.mutate({ job, save: true });
+    });
+    // The request leaves after onMutate took its snapshot, with no modal open.
+    await waitFor(() => expect(graphqlClient.request).toHaveBeenCalled());
+    act(() => {
+      useOpportunitiesStore.setState({ selectedOpportunity: job, isModalOpen: true });
+    });
+
+    await act(async () => {
+      pending.reject(new Error("boom"));
+    });
+    await waitFor(() => expect(result.current.isError).toBe(true));
+
+    expect(useOpportunitiesStore.getState().selectedOpportunity).toMatchObject({
+      id: "job-1",
+      isSavedByCurrentUser: false,
+    });
+  });
+
+  it("does not write the previous account's data back when it fails after the session was cleared", async () => {
+    const pending = deferred<boolean>();
+    vi.mocked(graphqlClient).request = vi.fn().mockReturnValue(pending.promise);
+    const { queryClient, Wrapper } = createHarness();
+    const job = buildJob("job-1", false);
+    queryClient.setQueryData<JobsData>(["jobOpportunities", undefined], {
+      jobOpportunities: [job],
+    });
+    queryClient.setQueryData<SavedData>(["savedJobs"], { savedJobOpportunities: [] });
+    const { result } = renderHook(() => useToggleSaveJob(), { wrapper: Wrapper });
+
+    act(() => {
+      result.current.mutate({ job, save: true });
+    });
+    await waitFor(() => expect(flagOf(queryClient, "job-1")).toBe(true));
+
+    // Logout happens while the request is still in flight.
+    act(() => {
+      queryClient.clear();
+      useAuthStore.setState({ user: null, isLoggedIn: false });
+    });
+    await act(async () => {
+      pending.reject(new Error("401"));
+    });
+    await waitFor(() => expect(result.current.isError).toBe(true));
+
+    expect(queryClient.getQueryData(["savedJobs"])).toBeUndefined();
+    expect(queryClient.getQueryData(["jobOpportunities", undefined])).toBeUndefined();
+    expect(toast.error).not.toHaveBeenCalled();
+  });
+
+  it("tells the user when the change could not be saved", async () => {
+    vi.mocked(graphqlClient).request = vi.fn().mockRejectedValue(new Error("boom"));
+    const { Wrapper } = createHarness();
+    const { result } = renderHook(() => useToggleSaveJob(), { wrapper: Wrapper });
+
+    await act(async () => {
+      await result.current
+        .mutateAsync({ job: buildJob("job-1", false), save: true })
+        .catch(() => undefined);
+    });
+
+    expect(toast.error).toHaveBeenCalledTimes(1);
   });
 
   it("invalidates both caches once the mutation settles", async () => {

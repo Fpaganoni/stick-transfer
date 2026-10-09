@@ -716,6 +716,7 @@
     "applicationSubmittedDescription": "Your application has been sent successfully",
     "alreadyApplied": "You already applied",
     "opportunityNotFound": "This opportunity is no longer available",
+    "saveJobError": "Could not update your saved jobs. Please try again.",
     "applicationFailed": "Failed to submit application",
     "visitor": "Visitor",
     "createYourProfile": "Create Your Profile",

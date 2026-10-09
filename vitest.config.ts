@@ -13,6 +13,9 @@ export default defineConfig({
     environment: "jsdom",
     globals: true,
     setupFiles: ["./tests/setup.ts"],
+    // The form tests drive many user-event interactions; under v8 coverage the
+    // slowest ones go past the default 5s and fail intermittently.
+    testTimeout: 15_000,
     // Excluye los tests de Playwright (E2E) para que Vitest no los ejecute
     exclude: [...configDefaults.exclude, "tests/e2e/**", ".agents/**", ".claude/**"],
     coverage: {

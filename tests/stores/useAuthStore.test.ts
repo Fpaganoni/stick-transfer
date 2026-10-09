@@ -4,7 +4,7 @@
  *      login/logout transitions, updateUser partial-merge safety, and that
  *      the persist key is stable (changing it would log out all users in prod).
  */
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, expect, beforeEach, vi } from "vitest";
 import { act } from "react";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { mockUser } from "../test-utils";
@@ -82,12 +82,23 @@ describe("useAuthStore", () => {
       expect(queryClient.getQueryCache().getAll()).toHaveLength(1);
     });
 
-    it("keeps the cache when there was no previous user", async () => {
+    it("clears what a visitor cached, whose per-user flags are all false", async () => {
       const queryClient = createRegisteredClient();
 
       await act(async () => useAuthStore.getState().login(otherUser));
 
-      expect(queryClient.getQueryCache().getAll()).toHaveLength(1);
+      expect(queryClient.getQueryCache().getAll()).toHaveLength(0);
+    });
+
+    it("cancels in-flight queries first so the old account cannot repopulate the cache", async () => {
+      const queryClient = createRegisteredClient();
+      const cancel = vi.spyOn(queryClient, "cancelQueries");
+      const clear = vi.spyOn(queryClient, "clear");
+      useAuthStore.setState({ user: mockUser, isLoggedIn: true });
+
+      await act(async () => useAuthStore.getState().login(otherUser));
+
+      expect(cancel.mock.invocationCallOrder[0]).toBeLessThan(clear.mock.invocationCallOrder[0]);
     });
   });
 

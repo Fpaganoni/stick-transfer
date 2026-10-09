@@ -32,11 +32,14 @@ export const useAuthStore = create<AuthState>()(
       //ACTIONS
 
       login: async (user: User) => {
-        // Switching accounts without a logout must not leak the previous
-        // account's cached data (saved jobs, applications, notifications).
-        const previousUser = get().user;
-        if (previousUser && previousUser.id !== user.id) {
-          getRegisteredQueryClient()?.clear();
+        // Whatever is cached belongs to someone else: another account that was
+        // never logged out, or a visitor whose per-user fields (e.g. saved
+        // flags) are all false. Cancel first so a request of the old identity
+        // cannot land in the cache after it is cleared.
+        if (get().user?.id !== user.id) {
+          const queryClient = getRegisteredQueryClient();
+          await queryClient?.cancelQueries();
+          queryClient?.clear();
         }
 
         if (typeof window !== "undefined") {

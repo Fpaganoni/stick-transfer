@@ -5,6 +5,8 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
+import { toast } from "sonner";
 import { graphqlClient } from "@/lib/graphql-client";
 import { GET_SAVED_JOBS, SAVE_JOB, UNSAVE_JOB } from "@/graphql";
 import { useAuthStore } from "@/stores/useAuthStore";
@@ -35,7 +37,8 @@ export interface ToggleSaveJobVariables {
 interface ToggleSaveJobContext {
   previousSavedJobs: SavedJobsData | undefined;
   previousJobLists: Array<[QueryKey, JobOpportunitiesData | undefined]>;
-  previousSelected: JobOpportunity | null;
+  /** Account that made the change; a rollback must not outlive it. */
+  userId: string | undefined;
 }
 
 /**
@@ -97,6 +100,7 @@ function applyOptimisticToggle(
  */
 export function useToggleSaveJob() {
   const queryClient = useQueryClient();
+  const t = useTranslations("opportunities");
 
   return useMutation<
     ToggleSaveJobResponse,
@@ -120,26 +124,33 @@ export function useToggleSaveJob() {
         previousJobLists: queryClient.getQueriesData<JobOpportunitiesData>({
           queryKey: JOB_OPPORTUNITIES_QUERY_KEY,
         }),
-        previousSelected: useOpportunitiesStore.getState().selectedOpportunity,
+        userId: useAuthStore.getState().user?.id,
       };
 
       applyOptimisticToggle(queryClient, variables);
       return context;
     },
 
-    onError: (_error, { job }, context) => {
-      if (!context) return;
+    onError: (_error, { job, save }, context) => {
+      // A logout or account switch while the request was in flight already
+      // cleared the cache. Restoring the snapshot would bring the previous
+      // account's data back for the next one.
+      if (!context || useAuthStore.getState().user?.id !== context.userId) return;
 
       queryClient.setQueryData(SAVED_JOBS_QUERY_KEY, context.previousSavedJobs);
       context.previousJobLists.forEach(([key, data]) => {
         queryClient.setQueryData(key, data);
       });
 
+      // Undo the flag on whatever the modal shows now; it may have been opened
+      // after the click, so a snapshot taken earlier could be null or another job.
       const { selectedOpportunity, setSelectedOpportunity } =
         useOpportunitiesStore.getState();
       if (selectedOpportunity?.id === job.id) {
-        setSelectedOpportunity(context.previousSelected);
+        setSelectedOpportunity(withSavedFlag(selectedOpportunity, !save));
       }
+
+      toast.error(t("saveJobError"));
     },
 
     onSettled: () => {

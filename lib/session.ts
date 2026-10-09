@@ -16,6 +16,10 @@ const USER_STORAGE_KEYS = ["auth-storage", "userRole"] as const;
 // browser. Their content may belong to someone else, so it is dropped, not migrated.
 const LEGACY_STORAGE_KEYS = ["saved-jobs"] as const;
 
+// Longest the UI waits for the server before wiping the client anyway. A stalled
+// connection must not keep the previous account's data on screen.
+export const SERVER_LOGOUT_TIMEOUT_MS = 8_000;
+
 let sessionClearInFlight: Promise<void> | null = null;
 
 function removeStorageKeys(keys: readonly string[]): void {
@@ -30,8 +34,20 @@ function removeStorageKeys(keys: readonly string[]): void {
   });
 }
 
+async function waitAtMost(task: Promise<void>, milliseconds: number): Promise<void> {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const timeout = new Promise<void>((resolve) => {
+    timer = setTimeout(resolve, milliseconds);
+  });
+
+  try {
+    await Promise.race([task, timeout]);
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 function resetUserStores(): void {
-  useAuthStore.getState().logout();
   useOpportunitiesStore.getState().resetFilters();
   useOpportunitiesStore.getState().closeModal();
   useNotificationsStore.getState().close();
@@ -52,8 +68,13 @@ async function endServerSession(queryClient: QueryClient | null): Promise<void> 
 }
 
 async function runClearClientSession(queryClient: QueryClient | null): Promise<void> {
+  // First, before any network call: from here on a late 401 from a request
+  // still in flight is not an "expired session" (graphql-client ignores it
+  // when nobody is logged in) and queries gated on the session stop firing.
+  useAuthStore.getState().logout();
+
   try {
-    await endServerSession(queryClient);
+    await waitAtMost(endServerSession(queryClient), SERVER_LOGOUT_TIMEOUT_MS);
   } finally {
     // Local state is cleared even when the network calls fail, so the next
     // person on this browser never inherits it.

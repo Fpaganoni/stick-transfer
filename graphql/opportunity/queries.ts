@@ -37,7 +37,7 @@ export const GET_JOB_OPPORTUNITIES = gql`
 
 export const GET_SAVED_JOBS = gql`
   query GetSavedJobs {
-    savedJobOpportunities {
+    savedJobOpportunities(limit: 100) {
       id
       title
       description

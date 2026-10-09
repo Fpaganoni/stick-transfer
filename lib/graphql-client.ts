@@ -57,9 +57,16 @@ function handleUnauthenticated(): void {
   if (typeof window === "undefined" || !useAuthStore.getState().isLoggedIn) return;
 
   if (!expiringSession) {
-    expiringSession = expireSession().finally(() => {
-      expiringSession = null;
-    });
+    expiringSession = expireSession()
+      .catch(() => {
+        // The full cleanup could not run (e.g. the session chunk failed to
+        // load while offline). Drop the in-memory login at least, so the UI
+        // stops acting on a session the server already rejected.
+        useAuthStore.getState().logout();
+      })
+      .finally(() => {
+        expiringSession = null;
+      });
   }
 }
 

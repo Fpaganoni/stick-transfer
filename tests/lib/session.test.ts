@@ -6,7 +6,11 @@
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { QueryClient } from "@tanstack/react-query";
-import { clearClientSession, purgeLegacyStorage } from "@/lib/session";
+import {
+  clearClientSession,
+  purgeLegacyStorage,
+  SERVER_LOGOUT_TIMEOUT_MS,
+} from "@/lib/session";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useOpportunitiesStore } from "@/stores/useOpportunitiesStore";
 import { useNotificationsStore } from "@/stores/useNotificationsStore";
@@ -98,6 +102,46 @@ describe("clearClientSession", () => {
     await done;
 
     expect(fetchMock).toHaveBeenCalledWith("/api/auth/session", { method: "DELETE" });
+  });
+
+  it("marks the user as logged out before the network calls finish", async () => {
+    seedPreviousSession();
+    const logoutAnswer = deferred<{ logout: boolean }>();
+    requestMock.mockReturnValue(logoutAnswer.promise);
+
+    const done = clearClientSession(createQueryClient());
+    await vi.waitFor(() => expect(requestMock).toHaveBeenCalled());
+
+    // Late 401s from requests still in flight must not look like an expired session.
+    expect(useAuthStore.getState().isLoggedIn).toBe(false);
+
+    logoutAnswer.resolve({ logout: true });
+    await done;
+  });
+
+  it("stops waiting for a LOGOUT that never answers and still wipes everything locally", async () => {
+    vi.useFakeTimers();
+    try {
+      seedPreviousSession();
+      requestMock.mockReturnValue(new Promise(() => undefined));
+      const queryClient = createQueryClient();
+      queryClient.setQueryData(["savedJobs"], { savedJobOpportunities: [] });
+
+      const done = clearClientSession(queryClient);
+      await vi.advanceTimersByTimeAsync(SERVER_LOGOUT_TIMEOUT_MS + 1);
+      await done;
+
+      expect(queryClient.getQueryCache().getAll()).toHaveLength(0);
+      expect(localStorage.getItem("auth-storage")).toBeNull();
+      expect(disconnectSocketMock).toHaveBeenCalled();
+
+      // The stuck run must not swallow later logouts.
+      requestMock.mockResolvedValue({ logout: true });
+      await clearClientSession(queryClient);
+      expect(requestMock).toHaveBeenCalledTimes(2);
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   it("cancels in-flight queries before clearing the cache", async () => {
