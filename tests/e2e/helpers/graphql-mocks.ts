@@ -50,6 +50,149 @@ export const MOCK_OPPORTUNITIES = [
   },
 ];
 
+/** Second account (user B) used to prove accounts do not share server state. */
+export const MOCK_USER_B = {
+  ...MOCK_USER,
+  id: "user-b-0987654321",
+  email: "second@sticktransfer.com",
+  name: "Second User",
+  username: "seconduser",
+};
+
+// ── Stateful fake backend ───────────────────────────────────────────────────
+
+export interface MockAccount {
+  id: string;
+  email: string;
+  /** Full `me` payload returned while this account has a session. */
+  me: Record<string, unknown>;
+}
+
+export interface MockBackend {
+  accounts: MockAccount[];
+  jobs: Array<Record<string, unknown> & { id: string }>;
+  /** accountId -> ids of saved job opportunities (shared by every browser). */
+  saved: Map<string, Set<string>>;
+  logoutCalls: number;
+  /** Saved job ids of an account, as an array (empty when none). */
+  savedFor: (accountId: string) => string[];
+}
+
+export interface CreateMockBackendOptions {
+  accounts?: MockAccount[];
+  jobs?: MockBackend["jobs"];
+}
+
+export const MOCK_ACCOUNT_A: MockAccount = {
+  id: MOCK_USER.id,
+  email: MOCK_USER.email,
+  me: MOCK_USER,
+};
+
+export const MOCK_ACCOUNT_B: MockAccount = {
+  id: MOCK_USER_B.id,
+  email: MOCK_USER_B.email,
+  me: MOCK_USER_B,
+};
+
+/**
+ * Creates the server state shared by every page registered against it, so a
+ * save made in one browser context is visible from another one.
+ */
+export function createMockBackend(
+  options: CreateMockBackendOptions = {},
+): MockBackend {
+  const saved = new Map<string, Set<string>>();
+  const backend: MockBackend = {
+    accounts: options.accounts ?? [MOCK_ACCOUNT_A, MOCK_ACCOUNT_B],
+    jobs: options.jobs ?? MOCK_OPPORTUNITIES,
+    saved,
+    logoutCalls: 0,
+    savedFor: (accountId) => [...(saved.get(accountId) ?? [])],
+  };
+  return backend;
+}
+
+const UNAUTHENTICATED_BODY = {
+  errors: [
+    {
+      message: "Unauthorized",
+      extensions: { code: "UNAUTHENTICATED" },
+    },
+  ],
+  data: null,
+};
+
+/**
+ * Returns a JSON body for operations owned by the stateful backend, or null
+ * when the operation is not one of them. `session` holds the per-page
+ * "cookie": the id of the logged-in account.
+ */
+function handleBackendOperation(
+  backend: MockBackend,
+  session: { accountId: string | null },
+  query: string,
+  variables: Record<string, unknown>,
+): unknown | null {
+  const savedIds = () =>
+    session.accountId ? (backend.saved.get(session.accountId) ?? new Set<string>()) : new Set<string>();
+  const withSavedFlag = (job: MockBackend["jobs"][number]) => ({
+    ...job,
+    isSavedByCurrentUser: savedIds().has(job.id),
+  });
+
+  if (query.includes("mutation Login") || query.includes("login(email:")) {
+    const account = backend.accounts.find((a) => a.email === variables.email);
+    if (!account) {
+      return {
+        errors: [{ message: "Invalid credentials", extensions: { code: "BAD_USER_INPUT" } }],
+        data: null,
+      };
+    }
+    session.accountId = account.id;
+    return { data: { login: MOCK_JWT } };
+  }
+
+  if (query.includes("mutation Logout")) {
+    session.accountId = null;
+    backend.logoutCalls += 1;
+    return { data: { logout: true } };
+  }
+
+  // `unsave` first: "unsaveJobOpportunity(" also contains "saveJobOpportunity(".
+  if (query.includes("unsaveJobOpportunity(") || query.includes("saveJobOpportunity(")) {
+    if (!session.accountId) return UNAUTHENTICATED_BODY;
+    const isUnsave = query.includes("unsaveJobOpportunity(");
+    const jobId = String(variables.jobOpportunityId);
+    const current = new Set(backend.saved.get(session.accountId) ?? []);
+    if (isUnsave) current.delete(jobId);
+    else current.add(jobId);
+    backend.saved.set(session.accountId, current);
+    return isUnsave
+      ? { data: { unsaveJobOpportunity: true } }
+      : { data: { saveJobOpportunity: true } };
+  }
+
+  if (query.includes("savedJobOpportunities")) {
+    const ids = savedIds();
+    const jobs = backend.jobs
+      .filter((job) => ids.has(job.id))
+      .map((job) => ({ ...job, isSavedByCurrentUser: true }));
+    return { data: { savedJobOpportunities: jobs } };
+  }
+
+  if (query.includes("jobOpportunities")) {
+    return { data: { jobOpportunities: backend.jobs.map(withSavedFlag) } };
+  }
+
+  if (query.includes("query Me") || query.includes("me {") || query.includes("me{")) {
+    const account = backend.accounts.find((a) => a.id === session.accountId);
+    return { data: { me: account ? account.me : null } };
+  }
+
+  return null;
+}
+
 /**
  * Registers Playwright route interceptors for every GraphQL operation fired
  * during E2E tests. Call this BEFORE page.goto() so the handler is in place
@@ -77,14 +220,22 @@ export interface GraphQLMockOverrides {
   exploreUsers?: unknown[];
   /** Payload returned by `getUserByUsername`. */
   getUserByUsername?: Record<string, unknown>;
+  /**
+   * Stateful fake backend. When present its handlers run before every other
+   * one and sessions/saved jobs follow the logged-in account.
+   */
+  backend?: MockBackend;
 }
 
 export async function setupGraphQLMocks(
   page: Page,
   overrides: GraphQLMockOverrides = {},
 ): Promise<void> {
+  // Per-page "cookie": which backend account this browser is logged in as.
+  const session: { accountId: string | null } = { accountId: null };
+
   await page.route("**/graphql", (route) => {
-    let body: { query?: string } | null = null;
+    let body: { query?: string; variables?: Record<string, unknown> } | null = null;
     try {
       const raw = route.request().postData();
       if (raw) body = JSON.parse(raw);
@@ -93,6 +244,22 @@ export async function setupGraphQLMocks(
     }
 
     const q = body?.query ?? "";
+
+    if (overrides.backend) {
+      const result = handleBackendOperation(
+        overrides.backend,
+        session,
+        q,
+        body?.variables ?? {},
+      );
+      if (result !== null) {
+        return route.fulfill({
+          status: 200,
+          contentType: "application/json",
+          body: JSON.stringify(result),
+        });
+      }
+    }
 
     // ── Auth ────────────────────────────────────────────────────────────────
     if (q.includes("mutation Login") || q.includes("login(email:")) {

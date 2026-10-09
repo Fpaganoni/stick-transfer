@@ -78,6 +78,23 @@ cause React errors at runtime, not TypeScript compile time.
 the real network where `localhost:4000` is not running, causing `ECONNREFUSED`
 and flaky tests. Use `route.fulfill({ data: {} })` to absorb unknown requests.
 
+### Stateful fake backend (accounts and saved jobs)
+
+For flows where server state matters (sessions, saved jobs) create a backend
+and pass it to the mocks. It handles login/logout/`me`/job lists/save/unsave
+before the static handlers; the session is per page, the data is shared:
+
+```typescript
+const backend = createMockBackend(); // accounts A and B by default
+await setupGraphQLMocks(page, { backend });
+// ...after the UI flow:
+backend.savedFor(MOCK_ACCOUNT_A.id); // ["opp-1"]
+backend.logoutCalls; // number of Logout mutations received
+```
+
+Register a second page/context against the same `backend` to simulate
+another browser. See `saved-jobs-session.spec.ts`.
+
 ### Locating elements reliably
 
 Prefer semantic or content-based locators over raw CSS class selectors.
