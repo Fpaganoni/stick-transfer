@@ -54,11 +54,6 @@ export async function POST(request: NextRequest) {
     uploadFormData.append("upload_preset", preset);
 
     const url = `https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`;
-    console.log("Uploading to Cloudinary:", {
-      url,
-      cloudName,
-      fileName: file.name,
-    });
 
     const response = await fetch(url, {
       method: "POST",
@@ -78,7 +73,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    console.log("Upload success:", { url: responseData.secure_url });
     return NextResponse.json({
       url: responseData.secure_url,
     });

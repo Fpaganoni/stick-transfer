@@ -81,13 +81,6 @@ export function useApplyForJob() {
         throw new Error("Job Opportunity ID is required");
       }
 
-      console.log("Executing applyForJob mutation with args:", {
-        jobOpportunityId,
-        userId: user.id,
-        coverLetter,
-        resumeUrl,
-      });
-
       return graphqlClient.request(APPLY_FOR_JOB, {
         jobOpportunityId,
         userId: user.id,
