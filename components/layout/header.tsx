@@ -8,6 +8,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { LanguageSelector } from "../ui/language-selector";
 import { ThemeToggleControl } from "../ui/theme-provider";
 import { useAuthStore } from "@/stores/useAuthStore";
+import { useLogout } from "@/hooks/useLogout";
 import { useNotificationsStore } from "@/stores/useNotificationsStore";
 import { useUnreadNotificationsCount } from "@/hooks/useNotifications";
 import { NotificationDropdown } from "@/components/notifications/NotificationDropdown";
@@ -18,17 +19,13 @@ interface HeaderProps {
 
 export function Header({ title = "Hockey Connect" }: HeaderProps) {
   const [showLogout, setShowLogout] = useState(false);
-  const { user, logout } = useAuthStore();
+  const { user } = useAuthStore();
+  const { logout, isLoggingOut } = useLogout();
   const t = useTranslations("navigation");
   const { isOpen: isNotificationsOpen, toggle } = useNotificationsStore();
   const { data: countData } = useUnreadNotificationsCount();
 
   const unreadCount = countData?.unreadNotificationsCount ?? 0;
-
-  const handleLogout = () => {
-    logout();
-    window.location.href = "/";
-  };
 
   return (
     <header className="sticky top-0 bg-background/30 backdrop-blur-sm border-b border-border z-30 px-4 py-3 flex items-center justify-between gap-2">
@@ -77,8 +74,9 @@ export function Header({ title = "Hockey Connect" }: HeaderProps) {
           </SidebarMenuButton>
           {showLogout && (
             <button
-              onClick={handleLogout}
-              className="absolute right-0 top-full mt-2 px-4 py-2 bg-background border border-border rounded-md text-foreground text-sm hover:bg-sidebar-accent hover:text-sidebar-accent-foreground shadow-lg transition-colors cursor-pointer whitespace-nowrap z-50"
+              onClick={logout}
+              disabled={isLoggingOut}
+              className="disabled:opacity-50 disabled:cursor-not-allowed absolute right-0 top-full mt-2 px-4 py-2 bg-background border border-border rounded-md text-foreground text-sm hover:bg-sidebar-accent hover:text-sidebar-accent-foreground shadow-lg transition-colors cursor-pointer whitespace-nowrap z-50"
             >
               {t("logout")}
             </button>

@@ -1,14 +1,22 @@
 "use client";
 
 import { useEffect } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useAuthStore } from "@/stores/useAuthStore";
+import { clearClientSession, purgeLegacyStorage } from "@/lib/session";
 import { useNotificationSocket } from "@/hooks/useNotificationSocket";
 import { graphqlClient } from "@/lib/graphql-client";
 import { ME } from "@/graphql/user/queries";
 
 export function AuthInitializer() {
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
-  const logout = useAuthStore((state) => state.logout);
+  const queryClient = useQueryClient();
+
+  // Older versions kept saved jobs in a localStorage key shared by every
+  // account of the browser; whatever is there may belong to someone else.
+  useEffect(() => {
+    purgeLegacyStorage();
+  }, []);
 
   useEffect(() => {
     let ignore = false;
@@ -29,7 +37,7 @@ export function AuthInitializer() {
         await fetch("/api/auth/session", { method: "POST" }).catch(() => {});
       } catch {
         if (ignore) return;
-        await logout();
+        await clearClientSession(queryClient);
       }
     }
 
@@ -38,7 +46,7 @@ export function AuthInitializer() {
     return () => {
       ignore = true;
     };
-  }, [isLoggedIn, logout]);
+  }, [isLoggedIn, queryClient]);
 
   useNotificationSocket();
 

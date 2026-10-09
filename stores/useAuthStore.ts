@@ -1,8 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { User } from "@/types/models/user";
-import { graphqlClient } from "@/lib/graphql-client";
-import { LOGOUT } from "@/graphql";
+import { getRegisteredQueryClient } from "@/lib/query-client-registry";
 
 type UpdateUserInput = Partial<User>;
 
@@ -13,16 +12,19 @@ interface AuthState {
 
   // ACTIONS
   login: (user: User) => Promise<void>;
-  logout: () => Promise<void>;
+  /**
+   * Resets this store and its persisted entry only. To end a session use
+   * clearClientSession (lib/session.ts), which also calls the server and wipes
+   * the query cache and the other user stores.
+   */
+  logout: () => void;
   register: (user: User) => void;
   updateUser: (data: UpdateUserInput) => void;
 }
 
-let isLoggingOut = false;
-
 export const useAuthStore = create<AuthState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       // INITIAL STATE
       user: null,
       isLoggedIn: false,
@@ -30,6 +32,13 @@ export const useAuthStore = create<AuthState>()(
       //ACTIONS
 
       login: async (user: User) => {
+        // Switching accounts without a logout must not leak the previous
+        // account's cached data (saved jobs, applications, notifications).
+        const previousUser = get().user;
+        if (previousUser && previousUser.id !== user.id) {
+          getRegisteredQueryClient()?.clear();
+        }
+
         if (typeof window !== "undefined") {
           // Must be awaited: the proxy gates protected routes (e.g.
           // /opportunities) on this cookie. Pushing to a protected route
@@ -39,23 +48,10 @@ export const useAuthStore = create<AuthState>()(
         set({ user, isLoggedIn: true });
       },
 
-      logout: async () => {
-        // Guard against re-entrant calls: if the LOGOUT mutation itself
-        // comes back unauthenticated, graphql-client's interceptor calls
-        // logout() again, which would otherwise recurse forever.
-        if (isLoggingOut) return;
-        isLoggingOut = true;
-
-        try {
-          await graphqlClient.request(LOGOUT).catch(() => {});
-
-          if (typeof window !== "undefined") {
-            await fetch("/api/auth/session", { method: "DELETE" }).catch(() => {});
-          }
-          set({ user: null, isLoggedIn: false });
-        } finally {
-          isLoggingOut = false;
-        }
+      logout: () => {
+        set({ user: null, isLoggedIn: false });
+        // set() just wrote the empty state back to localStorage; drop the entry itself.
+        useAuthStore.persist.clearStorage();
       },
 
       register: (user: User) => {

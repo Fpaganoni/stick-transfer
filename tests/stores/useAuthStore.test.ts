@@ -8,6 +8,8 @@ import { describe, it, expect, beforeEach } from "vitest";
 import { act } from "react";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { mockUser } from "../test-utils";
+import { QueryClient } from "@tanstack/react-query";
+import { registerQueryClient } from "@/lib/query-client-registry";
 
 // Reset store between tests (bypasses zustand persist caching)
 function resetStore() {
@@ -33,11 +35,60 @@ describe("useAuthStore", () => {
   it("logout() clears user and resets isLoggedIn", async () => {
     await act(async () => {
       await useAuthStore.getState().login(mockUser);
-      await useAuthStore.getState().logout();
     });
+    act(() => useAuthStore.getState().logout());
     const { user, isLoggedIn } = useAuthStore.getState();
     expect(user).toBeNull();
     expect(isLoggedIn).toBe(false);
+  });
+
+  it("logout() removes the persisted auth-storage entry, not just the in-memory user", async () => {
+    await act(async () => {
+      await useAuthStore.getState().login(mockUser);
+    });
+    expect(localStorage.getItem("auth-storage")).toContain("franco@test.com");
+
+    act(() => useAuthStore.getState().logout());
+
+    expect(localStorage.getItem("auth-storage")).toBeNull();
+  });
+
+  describe("login() when another account was active", () => {
+    const otherUser = { ...mockUser, id: "user-2", email: "other@test.com" };
+
+    function createRegisteredClient() {
+      const queryClient = new QueryClient();
+      queryClient.setQueryData(["savedJobs"], { savedJobOpportunities: [{ id: "job-1" }] });
+      registerQueryClient(queryClient);
+      return queryClient;
+    }
+
+    it("clears the query cache before setting the new user", async () => {
+      const queryClient = createRegisteredClient();
+      useAuthStore.setState({ user: mockUser, isLoggedIn: true });
+
+      await act(async () => useAuthStore.getState().login(otherUser));
+
+      expect(queryClient.getQueryCache().getAll()).toHaveLength(0);
+      expect(useAuthStore.getState().user?.id).toBe("user-2");
+    });
+
+    it("keeps the cache when the same account logs in again", async () => {
+      const queryClient = createRegisteredClient();
+      useAuthStore.setState({ user: mockUser, isLoggedIn: true });
+
+      await act(async () => useAuthStore.getState().login(mockUser));
+
+      expect(queryClient.getQueryCache().getAll()).toHaveLength(1);
+    });
+
+    it("keeps the cache when there was no previous user", async () => {
+      const queryClient = createRegisteredClient();
+
+      await act(async () => useAuthStore.getState().login(otherUser));
+
+      expect(queryClient.getQueryCache().getAll()).toHaveLength(1);
+    });
   });
 
   it("updateUser() merges partial data without overwriting unrelated fields", async () => {

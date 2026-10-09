@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import {
   LayoutDashboard,
@@ -39,6 +39,7 @@ import { Separator } from "@/components/ui/separator";
 import { LanguageSelector } from "@/components/ui/language-selector";
 import { ThemeToggleControl } from "@/components/ui/theme-provider";
 import { useAuthStore } from "@/stores/useAuthStore";
+import { useLogout } from "@/hooks/useLogout";
 
 interface AdminShellProps {
   children: React.ReactNode;
@@ -47,10 +48,10 @@ interface AdminShellProps {
 export function AdminShell({ children }: AdminShellProps) {
   const [showLogout, setShowLogout] = useState(false);
   const pathname = usePathname();
-  const router = useRouter();
   const t = useTranslations("admin.nav");
   const locale = useLocale();
-  const { user, logout } = useAuthStore();
+  const { user } = useAuthStore();
+  const { logout, isLoggingOut } = useLogout();
 
   const navItems = [
     { href: "/admin", label: t("overview"), icon: LayoutDashboard },
@@ -67,11 +68,6 @@ export function AdminShell({ children }: AdminShellProps) {
     return href === "/admin" ? pathname === target : pathname.startsWith(target);
   };
   const activeItem = navItems.find((item) => isActive(item.href));
-
-  const handleLogout = () => {
-    logout();
-    router.replace(localePrefix || "/");
-  };
 
   return (
     <SidebarProvider>
@@ -110,7 +106,11 @@ export function AdminShell({ children }: AdminShellProps) {
         <SidebarFooter>
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton onClick={handleLogout} tooltip={t("logout")}>
+              <SidebarMenuButton
+                onClick={logout}
+                disabled={isLoggingOut}
+                tooltip={t("logout")}
+              >
                 <LogOut />
                 <span>{t("logout")}</span>
               </SidebarMenuButton>
@@ -150,8 +150,9 @@ export function AdminShell({ children }: AdminShellProps) {
               </SidebarMenuButton>
               {showLogout && (
                 <button
-                  onClick={handleLogout}
-                  className="absolute right-0 top-full mt-2 px-4 py-2 bg-background border border-border rounded-md text-foreground text-sm hover:bg-sidebar-accent hover:text-sidebar-accent-foreground shadow-lg transition-colors cursor-pointer whitespace-nowrap z-50"
+                  onClick={logout}
+                  disabled={isLoggingOut}
+                  className="disabled:opacity-50 disabled:cursor-not-allowed absolute right-0 top-full mt-2 px-4 py-2 bg-background border border-border rounded-md text-foreground text-sm hover:bg-sidebar-accent hover:text-sidebar-accent-foreground shadow-lg transition-colors cursor-pointer whitespace-nowrap z-50"
                 >
                   {t("logout")}
                 </button>

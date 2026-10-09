@@ -1,6 +1,7 @@
 import { ClientError, GraphQLClient } from "graphql-request";
 import { toast } from "sonner";
 import { useAuthStore } from "@/stores/useAuthStore";
+import { getRegisteredQueryClient } from "@/lib/query-client-registry";
 import { locales } from "@/i18n/request";
 
 // This module runs outside React, so it can't use the useTranslations hook.
@@ -33,10 +34,10 @@ function isUnauthenticatedError(error: unknown): boolean {
   );
 }
 
-function handleUnauthenticated() {
-  useAuthStore.getState().logout();
-
-  if (typeof window === "undefined") return;
+async function expireSession() {
+  // Loaded lazily: lib/session imports this module for rawGraphqlClient.
+  const { clearClientSession } = await import("@/lib/session");
+  await clearClientSession(getRegisteredQueryClient());
 
   const [, maybeLocale] = window.location.pathname.split("/");
   const isKnownLocale = locales.includes(maybeLocale as (typeof locales)[number]);
@@ -47,8 +48,28 @@ function handleUnauthenticated() {
   window.location.href = `${localePrefix}/`;
 }
 
-// Wraps graphql-request so any UNAUTHENTICATED/401 response logs the user
-// out and redirects to /login instead of failing silently forever.
+// Several requests usually fail together when a session dies; they all share
+// one cleanup, one toast and one redirect.
+let expiringSession: Promise<void> | null = null;
+
+function handleUnauthenticated(): void {
+  // Nothing to expire for visitors (e.g. a rejected login attempt) or on the server.
+  if (typeof window === "undefined" || !useAuthStore.getState().isLoggedIn) return;
+
+  if (!expiringSession) {
+    expiringSession = expireSession().finally(() => {
+      expiringSession = null;
+    });
+  }
+}
+
+// Same client without the interceptor below. Needed by the LOGOUT mutation: if
+// it came back unauthenticated and went through the interceptor, logging out
+// would trigger another logout.
+export const rawGraphqlClient = client;
+
+// Wraps graphql-request so any UNAUTHENTICATED/401 response clears the client
+// session and sends the user home instead of failing silently forever.
 export const graphqlClient = {
   request: (async (...args: Parameters<GraphQLClient["request"]>) => {
     try {
