@@ -7,6 +7,7 @@ import { clearClientSession, purgeLegacyStorage } from "@/lib/session";
 import { useNotificationSocket } from "@/hooks/useNotificationSocket";
 import { graphqlClient } from "@/lib/graphql-client";
 import { ME } from "@/graphql/user/queries";
+import { isUnauthenticatedError } from "@/lib/graphql-errors";
 
 export function AuthInitializer() {
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
@@ -35,9 +36,13 @@ export function AuthInitializer() {
         await graphqlClient.request(ME);
         if (ignore) return;
         await fetch("/api/auth/session", { method: "POST" }).catch(() => {});
-      } catch {
+      } catch (error) {
         if (ignore) return;
-        await clearClientSession(queryClient);
+        // Only a rejected session logs out. Offline, or a reload aborting this
+        // request, must keep it: the next start checks again.
+        if (isUnauthenticatedError(error)) {
+          await clearClientSession(queryClient);
+        }
       }
     }
 

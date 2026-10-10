@@ -1,5 +1,4 @@
 import { Metadata } from "next";
-import { AppShell } from "@/components/layout/app-shell";
 import { ClubDetailPage } from "@/components/pages/club-detail-page";
 
 interface ClubDetailRouteProps {
@@ -20,9 +19,5 @@ export default async function ClubDetailRoute({
 }: ClubDetailRouteProps) {
   const { id } = await params;
 
-  return (
-    <AppShell title="Club">
-      <ClubDetailPage clubId={id} />
-    </AppShell>
-  );
+  return <ClubDetailPage clubId={id} />;
 }

@@ -203,7 +203,7 @@ function handleBackendOperation(
  *   Server-side (SSR/Node.js) requests to the GraphQL endpoint are made
  *   directly from the Next.js server process and cannot be intercepted here.
  *   Those pages must handle connection failures with try/catch so the
- *   client-side React Query hook takes over — see app/[locale]/opportunities/page.tsx.
+ *   client-side React Query hook takes over — see app/[locale]/(app)/opportunities/page.tsx.
  *
  * Adding a new query:
  *   1. Add an `if (q.includes("<field or operation name>"))` block above the catch-all.

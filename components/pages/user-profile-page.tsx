@@ -3,8 +3,8 @@
 import { useState } from "react";
 import { ProfileHeader } from "@/components/profile/profile-header";
 import { ProfileTabs } from "@/components/profile/profile-tabs";
-import { useAuthStore } from "@/stores/useAuthStore";
-import { useMe } from "@/hooks/useUsers";
+import { ProfilePageSkeleton } from "@/components/profile/profile-page-skeleton";
+import { useMe, useMyFollowCounts } from "@/hooks/useUsers";
 import { Role } from "@/types/enums";
 
 interface UserProfilePageProps {
@@ -15,14 +15,19 @@ export function UserProfilePage({
   isOwnProfile = false,
 }: UserProfilePageProps) {
   const [selectedTab, setSelectedTab] = useState<string | null>(null);
-  const { user: authUser } = useAuthStore();
-  const { data: freshData } = useMe();
+  // The stored user renders at once and `me` replaces it in place
+  const { data } = useMe({ placeholderFromStore: true });
+  const { data: counts } = useMyFollowCounts();
 
-  const user = freshData?.me ?? authUser;
+  const user = data?.me;
 
   if (!user) {
-    return <div>PLEASE LOGIN</div>;
+    return <ProfilePageSkeleton />;
   }
+
+  // Placeholders (undefined) until their own query answers
+  const followersCount = counts?.me.followersCount;
+  const followingCount = counts?.me.followingCount;
 
   // Umpires land on their officiating data; everyone else on trajectory
   const activeTab =
@@ -69,8 +74,8 @@ export function UserProfilePage({
       <ProfileHeader
           {...userData}
           isOwnProfile={isOwnProfile}
-          followersCount={user.followersCount}
-          followingCount={user.followingCount}
+          followersCount={followersCount}
+          followingCount={followingCount}
         />
       <ProfileTabs
         activeTab={activeTab}

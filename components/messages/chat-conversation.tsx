@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { ArrowLeft, Send, Plus } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Input } from "../ui/input";
 import { useTranslations } from "next-intl";
 import { useMediaQuery } from "@/hooks/ui/use-media-query";
@@ -113,30 +113,33 @@ export function ChatConversation({ onBack, contactName }: ChatConversationProps)
       </div>
 
       <div className="flex-1 overflow-y-auto px-6 py-6 space-y-4 scroll-smooth">
-        {messages.map((msg) => (
-          <motion.div
-            initial={{ opacity: 0, y: 20, x: 20 }}
-            animate={{ opacity: 1, y: 0, x: 0 }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
-            key={msg.id}
-            className={`flex ${
-              msg.sender === "user" ? "justify-end" : "justify-start"
-            }`}
-          >
-            <div
-              className={`max-w-xs px-4 py-3 rounded-2xl ${
-                msg.sender === "user"
-                  ? "bg-background text-foreground rounded-br-none shadow-md border border-border-strong hover:shadow-lg"
-                  : "bg-input border border-border-strong text-foreground rounded-bl-none shadow-sm hover:shadow-md"
+        {/* initial={false}: the history shows as is; only new messages slide in */}
+        <AnimatePresence initial={false}>
+          {messages.map((msg) => (
+            <motion.div
+              initial={{ opacity: 0, y: 20, x: 20 }}
+              animate={{ opacity: 1, y: 0, x: 0 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              key={msg.id}
+              className={`flex ${
+                msg.sender === "user" ? "justify-end" : "justify-start"
               }`}
             >
-              <p className="text-sm wrap-break-word">{msg.text}</p>
-              <p className="text-xs mt-2 text-foreground-muted">
-                <MessageTime timestamp={msg.timestamp} />
-              </p>
-            </div>
-          </motion.div>
-        ))}
+              <div
+                className={`max-w-xs px-4 py-3 rounded-2xl ${
+                  msg.sender === "user"
+                    ? "bg-background text-foreground rounded-br-none shadow-md border border-border-strong hover:shadow-lg"
+                    : "bg-input border border-border-strong text-foreground rounded-bl-none shadow-sm hover:shadow-md"
+                }`}
+              >
+                <p className="text-sm wrap-break-word">{msg.text}</p>
+                <p className="text-xs mt-2 text-foreground-muted">
+                  <MessageTime timestamp={msg.timestamp} />
+                </p>
+              </div>
+            </motion.div>
+          ))}
+        </AnimatePresence>
         <div ref={messagesEndRef} />
       </div>
 

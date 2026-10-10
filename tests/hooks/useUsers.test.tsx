@@ -131,7 +131,11 @@ describe("useFollow / useUnfollow optimistic update", () => {
     qc.setQueryData(["user", "target-1"], {
       user: { id: "target-1", followersCount: 7, isFollowedByCurrentUser: isFollowing },
     });
-    qc.setQueryData(["me"], { me: { id: "viewer-1", followingCount: 2 } });
+    // `me` itself carries no counters; they live in their own query
+    qc.setQueryData(["me"], { me: { id: "viewer-1", name: "Viewer" } });
+    qc.setQueryData(["me", "followCounts"], {
+      me: { id: "viewer-1", followersCount: 5, followingCount: 2 },
+    });
     return qc;
   }
 
@@ -149,7 +153,9 @@ describe("useFollow / useUnfollow optimistic update", () => {
     ])?.getUserByUsername;
   const targetById = (qc: QueryClient) =>
     qc.getQueryData<{ user: Record<string, unknown> }>(["user", "target-1"])?.user;
-  const me = (qc: QueryClient) => qc.getQueryData<{ me: Record<string, unknown> }>(["me"])?.me;
+  const me = (qc: QueryClient) =>
+    qc.getQueryData<{ me: Record<string, unknown> }>(["me", "followCounts"])?.me;
+  const plainMe = (qc: QueryClient) => qc.getQueryData<{ me: Record<string, unknown> }>(["me"])?.me;
 
   /** Keeps the request in flight so the optimistic state can be asserted; release() settles it. */
   function pendingRequest() {
@@ -174,6 +180,7 @@ describe("useFollow / useUnfollow optimistic update", () => {
     expect(target(qc)).toMatchObject({ isFollowedByCurrentUser: true });
     expect(targetById(qc)).toMatchObject({ followersCount: 8, isFollowedByCurrentUser: true });
     expect(me(qc)).toMatchObject({ followingCount: 3 });
+    expect(plainMe(qc)).not.toHaveProperty("followingCount");
 
     await act(async () => release());
   });

@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { CountryLabel } from "@/components/ui/country-label";
 import Image from "next/image";
-import { motion } from "framer-motion";
 import { Bookmark, MapPin, Briefcase, Loader2 } from "lucide-react";
 import { useTranslations, useLocale } from "next-intl";
 import { useSavedJobs, useToggleSaveJob } from "@/hooks/useSavedJobs";
@@ -37,37 +36,28 @@ export function UserSavedJobs() {
 
   if (savedOpportunities.length === 0) {
     return (
-      <motion.div
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-      >
-        <Empty className="border border-dashed border-border">
-          <EmptyMedia variant="icon">
-            <Bookmark />
-          </EmptyMedia>
-          <EmptyHeader>
-            <EmptyTitle>{t("savedJobs.noSavedJobs")}</EmptyTitle>
-            <EmptyDescription>{t("savedJobs.noSavedJobsHint")}</EmptyDescription>
-          </EmptyHeader>
-        </Empty>
-      </motion.div>
+      <Empty className="border border-dashed border-border">
+        <EmptyMedia variant="icon">
+          <Bookmark />
+        </EmptyMedia>
+        <EmptyHeader>
+          <EmptyTitle>{t("savedJobs.noSavedJobs")}</EmptyTitle>
+          <EmptyDescription>{t("savedJobs.noSavedJobsHint")}</EmptyDescription>
+        </EmptyHeader>
+      </Empty>
     );
   }
 
   return (
     <div className="space-y-3">
-      {savedOpportunities.map((opportunity, idx) => {
+      {savedOpportunities.map((opportunity) => {
         const { id, title, club, country, city, positionType, level, status, createdAt } =
           opportunity;
         const normalizedStatus = status.toLowerCase() as "open" | "closed" | "filled";
 
         return (
-          <motion.div
+          <div
             key={id}
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: idx * 0.05 }}
             className="bg-background rounded-xl border border-border shadow-sm hover:shadow-md transition-shadow duration-200"
           >
             <Link
@@ -161,7 +151,7 @@ export function UserSavedJobs() {
                 </div>
               </div>
             </Link>
-          </motion.div>
+          </div>
         );
       })}
     </div>

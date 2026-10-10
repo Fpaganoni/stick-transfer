@@ -26,6 +26,10 @@ function isProtectedPath(pathname: string): boolean {
   );
 }
 
+function isHomePath(pathname: string): boolean {
+  return /^(\/(en|es|fr))?\/?$/.test(pathname);
+}
+
 function getLocaleFromPath(pathname: string): string {
   const match = pathname.match(/^\/(en|es|fr)/);
   return match ? match[1] : "en";
@@ -33,9 +37,16 @@ function getLocaleFromPath(pathname: string): string {
 
 export default function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  const authCookie = request.cookies.get("st-auth");
+
+  // Signed-in users skip the landing: the app starts at /opportunities, inside
+  // the persistent shell. A stale cookie is cleared by AuthInitializer.
+  if (isHomePath(pathname) && authCookie?.value) {
+    const localePrefix = pathname.match(/^\/(es|fr)/)?.[0] ?? "";
+    return NextResponse.redirect(new URL(`${localePrefix}/opportunities`, request.url));
+  }
 
   if (isProtectedPath(pathname)) {
-    const authCookie = request.cookies.get("st-auth");
     if (!authCookie?.value) {
       const locale = getLocaleFromPath(pathname);
       return NextResponse.redirect(new URL(`/${locale}`, request.url));

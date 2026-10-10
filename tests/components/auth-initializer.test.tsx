@@ -3,9 +3,12 @@
  * Why: It reconciles the persisted "logged in" flag with the real session on
  *      every app start: it must drop storage left by older versions, re-arm the
  *      routing cookie only when the backend confirms the session, and wipe the
- *      client session when the backend rejects it.
+ *      client session when the backend rejects it. A failure that is not an
+ *      auth error (offline, or a reload aborting the request) must not log the
+ *      user out.
  */
 import { render, waitFor } from "@testing-library/react";
+import { ClientError } from "graphql-request";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { act } from "react";
 import { vi, describe, it, expect, beforeEach, afterEach } from "vitest";
@@ -97,11 +100,32 @@ describe("AuthInitializer", () => {
 
   it("clears the whole client session when the backend rejects the stored one", async () => {
     useAuthStore.setState({ user: mockUser, isLoggedIn: true });
-    vi.mocked(graphqlClient).request = vi.fn().mockRejectedValue(new Error("expired"));
+    vi.mocked(graphqlClient).request = vi.fn().mockRejectedValue(
+      new ClientError(
+        {
+          status: 200,
+          errors: [{ message: "Unauthorized", extensions: { code: "UNAUTHENTICATED" } }],
+        } as never,
+        { query: "query Me { me { id } }" },
+      ),
+    );
 
     const queryClient = renderInitializer();
 
     await waitFor(() => expect(clearClientSessionMock).toHaveBeenCalledWith(queryClient));
+    expect(fetchMock).not.toHaveBeenCalledWith("/api/auth/session", { method: "POST" });
+  });
+
+  it("keeps the session when `me` fails without an auth error (e.g. a reload aborts it)", async () => {
+    useAuthStore.setState({ user: mockUser, isLoggedIn: true });
+    vi.mocked(graphqlClient).request = vi.fn().mockRejectedValue(new TypeError("Failed to fetch"));
+
+    renderInitializer();
+
+    await waitFor(() => expect(graphqlClient.request).toHaveBeenCalled());
+    await act(async () => {});
+    expect(clearClientSessionMock).not.toHaveBeenCalled();
+    expect(useAuthStore.getState().isLoggedIn).toBe(true);
     expect(fetchMock).not.toHaveBeenCalledWith("/api/auth/session", { method: "POST" });
   });
 });

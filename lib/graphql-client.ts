@@ -1,8 +1,9 @@
-import { ClientError, GraphQLClient } from "graphql-request";
+import { GraphQLClient } from "graphql-request";
 import { toast } from "sonner";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { getRegisteredQueryClient } from "@/lib/query-client-registry";
 import { locales } from "@/i18n/request";
+import { isUnauthenticatedError } from "@/lib/graphql-errors";
 
 // This module runs outside React, so it can't use the useTranslations hook.
 // Keep this in sync with auth.sessionExpired in messages/{en,es,fr}.json.
@@ -23,16 +24,6 @@ const client = new GraphQLClient(endpoint, {
     "Content-Type": "application/json",
   },
 });
-
-function isUnauthenticatedError(error: unknown): boolean {
-  if (!(error instanceof ClientError)) return false;
-
-  if (error.response?.status === 401) return true;
-
-  return (error.response?.errors ?? []).some(
-    (gqlError) => gqlError.extensions?.code === "UNAUTHENTICATED",
-  );
-}
 
 async function expireSession() {
   // Loaded lazily: lib/session imports this module for rawGraphqlClient.

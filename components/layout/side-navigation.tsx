@@ -13,6 +13,9 @@ import {
   PlusCircle,
 } from "lucide-react";
 import { useRole } from "@/hooks/useRole";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { useAuthHydrated } from "@/hooks/ui/use-auth-hydrated";
+import { Role } from "@/types/enums";
 import {
   Sidebar,
   SidebarContent,
@@ -32,11 +35,18 @@ export function SideNavigation() {
   const t = useTranslations("navigation");
   const tOpportunities = useTranslations("opportunities");
   const { state } = useSidebar();
-  const { isClub } = useRole();
+  const { isClub, isLoading: isRoleLoading } = useRole();
+  const storedRole = useAuthStore((s) => s.user?.role);
+  const hydrated = useAuthHydrated();
+  // Navigation hint only (the create route has its own RoleGuard): while `me`
+  // loads, trust the stored role so the club entry does not pop in and push the
+  // rest of the menu down. Not before hydration, to match the server markup.
+  const showPostJob =
+    isClub || (hydrated && isRoleLoading && storedRole === Role.CLUB);
 
   const navItems = [
     { href: "/opportunities", label: t("opportunities"), icon: Target },
-    ...(isClub
+    ...(showPostJob
       ? [{ href: "/opportunities/new", label: tOpportunities("postJob"), icon: PlusCircle }]
       : []),
     { href: "/explore", label: t("players"), icon: Compass },

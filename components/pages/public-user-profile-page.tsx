@@ -4,7 +4,7 @@ import { useState } from "react";
 import { ProfileHeader } from "@/components/profile/profile-header";
 import { ProfileTabs } from "@/components/profile/profile-tabs";
 import { useUserByUsername } from "@/hooks/useUsers";
-import { Loader } from "@/components/ui/loader";
+import { ProfilePageSkeleton } from "@/components/profile/profile-page-skeleton";
 import { Error } from "@/components/ui/error";
 import { Role } from "@/types/enums";
 
@@ -19,11 +19,7 @@ export function PublicUserProfilePage({
   const { data, isLoading, error } = useUserByUsername(username);
 
   if (isLoading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <Loader />
-      </div>
-    );
+    return <ProfilePageSkeleton />;
   }
 
   if (error || !data?.getUserByUsername) {

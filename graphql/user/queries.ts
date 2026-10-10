@@ -77,8 +77,6 @@ export const ME = gql`
       city
       cvUrl
       multimedia
-      followersCount
-      followingCount
       ${UMPIRE_FIELDS}
       club {
         name
@@ -97,6 +95,20 @@ export const ME = gql`
           logo
         }
       }
+    }
+  }
+`;
+
+/**
+ * The own follower counters, apart from ME: they add seconds to the backend
+ * response and ME gates the session check and role-based UI.
+ */
+export const ME_FOLLOW_COUNTS = gql`
+  query MeFollowCounts {
+    me {
+      id
+      followersCount
+      followingCount
     }
   }
 `;

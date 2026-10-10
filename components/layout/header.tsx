@@ -12,12 +12,15 @@ import { useLogout } from "@/hooks/useLogout";
 import { useNotificationsStore } from "@/stores/useNotificationsStore";
 import { useUnreadNotificationsCount } from "@/hooks/useNotifications";
 import { NotificationDropdown } from "@/components/notifications/NotificationDropdown";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface HeaderProps {
-  title?: string;
+  title: string;
+  /** True while the persisted auth store hydrates: the user block is a placeholder. */
+  isLoadingUser?: boolean;
 }
 
-export function Header({ title = "Hockey Connect" }: HeaderProps) {
+export function Header({ title, isLoadingUser = false }: HeaderProps) {
   const [showLogout, setShowLogout] = useState(false);
   const { user } = useAuthStore();
   const { logout, isLoggingOut } = useLogout();
@@ -55,13 +58,20 @@ export function Header({ title = "Hockey Connect" }: HeaderProps) {
           <NotificationDropdown />
         </div>
 
-        <div className="flex items-center gap-2 pl-2">
-          <Avatar className="size-8">
-            <AvatarImage src={user?.avatar} alt={user?.name} />
-            <AvatarFallback>{user?.name?.[0]?.toUpperCase() ?? "U"}</AvatarFallback>
-          </Avatar>
-          <span className="hidden text-sm font-medium sm:inline">{user?.name}</span>
-        </div>
+        {isLoadingUser ? (
+          <div className="flex items-center gap-2 pl-2" aria-busy="true">
+            <Skeleton className="size-8 rounded-full" />
+            <Skeleton className="hidden h-4 w-24 sm:block" />
+          </div>
+        ) : (
+          <div className="flex items-center gap-2 pl-2">
+            <Avatar className="size-8">
+              <AvatarImage src={user?.avatar} alt={user?.name} />
+              <AvatarFallback>{user?.name?.[0]?.toUpperCase() ?? "U"}</AvatarFallback>
+            </Avatar>
+            <span className="hidden text-sm font-medium sm:inline">{user?.name}</span>
+          </div>
+        )}
 
         <div className="relative">
           <SidebarMenuButton

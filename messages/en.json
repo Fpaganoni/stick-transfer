@@ -425,6 +425,7 @@
     "followed": "Now following this user!",
     "unfollowed": "Unfollowed",
     "followError": "Failed to update follow status",
+    "loadingProfile": "Loading profile",
     "followList": {
       "emptyFollowers": "No followers yet",
       "emptyFollowing": "Not following anyone yet",
@@ -1405,5 +1406,15 @@
         "actionFailed": "Couldn't complete the action. Please try again."
       }
     }
+  },
+  "pageTitles": {
+    "explore": "Explore",
+    "messages": "Messages",
+    "profile": "Profile",
+    "editProfile": "Edit Profile",
+    "club": "Club",
+    "myProfile": "My Profile",
+    "default": "Stick Transfer",
+    "loading": "Loading page"
   }
 }

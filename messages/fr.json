@@ -425,6 +425,7 @@
     "followed": "Vous suivez maintenant cet utilisateur !",
     "unfollowed": "Vous ne suivez plus cet utilisateur",
     "followError": "Échec de la mise à jour du suivi",
+    "loadingProfile": "Chargement du profil",
     "followList": {
       "emptyFollowers": "Pas encore d'abonnés",
       "emptyFollowing": "Ne suit encore personne",
@@ -1405,5 +1406,15 @@
         "actionFailed": "Impossible de terminer l’action. Veuillez réessayer."
       }
     }
+  },
+  "pageTitles": {
+    "explore": "Explorer",
+    "messages": "Messages",
+    "profile": "Profil",
+    "editProfile": "Modifier le profil",
+    "club": "Club",
+    "myProfile": "Mon profil",
+    "default": "Stick Transfer",
+    "loading": "Chargement de la page"
   }
 }

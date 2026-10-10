@@ -21,7 +21,7 @@ Browser (Playwright)          Next.js server (Node.js)
 (no backend running in E2E). Every SSR page must handle this gracefully:
 
 ```typescript
-// app/[locale]/opportunities/page.tsx
+// app/[locale]/(app)/opportunities/page.tsx
 let initialData = undefined;
 try {
   const data = await graphqlClient.request(GET_JOB_OPPORTUNITIES);

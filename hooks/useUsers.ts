@@ -14,6 +14,7 @@ import {
   GET_USER_FOLLOWERS,
   GET_USER_FOLLOWING,
   ME,
+  ME_FOLLOW_COUNTS,
 } from "@/graphql/user/queries";
 import {
   LOGIN,
@@ -69,14 +70,32 @@ export function useUser(userId: string | null) {
  * Resolved server-side from the JWT (no id passed) — safe source of
  * truth for role-gated UI, unlike the persisted auth store.
  */
-export function useMe() {
+export function useMe({ placeholderFromStore = false }: { placeholderFromStore?: boolean } = {}) {
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+  const storedUser = useAuthStore((state) => state.user);
 
   return useQuery<{ me: User }>({
     queryKey: ["me"],
     queryFn: async () => graphqlClient.request(ME),
     enabled: isLoggedIn,
     retry: false,
+    // Display only (e.g. the own profile, to avoid a layout jump). Never for
+    // role gating: the stored user is not a trusted source for that.
+    placeholderData:
+      placeholderFromStore && storedUser ? { me: storedUser } : undefined,
+  });
+}
+
+type MyFollowCounts = { me: Pick<User, "id" | "followersCount" | "followingCount"> };
+
+/** The own follower counters (a separate, slower query than `me`). */
+export function useMyFollowCounts() {
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+
+  return useQuery<MyFollowCounts>({
+    queryKey: ["me", "followCounts"],
+    queryFn: async () => graphqlClient.request(ME_FOLLOW_COUNTS),
+    enabled: isLoggedIn,
   });
 }
 
@@ -280,17 +299,15 @@ async function applyOptimisticFollow(
   );
 
   if (!wasFollowing) {
-    queryClient.setQueryData<{ me: User }>(["me"], (data) =>
-      data?.me?.id === followerId
-        ? {
-            ...data,
-            me: {
-              ...data.me,
-              followingCount: Math.max(0, (data.me.followingCount ?? 0) + (follow ? 1 : -1)),
-            },
-          }
-        : data,
-    );
+    // Only copies that carry the counter (the followCounts query, not `me` itself)
+    queryClient.setQueriesData<{ me?: User }>({ queryKey: ["me"] }, (data) => {
+      const me = data?.me;
+      if (!me || me.id !== followerId || typeof me.followingCount !== "number") return data;
+      return {
+        ...data,
+        me: { ...me, followingCount: Math.max(0, me.followingCount + (follow ? 1 : -1)) },
+      };
+    });
   }
 
   return snapshot;
