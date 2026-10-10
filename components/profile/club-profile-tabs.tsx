@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { CountryLabel } from "@/components/ui/country-label";
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { MapPin, Briefcase, Globe, Mail, Video, Plus, X } from "lucide-react";
@@ -75,9 +76,11 @@ function ProfileTabPanel({ t, clubData }: ProfileTabPanelProps) {
                 {t("about.location")}
               </p>
               <p className="text-foreground text-sm">
-                {[clubData.city, clubData.country]
-                  .filter(Boolean)
-                  .join(", ") || t("about.noLocation")}
+                <CountryLabel
+                  city={clubData.city}
+                  value={clubData.country}
+                  fallback={t("about.noLocation")}
+                />
               </p>
             </div>
           </div>

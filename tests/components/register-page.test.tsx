@@ -77,6 +77,13 @@ vi.mock("framer-motion", () => ({
 }));
 
 /** Walks steps 1 and 2 with valid data for the given role card. */
+/** Opens the country combobox and picks a country by its English name. */
+async function pickCountry(user: ReturnType<typeof userEvent.setup>, name: string) {
+  await user.click(screen.getByLabelText("country"));
+  await user.type(screen.getByPlaceholderText("search"), name);
+  await user.click(await screen.findByRole("option", { name: new RegExp(name) }));
+}
+
 async function fillUntilStep3(user: ReturnType<typeof userEvent.setup>, roleCardId: string) {
   await user.click(screen.getByTestId(`role-card-${roleCardId}`));
   await user.click(screen.getByText("next"));
@@ -87,7 +94,7 @@ async function fillUntilStep3(user: ReturnType<typeof userEvent.setup>, roleCard
   await user.type(screen.getByLabelText("email"), "ana@x.com");
   await user.type(screen.getByLabelText("password"), "Password1!");
   await user.type(screen.getByLabelText("confirmPassword"), "Password1!");
-  await user.selectOptions(screen.getByLabelText("country"), "Spain");
+  await pickCountry(user, "Spain");
   await user.click(screen.getByLabelText(/termsAndConditions/));
   await user.click(screen.getByText("next"));
 }
@@ -175,7 +182,7 @@ describe("RegisterPage", () => {
         name: "Ana Referee",
         username: "ana_ref",
         role: "UMPIRE",
-        country: "Spain",
+        country: "ES",
         city: "Madrid",
         dateOfBirth: "1990-05-20",
       });
@@ -352,7 +359,7 @@ describe("RegisterPage", () => {
       await fillUntilStep3(user, "clubAdmin");
       await user.type(await screen.findByLabelText("clubName"), "HC Madrid");
       await user.type(screen.getByLabelText("city"), "Madrid");
-      await user.selectOptions(screen.getByLabelText("country"), "Spain");
+      await pickCountry(user, "Spain");
       await user.click(screen.getByText("createProfile"));
 
       expect(await screen.findByText("registrationFailed")).toBeDefined();
@@ -370,6 +377,22 @@ describe("RegisterPage", () => {
       await user.click(screen.getByText("createProfile"));
 
       expect(await screen.findByText("positionInvalid")).toBeDefined();
+      expect(screen.queryByText("registrationFailed")).toBeNull();
+    });
+
+    it("shows COUNTRY_INVALID on the country field back on step 2", async () => {
+      mockRegister.mockImplementation((_vars, opts) =>
+        opts.onError(validationError("country", "COUNTRY_INVALID")),
+      );
+      const user = userEvent.setup();
+      renderWithProviders(<RegisterPage />);
+
+      await fillUntilStep3(user, "player");
+      await user.selectOptions(await screen.findByLabelText("preferredPosition"), "defender");
+      await user.click(screen.getByText("createProfile"));
+
+      expect(await screen.findByText("countryInvalid")).toBeDefined();
+      expect(screen.getByLabelText("country")).toBeDefined();
       expect(screen.queryByText("registrationFailed")).toBeNull();
     });
   });
@@ -424,7 +447,7 @@ describe("RegisterPage with a preselected role", () => {
     await user.type(screen.getByLabelText("email"), "ana@x.com");
     await user.type(screen.getByLabelText("password"), "Password1!");
     await user.type(screen.getByLabelText("confirmPassword"), "Password1!");
-    await user.selectOptions(screen.getByLabelText("country"), "Spain");
+    await pickCountry(user, "Spain");
     await user.click(screen.getByLabelText(/termsAndConditions/));
     await user.click(screen.getByText("next"));
     await user.type(await screen.findByLabelText("city"), "Madrid");

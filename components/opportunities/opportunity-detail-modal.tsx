@@ -30,6 +30,7 @@ import { Badge } from "@/components/ui/badge";
 import { formatRelativeTime } from "@/lib/date-utils";
 import { getPositionTypeLabel, isUmpireJob } from "@/lib/job-position-type";
 import { UmpireJobDetails } from "./umpire-job-details";
+import { CountryLabel } from "@/components/ui/country-label";
 
 type OpportunityDetailModalProps = Pick<
   JobOpportunity,
@@ -258,7 +259,7 @@ export function OpportunityDetailModal() {
                   {t("filters.location")}
                 </p>
                 <p className="text-sm font-semibold text-foreground">
-                  {opportunity.city}, {opportunity.country}
+                  <CountryLabel city={opportunity.city} value={opportunity.country} />
                 </p>
               </div>
             </div>
@@ -270,7 +271,7 @@ export function OpportunityDetailModal() {
                   {t("country")}
                 </p>
                 <p className="text-sm font-semibold text-foreground">
-                  {opportunity.country}
+                  <CountryLabel value={opportunity.country} />
                 </p>
               </div>
             </div>

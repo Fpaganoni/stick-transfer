@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { CountryLabel } from "@/components/ui/country-label";
 
 // Keep existing imports below...
 import { ArrowRight, BadgeCheck, MapPin, Star } from "lucide-react";
@@ -102,7 +103,7 @@ export function ProfileCard({
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
               <h3 className="font-medium text-foreground truncate">{name}</h3>
-              <span className="shrink-0">{country}</span>
+              <CountryLabel value={country} showName={false} className="shrink-0" />
               <Badge className={`${colors.badge}`}>{role}</Badge>
               {isUmpire && isVerified && (
                 <BadgeCheck
@@ -157,9 +158,7 @@ export function ProfileCard({
             </p>
             <div className="flex items-center gap-1 text-xs text-foreground-muted mt-1">
               <MapPin size={12} />
-              <span>
-                {city}, {country}
-              </span>
+              <CountryLabel city={city} value={country} />
             </div>
           </div>
         </div>

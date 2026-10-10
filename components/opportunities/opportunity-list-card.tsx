@@ -14,6 +14,7 @@ import { useAuthStore } from "@/stores/useAuthStore";
 import { useUIStore } from "@/stores/useUIStore";
 import { getPositionTypeLabel, isUmpireJob } from "@/lib/job-position-type";
 import { UmpireJobDetails } from "./umpire-job-details";
+import { CountryLabel } from "@/components/ui/country-label";
 
 type OpportunityListCardProps = JobOpportunity;
 
@@ -110,7 +111,7 @@ export function OpportunityListCard(opportunity: OpportunityListCardProps) {
 
             {/* Meta */}
             <div className="flex flex-wrap items-center gap-1.5 mt-2">
-              <span className="text-xs text-foreground-muted">{country}</span>
+              <CountryLabel value={country} className="text-xs text-foreground-muted" />
               {positionType && (
                 <span className="text-xs text-foreground-muted">
                   · {getPositionTypeLabel(t, positionType)}

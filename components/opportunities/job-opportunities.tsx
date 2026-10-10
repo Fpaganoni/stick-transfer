@@ -9,6 +9,7 @@ import { OpportunityListCard } from "./opportunity-list-card";
 import { OpportunityFilters } from "./opportunity-filters";
 import { OpportunityDetailModal } from "./opportunity-detail-modal";
 import { useTranslations } from "next-intl";
+import { FEATURED_HOCKEY_COUNTRIES, normalizeCountry } from "@/lib/countries";
 import { JobOpportunity } from "@/types/models/job-opportunity";
 import { useOpportunitiesStore } from "@/stores/useOpportunitiesStore";
 import { Button } from "@/components/ui/button";
@@ -24,37 +25,6 @@ interface JobOpportunitiesProps {
   initialData?: { jobOpportunities: JobOpportunity[] };
 }
 
-const HOCKEY_COUNTRIES = [
-  "Argentina",
-  "Australia",
-  "Austria",
-  "Belgium",
-  "Canada",
-  "Chile",
-  "China",
-  "Egypt",
-  "England",
-  "France",
-  "Germany",
-  "India",
-  "Ireland",
-  "Italy",
-  "Japan",
-  "Malaysia",
-  "Netherlands",
-  "New Zealand",
-  "Pakistan",
-  "Portugal",
-  "Scotland",
-  "South Africa",
-  "South Korea",
-  "Spain",
-  "Switzerland",
-  "United States",
-  "Uruguay",
-  "Wales",
-];
-
 export function JobOpportunities({ initialData }: JobOpportunitiesProps) {
   const t = useTranslations("opportunities");
   const { data, isLoading, error } = useJobOpportunities(undefined, initialData);
@@ -69,10 +39,12 @@ export function JobOpportunities({ initialData }: JobOpportunitiesProps) {
     return () => clearTimeout(timer);
   }, [localSearch, setSearchQuery]);
 
+  // Countries present in the jobs plus the hockey list (CountrySelect sorts by name)
   const availableCountries = useMemo(() => {
-    const apiCountries = data?.jobOpportunities?.map((opp) => opp.country) ?? [];
-    const merged = new Set([...apiCountries, ...HOCKEY_COUNTRIES]);
-    return Array.from(merged).sort();
+    const jobCountries = (data?.jobOpportunities ?? [])
+      .map((opp) => normalizeCountry(opp.country))
+      .filter((code): code is string => code !== null);
+    return [...new Set([...jobCountries, ...FEATURED_HOCKEY_COUNTRIES])];
   }, [data]);
 
   const filteredOpportunities = useMemo(() => {
@@ -97,7 +69,10 @@ export function JobOpportunities({ initialData }: JobOpportunitiesProps) {
         opportunity.status.toLowerCase() !== filters.status.toLowerCase()
       )
         return false;
-      if (filters.country && opportunity.country !== filters.country)
+      if (
+        filters.country &&
+        normalizeCountry(opportunity.country) !== normalizeCountry(filters.country)
+      )
         return false;
       if (
         filters.positionType &&

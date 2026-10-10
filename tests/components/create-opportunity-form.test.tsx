@@ -22,6 +22,7 @@ vi.mock("next/navigation", () => ({
 
 vi.mock("next-intl", () => ({
   useTranslations: () => (key: string) => key,
+  useLocale: () => "en",
 }));
 
 vi.mock("sonner", () => ({ toast: mockToast }));
@@ -40,7 +41,9 @@ const positionTrigger = () => screen.getAllByRole("combobox")[0];
 async function fillBasics(user: ReturnType<typeof userEvent.setup>) {
   await user.type(screen.getByLabelText("create.titleLabel"), "Umpire - Division de Honor");
   await user.type(screen.getByLabelText("create.descriptionLabel"), "Primera division");
-  await user.type(screen.getByLabelText("create.countryLabel"), "Spain");
+  await user.click(screen.getByLabelText("create.countryLabel"));
+  await user.type(screen.getByPlaceholderText("search"), "Spain");
+  await user.click(await screen.findByRole("option", { name: /Spain/ }));
   await user.type(screen.getByLabelText("create.cityLabel"), "Madrid");
 }
 
@@ -227,6 +230,18 @@ describe("CreateOpportunityForm", () => {
 
       await waitFor(() => expect(mockPush).toHaveBeenCalledWith("/opportunities"));
       expect(mockToast.success).toHaveBeenCalled();
+    });
+
+    it("sends the ISO code of the picked country", async () => {
+      const user = userEvent.setup();
+      render(<CreateOpportunityForm />);
+
+      await fillBasics(user);
+      await choose(user, positionTrigger(), "positionTypes.COACH");
+      await user.click(submit());
+
+      await waitFor(() => expect(mockCreate).toHaveBeenCalledTimes(1));
+      expect(mockCreate.mock.calls[0][0]).toMatchObject({ country: "ES", city: "Madrid" });
     });
 
     it("shows an error toast and stays when the backend rejects the job", async () => {

@@ -8,6 +8,7 @@ import { formatRelativeTime } from "@/lib/date-utils";
 import { Loader2, MapPin, Award, Calendar, CheckCircle, Clock, XCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
+import { CountryLabel } from "@/components/ui/country-label";
 
 function getStatusColor(status: string) {
   const normalized = status.toLowerCase();
@@ -119,7 +120,7 @@ export function UserApplications() {
                       {t("applications.location")}
                     </p>
                     <p className="text-sm font-semibold text-foreground">
-                      {opportunity?.city}, {opportunity?.country}
+                      <CountryLabel city={opportunity?.city} value={opportunity?.country} />
                     </p>
                   </div>
                 </div>

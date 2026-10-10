@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/empty";
 import Image from "next/image";
 import { MapPin, CheckCircle, Briefcase } from "lucide-react";
+import { CountryLabel } from "@/components/ui/country-label";
 
 interface ClubDetailPageProps {
   clubId: string;
@@ -122,9 +123,7 @@ export function ClubDetailPage({ clubId }: ClubDetailPageProps) {
           {(club.city || club.country) && (
             <div className="flex items-center gap-2 text-foreground/70 mb-6 text-base">
               <MapPin className="w-5 h-5 shrink-0" />
-              <span>
-                {[club.city, club.country].filter(Boolean).join(", ")}
-              </span>
+              <CountryLabel city={club.city} value={club.country} />
             </div>
           )}
 

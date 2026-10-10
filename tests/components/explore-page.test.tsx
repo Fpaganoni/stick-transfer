@@ -18,11 +18,13 @@ const { mockUseExploreUsers, state } = vi.hoisted(() => ({
     isLoading: false,
     error: null as Error | null,
     isPlaceholderData: false,
+    countries: ["NL", "ES", "AR"] as string[],
   },
 }));
 
 vi.mock("next-intl", () => ({
   useTranslations: () => (key: string) => key,
+  useLocale: () => "en",
 }));
 
 vi.mock("@/hooks/useExplore", () => ({
@@ -35,6 +37,7 @@ vi.mock("@/hooks/useExplore", () => ({
       isPlaceholderData: state.isPlaceholderData,
     };
   },
+  useAvailableCountries: () => ({ data: state.countries }),
 }));
 
 vi.mock("@/components/explore/profile-card", () => ({
@@ -59,6 +62,7 @@ describe("ExplorePage", () => {
     state.isLoading = false;
     state.error = null;
     state.isPlaceholderData = false;
+    state.countries = ["NL", "ES", "AR"];
   });
 
   describe("role filter", () => {
@@ -116,6 +120,37 @@ describe("ExplorePage", () => {
       expect(screen.getByRole("button", { name: "filters.country" })).toBeInTheDocument();
     });
 
+    it("offers only the countries that have users or clubs, by name", async () => {
+      const user = userEvent.setup();
+      render(<ExplorePage />);
+
+      await user.click(screen.getByRole("button", { name: "filters.country" }));
+
+      const options = (await screen.findAllByRole("option")).map((o) => o.textContent);
+      expect(options).toEqual(["🇦🇷Argentina", "🇳🇱Netherlands", "🇪🇸Spain"]);
+    });
+
+    it("falls back to the hockey countries when the API has none", async () => {
+      state.countries = [];
+      const user = userEvent.setup();
+      render(<ExplorePage />);
+
+      await user.click(screen.getByRole("button", { name: "filters.country" }));
+
+      expect(await screen.findAllByRole("option")).toHaveLength(28);
+    });
+
+    it("shows the picked country on the chip and filters by its code", async () => {
+      const user = userEvent.setup();
+      render(<ExplorePage />);
+
+      await user.click(screen.getByRole("button", { name: "filters.country" }));
+      await user.click(await screen.findByRole("option", { name: /Netherlands/ }));
+
+      expect(screen.getByRole("button", { name: "🇳🇱 Netherlands" })).toBeInTheDocument();
+      expect(lastFilters()).toMatchObject({ country: "NL" });
+    });
+
     it("keeps the coach filter set the same as player's", async () => {
       const user = userEvent.setup();
       render(<ExplorePage />);
@@ -158,7 +193,8 @@ describe("ExplorePage", () => {
       render(<ExplorePage />);
 
       await pick(user, "filters.role", "roles.umpire");
-      await pick(user, "filters.country", "🇪🇸 Spain");
+      await user.click(screen.getByRole("button", { name: "filters.country" }));
+      await user.click(await screen.findByRole("option", { name: /Spain/ }));
       await pick(user, "filters.licenseLevel", "licenseLevels.INTERNACIONAL");
 
       expect(lastFilters()).toMatchObject({

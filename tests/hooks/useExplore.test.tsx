@@ -8,7 +8,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { renderHook, waitFor } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React from "react";
-import { useExploreUsers } from "@/hooks/useExplore";
+import { useExploreUsers, useAvailableCountries } from "@/hooks/useExplore";
 
 const mockRequest = vi.fn();
 vi.mock("@/lib/graphql-client", () => ({
@@ -102,5 +102,19 @@ describe("useExploreUsers", () => {
     rerender({ level: "REGIONAL" });
     await waitFor(() => expect(mockRequest).toHaveBeenCalledTimes(2));
     expect(mockRequest.mock.calls[1][1].licenseLevel).toBe("REGIONAL");
+  });
+});
+
+describe("useAvailableCountries", () => {
+  beforeEach(() => mockRequest.mockReset());
+
+  it("returns the uppercase codes and drops anything the API should not send", async () => {
+    mockRequest.mockResolvedValue({ availableCountries: ["AR", "es", "GB-ENG", "Narnia"] });
+
+    const { result } = renderHook(() => useAvailableCountries(), { wrapper: wrapper() });
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(result.current.data).toEqual(["AR", "ES", "GB-ENG"]);
+    expect(String(mockRequest.mock.calls[0][0])).toContain("availableCountries");
   });
 });

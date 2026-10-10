@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { CountryLabel } from "@/components/ui/country-label";
 import { useTranslations, useLocale } from "next-intl";
 import {
   Table,
@@ -87,7 +88,7 @@ export function AdminJobOpportunitiesTable({ opportunities, isLoading }: AdminJo
                   {job.level ? ` · ${job.level}` : ""}
                 </TableCell>
                 <TableCell className="text-foreground-muted">
-                  {[job.city, job.country].filter(Boolean).join(", ") || "—"}
+                  <CountryLabel city={job.city} value={job.country} fallback="—" />
                 </TableCell>
                 <TableCell>
                   <Badge variant="outline" className={STATUS_BADGE_CLASS[status] ?? ""}>

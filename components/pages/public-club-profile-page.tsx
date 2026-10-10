@@ -57,7 +57,7 @@ export function PublicClubProfilePage({
     coverImage: user.coverImage || "",
     bio: user.bio,
     city: user.city,
-    country: user.country || "🌍",
+    country: user.country || undefined,
     isVerified: anyUser.isVerified as boolean | undefined,
     memberCount: anyUser.memberCount as number | undefined,
     website: anyUser.website as string | undefined,

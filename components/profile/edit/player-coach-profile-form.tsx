@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import type { Control, FieldValues } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { isCountryCode } from "@/lib/countries";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useUpdateUser, useUploadCv, useDeleteCv } from "@/hooks/useUsers";
 import { TrajectoryItem } from "@/types/models/user";
@@ -52,7 +53,12 @@ const createProfileFormSchema = (t: (key: string) => string) =>
       .optional(),
     position: z.string().optional(),
     yearsOfExperience: z.coerce.number().min(0).optional(),
-    country: z.string().optional(),
+    country: z
+      .string()
+      .optional()
+      .refine((v) => !v || isCountryCode(v), {
+        message: t("editForm.validation.countryInvalid"),
+      }),
     city: z.string().optional(),
     trajectories: z
       .array(
@@ -160,7 +166,7 @@ export function PlayerCoachProfileForm() {
         avatar: data.avatar,
         coverImage: data.coverImage,
         ...(position ? { position } : {}),
-        country: data.country,
+        country: data.country || undefined,
         city: data.city,
         cvUrl: finalCvUrl,
         yearsOfExperience: data.yearsOfExperience,

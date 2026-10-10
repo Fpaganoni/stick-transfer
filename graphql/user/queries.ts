@@ -197,6 +197,13 @@ export const GET_USER_BY_USERNAME = gql`
   }
 `;
 
+/** Codes of the countries with active users or clubs (sorted, no duplicates). */
+export const AVAILABLE_COUNTRIES_QUERY = gql`
+  query AvailableCountries {
+    availableCountries
+  }
+`;
+
 export const EXPLORE_USERS_QUERY = gql`
   query ExploreUsers(
     $searchQuery: String

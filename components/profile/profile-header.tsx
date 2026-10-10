@@ -15,6 +15,7 @@ import {
   BadgeCheck,
 } from "lucide-react";
 import { motion } from "framer-motion";
+import { CountryLabel } from "@/components/ui/country-label";
 import { useState, useRef, useCallback, useEffect } from "react";
 import { Badge } from "../ui/badge";
 import { User } from "@/types/models/user";
@@ -516,7 +517,7 @@ export function ProfileHeader({
                   {name}
                 </h1>
                 <span className="text-xl sm:text-2xl text-foreground-muted">
-                  {country || "🌍"}
+                  <CountryLabel value={country} fallback="🌍" />
                 </span>
               </div>
               <div className="flex items-center justify-center sm:justify-start gap-2 mt-1 flex-wrap">

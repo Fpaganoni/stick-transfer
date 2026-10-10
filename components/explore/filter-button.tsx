@@ -1,7 +1,7 @@
 "use client";
 
 import { ChevronDown, X } from "lucide-react";
-import { useState } from "react";
+import { useState, type ComponentProps, type ReactNode } from "react";
 
 interface FilterOption {
   value: string;
@@ -14,6 +14,52 @@ interface FilterButtonProps {
   activeValue?: string | null;
   onSelect: (value: string) => void;
   onClear: () => void;
+}
+
+interface FilterChipProps extends Omit<ComponentProps<"button">, "children"> {
+  label: ReactNode;
+  isActive: boolean;
+  isOpen: boolean;
+  onClear: () => void;
+}
+
+/** Pill trigger of the explore filters; highlighted while a value is set. */
+export function FilterChip({
+  label,
+  isActive,
+  isOpen,
+  onClear,
+  className = "",
+  ...props
+}: FilterChipProps) {
+  return (
+    <button
+      type="button"
+      className={`flex items-center gap-2 h-(--input-button-height) px-3 py-2.5 border rounded-md transition-colors duration-300 text-sm font-medium cursor-pointer active:scale-95 ${
+        isActive
+          ? "bg-primary/15 border-primary text-primary"
+          : "bg-background border-border text-foreground"
+      } ${className}`}
+      {...props}
+    >
+      {label}
+      {isActive ? (
+        <X
+          size={14}
+          onClick={(e) => {
+            e.stopPropagation();
+            onClear();
+          }}
+          className="hover:opacity-70"
+        />
+      ) : (
+        <ChevronDown
+          size={16}
+          className={`transition-transform ${isOpen ? "rotate-180" : ""}`}
+        />
+      )}
+    </button>
+  );
 }
 
 export function FilterButton({
@@ -31,32 +77,16 @@ export function FilterButton({
 
   return (
     <div className="relative shrink-0">
-      <button
+      <FilterChip
+        label={activeLabel ?? label}
+        isActive={Boolean(activeValue)}
+        isOpen={isOpen}
         onClick={() => setIsOpen(!isOpen)}
-        className={`flex items-center gap-2 h-(--input-button-height) px-3 py-2.5 border rounded-md transition-colors duration-300 text-sm font-medium cursor-pointer active:scale-95 ${
-          activeValue
-            ? "bg-primary/15 border-primary text-primary"
-            : "bg-background border-border text-foreground"
-        }`}
-      >
-        {activeLabel ?? label}
-        {activeValue ? (
-          <X
-            size={14}
-            onClick={(e) => {
-              e.stopPropagation();
-              onClear();
-              setIsOpen(false);
-            }}
-            className="hover:opacity-70"
-          />
-        ) : (
-          <ChevronDown
-            size={16}
-            className={`transition-transform ${isOpen ? "rotate-180" : ""}`}
-          />
-        )}
-      </button>
+        onClear={() => {
+          onClear();
+          setIsOpen(false);
+        }}
+      />
 
       {isOpen && (
         <div className="absolute top-full left-0 right-auto mt-2 w-48 max-w-[calc(100vw-2rem)] shadow-lg z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">

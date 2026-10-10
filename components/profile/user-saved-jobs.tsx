@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { CountryLabel } from "@/components/ui/country-label";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { Bookmark, MapPin, Briefcase, Loader2 } from "lucide-react";
@@ -122,9 +123,7 @@ export function UserSavedJobs() {
                     <div className="flex flex-wrap items-center gap-1.5 mt-2">
                       <div className="flex items-center gap-1 text-xs text-foreground-muted">
                         <MapPin size={11} />
-                        <span>
-                          {[city, country].filter(Boolean).join(", ")}
-                        </span>
+                        <CountryLabel city={city} value={country} />
                       </div>
                       {positionType && (
                         <span className="text-xs text-foreground-muted">

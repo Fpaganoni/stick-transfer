@@ -58,7 +58,9 @@ test.describe("Umpire registration", () => {
     await page.getByLabel("Email").fill("ref@sticktransfer.com");
     await page.getByLabel("Password", { exact: true }).fill("Password1!");
     await page.getByLabel("Confirm Password").fill("Password1!");
-    await page.getByLabel("Country").selectOption("Spain");
+    await page.getByLabel("Country").click();
+    await page.getByPlaceholder("Search country...").fill("Spain");
+    await page.getByRole("option", { name: /Spain/ }).click();
     await page.getByLabel(/I agree to the Terms/i).check();
     await page.getByRole("button", { name: /^next/i }).click();
 

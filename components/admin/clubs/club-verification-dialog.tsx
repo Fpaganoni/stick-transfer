@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { CountryLabel } from "@/components/ui/country-label";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { FileText, ShieldCheck, ShieldX } from "lucide-react";
@@ -71,7 +72,7 @@ export function ClubVerificationDialog({ club, open, onOpenChange }: ClubVerific
               <div>
                 <p className="font-medium">{club.name}</p>
                 <p className="text-sm text-foreground-muted">
-                  {[club.city, club.country].filter(Boolean).join(", ") || "—"}
+                  <CountryLabel city={club.city} value={club.country} fallback="—" />
                   {club.league ? ` · ${club.league}` : ""}
                 </p>
               </div>

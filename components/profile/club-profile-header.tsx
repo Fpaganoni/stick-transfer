@@ -1,6 +1,7 @@
 "use client";
 
 import { Edit, BadgeCheck, MoreHorizontal } from "lucide-react";
+import { CountryLabel } from "@/components/ui/country-label";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { useMediaQuery } from "@/hooks/ui/use-media-query";
@@ -117,7 +118,7 @@ export function ClubProfileHeader({
               )}
               {(city || country) && (
                 <p className="text-foreground-muted text-sm font-medium mt-1 truncate">
-                  {[city, country].filter(Boolean).join(", ") || "🌍"}
+                  <CountryLabel city={city} value={country} fallback="🌍" />
                 </p>
               )}
               <p className="text-foreground-muted text-sm mb-2 leading-relaxed mt-2 line-clamp-2">

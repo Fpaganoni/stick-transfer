@@ -18,7 +18,7 @@ function resetStore() {
 }
 
 const defaultProps = {
-  availableCountries: ["ESP", "ARG", "FRA"],
+  availableCountries: ["FR", "ES", "AR"],
 };
 
 describe("OpportunityFilters", () => {
@@ -34,9 +34,14 @@ describe("OpportunityFilters", () => {
     render(<OpportunityFilters {...defaultProps} />);
     const [, , countryTrigger] = screen.getAllByRole("combobox");
     fireEvent.click(countryTrigger);
-    expect(await screen.findByRole("option", { name: "ESP" })).toBeInTheDocument();
-    expect(screen.getByRole("option", { name: "ARG" })).toBeInTheDocument();
-    expect(screen.getByRole("option", { name: "FRA" })).toBeInTheDocument();
+    await screen.findAllByRole("option");
+    // "all countries" first, then the codes by English name
+    expect(screen.getAllByRole("option").map((o) => o.textContent)).toEqual([
+      "any",
+      "🇦🇷Argentina",
+      "🇫🇷France",
+      "🇪🇸Spain",
+    ]);
   });
 
   it("changing level select updates store filters.level", async () => {
@@ -59,8 +64,22 @@ describe("OpportunityFilters", () => {
     render(<OpportunityFilters {...defaultProps} />);
     const [, , countryTrigger] = screen.getAllByRole("combobox");
     fireEvent.click(countryTrigger);
-    fireEvent.click(await screen.findByRole("option", { name: "ARG" }));
-    expect(useOpportunitiesStore.getState().filters.country).toBe("ARG");
+    fireEvent.click(await screen.findByRole("option", { name: /Argentina/ }));
+    expect(useOpportunitiesStore.getState().filters.country).toBe("AR");
+  });
+
+  it("'all countries' clears the country filter", async () => {
+    act(() => {
+      useOpportunitiesStore.getState().setFilters({ country: "AR" });
+    });
+    render(<OpportunityFilters {...defaultProps} />);
+    const [, , countryTrigger] = screen.getAllByRole("combobox");
+    expect(countryTrigger).toHaveTextContent("Argentina");
+
+    fireEvent.click(countryTrigger);
+    fireEvent.click(await screen.findByRole("option", { name: "any" }));
+
+    expect(useOpportunitiesStore.getState().filters.country).toBeNull();
   });
 
   it("reset button clears all filters", () => {

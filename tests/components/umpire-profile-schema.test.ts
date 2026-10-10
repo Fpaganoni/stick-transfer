@@ -29,7 +29,7 @@ const baseValues: UmpireProfileFormValues = {
   avatar: "",
   coverImage: "",
   bio: "",
-  country: "Spain",
+  country: "ES",
   city: "Madrid",
   yearsOfExperience: "",
   certificationYear: "",
@@ -52,6 +52,20 @@ describe("createUmpireProfileSchema", () => {
 
   it("accepts a profile with all optional numbers left empty", () => {
     expect(schema.safeParse(baseValues).success).toBe(true);
+  });
+
+  it.each(["ES", "gb-eng", ""])("accepts country %j", (country) => {
+    expect(schema.safeParse({ ...baseValues, country }).success).toBe(true);
+  });
+
+  it("rejects a country that is not an ISO code", () => {
+    const result = schema.safeParse({ ...baseValues, country: "Spain" });
+
+    expect(result.success).toBe(false);
+    expect(result.error?.issues[0]).toMatchObject({
+      path: ["country"],
+      message: "editForm.validation.countryInvalid",
+    });
   });
 
   it("has no multimedia field and strips one if present", () => {

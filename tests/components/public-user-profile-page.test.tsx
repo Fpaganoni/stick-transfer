@@ -14,6 +14,7 @@ const { state } = vi.hoisted(() => ({
 
 vi.mock("next-intl", () => ({
   useTranslations: () => (key: string) => key,
+  useLocale: () => "en",
 }));
 
 vi.mock("@/hooks/useUsers", () => ({

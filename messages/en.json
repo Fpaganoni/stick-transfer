@@ -1,4 +1,17 @@
 {
+  "countries": {
+    "names": {
+      "GB-ENG": "England",
+      "GB-SCT": "Scotland",
+      "GB-WLS": "Wales"
+    },
+    "select": "Select a country",
+    "search": "Search country...",
+    "empty": "No country found",
+    "featured": "Hockey countries",
+    "others": "Other countries",
+    "any": "All countries"
+  },
   "common": {
     "appName": "Stick Transer",
     "loading": "Loading...",
@@ -155,6 +168,7 @@
       "passwordsNoMatch": "Passwords do not match",
       "roleInvalid": "Select a valid role",
       "countryRequired": "Please select your country",
+      "countryInvalid": "Select a valid country",
       "termsRequired": "You must accept the terms and conditions",
       "cityRequired": "City is required",
       "positionRequired": "Position is required",
@@ -490,13 +504,12 @@
         "bio": "Tell us a little bit about yourself",
         "avatarUrl": "https://example.com/avatar.jpg",
         "coverImageUrl": "https://example.com/cover.jpg",
-        "countryCode": "e.g. ES, US, AR",
         "city": "e.g. Barcelona",
         "multimedia": "https://www.youtube.com/watch?v=..."
       },
       "location": "Location",
       "locationDesc": "Where are you based?",
-      "countryCode": "Country Code",
+      "country": "Country",
       "city": "City",
       "trajectories": "Trajectories & Experience",
       "trajectoriesDesc": "Add your past and current clubs or roles.",
@@ -525,6 +538,7 @@
         "nameMin": "Name must be at least 2 characters.",
         "usernameMin": "Username must be 3-20 characters: letters, numbers and _",
         "urlInvalid": "Please enter a valid URL.",
+        "countryInvalid": "Select a valid country.",
         "bioMax": "Bio cannot exceed 500 characters.",
         "titleRequired": "Title is required",
         "periodRequired": "Period is required"

@@ -1,5 +1,9 @@
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
-import { EXPLORE_USERS_QUERY } from "@/graphql/user/queries";
+import {
+  AVAILABLE_COUNTRIES_QUERY,
+  EXPLORE_USERS_QUERY,
+} from "@/graphql/user/queries";
+import { normalizeCountry } from "@/lib/countries";
 import { graphqlClient } from "@/lib/graphql-client";
 import { ExploreUser } from "@/types/models/user";
 
@@ -63,5 +67,25 @@ export function useExploreUsers(filters: ExploreFilters = {}) {
       }),
     // "Load more" re-queries with a bigger limit; keep the current list on screen meanwhile
     placeholderData: keepPreviousData,
+  });
+}
+
+interface AvailableCountriesResponse {
+  availableCountries: string[];
+}
+
+const AVAILABLE_COUNTRIES_STALE_MS = 5 * 60 * 1000;
+
+/** Countries that have active users or clubs: the explore country filter. */
+export function useAvailableCountries() {
+  return useQuery({
+    queryKey: ["explore", "availableCountries"],
+    queryFn: () =>
+      graphqlClient.request<AvailableCountriesResponse>(AVAILABLE_COUNTRIES_QUERY),
+    select: (data) =>
+      data.availableCountries
+        .map((code) => normalizeCountry(code))
+        .filter((code): code is string => code !== null),
+    staleTime: AVAILABLE_COUNTRIES_STALE_MS,
   });
 }

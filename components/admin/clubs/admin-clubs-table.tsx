@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { CountryLabel } from "@/components/ui/country-label";
 import { useTranslations } from "next-intl";
 import { useLocale } from "next-intl";
 import { ShieldCheck } from "lucide-react";
@@ -86,7 +87,7 @@ export function AdminClubsTable({ clubs, isLoading, onReview }: AdminClubsTableP
                 </Link>
               </TableCell>
               <TableCell className="text-foreground-muted">
-                {[club.city, club.country].filter(Boolean).join(", ") || "—"}
+                <CountryLabel city={club.city} value={club.country} fallback="—" />
               </TableCell>
               <TableCell className="text-foreground-muted">{club.league || "—"}</TableCell>
               <TableCell className="text-foreground-muted">{club.membersCount}</TableCell>

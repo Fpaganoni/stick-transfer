@@ -37,7 +37,7 @@ function job(overrides: Partial<JobOpportunity> & { id: string; title: string })
     description: "desc",
     positionType: "PLAYER",
     level: "PROFESSIONAL",
-    country: "Spain",
+    country: "ES",
     city: "Madrid",
     salary: 0,
     currency: "EUR",
@@ -158,6 +158,31 @@ describe("JobOpportunities filtering", () => {
     render(<JobOpportunities />);
 
     expect(shown()).not.toContain("Umpire no requirements");
+  });
+
+  describe("by country", () => {
+    const argentineJobs = [
+      job({ id: "a1", title: "Rosario job (before migration)", country: "AR" }),
+      job({ id: "a2", title: "Cordoba job (after migration)", country: "ar" }),
+      job({ id: "e1", title: "Madrid job", country: "ES" }),
+      job({ id: "e2", title: "Legacy job", country: "Argentina" }),
+    ];
+
+    it("shows every Argentine job when filtering by AR, whatever the stored case", () => {
+      state.jobs = argentineJobs;
+      applyFilters({ country: "AR" });
+      render(<JobOpportunities />);
+
+      expect(shown()).toEqual(["Rosario job (before migration)", "Cordoba job (after migration)"]);
+    });
+
+    it("normalizes the filter value too", () => {
+      state.jobs = argentineJobs;
+      applyFilters({ country: "es" });
+      render(<JobOpportunities />);
+
+      expect(shown()).toEqual(["Madrid job"]);
+    });
   });
 
   it("never lets non-umpire jobs through a requirement filter", () => {

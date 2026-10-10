@@ -45,7 +45,7 @@ export function PublicUserProfilePage({
     name: user.name,
     role: user.role,
     position: user.position,
-    country: user.country || "🌍",
+    country: user.country || undefined,
     avatar: user.avatar || "/user.png",
     coverImage: user.coverImage || "",
     bio: user.bio,

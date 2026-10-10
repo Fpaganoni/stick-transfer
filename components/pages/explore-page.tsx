@@ -2,10 +2,12 @@
 
 import { useState, useEffect, useMemo } from "react";
 import { ProfileCard } from "@/components/explore/profile-card";
-import { FilterButton } from "@/components/explore/filter-button";
+import { FilterButton, FilterChip } from "@/components/explore/filter-button";
+import { CountrySelect } from "@/components/ui/country-select";
+import { FEATURED_HOCKEY_COUNTRIES } from "@/lib/countries";
 import { Filter } from "@/components/ui/filter";
 import { useTranslations } from "next-intl";
-import { useExploreUsers } from "@/hooks/useExplore";
+import { useExploreUsers, useAvailableCountries } from "@/hooks/useExplore";
 import { Loader } from "../ui/loader";
 import { Error } from "../ui/error";
 import {
@@ -20,26 +22,6 @@ const UMPIRE_ROLE = "UMPIRE";
 // Filters that only make sense for one side; dropped when the role changes
 const UMPIRE_ONLY_FILTERS = ["licenseLevel", "modality", "umpireCategory"];
 const PLAYER_ONLY_FILTERS = ["position", "level"];
-
-const COUNTRY_OPTIONS = [
-  { value: "AR", label: "🇦🇷 Argentina" },
-  { value: "AT", label: "🇦🇹 Austria" },
-  { value: "BE", label: "🇧🇪 Belgium" },
-  { value: "CA", label: "🇨🇦 Canada" },
-  { value: "CL", label: "🇨🇱 Chile" },
-  { value: "DK", label: "🇩🇰 Denmark" },
-  { value: "FI", label: "🇫🇮 Finland" },
-  { value: "FR", label: "🇫🇷 France" },
-  { value: "DE", label: "🇩🇪 Germany" },
-  { value: "IT", label: "🇮🇹 Italy" },
-  { value: "NL", label: "🇳🇱 Netherlands" },
-  { value: "PT", label: "🇵🇹 Portugal" },
-  { value: "ES", label: "🇪🇸 Spain" },
-  { value: "SE", label: "🇸🇪 Sweden" },
-  { value: "CH", label: "🇨🇭 Switzerland" },
-  { value: "GB", label: "🇬🇧 UK" },
-  { value: "US", label: "🇺🇸 USA" },
-];
 
 // Debounce: only fire the query after the user stops typing for 400ms
 function useDebounce<T>(value: T, delay = 400): T {
@@ -64,6 +46,11 @@ export function ExplorePage() {
   const debouncedSearch = useDebounce(searchQuery, 400);
 
   const isUmpireSearch = selectedFilters.role === UMPIRE_ROLE;
+  const { data: availableCountries } = useAvailableCountries();
+  // Countries with users or clubs; the hockey list while loading or if empty
+  const countryOptions = availableCountries?.length
+    ? availableCountries
+    : FEATURED_HOCKEY_COUNTRIES;
   const limit = PAGE_SIZE * pageCount;
 
   const { data, isLoading, error, isPlaceholderData } = useExploreUsers({
@@ -161,12 +148,21 @@ export function ExplorePage() {
             onSelect={setFilter("role")}
             onClear={clearFilter("role")}
           />
-          <FilterButton
-            label={t("filters.country")}
-            options={COUNTRY_OPTIONS}
-            activeValue={selectedFilters.country}
-            onSelect={setFilter("country")}
-            onClear={clearFilter("country")}
+          <CountrySelect
+            value={selectedFilters.country ?? null}
+            onChange={(code) =>
+              code ? setFilter("country")(code) : clearFilter("country")()
+            }
+            options={countryOptions}
+            renderTrigger={({ label, flag, open }) => (
+              <FilterChip
+                label={label ? `${flag ?? ""} ${label}`.trim() : t("filters.country")}
+                isActive={Boolean(selectedFilters.country)}
+                isOpen={open}
+                onClear={clearFilter("country")}
+                className="shrink-0"
+              />
+            )}
           />
           {isUmpireSearch ? (
             <>

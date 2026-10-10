@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { isCountryCode } from "@/lib/countries";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useUpdateUser } from "@/hooks/useUsers";
 import { useClub, useUpdateClub } from "@/hooks/useClubs";
@@ -58,7 +59,12 @@ const createClubFormSchema = (t: (key: string) => string) =>
       .string()
       .max(500, { message: t("editForm.validation.bioMax") })
       .optional(),
-    country: z.string().optional(),
+    country: z
+      .string()
+      .optional()
+      .refine((v) => !v || isCountryCode(v), {
+        message: t("editForm.validation.countryInvalid"),
+      }),
     city: z.string().optional(),
     clubName: z
       .string()
@@ -163,7 +169,7 @@ export function ClubProfileForm() {
         bio: data.bio,
         avatar: data.avatar,
         coverImage: data.coverImage,
-        country: data.country,
+        country: data.country || undefined,
         city: data.city,
       });
 
@@ -173,7 +179,7 @@ export function ClubProfileForm() {
           name: data.clubName,
           description: data.clubDescription,
           city: data.city,
-          country: data.country,
+          country: data.country || undefined,
           logo: data.clubLogo,
           managedByFirstName: data.managedByFirstName,
           managedByLastName: data.managedByLastName,

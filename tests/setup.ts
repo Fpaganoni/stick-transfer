@@ -57,9 +57,13 @@ const useMockTranslations = (namespace?: string) => {
   };
 };
 
+/** Mock de useLocale: locale del Provider activo, "en" si no hay contexto. */
+const useMockLocale = () => useContext(IntlContext)?.locale ?? "en";
+
 vi.mock("next-intl", () => ({
   NextIntlClientProvider: MockNextIntlClientProvider,
   useTranslations: useMockTranslations,
+  useLocale: useMockLocale,
 }));
 
 // ── localStorage (zustand persist) ───────────────────────────────────────────
@@ -72,6 +76,13 @@ Element.prototype.scrollIntoView = vi.fn();
 Element.prototype.hasPointerCapture = vi.fn(() => false);
 Element.prototype.releasePointerCapture = vi.fn();
 Element.prototype.setPointerCapture = vi.fn();
+
+// ── jsdom stub for ResizeObserver (Radix Popover / floating-ui) ──────────────
+globalThis.ResizeObserver ??= class {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+};
 
 // ── jsdom stub for window.matchMedia (not implemented by jsdom) ─────────────
 window.matchMedia =

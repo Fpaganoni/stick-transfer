@@ -26,6 +26,7 @@ vi.mock("next/navigation", () => ({
 
 vi.mock("next-intl", () => ({
   useTranslations: () => (key: string) => key,
+  useLocale: () => "en",
 }));
 
 vi.mock("sonner", () => ({ toast: mockToast }));
@@ -51,7 +52,7 @@ function makeUser(overrides: Record<string, unknown> = {}) {
     avatar: "",
     coverImage: "",
     bio: "Fair play first",
-    country: "Spain",
+    country: "ES",
     city: "Madrid",
     yearsOfExperience: 14,
     certificationYear: 2012,

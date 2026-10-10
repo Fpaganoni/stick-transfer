@@ -9,6 +9,7 @@ vi.mock("next/navigation", () => ({
 
 vi.mock("next-intl", () => ({
   useLocale: () => "en",
+  useTranslations: () => (key: string) => key,
 }));
 
 vi.mock("next/image", () => ({
@@ -49,9 +50,10 @@ describe("ClubListCard", () => {
     expect(img).toBeInTheDocument();
   });
 
-  it("renders country flag for 2-letter country code", () => {
+  it("renders the flag and the English name of the country code", () => {
     render(<ClubListCard {...mockClub} />);
     expect(screen.getByText("🇪🇸")).toBeInTheDocument();
+    expect(screen.getByText("Spain")).toBeInTheDocument();
   });
 
   it("renders type badge when type is provided", () => {

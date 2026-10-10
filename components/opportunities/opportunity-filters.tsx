@@ -11,6 +11,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { POSITION_TYPES, isUmpireJob } from "@/lib/job-position-type";
+import { CountrySelect } from "@/components/ui/country-select";
 import {
   UmpireLicenseLevel,
   UmpireModality,
@@ -18,7 +19,8 @@ import {
 } from "@/types/enums";
 
 interface OpportunityFiltersProps {
-  availableCountries: string[];
+  /** Codes; the select orders them by translated name. */
+  availableCountries: readonly string[];
   onClose?: () => void;
 }
 
@@ -28,6 +30,7 @@ export function OpportunityFilters({
 }: OpportunityFiltersProps) {
   const t = useTranslations("opportunities");
   const tUmpire = useTranslations("umpire");
+  const tCountries = useTranslations("countries");
   const { filters, setFilters, resetFilters } = useOpportunitiesStore();
 
   const handleApply = () => {
@@ -90,22 +93,14 @@ export function OpportunityFilters({
         <label htmlFor="filter-country" className="text-xs font-semibold text-foreground-muted uppercase tracking-wide">
           {t("filters.location")}
         </label>
-        <Select
-          value={filters.country || "ALL"}
-          onValueChange={(v) => setFilters({ country: v === "ALL" ? null : v })}
-        >
-          <SelectTrigger id="filter-country" className={triggerClass} aria-label={t("filters.location")}>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="ALL">All Countries</SelectItem>
-            {availableCountries.map((country) => (
-              <SelectItem key={country} value={country}>
-                {country}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <CountrySelect
+          id="filter-country"
+          value={filters.country}
+          onChange={(code) => setFilters({ country: code })}
+          options={availableCountries}
+          allLabel={tCountries("any")}
+          className={triggerClass}
+        />
       </div>
 
       {/* Position Type */}

@@ -140,7 +140,7 @@ export function UmpireProfileForm() {
         bio: data.bio,
         avatar: data.avatar,
         coverImage: data.coverImage,
-        country: data.country,
+        country: data.country || undefined,
         city: data.city,
         cvUrl: finalCvUrl,
         trajectories: formatTrajectories(data.trajectories),

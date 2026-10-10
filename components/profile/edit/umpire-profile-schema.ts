@@ -1,4 +1,5 @@
 import * as z from "zod";
+import { isCountryCode } from "@/lib/countries";
 import type { User, UpdateUserVariables } from "@/types/models/user";
 import {
   UmpireLicenseLevel,
@@ -46,7 +47,12 @@ export const createUmpireProfileSchema = (t: Translate) =>
       .string()
       .max(500, { message: t("editForm.validation.bioMax") })
       .optional(),
-    country: z.string().optional(),
+    country: z
+      .string()
+      .optional()
+      .refine((v) => !v || isCountryCode(v), {
+        message: t("editForm.validation.countryInvalid"),
+      }),
     city: z.string().optional(),
 
     // Numbers stay as strings in the form and are converted on submit, so an

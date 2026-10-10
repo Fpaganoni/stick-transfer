@@ -8,6 +8,7 @@ import {
   ClubVerificationStatus,
 } from "@/types/models/admin";
 import { useTranslations } from "next-intl";
+import { useCountryNames } from "@/hooks/useCountryNames";
 import { toast } from "sonner";
 
 const ADMIN_CLUBS_KEY = ["admin", "clubs"] as const;
@@ -26,14 +27,19 @@ function toAdminClubRow(club: RawClubRow): AdminClubRow {
   return { ...rest, membersCount: members?.length ?? 0 };
 }
 
-function applyClubFilters(clubs: RawClubRow[], filters?: AdminClubFilters): RawClubRow[] {
+function applyClubFilters(
+  clubs: RawClubRow[],
+  filters: AdminClubFilters | undefined,
+  countryName: (code?: string | null) => string,
+): RawClubRow[] {
   return clubs.filter((club) => {
     if (filters?.verificationStatus && club.verificationStatus !== filters.verificationStatus) {
       return false;
     }
     if (filters?.search) {
       const q = filters.search.toLowerCase();
-      const haystack = `${club.name} ${club.city ?? ""} ${club.country ?? ""} ${club.league ?? ""}`.toLowerCase();
+      // Country is stored as a code ("AR"): match the code and its translated name
+      const haystack = `${club.name} ${club.city ?? ""} ${club.country ?? ""} ${countryName(club.country)} ${club.league ?? ""}`.toLowerCase();
       if (!haystack.includes(q)) return false;
     }
     return true;
@@ -43,11 +49,12 @@ function applyClubFilters(clubs: RawClubRow[], filters?: AdminClubFilters): RawC
 // GAP backend: no existe adminClubs/AdminClubFiltersInput — `clubs` no soporta
 // filtros ni paginación. Se trae la lista completa y se filtra/pagina aquí.
 export function useAdminClubs(filters?: AdminClubFilters, page = 1, limit = 20) {
+  const { nameOf } = useCountryNames();
   return useQuery<ClubsResponse, Error, AdminClubsResponse>({
     queryKey: ADMIN_CLUBS_KEY,
     queryFn: async () => graphqlClient.request<ClubsResponse>(ADMIN_CLUBS),
     select: (data) => {
-      const filtered = applyClubFilters(data.clubs, filters);
+      const filtered = applyClubFilters(data.clubs, filters, nameOf);
       const start = (page - 1) * limit;
       const items = filtered.slice(start, start + limit).map(toAdminClubRow);
       return {

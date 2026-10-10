@@ -72,6 +72,18 @@ describe("useAdminClubs", () => {
     expect(result.current.data?.adminClubs.total).toBe(1);
     expect(mockRequest).toHaveBeenCalledWith(expect.anything());
   });
+
+  it("finds clubs by the name of their country code", async () => {
+    const argentineClub = { ...verifiedClubRow, id: "club-3", city: "Rosario", country: "AR" };
+    mockRequest.mockResolvedValueOnce({ clubs: [mockClubRow, argentineClub] });
+
+    const { result } = renderHook(() => useAdminClubs({ search: "argentin" }, 1, 20), {
+      wrapper: wrapper(),
+    });
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(result.current.data?.adminClubs.items.map((c) => c.id)).toEqual(["club-3"]);
+  });
 });
 
 describe("useAdminSetClubVerification", () => {

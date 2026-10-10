@@ -14,6 +14,7 @@ import {
   X,
 } from "lucide-react";
 import {
+  Controller,
   useForm,
   UseFormReturn,
   UseFormRegisterReturn,
@@ -42,6 +43,8 @@ import {
 } from "@/lib/auth-errors";
 import { dateOfBirthSchema, getDobBounds } from "@/lib/date-of-birth";
 import { POSITION_OPTIONS } from "@/lib/positions";
+import { isCountryCode } from "@/lib/countries";
+import dynamic from "next/dynamic";
 import { useCooldown } from "@/hooks/useCooldown";
 import { useTranslations } from "next-intl";
 import { useUIStore } from "@/stores/useUIStore";
@@ -65,36 +68,15 @@ const ROLE_CARDS: RoleCard[] = [
   { id: "clubAdmin", icon: "🏟️", backendRole: "CLUB" },
 ];
 
-const HOCKEY_COUNTRIES = [
-  "Argentina",
-  "Australia",
-  "Austria",
-  "Belgium",
-  "Canada",
-  "Chile",
-  "China",
-  "Egypt",
-  "England",
-  "France",
-  "Germany",
-  "India",
-  "Ireland",
-  "Italy",
-  "Japan",
-  "Malaysia",
-  "Netherlands",
-  "New Zealand",
-  "Pakistan",
-  "Portugal",
-  "Scotland",
-  "South Africa",
-  "South Korea",
-  "Spain",
-  "Switzerland",
-  "United States",
-  "Uruguay",
-  "Wales",
-];
+// The country combobox (cmdk + popover) is only needed from step 2 on, so it
+// stays out of the page's first-load JS.
+const CountrySelect = dynamic(
+  () => import("@/components/ui/country-select").then((m) => m.CountrySelect),
+  {
+    ssr: false,
+    loading: () => <div className="h-9 w-full rounded-md border border-input" />,
+  },
+);
 
 // ---------------------------------------------------------------------------
 // Step indicator
@@ -478,21 +460,23 @@ function Step2BasicData({
         <Label htmlFor="country" className="mb-1 text-sm">
           {t("country")}
         </Label>
-        <select
-          {...form.register("country")}
-          id="country"
-          defaultValue=""
-          className="w-full h-9 rounded-md border border-input bg-background text-foreground text-sm px-3 focus:outline-none focus:ring-2 focus:ring-ring appearance-none cursor-pointer"
-        >
-          <option value="" disabled>
-            {t("placeholders.country")}
-          </option>
-          {HOCKEY_COUNTRIES.map((c) => (
-            <option key={c} value={c}>
-              {c}
-            </option>
-          ))}
-        </select>
+        <Controller
+          control={form.control}
+          name="country"
+          render={({ field }) => (
+            <CountrySelect
+              id="country"
+              ref={field.ref}
+              name={field.name}
+              value={field.value}
+              onChange={(code) => field.onChange(code ?? "")}
+              onBlur={field.onBlur}
+              placeholder={t("placeholders.country")}
+              aria-invalid={!!form.formState.errors.country}
+              className="h-9 text-sm"
+            />
+          )}
+        />
         <FieldError message={form.formState.errors.country?.message} />
       </div>
 
@@ -628,21 +612,23 @@ function Step3ClubDataForm({
         <Label htmlFor="clubCountry" className="mb-1 text-sm">
           {t("country")}
         </Label>
-        <select
-          {...form.register("country")}
-          id="clubCountry"
-          defaultValue=""
-          className="w-full h-9 rounded-md border border-input bg-background text-foreground text-sm px-3 focus:outline-none focus:ring-2 focus:ring-ring appearance-none cursor-pointer"
-        >
-          <option value="" disabled>
-            {t("placeholders.country")}
-          </option>
-          {HOCKEY_COUNTRIES.map((c) => (
-            <option key={c} value={c}>
-              {c}
-            </option>
-          ))}
-        </select>
+        <Controller
+          control={form.control}
+          name="country"
+          render={({ field }) => (
+            <CountrySelect
+              id="clubCountry"
+              ref={field.ref}
+              name={field.name}
+              value={field.value}
+              onChange={(code) => field.onChange(code ?? "")}
+              onBlur={field.onBlur}
+              placeholder={t("placeholders.country")}
+              aria-invalid={!!form.formState.errors.country}
+              className="h-9 text-sm"
+            />
+          )}
+        />
         <FieldError message={form.formState.errors.country?.message} />
       </div>
 
@@ -931,7 +917,10 @@ export const RegisterPage = () => {
       confirmPassword: z
         .string()
         .min(1, tValidation("confirmPasswordRequired")),
-      country: z.string().min(1, tValidation("countryRequired")),
+      country: z
+        .string()
+        .min(1, tValidation("countryRequired"))
+        .refine(isCountryCode, tValidation("countryInvalid")),
       terms: z
         .boolean()
         .refine((v) => v === true, tValidation("termsRequired")),
@@ -956,7 +945,10 @@ export const RegisterPage = () => {
   const step3ClubSchema = z.object({
     name: z.string().min(2, tValidation("clubNameRequired")),
     city: z.string().min(1, tValidation("cityRequired")),
-    country: z.string().min(1, tValidation("countryRequired")),
+    country: z
+      .string()
+      .min(1, tValidation("countryRequired"))
+      .refine(isCountryCode, tValidation("countryInvalid")),
   });
 
   const step3UmpireSchema = z.object({

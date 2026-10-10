@@ -26,6 +26,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { CountrySelect } from "@/components/ui/country-select";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import {
@@ -256,7 +257,13 @@ export function CreateOpportunityForm() {
                   <FormItem>
                     <FormLabel>{t("create.countryLabel")}</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <CountrySelect
+                        ref={field.ref}
+                        name={field.name}
+                        value={field.value}
+                        onChange={(code) => field.onChange(code ?? "")}
+                        onBlur={field.onBlur}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

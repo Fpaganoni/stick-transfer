@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { CountryLabel } from "@/components/ui/country-label";
 import { useTranslations } from "next-intl";
 import { CheckCircle2, XCircle } from "lucide-react";
 import {
@@ -108,7 +109,7 @@ export function AdminUsersTable({ users, isLoading }: AdminUsersTableProps) {
                   )}
               </TableCell>
               <TableCell className="text-foreground-muted">
-                {[user.city, user.country].filter(Boolean).join(", ") || "—"}
+                <CountryLabel city={user.city} value={user.country} fallback="—" />
               </TableCell>
               <TableCell>
                 <Badge variant="outline" className={user.isActive ? "border-success text-success" : "border-error text-error"}>

@@ -1,4 +1,17 @@
 {
+  "countries": {
+    "names": {
+      "GB-ENG": "Inglaterra",
+      "GB-SCT": "Escocia",
+      "GB-WLS": "Gales"
+    },
+    "select": "Selecciona un país",
+    "search": "Buscar país...",
+    "empty": "No se encontró ningún país",
+    "featured": "Países de hockey",
+    "others": "Otros países",
+    "any": "Todos los países"
+  },
   "common": {
     "appName": "Stick Transfer",
     "loading": "Cargando...",
@@ -155,6 +168,7 @@
       "passwordsNoMatch": "Las contraseñas no coinciden",
       "roleInvalid": "Selecciona un rol válido",
       "countryRequired": "Por favor selecciona tu país",
+      "countryInvalid": "Selecciona un país válido",
       "termsRequired": "Debes aceptar los términos y condiciones",
       "cityRequired": "La ciudad es obligatoria",
       "positionRequired": "La posición es obligatoria",
@@ -490,13 +504,12 @@
         "bio": "Cuéntanos un poco sobre ti",
         "avatarUrl": "https://ejemplo.com/avatar.jpg",
         "coverImageUrl": "https://ejemplo.com/portada.jpg",
-        "countryCode": "ej. ES, US, AR",
         "city": "ej. Barcelona",
         "multimedia": "https://www.youtube.com/watch?v=..."
       },
       "location": "Ubicación",
       "locationDesc": "¿Dónde te encuentras?",
-      "countryCode": "Código de País",
+      "country": "País",
       "city": "Ciudad",
       "trajectories": "Trayectorias y Experiencia",
       "trajectoriesDesc": "Añade tus clubes actuales y pasados o roles.",
@@ -525,6 +538,7 @@
         "nameMin": "El nombre debe tener al menos 2 caracteres.",
         "usernameMin": "El usuario debe tener 3-20 caracteres: letras, numeros y _",
         "urlInvalid": "Por favor, introduce una URL válida.",
+        "countryInvalid": "Selecciona un país válido.",
         "bioMax": "La biografía no puede exceder los 500 caracteres.",
         "titleRequired": "El título es obligatorio",
         "periodRequired": "El período es obligatorio"

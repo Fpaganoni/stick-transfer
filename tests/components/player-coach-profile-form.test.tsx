@@ -21,6 +21,7 @@ vi.mock("next/navigation", () => ({
 
 vi.mock("next-intl", () => ({
   useTranslations: () => (key: string) => key,
+  useLocale: () => "en",
 }));
 
 vi.mock("@/stores/useAuthStore", () => ({
@@ -82,14 +83,14 @@ describe("PlayerCoachProfileForm", () => {
       render(<PlayerCoachProfileForm />);
 
       expect(screen.getByText("editForm.position")).toBeInTheDocument();
-      expect(screen.getByRole("combobox")).toHaveTextContent("positions.forward");
+      expect(screen.getByRole("combobox", { name: "editForm.position" })).toHaveTextContent("positions.forward");
     });
 
     it("shows the placeholder for a legacy free-text position", () => {
       state.user = makeUser(Role.PLAYER, "Forward");
       render(<PlayerCoachProfileForm />);
 
-      expect(screen.getByRole("combobox")).toHaveTextContent(
+      expect(screen.getByRole("combobox", { name: "editForm.position" })).toHaveTextContent(
         "editForm.placeholders.position",
       );
     });
