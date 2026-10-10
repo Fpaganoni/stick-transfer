@@ -3,6 +3,7 @@
  * Why: The umpire fields come from getUserByUsername and must reach the header
  *      and tabs; and an umpire profile has to open on the officiating tab (the
  *      reason people visit it) while other roles keep opening on trajectory.
+ *      Followers come as counters plus isFollowedByCurrentUser, not as lists.
  */
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
@@ -29,6 +30,10 @@ vi.mock("@/components/profile/profile-header", () => ({
   ProfileHeader: (props: Record<string, unknown>) => (
     <div data-testid="header">
       {String(props.role)}|{String(props.isVerified)}|{String(props.licenseLevel)}
+      <span data-testid="follow">
+        {String(props.followersCount)}|{String(props.followingCount)}|
+        {String(props.isFollowedByCurrentUser)}
+      </span>
     </div>
   ),
 }));
@@ -58,8 +63,9 @@ const umpireUser = {
   matchesOfficiated: 640,
   trajectories: [],
   multimedia: [],
-  followers: [],
-  following: [],
+  followersCount: 3,
+  followingCount: 1,
+  isFollowedByCurrentUser: true,
 };
 
 describe("PublicUserProfilePage", () => {
@@ -85,7 +91,14 @@ describe("PublicUserProfilePage", () => {
     state.user = umpireUser;
     render(<PublicUserProfilePage username="umpire_garcia" />);
 
-    expect(screen.getByTestId("header").textContent).toBe("UMPIRE|true|INTERNACIONAL");
+    expect(screen.getByTestId("header").textContent).toContain("UMPIRE|true|INTERNACIONAL");
+  });
+
+  it("passes the follow counters and the backend follow state to the header", () => {
+    state.user = umpireUser;
+    render(<PublicUserProfilePage username="umpire_garcia" />);
+
+    expect(screen.getByTestId("follow").textContent).toBe("3|1|true");
   });
 
   it("passes the umpire data to the tabs", () => {

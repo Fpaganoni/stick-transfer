@@ -77,6 +77,8 @@ export const ME = gql`
       city
       cvUrl
       multimedia
+      followersCount
+      followingCount
       ${UMPIRE_FIELDS}
       club {
         name
@@ -121,18 +123,9 @@ export const GET_USER = gql`
         name
         logo
       }
-      followers {
-        id
-        name
-        avatar
-        username
-      }
-      following {
-        id
-        name
-        avatar
-        username
-      }
+      followersCount
+      followingCount
+      isFollowedByCurrentUser
       trajectories {
         title
         organization
@@ -168,18 +161,9 @@ export const GET_USER_BY_USERNAME = gql`
       cvUrl
       multimedia
       ${UMPIRE_FIELDS}
-      followers {
-        id
-        name
-        avatar
-        username
-      }
-      following {
-        id
-        name
-        avatar
-        username
-      }
+      followersCount
+      followingCount
+      isFollowedByCurrentUser
       trajectories {
         title
         organization
@@ -193,6 +177,30 @@ export const GET_USER_BY_USERNAME = gql`
           logo
         }
       }
+    }
+  }
+`;
+
+/** First page of a user's followers (users and clubs); the modal shows up to `limit`. */
+export const GET_USER_FOLLOWERS = gql`
+  query GetUserFollowers($entityType: FollowEntityType!, $entityId: ID!, $limit: Int) {
+    followers(entityType: $entityType, entityId: $entityId, limit: $limit) {
+      id
+      name
+      username
+      avatar
+    }
+  }
+`;
+
+/** First page of the users and clubs a user follows. */
+export const GET_USER_FOLLOWING = gql`
+  query GetUserFollowing($entityType: FollowEntityType!, $entityId: ID!, $limit: Int) {
+    following(entityType: $entityType, entityId: $entityId, limit: $limit) {
+      id
+      name
+      username
+      avatar
     }
   }
 `;

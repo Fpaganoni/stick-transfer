@@ -425,6 +425,14 @@
     "followed": "Now following this user!",
     "unfollowed": "Unfollowed",
     "followError": "Failed to update follow status",
+    "followList": {
+      "emptyFollowers": "No followers yet",
+      "emptyFollowing": "Not following anyone yet",
+      "error": "Could not load the list. Try again later.",
+      "loading": "Loading list",
+      "loadingCounts": "Loading followers",
+      "close": "Close"
+    },
     "report": "Report",
     "editProfile": "Edit Profile",
     "editSuccess": "Profile updated successfully!",

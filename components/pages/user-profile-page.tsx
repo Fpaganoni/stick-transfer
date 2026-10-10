@@ -69,8 +69,8 @@ export function UserProfilePage({
       <ProfileHeader
           {...userData}
           isOwnProfile={isOwnProfile}
-          followers={user.followers || []}
-          following={user.following || []}
+          followersCount={user.followersCount}
+          followingCount={user.followingCount}
         />
       <ProfileTabs
         activeTab={activeTab}

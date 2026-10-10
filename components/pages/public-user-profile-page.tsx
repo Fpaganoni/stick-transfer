@@ -82,8 +82,9 @@ export function PublicUserProfilePage({
           {...userData}
           isOwnProfile={false}
           username={user.username}
-          followers={user.followers || []}
-          following={user.following || []}
+          followersCount={user.followersCount}
+          followingCount={user.followingCount}
+          isFollowedByCurrentUser={user.isFollowedByCurrentUser}
         />
       <ProfileTabs
         activeTab={activeTab}

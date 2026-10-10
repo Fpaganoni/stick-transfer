@@ -18,6 +18,7 @@ import { motion } from "framer-motion";
 import { CountryLabel } from "@/components/ui/country-label";
 import { useState, useRef, useCallback, useEffect } from "react";
 import { Badge } from "../ui/badge";
+import { Skeleton } from "../ui/skeleton";
 import { User } from "@/types/models/user";
 import { useUpdateUser, useFollow, useUnfollow } from "@/hooks/useUsers";
 import { useAuthStore } from "@/stores/useAuthStore";
@@ -31,15 +32,6 @@ import { toast } from "sonner";
 import { FollowersFollowingModal } from "./followers-following-modal";
 import { ReportModal } from "./report-modal";
 import { AvatarPhotoModal } from "../ui/avatar-photo-modal";
-
-interface FollowUser {
-  id: string;
-  name: string;
-  avatar?: string;
-  username?: string;
-}
-
-const EMPTY_FOLLOW_USERS: FollowUser[] = [];
 
 type ProfileHeaderProps = Pick<
   User,
@@ -55,11 +47,12 @@ type ProfileHeaderProps = Pick<
   | "cvUrl"
   | "isVerified"
   | "licenseLevel"
+  | "followersCount"
+  | "followingCount"
+  | "isFollowedByCurrentUser"
 > & {
   isOwnProfile?: boolean;
   username?: string;
-  followers?: FollowUser[];
-  following?: FollowUser[];
 };
 
 interface CoverImageSectionProps {
@@ -175,8 +168,9 @@ function CoverImageSection({
 
 interface FollowCountsProps {
   t: (key: string) => string;
-  followersCount: number;
-  followingCount: number;
+  // Undefined while the profile is still loading (e.g. own profile from the store)
+  followersCount?: number;
+  followingCount?: number;
   onShowFollowers: () => void;
   onShowFollowing: () => void;
 }
@@ -188,6 +182,20 @@ function FollowCounts({
   onShowFollowers,
   onShowFollowing,
 }: FollowCountsProps) {
+  if (followersCount === undefined || followingCount === undefined) {
+    return (
+      <div
+        aria-busy="true"
+        aria-label={t("followList.loadingCounts")}
+        className="flex items-center gap-2 justify-center sm:justify-start"
+      >
+        <Skeleton className="h-4 w-24" />
+        <span className="text-foreground-muted">·</span>
+        <Skeleton className="h-4 w-24" />
+      </div>
+    );
+  }
+
   return (
     <div className="flex items-center gap-2 justify-center sm:justify-start">
       <button
@@ -218,8 +226,8 @@ interface OtherProfileActionsProps {
   canContact: boolean;
   onFollowToggle: () => void;
   onReport: () => void;
-  followersCount: number;
-  followingCount: number;
+  followersCount?: number;
+  followingCount?: number;
   onShowFollowers: () => void;
   onShowFollowing: () => void;
 }
@@ -340,8 +348,9 @@ export function ProfileHeader({
   isVerified,
   licenseLevel,
   isOwnProfile = false,
-  followers = EMPTY_FOLLOW_USERS,
-  following = EMPTY_FOLLOW_USERS,
+  followersCount,
+  followingCount,
+  isFollowedByCurrentUser,
 }: ProfileHeaderProps) {
   const t = useTranslations("profile");
   const tUmpire = useTranslations("umpire");
@@ -372,7 +381,8 @@ export function ProfileHeader({
   const followMutation = useFollow();
   const unfollowMutation = useUnfollow();
 
-  const isFollowing = followers.some((f) => f.id === currentUser?.id);
+  // Comes from the backend; useFollow / useUnfollow flip it optimistically in the cache
+  const isFollowing = Boolean(isFollowedByCurrentUser);
   const isFollowPending =
     followMutation.isPending || unfollowMutation.isPending;
 
@@ -564,8 +574,8 @@ export function ProfileHeader({
                   </Link>
                   <FollowCounts
                     t={t}
-                    followersCount={followers.length}
-                    followingCount={following.length}
+                    followersCount={followersCount}
+                    followingCount={followingCount}
                     onShowFollowers={() => setFollowersModalOpen(true)}
                     onShowFollowing={() => setFollowingModalOpen(true)}
                   />
@@ -582,8 +592,8 @@ export function ProfileHeader({
                   canContact={canContact}
                   onFollowToggle={handleFollowToggle}
                   onReport={() => setReportModalOpen(true)}
-                  followersCount={followers.length}
-                  followingCount={following.length}
+                  followersCount={followersCount}
+                  followingCount={followingCount}
                   onShowFollowers={() => setFollowersModalOpen(true)}
                   onShowFollowing={() => setFollowingModalOpen(true)}
                 />
@@ -597,15 +607,15 @@ export function ProfileHeader({
         isOpen={followersModalOpen}
         onClose={() => setFollowersModalOpen(false)}
         mode="followers"
-        users={followers}
-        totalCount={followers.length}
+        userId={id}
+        totalCount={followersCount ?? 0}
       />
       <FollowersFollowingModal
         isOpen={followingModalOpen}
         onClose={() => setFollowingModalOpen(false)}
         mode="following"
-        users={following}
-        totalCount={following.length}
+        userId={id}
+        totalCount={followingCount ?? 0}
       />
       {!isOwnProfile && (
         <ReportModal

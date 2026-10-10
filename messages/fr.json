@@ -425,6 +425,14 @@
     "followed": "Vous suivez maintenant cet utilisateur !",
     "unfollowed": "Vous ne suivez plus cet utilisateur",
     "followError": "Échec de la mise à jour du suivi",
+    "followList": {
+      "emptyFollowers": "Pas encore d'abonnés",
+      "emptyFollowing": "Ne suit encore personne",
+      "error": "Impossible de charger la liste. Réessayez plus tard.",
+      "loading": "Chargement de la liste",
+      "loadingCounts": "Chargement des abonnés",
+      "close": "Fermer"
+    },
     "report": "Signaler",
     "editProfile": "Éditer le Profil",
     "editSuccess": "Profil mis à jour avec succès !",

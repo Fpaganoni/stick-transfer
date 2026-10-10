@@ -1,9 +1,12 @@
 /**
- * What: Tests for ProfileHeader contact rules and umpire presentation.
+ * What: Tests for ProfileHeader contact rules, umpire presentation and the
+ *       follow counters / button.
  * Why: Messaging is limited to clubs/admins for players and coaches, but
  *      umpires are contactable by everyone. Umpires also have no playing
  *      position, so the header must show licence level and verification
- *      instead of "position not set".
+ *      instead of "position not set". Counters and the follow state come from
+ *      followersCount / followingCount / isFollowedByCurrentUser, never from
+ *      walking a followers list.
  */
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
@@ -11,9 +14,12 @@ import userEvent from "@testing-library/user-event";
 import { ProfileHeader } from "@/components/profile/profile-header";
 import { Role, UmpireLicenseLevel } from "@/types/enums";
 
-const { mockPush, roleState } = vi.hoisted(() => ({
+const { mockPush, roleState, followMock, unfollowMock, modalProps } = vi.hoisted(() => ({
   mockPush: vi.fn(),
   roleState: { isClub: false, isSuperAdmin: false },
+  followMock: vi.fn(),
+  unfollowMock: vi.fn(),
+  modalProps: [] as Array<{ isOpen: boolean; mode: string; userId: string; totalCount: number }>,
 }));
 
 vi.mock("next/navigation", () => ({
@@ -35,8 +41,8 @@ vi.mock("@/stores/useAuthStore", () => ({
 
 vi.mock("@/hooks/useUsers", () => ({
   useUpdateUser: () => ({ mutate: vi.fn(), isPending: false }),
-  useFollow: () => ({ mutate: vi.fn(), isPending: false }),
-  useUnfollow: () => ({ mutate: vi.fn(), isPending: false }),
+  useFollow: () => ({ mutate: followMock, isPending: false }),
+  useUnfollow: () => ({ mutate: unfollowMock, isPending: false }),
 }));
 
 vi.mock("sonner", () => ({ toast: { success: vi.fn(), error: vi.fn() } }));
@@ -55,7 +61,10 @@ vi.mock("next/link", () => ({
 }));
 
 vi.mock("@/components/profile/followers-following-modal", () => ({
-  FollowersFollowingModal: () => null,
+  FollowersFollowingModal: (props: (typeof modalProps)[number]) => {
+    modalProps.push(props);
+    return null;
+  },
 }));
 vi.mock("@/components/profile/report-modal", () => ({ ReportModal: () => null }));
 vi.mock("@/components/ui/avatar-photo-modal", () => ({ AvatarPhotoModal: () => null }));
@@ -82,6 +91,82 @@ describe("ProfileHeader", () => {
     mockPush.mockReset();
     roleState.isClub = false;
     roleState.isSuperAdmin = false;
+    followMock.mockReset();
+    unfollowMock.mockReset();
+    modalProps.length = 0;
+  });
+
+  describe("follow counters", () => {
+    const lastModal = (mode: string) => modalProps.filter((p) => p.mode === mode).at(-1);
+
+    it("shows the counters of the own profile", () => {
+      render(<ProfileHeader {...player} isOwnProfile followersCount={12} followingCount={3} />);
+
+      expect(screen.getByRole("button", { name: "12 followers" })).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: "3 following" })).toBeInTheDocument();
+    });
+
+    it("shows the counters of another profile", () => {
+      render(<ProfileHeader {...player} followersCount={7} followingCount={0} />);
+
+      expect(screen.getByRole("button", { name: "7 followers" })).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: "0 following" })).toBeInTheDocument();
+    });
+
+    it("shows placeholders while the counters are unknown", () => {
+      render(<ProfileHeader {...player} isOwnProfile />);
+
+      expect(screen.queryByRole("button", { name: /followers/ })).not.toBeInTheDocument();
+      expect(screen.getByLabelText("followList.loadingCounts")).toHaveAttribute(
+        "aria-busy",
+        "true",
+      );
+    });
+
+    it("opens the followers list for this user, which loads lazily", async () => {
+      const user = userEvent.setup();
+      render(<ProfileHeader {...player} followersCount={7} followingCount={1} />);
+
+      expect(lastModal("followers")).toMatchObject({ isOpen: false, userId: "target-1" });
+
+      await user.click(screen.getByRole("button", { name: "7 followers" }));
+
+      expect(lastModal("followers")).toMatchObject({
+        isOpen: true,
+        userId: "target-1",
+        totalCount: 7,
+      });
+      expect(lastModal("following")).toMatchObject({ isOpen: false });
+    });
+  });
+
+  describe("follow button", () => {
+    const vars = {
+      followerType: "USER",
+      followerId: "viewer-1",
+      followingType: "USER",
+      followingId: "target-1",
+    };
+
+    it("follows when the backend says the viewer does not follow yet", async () => {
+      const user = userEvent.setup();
+      render(<ProfileHeader {...player} followersCount={7} isFollowedByCurrentUser={false} />);
+
+      await user.click(screen.getByTitle("follow"));
+
+      expect(followMock).toHaveBeenCalledWith(vars, expect.anything());
+      expect(unfollowMock).not.toHaveBeenCalled();
+    });
+
+    it("unfollows when the backend says the viewer already follows", async () => {
+      const user = userEvent.setup();
+      render(<ProfileHeader {...player} followersCount={7} isFollowedByCurrentUser />);
+
+      await user.click(screen.getByTitle("unfollow"));
+
+      expect(unfollowMock).toHaveBeenCalledWith(vars, expect.anything());
+      expect(followMock).not.toHaveBeenCalled();
+    });
   });
 
   describe("contact button", () => {

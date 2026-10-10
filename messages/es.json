@@ -425,6 +425,14 @@
     "followed": "¡Ahora sigues a este usuario!",
     "unfollowed": "Dejaste de seguir",
     "followError": "Error al actualizar seguimiento",
+    "followList": {
+      "emptyFollowers": "Todavía no tiene seguidores",
+      "emptyFollowing": "Todavía no sigue a nadie",
+      "error": "No se pudo cargar la lista. Inténtalo de nuevo más tarde.",
+      "loading": "Cargando lista",
+      "loadingCounts": "Cargando seguidores",
+      "close": "Cerrar"
+    },
     "report": "Reportar",
     "editProfile": "Editar Perfil",
     "editSuccess": "¡Perfil actualizado con éxito!",

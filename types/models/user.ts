@@ -94,8 +94,11 @@ export interface User {
   clubId?: string;
   club?: Club;
   trajectories?: TrajectoryItem[];
-  followers?: UserBasicInfo[];
-  following?: UserBasicInfo[];
+
+  // Totals; the lists are fetched on demand (see useFollowList)
+  followersCount?: number;
+  followingCount?: number;
+  isFollowedByCurrentUser?: boolean;
 
   // Metadata (opcional)
   createdAt?: string;
