@@ -142,6 +142,16 @@ describe("OpportunityDetailModal", () => {
       expect(applyButton()).not.toBeInTheDocument();
     });
 
+    it("renders a preview (opened from the applications tab) while the details load", () => {
+      const preview = { ...base, description: undefined, benefits: undefined, createdAt: undefined };
+      open(preview as unknown as JobOpportunity);
+
+      expect(screen.getByText("Some job")).toBeInTheDocument();
+      expect(screen.getByLabelText("loadingDetails")).toHaveAttribute("aria-busy", "true");
+      expect(screen.getByRole("button", { name: "Bookmark" })).toBeDisabled();
+      expect(screen.queryByText(/published/)).not.toBeInTheDocument();
+    });
+
     it("shows the application as sent when it is in the user's applications", () => {
       appliedIds.add("job-1");
       open(base);

@@ -606,7 +606,15 @@
       "noApplications": "Aucune candidature pour le moment. Commencez à postuler aux opportunités d'emploi !",
       "location": "Localisation",
       "salary": "Salaire",
-      "appliedAt": "Postuler"
+      "appliedAt": "Postuler",
+      "loading": "Chargement des candidatures",
+      "status": {
+        "PENDING": "En attente",
+        "UNDER_REVIEW": "En cours d'examen",
+        "ACCEPTED": "Acceptée",
+        "REJECTED": "Rejetée",
+        "WITHDRAWN": "Retirée"
+      }
     },
     "repositionCover": "Repositionner la couverture",
     "dragToReposition": "Faites glisser pour repositionner",
@@ -706,6 +714,7 @@
       "onlyUmpires": "Seuls les arbitres peuvent postuler à cette opportunité."
     },
     "availablePositions": "Postes Disponibles",
+    "loadingDetails": "Chargement des détails de l'opportunité",
     "filters": {
       "experience": "Expérience",
       "location": "Localisation",

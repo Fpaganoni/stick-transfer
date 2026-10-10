@@ -606,7 +606,15 @@
       "noApplications": "Aún no hay solicitudes. ¡Comienza a solicitar oportunidades de trabajo!",
       "location": "Ubicación",
       "salary": "Salario",
-      "appliedAt": "Solicitado"
+      "appliedAt": "Solicitado",
+      "loading": "Cargando postulaciones",
+      "status": {
+        "PENDING": "Pendiente",
+        "UNDER_REVIEW": "En revisión",
+        "ACCEPTED": "Aceptada",
+        "REJECTED": "Rechazada",
+        "WITHDRAWN": "Retirada"
+      }
     },
     "repositionCover": "Reposicionar portada",
     "dragToReposition": "Arrastra para reposicionar",
@@ -706,6 +714,7 @@
       "onlyUmpires": "Solo los árbitros pueden postularse a esta oportunidad."
     },
     "availablePositions": "Posiciones Disponibles",
+    "loadingDetails": "Cargando detalles de la oportunidad",
     "filters": {
       "experience": "Experiencia",
       "location": "Ubicación",

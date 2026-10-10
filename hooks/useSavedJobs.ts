@@ -11,7 +11,10 @@ import { graphqlClient } from "@/lib/graphql-client";
 import { GET_SAVED_JOBS, SAVE_JOB, UNSAVE_JOB } from "@/graphql";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useOpportunitiesStore } from "@/stores/useOpportunitiesStore";
-import type { JobOpportunity } from "@/types/models/job-opportunity";
+import type {
+  JobOpportunity,
+  JobOpportunityPreview,
+} from "@/types/models/job-opportunity";
 
 export const SAVED_JOBS_QUERY_KEY = ["savedJobs"] as const;
 const JOB_OPPORTUNITIES_QUERY_KEY = ["jobOpportunities"] as const;
@@ -55,7 +58,7 @@ export function useSavedJobs() {
   });
 }
 
-function withSavedFlag(job: JobOpportunity, save: boolean): JobOpportunity {
+function withSavedFlag<T extends JobOpportunityPreview>(job: T, save: boolean): T {
   return { ...job, isSavedByCurrentUser: save };
 }
 

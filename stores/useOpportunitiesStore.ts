@@ -1,8 +1,9 @@
 import { create } from "zustand";
-import { JobOpportunity } from "@/types/models/job-opportunity";
+import { JobOpportunityPreview } from "@/types/models/job-opportunity";
 
 interface OpportunitiesStore {
-  selectedOpportunity: JobOpportunity | null;
+  // A preview while the full opportunity loads (opened from the applications tab)
+  selectedOpportunity: JobOpportunityPreview | null;
   isModalOpen: boolean;
   searchQuery: string;
   filters: {
@@ -16,7 +17,7 @@ interface OpportunitiesStore {
     umpireCategory?: string | null;
   };
 
-  setSelectedOpportunity: (opportunity: JobOpportunity | null) => void;
+  setSelectedOpportunity: (opportunity: JobOpportunityPreview | null) => void;
   setIsModalOpen: (isOpen: boolean) => void;
   setSearchQuery: (query: string) => void;
   setFilters: (filters: Partial<OpportunitiesStore["filters"]>) => void;

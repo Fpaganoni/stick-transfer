@@ -606,7 +606,15 @@
       "noApplications": "No applications yet. Start applying to job opportunities!",
       "location": "Location",
       "salary": "Salary",
-      "appliedAt": "Applied"
+      "appliedAt": "Applied",
+      "loading": "Loading applications",
+      "status": {
+        "PENDING": "Pending",
+        "UNDER_REVIEW": "Under review",
+        "ACCEPTED": "Accepted",
+        "REJECTED": "Rejected",
+        "WITHDRAWN": "Withdrawn"
+      }
     },
     "repositionCover": "Reposition Cover",
     "dragToReposition": "Drag to reposition",
@@ -706,6 +714,7 @@
       "onlyUmpires": "Only umpires can apply to this opportunity."
     },
     "availablePositions": "Available Positions",
+    "loadingDetails": "Loading opportunity details",
     "filters": {
       "experience": "Experience",
       "location": "Location",

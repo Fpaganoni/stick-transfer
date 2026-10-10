@@ -37,6 +37,22 @@ export interface JobOpportunity {
   updatedAt?: string;
 }
 
+/**
+ * What the detail modal can render before the full opportunity is loaded
+ * (e.g. the light copy nested in the user's applications).
+ */
+export type JobOpportunityPreview = Omit<
+  JobOpportunity,
+  "description" | "benefits" | "createdAt"
+> &
+  Partial<Pick<JobOpportunity, "description" | "benefits" | "createdAt">>;
+
+export function isFullOpportunity(
+  opportunity: JobOpportunityPreview,
+): opportunity is JobOpportunity {
+  return opportunity.description !== undefined && opportunity.createdAt !== undefined;
+}
+
 // Variantes
 export type JobOpportunityCard = Pick<
   JobOpportunity,

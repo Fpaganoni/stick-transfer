@@ -1,6 +1,7 @@
 "use client";
 
-import { JobOpportunity } from "@/types/models/job-opportunity";
+import { JobOpportunity, isFullOpportunity } from "@/types/models/job-opportunity";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useOpportunitiesStore } from "@/stores/useOpportunitiesStore";
 import { useTranslations, useLocale } from "next-intl";
 import { useAuthStore } from "@/stores/useAuthStore";
@@ -31,29 +32,7 @@ import { getPositionTypeLabel, isUmpireJob } from "@/lib/job-position-type";
 import { UmpireJobDetails } from "./umpire-job-details";
 import { CountryLabel } from "@/components/ui/country-label";
 
-type OpportunityDetailModalProps = Pick<
-  JobOpportunity,
-  | "id"
-  | "title"
-  | "description"
-  | "positionType"
-  | "club"
-  | "country"
-  | "city"
-  | "salary"
-  | "currency"
-  | "benefits"
-  | "createdAt"
-  | "level"
-  | "status"
-  | "licenseLevelRequired"
-  | "modality"
-  | "umpireCategory"
-  | "matchDate"
-  | "hasAppliedByCurrentUser"
->;
-
-function getBenefitsArray(benefits: OpportunityDetailModalProps["benefits"]): string[] {
+function getBenefitsArray(benefits: JobOpportunity["benefits"] | undefined): string[] {
   return Array.isArray(benefits) ? benefits : [];
 }
 
@@ -66,6 +45,7 @@ interface OpportunityActionButtonsProps {
   isLoadingApplications: boolean;
   onApply: () => void;
   isSaved: boolean;
+  saveDisabled: boolean;
   onToggleSave: () => void;
   onClose: () => void;
   canApply: boolean;
@@ -80,6 +60,7 @@ function OpportunityActionButtons({
   isLoadingApplications,
   onApply,
   isSaved,
+  saveDisabled,
   onToggleSave,
   onClose,
   canApply,
@@ -112,7 +93,8 @@ function OpportunityActionButtons({
       )}
       <button
         onClick={onToggleSave}
-        className={`px-4 py-2 rounded-lg border transition-colors duration-200 flex items-center gap-2 font-semibold ${
+        disabled={saveDisabled}
+        className={`px-4 py-2 rounded-lg border transition-colors duration-200 flex items-center gap-2 font-semibold disabled:opacity-50 disabled:cursor-not-allowed ${
           isSaved
             ? "bg-primary/10 border-primary text-primary"
             : "bg-foreground/10 border-border text-foreground hover:bg-foreground/20"
@@ -149,7 +131,9 @@ export function OpportunityDetailModal() {
     return null;
   }
 
-  const opportunity = selectedOpportunity as OpportunityDetailModalProps;
+  const opportunity = selectedOpportunity;
+  // Opened from the applications tab: the full opportunity is still loading
+  const isPreview = !isFullOpportunity(opportunity);
   const normalizedStatus = opportunity.status.toLowerCase() as
     | "open"
     | "closed"
@@ -164,6 +148,7 @@ export function OpportunityDetailModal() {
       openLoginModal();
       return;
     }
+    if (!isFullOpportunity(selectedOpportunity)) return;
     toggleSave({ job: selectedOpportunity, save: !isSaved });
   };
 
@@ -297,23 +282,34 @@ export function OpportunityDetailModal() {
             </div>
           </div>
 
-          {/* Published Date */}
-          <div className="flex items-center gap-2 text-foreground-muted">
-            <Calendar size={18} />
-            <span className="text-sm">
-              {t("published")} {formatRelativeTime(opportunity.createdAt, locale)}
-            </span>
-          </div>
+          {isPreview ? (
+            <div aria-busy="true" aria-label={t("loadingDetails")} className="space-y-3">
+              <Skeleton className="h-5 w-40" />
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-2/3" />
+            </div>
+          ) : (
+            <>
+              {/* Published Date */}
+              <div className="flex items-center gap-2 text-foreground-muted">
+                <Calendar size={18} />
+                <span className="text-sm">
+                  {t("published")} {formatRelativeTime(opportunity.createdAt, locale)}
+                </span>
+              </div>
 
-          {/* Description */}
-          <div>
-            <h3 className="text-sm font-semibold text-foreground-muted uppercase tracking-wide mb-2">
-              {t("description")}
-            </h3>
-            <p className="text-sm text-foreground leading-relaxed whitespace-pre-wrap">
-              {opportunity.description}
-            </p>
-          </div>
+              {/* Description */}
+              <div>
+                <h3 className="text-sm font-semibold text-foreground-muted uppercase tracking-wide mb-2">
+                  {t("description")}
+                </h3>
+                <p className="text-sm text-foreground leading-relaxed whitespace-pre-wrap">
+                  {opportunity.description}
+                </p>
+              </div>
+            </>
+          )}
 
           {isUmpireOpportunity && (
             <UmpireJobDetails opportunity={opportunity} variant="detail" />
@@ -345,6 +341,7 @@ export function OpportunityDetailModal() {
             isLoadingApplications={isLoadingApplications}
             onApply={handleApply}
             isSaved={isSaved}
+            saveDisabled={isPreview}
             onToggleSave={handleToggleSave}
             onClose={closeModal}
             canApply={canApply}

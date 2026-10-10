@@ -7,7 +7,7 @@ import {
 import { graphqlClient } from "@/lib/graphql-client";
 import { APPLY_FOR_JOB, GET_USER_APPLICATIONS } from "@/graphql";
 import { UserApplication } from "@/types/models/job-application";
-import { JobOpportunity } from "@/types/models/job-opportunity";
+import { JobOpportunity, JobOpportunityPreview } from "@/types/models/job-opportunity";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useOpportunitiesStore } from "@/stores/useOpportunitiesStore";
 import { useTranslations } from "next-intl";
@@ -87,7 +87,7 @@ function writeApplicationToCache(
     (old = []) => [application, ...old.filter((app) => app.id !== application.id)],
   );
 
-  const markApplied = (job: JobOpportunity): JobOpportunity =>
+  const markApplied = <T extends JobOpportunityPreview>(job: T): T =>
     job.id === application.jobOpportunityId
       ? { ...job, hasAppliedByCurrentUser: true }
       : job;
