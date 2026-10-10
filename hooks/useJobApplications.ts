@@ -1,8 +1,15 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  QueryClient,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { graphqlClient } from "@/lib/graphql-client";
 import { APPLY_FOR_JOB, GET_USER_APPLICATIONS } from "@/graphql";
-import { JobApplicationResponse } from "@/types/models/job-application";
+import { UserApplication } from "@/types/models/job-application";
+import { JobOpportunity } from "@/types/models/job-opportunity";
 import { useAuthStore } from "@/stores/useAuthStore";
+import { useOpportunitiesStore } from "@/stores/useOpportunitiesStore";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
@@ -13,17 +20,20 @@ type ApplyForJobVariables = {
 };
 
 type ApplyForJobResponse = {
-  applyForJob: JobApplicationResponse;
+  applyForJob: UserApplication;
 };
 
 type UserApplicationsResponse = {
-  userApplications: Array<{
-    id: string;
-    jobOpportunityId: string;
-    status: string;
-    appliedAt: string;
-  }>;
+  userApplications: UserApplication[];
 };
+
+type JobOpportunitiesData = { jobOpportunities: JobOpportunity[] };
+
+const WITHDRAWN = "WITHDRAWN";
+
+export function userApplicationsQueryKey(userId: string | undefined) {
+  return ["userApplications", userId] as const;
+}
 
 /**
  * Hook to fetch user's job applications
@@ -33,7 +43,7 @@ export function useUserApplications() {
   const { user } = useAuthStore();
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ["userApplications", user?.id],
+    queryKey: userApplicationsQueryKey(user?.id),
     queryFn: async () => {
       if (!user?.id) {
         throw new Error("User not authenticated");
@@ -53,10 +63,45 @@ export function useUserApplications() {
     applications: data || [],
     isLoading,
     error,
-    hasAppliedTo: (opportunityId: string) => {
-      return data?.some((app) => app.jobOpportunityId === opportunityId) ?? false;
-    },
+    // A withdrawn application can be sent again, so it does not count
+    hasAppliedTo: (opportunityId: string) =>
+      data?.some(
+        (app) => app.jobOpportunityId === opportunityId && app.status !== WITHDRAWN,
+      ) ?? false,
   };
+}
+
+/**
+ * Writes a successful application into every cache that renders it: the
+ * user's applications (the backend reactivates a withdrawn row with the same
+ * id, so it replaces instead of duplicating), the opportunity lists and the
+ * snapshot the detail modal holds in its store.
+ */
+function writeApplicationToCache(
+  queryClient: QueryClient,
+  userId: string,
+  application: UserApplication,
+) {
+  queryClient.setQueryData<UserApplication[]>(
+    userApplicationsQueryKey(userId),
+    (old = []) => [application, ...old.filter((app) => app.id !== application.id)],
+  );
+
+  const markApplied = (job: JobOpportunity): JobOpportunity =>
+    job.id === application.jobOpportunityId
+      ? { ...job, hasAppliedByCurrentUser: true }
+      : job;
+
+  queryClient.setQueriesData<JobOpportunitiesData>(
+    { queryKey: ["jobOpportunities"] },
+    (old) => old && { ...old, jobOpportunities: old.jobOpportunities.map(markApplied) },
+  );
+
+  const { selectedOpportunity, setSelectedOpportunity } =
+    useOpportunitiesStore.getState();
+  if (selectedOpportunity && selectedOpportunity.id === application.jobOpportunityId) {
+    setSelectedOpportunity(markApplied(selectedOpportunity));
+  }
 }
 
 /**
@@ -89,8 +134,10 @@ export function useApplyForJob() {
       });
     },
 
-    onSuccess: () => {
-      // Invalidate job opportunities to refresh the list
+    onSuccess: (data) => {
+      if (user?.id && data?.applyForJob) {
+        writeApplicationToCache(queryClient, user.id, data.applyForJob);
+      }
       queryClient.invalidateQueries({ queryKey: ["jobOpportunities"] });
       queryClient.invalidateQueries({ queryKey: ["userApplications"] });
 

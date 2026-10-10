@@ -1,5 +1,6 @@
 import { User } from "./user";
 import { JobOpportunity } from "./job-opportunity";
+import { Club } from "./club";
 
 export type ApplicationStatus =
   | "PENDING"
@@ -31,7 +32,27 @@ export type CreateJobApplicationInput = Pick<
   "jobOpportunityId" | "userId" | "coverLetter" | "resumeUrl"
 >;
 
-export type JobApplicationResponse = Pick<
+/** The opportunity as it is nested in the user's applications list. */
+export type ApplicationOpportunity = Pick<
+  JobOpportunity,
+  | "id"
+  | "title"
+  | "city"
+  | "country"
+  | "salary"
+  | "currency"
+  | "level"
+  | "status"
+  | "positionType"
+> & {
+  club: Pick<Club, "id" | "name" | "logo">;
+};
+
+/** One row of userApplications / the result of applyForJob. */
+export type UserApplication = Pick<
   JobApplication,
-  "id" | "status" | "appliedAt" | "updatedAt"
->;
+  "id" | "jobOpportunityId" | "status" | "appliedAt"
+> & {
+  updatedAt?: string;
+  jobOpportunity?: ApplicationOpportunity;
+};

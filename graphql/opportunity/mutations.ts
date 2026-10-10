@@ -1,4 +1,5 @@
 import { gql } from "graphql-request";
+import { APPLICATION_FIELDS } from "./queries";
 
 /// ============================================
 /// JOB OPPORTUNITY MUTATIONS
@@ -85,9 +86,7 @@ export const APPLY_FOR_JOB = gql`
       coverLetter: $coverLetter
       resumeUrl: $resumeUrl
     ) {
-      id
-      status
-      appliedAt
+      ${APPLICATION_FIELDS}
       updatedAt
     }
   }

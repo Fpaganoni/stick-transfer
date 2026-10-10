@@ -24,8 +24,10 @@ export interface JobOpportunity {
   umpireCategory?: UmpireCategory | null;
   matchDate?: string | null;
 
-  // Per-user flag; the backend returns false without a session
+  // Per-user flags; the backend returns false without a session
   isSavedByCurrentUser?: boolean;
+  // WITHDRAWN applications do not count
+  hasAppliedByCurrentUser?: boolean;
 
   // Relations
   club: Club;

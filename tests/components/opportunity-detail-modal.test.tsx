@@ -27,9 +27,25 @@ vi.mock("@/stores/useAuthStore", () => ({
   useAuthStore: () => ({ user: authState.user }),
 }));
 
+// Stands in for the ["userApplications", userId] cache: applying adds the id,
+// exactly as useApplyForJob's onSuccess does with setQueryData.
+const { appliedIds } = vi.hoisted(() => ({ appliedIds: new Set<string>() }));
+
 vi.mock("@/hooks/useJobApplications", () => ({
-  useApplyForJob: () => ({ mutate: vi.fn(), isPending: false }),
-  useUserApplications: () => ({ hasAppliedTo: () => false, isLoading: false }),
+  useApplyForJob: () => ({
+    mutate: (
+      variables: { jobOpportunityId: string },
+      options?: { onSuccess?: () => void },
+    ) => {
+      appliedIds.add(variables.jobOpportunityId);
+      options?.onSuccess?.();
+    },
+    isPending: false,
+  }),
+  useUserApplications: () => ({
+    hasAppliedTo: (id: string) => appliedIds.has(id),
+    isLoading: false,
+  }),
 }));
 
 const { toggleSaveMock, openLoginModalMock } = vi.hoisted(() => ({
@@ -93,6 +109,45 @@ describe("OpportunityDetailModal", () => {
     useOpportunitiesStore.setState({ selectedOpportunity: null, isModalOpen: false });
     toggleSaveMock.mockReset();
     openLoginModalMock.mockReset();
+    appliedIds.clear();
+  });
+
+  describe("application sent state", () => {
+    const sent = () => screen.queryByRole("button", { name: "applicationSent" });
+
+    it("does not carry the applied state over to the next opportunity", () => {
+      const jobA = { ...base, id: "job-a", title: "Job A" };
+      const jobB = { ...base, id: "job-b", title: "Job B" };
+      const { rerender } = open(jobA);
+
+      fireEvent.click(applyButton()!);
+      rerender(<OpportunityDetailModal />);
+      expect(sent()).toBeInTheDocument();
+
+      // The modal stays mounted while the store swaps the opportunity
+      act(() => useOpportunitiesStore.getState().closeModal());
+      act(() => {
+        useOpportunitiesStore.setState({ selectedOpportunity: jobB, isModalOpen: true });
+      });
+
+      expect(screen.getByText("Job B")).toBeInTheDocument();
+      expect(applyButton()).toBeInTheDocument();
+      expect(sent()).not.toBeInTheDocument();
+    });
+
+    it("shows the application as sent when the backend says so", () => {
+      open({ ...base, hasAppliedByCurrentUser: true });
+
+      expect(sent()).toBeInTheDocument();
+      expect(applyButton()).not.toBeInTheDocument();
+    });
+
+    it("shows the application as sent when it is in the user's applications", () => {
+      appliedIds.add("job-1");
+      open(base);
+
+      expect(sent()).toBeInTheDocument();
+    });
   });
 
   describe("saving the opportunity", () => {

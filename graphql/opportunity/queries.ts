@@ -30,7 +30,32 @@ export const GET_JOB_OPPORTUNITIES = gql`
       umpireCategory
       matchDate
       isSavedByCurrentUser
+      hasAppliedByCurrentUser
       createdAt
+    }
+  }
+`;
+
+/** Selection of one row of userApplications (also returned by applyForJob). */
+export const APPLICATION_FIELDS = `
+  id
+  jobOpportunityId
+  status
+  appliedAt
+  jobOpportunity {
+    id
+    title
+    city
+    country
+    salary
+    currency
+    level
+    status
+    positionType
+    club {
+      id
+      name
+      logo
     }
   }
 `;

@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { JobOpportunity } from "@/types/models/job-opportunity";
 import { useOpportunitiesStore } from "@/stores/useOpportunitiesStore";
 import { useTranslations, useLocale } from "next-intl";
@@ -51,6 +50,7 @@ type OpportunityDetailModalProps = Pick<
   | "modality"
   | "umpireCategory"
   | "matchDate"
+  | "hasAppliedByCurrentUser"
 >;
 
 function getBenefitsArray(benefits: OpportunityDetailModalProps["benefits"]): string[] {
@@ -144,7 +144,6 @@ export function OpportunityDetailModal() {
     useUserApplications();
   const { mutate: toggleSave } = useToggleSaveJob();
   const { openLoginModal } = useUIStore();
-  const [hasAppliedLocalState, setHasAppliedLocalState] = useState(false);
 
   if (!selectedOpportunity) {
     return null;
@@ -183,23 +182,18 @@ export function OpportunityDetailModal() {
       return;
     }
 
-    applyForJob(
-      {
-        jobOpportunityId: opportunity.id,
-        coverLetter: undefined,
-        resumeUrl: user.cvUrl || undefined,
-      },
-      {
-        onSuccess: () => {
-          setHasAppliedLocalState(true);
-        },
-      }
-    );
+    applyForJob({
+      jobOpportunityId: opportunity.id,
+      coverLetter: undefined,
+      resumeUrl: user.cvUrl || undefined,
+    });
   };
 
-  // Check if user already applied - either from previous query or local state
+  // Derived from the opportunity on screen only: the modal stays mounted while
+  // the store swaps opportunities, so no local "applied" state may survive.
+  // userApplications is paged (50 by default); the backend flag covers the rest.
   const userAlreadyApplied =
-    hasAppliedLocalState || hasAppliedTo(opportunity.id);
+    hasAppliedTo(opportunity.id) || Boolean(opportunity.hasAppliedByCurrentUser);
 
   return (
     <Dialog open={isModalOpen} onOpenChange={(open) => !open && closeModal()}>
