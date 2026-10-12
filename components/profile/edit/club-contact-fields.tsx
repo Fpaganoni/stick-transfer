@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/card";
 import {
   SOCIAL_PLATFORMS,
+  isValidEmail,
   normalizeSocialHandle,
   toWebsiteUrl,
   type SocialPlatform,
@@ -37,7 +38,6 @@ import type { Club, UpdateClubVariables } from "@/types/models/club";
 import type { ClubFormValues } from "./club-profile-form";
 
 const PHONE_PATTERN = /^\+?[0-9 ()-]{6,20}$/;
-const EMAIL_SCHEMA = z.string().email();
 
 type ContactField = "website" | "email" | "phone";
 export type ClubContactFieldName = ContactField | SocialPlatform;
@@ -63,7 +63,7 @@ export function createClubContactShape(t: (key: string) => string) {
       t("editForm.club.contact.validation.websiteInvalid"),
     ),
     email: optionalField(
-      (value) => EMAIL_SCHEMA.safeParse(value).success,
+      isValidEmail,
       t("editForm.club.contact.validation.emailInvalid"),
     ),
     phone: optionalField(

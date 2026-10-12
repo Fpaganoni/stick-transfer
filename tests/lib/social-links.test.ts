@@ -24,6 +24,7 @@ describe("normalizeSocialHandle", () => {
     ["facebook", "https://m.facebook.com/hc.sanisidro", "hc.sanisidro"],
     ["facebook", "https://www.facebook.com/profile.php?id=1000123", "profile.php?id=1000123"],
     ["tiktok", "https://www.tiktok.com/@hcsanisidro", "hcsanisidro"],
+    ["instagram", "https://instagram.com/hcsanisidro/?hl=es", "hcsanisidro"],
   ] as const)("%s: %s -> %s", (platform, input, expected) => {
     expect(normalizeSocialHandle(platform, input)).toBe(expected);
   });
@@ -36,6 +37,20 @@ describe("normalizeSocialHandle", () => {
     ["instagram", "https://facebook.com/hcsanisidro"],
     ["twitter", "https://x.com/"],
     ["tiktok", "javascript:alert(1)"],
+    // A post, reel or page path is not a profile: rejecting beats saving "p"
+    ["instagram", "https://instagram.com/p/Cxyz123/"],
+    ["instagram", "https://www.instagram.com/reel/Cxyz123"],
+    ["twitter", "https://x.com/hcsanisidro/status/123"],
+    ["twitter", "https://twitter.com/intent/tweet"],
+    ["facebook", "https://facebook.com/pages/HC-San-Isidro/123"],
+    ["facebook", "https://facebook.com/groups/hcsanisidro"],
+    ["tiktok", "https://www.tiktok.com/@hcsanisidro/video/123"],
+    // Bare platform domain typed without a profile
+    ["instagram", "instagram.com"],
+    ["facebook", "www.facebook.com"],
+    // Dots only would link to the platform root
+    ["instagram", "."],
+    ["instagram", ".."],
   ] as const)("%s: rejects %j", (platform, input) => {
     expect(normalizeSocialHandle(platform, input)).toBeNull();
   });
@@ -73,7 +88,11 @@ describe("toWebsiteUrl", () => {
     expect(toWebsiteUrl(" hcsanisidro.com.ar ")).toBe("https://hcsanisidro.com.ar");
   });
 
-  it.each(["", "   ", "javascript:alert(1)", "ftp://hcsanisidro.com", "not a site", "localhost"])(
+  it("accepts a host with an explicit port", () => {
+    expect(toWebsiteUrl("hcsanisidro.com.ar:8080")).toBe("https://hcsanisidro.com.ar:8080");
+  });
+
+  it.each(["", "   ", "javascript:alert(1)", "javascript:8080", "ftp://hcsanisidro.com", "not a site", "localhost"])(
     "rejects %j",
     (input) => {
       expect(toWebsiteUrl(input)).toBeNull();

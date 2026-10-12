@@ -89,6 +89,22 @@ describe("ClubDetailPage", () => {
     expect(screen.queryByRole("link", { name: /website/ })).not.toBeInTheDocument();
   });
 
+  it("skips legacy email and phone values that cannot make a valid link", () => {
+    state.club = {
+      ...baseClub,
+      website: undefined,
+      email: "a@b.com?bcc=spam@x.com",
+      phone: "ask at the bar",
+      instagram: undefined,
+      twitter: undefined,
+    };
+    render(<ClubDetailPage clubId="club-1" />);
+
+    expect(screen.queryByRole("link", { name: /email/ })).not.toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: /phone/ })).not.toBeInTheDocument();
+    expect(screen.queryByRole("region", { name: "contactAndSocial" })).not.toBeInTheDocument();
+  });
+
   it("shows the verification banner to the club owner", () => {
     state.user = { id: "club-1", role: Role.CLUB };
     render(<ClubDetailPage clubId="club-1" />);

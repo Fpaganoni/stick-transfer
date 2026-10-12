@@ -15,6 +15,8 @@ import {
 } from "lucide-react";
 import {
   socialProfileUrl,
+  toMailtoUrl,
+  toTelUrl,
   toWebsiteUrl,
   type SocialPlatform,
 } from "@/lib/social-links";
@@ -31,8 +33,8 @@ const contactLinks: Array<{
   href: (value: string) => string | null;
 }> = [
   { field: "website", icon: Globe, href: toWebsiteUrl },
-  { field: "email", icon: Mail, href: (value) => `mailto:${value}` },
-  { field: "phone", icon: Phone, href: (value) => `tel:${value.replace(/[^\d+]/g, "")}` },
+  { field: "email", icon: Mail, href: toMailtoUrl },
+  { field: "phone", icon: Phone, href: toTelUrl },
 ];
 
 // Brand names: not translated.
