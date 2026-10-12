@@ -575,6 +575,30 @@
           "nameMin": "El nombre del club debe tener al menos 2 caracteres.",
           "managedByFirstNameRequired": "El nombre del administrador es obligatorio.",
           "managedByLastNameRequired": "El apellido del administrador es obligatorio."
+        },
+        "contact": {
+          "title": "Contacto y redes",
+          "desc": "Cómo pueden contactar a tu club jugadores y staff. Se muestra en el perfil público del club.",
+          "website": "Sitio web",
+          "email": "Email de contacto",
+          "phone": "Teléfono",
+          "socialsTitle": "Redes sociales",
+          "instagram": "Instagram",
+          "twitter": "X (Twitter)",
+          "facebook": "Facebook",
+          "tiktok": "TikTok",
+          "placeholders": {
+            "website": "tuclub.com",
+            "email": "contacto@tuclub.com",
+            "phone": "+54 11 1234 5678",
+            "handle": "usuario o URL del perfil"
+          },
+          "validation": {
+            "websiteInvalid": "Ingresá un sitio web válido, por ejemplo tuclub.com.",
+            "emailInvalid": "Ingresá un email válido.",
+            "phoneInvalid": "Ingresá un teléfono válido (números, espacios, +, - y paréntesis).",
+            "handleInvalid": "Ingresá el usuario (con o sin @) o la URL del perfil de esta red."
+          }
         }
       }
     },

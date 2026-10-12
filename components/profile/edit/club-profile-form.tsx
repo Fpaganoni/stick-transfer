@@ -36,6 +36,12 @@ import {
   FormActions,
   ImageUploadField,
 } from "./shared-sections";
+import {
+  ClubContactFields,
+  createClubContactShape,
+  getClubContactValues,
+  toClubContactVariables,
+} from "./club-contact-fields";
 
 const createClubFormSchema = (t: (key: string) => string) =>
   z.object({
@@ -81,9 +87,10 @@ const createClubFormSchema = (t: (key: string) => string) =>
     managedByLastName: z
       .string()
       .min(1, { message: t("editForm.club.validation.managedByLastNameRequired") }),
+    ...createClubContactShape(t),
   });
 
-type ClubFormValues = z.infer<ReturnType<typeof createClubFormSchema>>;
+export type ClubFormValues = z.infer<ReturnType<typeof createClubFormSchema>>;
 
 function VerificationBadge({
   status,
@@ -154,6 +161,7 @@ export function ClubProfileForm() {
       clubLogo: club?.logo || "",
       managedByFirstName: club?.managedBy?.firstName || "",
       managedByLastName: club?.managedBy?.lastName || "",
+      ...getClubContactValues(club),
     },
   });
 
@@ -183,6 +191,7 @@ export function ClubProfileForm() {
           logo: data.clubLogo,
           managedByFirstName: data.managedByFirstName,
           managedByLastName: data.managedByLastName,
+          ...toClubContactVariables(data),
         });
       }
 
@@ -311,6 +320,8 @@ export function ClubProfileForm() {
             />
           </CardContent>
         </Card>
+
+        <ClubContactFields control={form.control} t={t} />
 
         <FormActions
           tCommon={tCommon}

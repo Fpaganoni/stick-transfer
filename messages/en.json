@@ -575,6 +575,30 @@
           "nameMin": "Club name must be at least 2 characters.",
           "managedByFirstNameRequired": "Administrator first name is required.",
           "managedByLastNameRequired": "Administrator last name is required."
+        },
+        "contact": {
+          "title": "Contact and social",
+          "desc": "How players and staff can reach your club. Shown on your public club page.",
+          "website": "Website",
+          "email": "Contact email",
+          "phone": "Phone",
+          "socialsTitle": "Social networks",
+          "instagram": "Instagram",
+          "twitter": "X (Twitter)",
+          "facebook": "Facebook",
+          "tiktok": "TikTok",
+          "placeholders": {
+            "website": "yourclub.com",
+            "email": "contact@yourclub.com",
+            "phone": "+54 11 1234 5678",
+            "handle": "username or profile URL"
+          },
+          "validation": {
+            "websiteInvalid": "Enter a valid website, e.g. yourclub.com.",
+            "emailInvalid": "Enter a valid email address.",
+            "phoneInvalid": "Enter a valid phone number (digits, spaces, +, - and parentheses).",
+            "handleInvalid": "Enter the username (with or without @) or the profile URL of this network."
+          }
         }
       }
     },

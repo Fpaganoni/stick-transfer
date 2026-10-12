@@ -4,9 +4,13 @@
  *      CLUB account never sees CV/trajectories/multimedia fields meant for
  *      PLAYER/COACH, and does see its own club-entity fields instead. A regression
  *      here would put those irrelevant fields back in front of club users.
+ *      The "contact and social" card is the only place a club can set the
+ *      website/email/phone/socials shown on its public page, so it must send
+ *      them to updateClub normalized (bare handles, https website).
  */
-import { describe, it, expect, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { render, screen, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { ClubProfileForm } from "@/components/profile/edit/club-profile-form";
 import { Role } from "@/types/enums";
 
@@ -17,6 +21,11 @@ vi.mock("next/navigation", () => ({
 vi.mock("next-intl", () => ({
   useTranslations: () => (key: string) => key,
   useLocale: () => "en",
+}));
+
+const mocks = vi.hoisted(() => ({
+  updateClub: vi.fn(),
+  updateProfile: vi.fn(),
 }));
 
 const mockUser = {
@@ -40,6 +49,8 @@ const mockClub = {
   logo: "",
   verificationStatus: "UNVERIFIED" as const,
   managedBy: { firstName: "Ana", lastName: "Garcia" },
+  website: "https://hcbarcelona.com",
+  instagram: "hcbarcelona",
 };
 
 vi.mock("@/stores/useAuthStore", () => ({
@@ -47,15 +58,20 @@ vi.mock("@/stores/useAuthStore", () => ({
 }));
 
 vi.mock("@/hooks/useUsers", () => ({
-  useUpdateUser: () => ({ mutateAsync: vi.fn() }),
+  useUpdateUser: () => ({ mutateAsync: mocks.updateProfile }),
 }));
 
 vi.mock("@/hooks/useClubs", () => ({
   useClub: () => ({ data: { club: mockClub } }),
-  useUpdateClub: () => ({ mutateAsync: vi.fn() }),
+  useUpdateClub: () => ({ mutateAsync: mocks.updateClub }),
 }));
 
 describe("ClubProfileForm", () => {
+  beforeEach(() => {
+    mocks.updateClub.mockReset().mockResolvedValue({});
+    mocks.updateProfile.mockReset().mockResolvedValue({});
+  });
+
   it("renders club-entity fields (name, description, managed-by)", () => {
     render(<ClubProfileForm />);
 
@@ -83,5 +99,69 @@ describe("ClubProfileForm", () => {
 
     expect(screen.getByText("editForm.basicInfo")).toBeInTheDocument();
     expect(screen.getByDisplayValue("HC Barcelona Admin")).toBeInTheDocument();
+  });
+
+  it("renders the contact and social card with the stored club values", () => {
+    render(<ClubProfileForm />);
+
+    expect(screen.getByText("editForm.club.contact.title")).toBeInTheDocument();
+    expect(screen.getByLabelText("editForm.club.contact.website")).toHaveValue(
+      "https://hcbarcelona.com",
+    );
+    expect(screen.getByLabelText("editForm.club.contact.instagram")).toHaveValue(
+      "hcbarcelona",
+    );
+    expect(screen.getByLabelText("editForm.club.contact.tiktok")).toHaveValue("");
+  });
+
+  it("saves contact fields and socials normalized through updateClub", async () => {
+    const user = userEvent.setup();
+    render(<ClubProfileForm />);
+
+    const website = screen.getByLabelText("editForm.club.contact.website");
+    await user.clear(website);
+    await user.type(website, "hcbarcelona.es");
+    await user.type(screen.getByLabelText("editForm.club.contact.email"), "info@hcbarcelona.es");
+    await user.type(screen.getByLabelText("editForm.club.contact.phone"), "+34 600 123 456");
+    await user.type(screen.getByLabelText("editForm.club.contact.twitter"), "@hcbarcelona");
+    await user.type(
+      screen.getByLabelText("editForm.club.contact.tiktok"),
+      "https://www.tiktok.com/@hcbarcelona",
+    );
+    await user.click(screen.getByRole("button", { name: "editForm.saveChanges" }));
+
+    await waitFor(() => expect(mocks.updateClub).toHaveBeenCalledTimes(1));
+    expect(mocks.updateClub).toHaveBeenCalledWith(
+      expect.objectContaining({
+        id: "club-1",
+        website: "https://hcbarcelona.es",
+        email: "info@hcbarcelona.es",
+        phone: "+34 600 123 456",
+        instagram: "hcbarcelona",
+        twitter: "hcbarcelona",
+        facebook: "",
+        tiktok: "hcbarcelona",
+      }),
+    );
+  });
+
+  it("blocks the save and shows errors for an invalid email or handle", async () => {
+    const user = userEvent.setup();
+    render(<ClubProfileForm />);
+
+    await user.type(screen.getByLabelText("editForm.club.contact.email"), "not-an-email");
+    await user.type(
+      screen.getByLabelText("editForm.club.contact.facebook"),
+      "https://instagram.com/hcbarcelona",
+    );
+    await user.click(screen.getByRole("button", { name: "editForm.saveChanges" }));
+
+    expect(
+      await screen.findByText("editForm.club.contact.validation.emailInvalid"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("editForm.club.contact.validation.handleInvalid"),
+    ).toBeInTheDocument();
+    expect(mocks.updateClub).not.toHaveBeenCalled();
   });
 });
