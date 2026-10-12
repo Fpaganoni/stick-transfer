@@ -62,15 +62,26 @@ describe("SideNavigation", () => {
     state.user = { id: "club-1", username: "admin_san_isidro", role: Role.CLUB };
   });
 
-  it("renders both logos with a translated alt and lets CSS pick one", () => {
+  it("shows only the wordmark logo, with a translated alt", () => {
+    renderNav();
+
+    const home = navLink("home");
+    const logos = within(home).getAllByRole("img", { name: "logoAlt" });
+    expect(logos).toHaveLength(1);
+    expect(logos[0].getAttribute("src")).toContain("logo-og.png");
+    expect(document.querySelector('img[src*="icon-192"]')).toBeNull();
+  });
+
+  it("hides the logo link when collapsed but keeps its height so the menu does not jump", () => {
     renderNav({ open: false });
 
     const home = navLink("home");
-    const [icon, wordmark] = within(home).getAllByRole("img", { name: "logoAlt" });
-    expect(icon.getAttribute("src")).toContain("icon-192.png");
-    expect(icon).toHaveClass("hidden", "group-data-[collapsible=icon]:block");
-    expect(wordmark.getAttribute("src")).toContain("logo-og.png");
-    expect(wordmark).toHaveClass("group-data-[collapsible=icon]:hidden");
+    // invisible: not painted, not focusable, out of the a11y tree, space kept
+    expect(home).toHaveClass("h-12", "group-data-[collapsible=icon]:invisible");
+    // the 99px wordmark must not widen the narrow collapsed rail
+    expect(within(home).getByRole("img", { name: "logoAlt" })).toHaveClass(
+      "group-data-[collapsible=icon]:hidden",
+    );
   });
 
   it("marks the collapsed state on the sidebar so the icon logo shows", () => {

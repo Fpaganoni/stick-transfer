@@ -72,20 +72,14 @@ export function SideNavigation() {
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
-        {/* Both logos are rendered and CSS picks one, so collapsing never
-            swaps markup (no hydration jump, no squashed wordmark). */}
+        {/* The logo only shows on the open sidebar. Collapsed, CSS makes the
+            link invisible (not focusable, out of the a11y tree) but keeps its
+            fixed height, so the menu icons do not jump when toggling. */}
         <Link
           href={getLocalizedHref("/opportunities")}
           aria-label={t("home")}
-          className="flex w-full items-center justify-center rounded-md px-2 py-1.5 outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring group-data-[collapsible=icon]:px-0"
+          className="flex h-12 w-full items-center justify-center rounded-md px-2 outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring group-data-[collapsible=icon]:invisible"
         >
-          <Image
-            src="/icon-192.png"
-            alt={t("logoAlt")}
-            width={32}
-            height={32}
-            className="hidden size-8 shrink-0 group-data-[collapsible=icon]:block"
-          />
           <Image
             src="/logo-og.png"
             alt={t("logoAlt")}

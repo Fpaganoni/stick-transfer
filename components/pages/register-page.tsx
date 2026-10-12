@@ -1167,8 +1167,10 @@ export const RegisterPage = () => {
           await login(fullUser);
           closeRegisterModal();
 
-          if (isClub && fullUser.clubId) {
-            router.push(`/${locale}/clubs/${fullUser.clubId}`);
+          // A club account is the club itself (club id === user id); clubId is
+          // the player membership field and stays empty here.
+          if (isClub && fullUser.id) {
+            router.push(`/${locale}/clubs/${fullUser.id}`);
             return;
           }
 

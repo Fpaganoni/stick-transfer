@@ -205,6 +205,28 @@ describe("RegisterPage", () => {
     });
   });
 
+  describe("club flow", () => {
+    // The backend creates the club with id = user id; me.clubId is the player
+    // membership field and comes back empty for a club account.
+    it("sends the new club to its own club page", async () => {
+      mockRegister.mockImplementation((_vars, opts) => opts.onSuccess());
+      mockRequest.mockResolvedValue({
+        me: { id: "club-user-1", role: "CLUB", clubId: null },
+      });
+      const user = userEvent.setup();
+      renderWithProviders(<RegisterPage />);
+
+      await fillUntilStep3(user, "clubAdmin");
+      await user.type(await screen.findByLabelText("clubName"), "HC Madrid");
+      await user.type(screen.getByLabelText("city"), "Madrid");
+      await pickCountry(user, "Spain");
+      await user.click(screen.getByText("createProfile"));
+
+      await waitFor(() => expect(mockPush).toHaveBeenCalledWith("/en/clubs/club-user-1"));
+      expect(mockPush).not.toHaveBeenCalledWith("/en/opportunities");
+    });
+  });
+
   describe("player flow (regression)", () => {
     it("still registers with position and sends players to opportunities", async () => {
       mockRegister.mockImplementation((_vars, opts) => opts.onSuccess());
