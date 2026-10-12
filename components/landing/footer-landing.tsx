@@ -157,7 +157,7 @@ export function FooterLanding() {
         <div className="pt-8 border-t border-border">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <p className="text-foreground-muted text-sm">
-              © {currentYear} Scordd. {t("copyright")}
+              © {currentYear} Stick Transfer. {t("copyright")}
             </p>
             <LanguageSelector />
           </div>

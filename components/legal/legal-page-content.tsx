@@ -1,7 +1,7 @@
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { getTranslations } from "next-intl/server";
-import { HockeyXTicks } from "@/components/ui/hockey-xtick";
 import { Card, CardContent } from "@/components/ui/card";
 
 type LegalSection = {
@@ -33,11 +33,15 @@ export async function LegalPageContent({
           {t("backToHome")}
         </Link>
 
-        <div className="flex items-center gap-2 mb-2">
-          <HockeyXTicks size={28} className="text-primary" />
-          <span className="text-sm font-semibold text-foreground-muted">
-            Stick Transfer
-          </span>
+        <div className="mb-4">
+          <Image
+            src="/logo-og.png"
+            alt="Scordd"
+            width={180}
+            height={65}
+            className="h-11 w-auto"
+            style={{ width: "auto" }}
+          />
         </div>
 
         <h1 className="text-3xl font-bold text-foreground mb-2">{title}</h1>
