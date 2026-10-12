@@ -834,7 +834,10 @@
     "detail": {
       "contactAndSocial": "Contact & Social",
       "contactInfo": "Contact Information",
-      "followUs": "Follow Us"
+      "followUs": "Follow Us",
+      "website": "Website",
+      "email": "Email",
+      "phone": "Phone"
     },
     "roles": {
       "coach": "Coach",

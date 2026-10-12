@@ -834,7 +834,10 @@
     "detail": {
       "contactAndSocial": "Contacto y Redes",
       "contactInfo": "Información de Contacto",
-      "followUs": "Síguenos"
+      "followUs": "Síguenos",
+      "website": "Sitio web",
+      "email": "Email",
+      "phone": "Teléfono"
     },
     "roles": {
       "coach": "Entrenador",

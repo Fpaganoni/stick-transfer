@@ -21,6 +21,9 @@ import {
 import Image from "next/image";
 import { MapPin, CheckCircle, Briefcase } from "lucide-react";
 import { CountryLabel } from "@/components/ui/country-label";
+import { Role } from "@/types/enums";
+
+const CREST_SIZES = "(min-width: 768px) 160px, (min-width: 640px) 144px, 112px";
 
 interface ClubDetailPageProps {
   clubId: string;
@@ -57,10 +60,11 @@ export function ClubDetailPage({ clubId }: ClubDetailPageProps) {
 
   const club = data.club;
 
-  // Check if user is admin of this club
-  const isClubAdmin = club.members?.some(
-    (m) => m.user.id === user?.id && m.role.toUpperCase() === "ADMIN",
-  );
+  // A CLUB account is the club itself: the backend authorizes club changes
+  // with userId === clubId (or SUPERADMIN).
+  const canManageClub =
+    !!user && (user.id === club.id || user.role === Role.SUPERADMIN);
+  const clubInitial = Array.from(club.name.trim())[0]?.toUpperCase() ?? "?";
 
   return (
     <>
@@ -70,7 +74,7 @@ export function ClubDetailPage({ clubId }: ClubDetailPageProps) {
           {club.coverImage ? (
             <Image
               src={club.coverImage}
-              alt={club.name}
+              alt=""
               fill
               sizes="(min-width: 1024px) 1024px, 100vw"
               className="w-full h-full object-cover"
@@ -84,19 +88,28 @@ export function ClubDetailPage({ clubId }: ClubDetailPageProps) {
         {/* Club info */}
         <div className="px-4 sm:px-6">
           {/* Logo + Title section */}
-          <div className="flex flex-col sm:flex-row sm:items-end gap-3 sm:gap-4 -mt-10 sm:-mt-16 mb-6 sm:mb-8 relative z-10">
-            {/* Logo */}
-            {club.logo && (
-              <div className="shrink-0">
+          <div className="flex flex-col sm:flex-row sm:items-end gap-3 sm:gap-4 -mt-14 sm:-mt-20 md:-mt-24 mb-6 sm:mb-8 relative z-10">
+            {/* Crest: contained, never cropped to a circle */}
+            <div className="shrink-0 size-28 sm:size-36 md:size-40 rounded-2xl bg-background border border-border shadow-lg overflow-hidden">
+              {club.logo ? (
                 <Image
                   src={club.logo}
                   alt={club.name}
-                  width={120}
-                  height={120}
-                  className="w-20 h-20 sm:w-28 sm:h-28 rounded-full object-cover border-4 border-background shadow-lg"
+                  width={160}
+                  height={160}
+                  sizes={CREST_SIZES}
+                  className="size-full object-contain p-2 sm:p-3"
                 />
-              </div>
-            )}
+              ) : (
+                <div
+                  role="img"
+                  aria-label={club.name}
+                  className="size-full flex items-center justify-center bg-surface-elevated text-foreground-muted text-4xl sm:text-5xl font-bold"
+                >
+                  <span aria-hidden>{clubInitial}</span>
+                </div>
+              )}
+            </div>
 
             {/* Title con badge */}
             <div className="flex-1 min-w-0 sm:pb-2">
@@ -112,7 +125,7 @@ export function ClubDetailPage({ clubId }: ClubDetailPageProps) {
           </div>
 
           {/* Verification banner - only show to admin */}
-          {isClubAdmin && (
+          {canManageClub && (
             <VerificationBanner
               club={club}
               onVerifyClick={() => setIsVerificationModalOpen(true)}
