@@ -753,7 +753,13 @@
       "experience": "Experiencia",
       "location": "Ubicación",
       "contract": "Contrato",
-      "salary": "Salario"
+      "salary": "Salario",
+      "allStatuses": "Todos los estados",
+      "allPositions": "Todas las posiciones",
+      "levels": {
+        "PROFESSIONAL": "Profesional",
+        "AMATEUR": "Amateur"
+      }
     },
     "loading": "Cargando oportunidades...",
     "noData": "No se encontraron datos",

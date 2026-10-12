@@ -157,7 +157,7 @@ export function CreateOpportunityForm() {
   }
 
   const triggerClass =
-    "w-full bg-input border-border text-foreground text-sm hover:border-border-strong";
+    "w-full bg-input text-foreground text-sm hover:border-primary";
 
   return (
     <Form {...form}>

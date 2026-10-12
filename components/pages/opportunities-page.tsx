@@ -78,7 +78,7 @@ export function OpportunitiesPage({ initialData }: OpportunitiesPageProps) {
                 </p>
                 <Button
                   size="sm"
-                  className="w-full text-white mt-1"
+                  className="w-full mt-1"
                   onClick={openRegisterModal}
                 >
                   {t("createYourProfile")}
@@ -102,7 +102,7 @@ export function OpportunitiesPage({ initialData }: OpportunitiesPageProps) {
               </h1>
             </div>
             {isClub && (
-              <Button asChild size="sm" className="text-white shrink-0">
+              <Button asChild size="sm" className="shrink-0">
                 <Link href="/opportunities/new">
                   <PlusCircle className="size-4 mr-1" />
                   {t("postJob")}

@@ -140,7 +140,9 @@ export function ClubProfileForm() {
   const { user, updateUser } = useAuthStore();
   const { mutateAsync: updateProfile } = useUpdateUser();
   const { mutateAsync: updateClub } = useUpdateClub();
-  const { data: clubData } = useClub(user?.clubId ?? null);
+  // A CLUB account is the club itself: the backend only lets userId === clubId
+  // update it. user.clubId is the membership of players and is usually empty here.
+  const { data: clubData } = useClub(user?.id ?? null);
   const [isSaving, setIsSaving] = useState(false);
 
   const club = clubData?.club;

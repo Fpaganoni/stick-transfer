@@ -134,7 +134,6 @@ export function RoleTabsSection() {
                   </ul>
                   <Button
                     size="lg"
-                    className="text-white"
                     onClick={() => openRegisterModal(REGISTER_ROLE[role])}
                   >
                     {t("cta")}

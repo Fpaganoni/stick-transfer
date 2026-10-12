@@ -122,9 +122,10 @@ export function JobOpportunities({ initialData }: JobOpportunitiesProps) {
           <SheetTrigger asChild>
             <Button
               variant="outline"
+              aria-label={t("filterVacancies")}
               className={`gap-2 shrink-0 ${hasActiveFilters ? "border-primary text-primary" : ""}`}
             >
-              <SlidersHorizontal size={16} />
+              <SlidersHorizontal aria-hidden size={16} />
               <span className="hidden sm:inline">{t("filterVacancies")}</span>
             </Button>
           </SheetTrigger>

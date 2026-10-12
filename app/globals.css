@@ -244,6 +244,7 @@
 
   /* NEW COLORS*/
   --color-primary-hover: var(--primary-hover);
+  --color-primary-soft: var(--primary-soft);
   --color-foreground-muted: var(--foreground-muted);
   --color-border: var(--border);
   --color-border-strong: var(--border-strong);

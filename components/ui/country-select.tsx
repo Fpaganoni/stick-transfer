@@ -26,7 +26,7 @@ const ANY_VALUE = "__any__";
 
 // Same look as SelectTrigger / SelectItem so the combobox sits next to selects
 const TRIGGER_CLASS =
-  "border-input data-placeholder:text-muted-foreground [&_svg:not([class*='text-'])]:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 dark:hover:bg-input/50 flex h-9 w-full items-center justify-between gap-2 rounded-md border bg-transparent px-3 py-2 text-sm whitespace-nowrap shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0";
+  "border-border-strong data-placeholder:text-muted-foreground [&_svg:not([class*='text-'])]:text-foreground-muted focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 dark:hover:bg-input/50 flex h-9 w-full items-center justify-between gap-2 rounded-md border bg-transparent px-3 py-2 text-sm whitespace-nowrap shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0";
 const ITEM_CLASS =
   "data-[selected=true]:bg-primary data-[selected=true]:text-white-black cursor-pointer";
 
@@ -101,7 +101,8 @@ export function CountrySelect({
             role="combobox"
             aria-expanded={open}
             aria-controls={contentId}
-            data-placeholder={label ? undefined : ""}
+            // "All countries" is a real choice, not a hint: style it like a value.
+            data-placeholder={label || allLabel ? undefined : ""}
             className={cn(TRIGGER_CLASS, className)}
             {...triggerProps}
           >
@@ -115,7 +116,7 @@ export function CountrySelect({
                 (allLabel ?? placeholder ?? t("select"))
               )}
             </span>
-            <ChevronDownIcon className="size-4 opacity-50" />
+            <ChevronDownIcon className="size-4" />
           </button>
         )}
       </PopoverTrigger>

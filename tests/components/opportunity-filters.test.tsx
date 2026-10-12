@@ -2,6 +2,8 @@
  * What: Unit tests for OpportunityFilters component.
  * Why: Component was refactored to work inside a Sheet panel (no search bar).
  *      Tests validate that filter selects update the store and action buttons work.
+ *      Every option label goes through next-intl: the panel ships in EN/ES/FR and
+ *      hardcoded English ("All", "All Positions", "Professional") leaked into ES/FR.
  */
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent, act } from "@testing-library/react";
@@ -44,11 +46,30 @@ describe("OpportunityFilters", () => {
     ]);
   });
 
+  it.each([
+    [0, ["filters.experience", "filters.levels.PROFESSIONAL", "filters.levels.AMATEUR"]],
+    [1, ["filters.allStatuses", "open", "filled", "closed"]],
+  ] as const)("select #%i only offers translated labels", async (index, expected) => {
+    render(<OpportunityFilters {...defaultProps} />);
+    fireEvent.click(screen.getAllByRole("combobox")[index]);
+    await screen.findAllByRole("option");
+
+    expect(screen.getAllByRole("option").map((o) => o.textContent)).toEqual(expected);
+  });
+
+  it("labels the 'all positions' option through i18n", async () => {
+    render(<OpportunityFilters {...defaultProps} />);
+    fireEvent.click(screen.getAllByRole("combobox")[3]);
+
+    expect(await screen.findByRole("option", { name: "filters.allPositions" })).toBeInTheDocument();
+    expect(screen.queryByRole("option", { name: "All Positions" })).not.toBeInTheDocument();
+  });
+
   it("changing level select updates store filters.level", async () => {
     render(<OpportunityFilters {...defaultProps} />);
     const [levelTrigger] = screen.getAllByRole("combobox");
     fireEvent.click(levelTrigger);
-    fireEvent.click(await screen.findByRole("option", { name: "Professional" }));
+    fireEvent.click(await screen.findByRole("option", { name: "filters.levels.PROFESSIONAL" }));
     expect(useOpportunitiesStore.getState().filters.level).toBe("PROFESSIONAL");
   });
 
@@ -212,7 +233,7 @@ describe("OpportunityFilters position types and umpire filters", () => {
     render(<OpportunityFilters {...defaultProps} />);
 
     fireEvent.click(screen.getByLabelText("positionFilter"));
-    fireEvent.click(await screen.findByRole("option", { name: "All Positions" }));
+    fireEvent.click(await screen.findByRole("option", { name: "filters.allPositions" }));
 
     expect(useOpportunitiesStore.getState().filters).toMatchObject({
       positionType: null,

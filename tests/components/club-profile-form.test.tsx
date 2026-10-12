@@ -26,6 +26,7 @@ vi.mock("next-intl", () => ({
 const mocks = vi.hoisted(() => ({
   updateClub: vi.fn(),
   updateProfile: vi.fn(),
+  useClub: vi.fn(),
 }));
 
 const mockUser = {
@@ -34,7 +35,8 @@ const mockUser = {
   username: "hcbarcelona",
   email: "club@test.com",
   role: Role.CLUB,
-  clubId: "club-1",
+  // Membership field for players; a CLUB account usually has none.
+  clubId: undefined,
   avatar: "",
   coverImage: "",
   bio: "",
@@ -43,7 +45,7 @@ const mockUser = {
 };
 
 const mockClub = {
-  id: "club-1",
+  id: "club-user-1",
   name: "HC Barcelona",
   description: "A great club",
   logo: "",
@@ -62,7 +64,7 @@ vi.mock("@/hooks/useUsers", () => ({
 }));
 
 vi.mock("@/hooks/useClubs", () => ({
-  useClub: () => ({ data: { club: mockClub } }),
+  useClub: mocks.useClub,
   useUpdateClub: () => ({ mutateAsync: mocks.updateClub }),
 }));
 
@@ -70,6 +72,13 @@ describe("ClubProfileForm", () => {
   beforeEach(() => {
     mocks.updateClub.mockReset().mockResolvedValue({});
     mocks.updateProfile.mockReset().mockResolvedValue({});
+    mocks.useClub.mockReset().mockReturnValue({ data: { club: mockClub } });
+  });
+
+  it("loads the club of the account itself (a CLUB user is the club)", () => {
+    render(<ClubProfileForm />);
+
+    expect(mocks.useClub).toHaveBeenCalledWith("club-user-1");
   });
 
   it("renders club-entity fields (name, description, managed-by)", () => {
@@ -133,7 +142,7 @@ describe("ClubProfileForm", () => {
     await waitFor(() => expect(mocks.updateClub).toHaveBeenCalledTimes(1));
     expect(mocks.updateClub).toHaveBeenCalledWith(
       expect.objectContaining({
-        id: "club-1",
+        id: "club-user-1",
         website: "https://hcbarcelona.es",
         email: "info@hcbarcelona.es",
         phone: "+34 600 123 456",

@@ -71,7 +71,7 @@ export function HeroSection() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button
               size="lg"
-              className="group px-8 text-white"
+              className="group px-8"
               onClick={openRegisterModal}
             >
               {t("createProfile")}

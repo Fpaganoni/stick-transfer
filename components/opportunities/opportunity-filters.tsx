@@ -42,8 +42,7 @@ export function OpportunityFilters({
     onClose?.();
   };
 
-  const triggerClass =
-    "w-full bg-input border-border text-foreground text-sm hover:border-border-strong";
+  const triggerClass = "w-full bg-input text-foreground text-sm hover:border-primary";
 
   return (
     <div className="flex flex-col gap-5 p-4 pt-6">
@@ -61,8 +60,8 @@ export function OpportunityFilters({
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="ALL">{t("filters.experience")}</SelectItem>
-            <SelectItem value="PROFESSIONAL">Professional</SelectItem>
-            <SelectItem value="AMATEUR">Amateur</SelectItem>
+            <SelectItem value="PROFESSIONAL">{t("filters.levels.PROFESSIONAL")}</SelectItem>
+            <SelectItem value="AMATEUR">{t("filters.levels.AMATEUR")}</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -80,7 +79,7 @@ export function OpportunityFilters({
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="ALL">All</SelectItem>
+            <SelectItem value="ALL">{t("filters.allStatuses")}</SelectItem>
             <SelectItem value="open">{t("open")}</SelectItem>
             <SelectItem value="filled">{t("filled")}</SelectItem>
             <SelectItem value="closed">{t("closed")}</SelectItem>
@@ -124,7 +123,7 @@ export function OpportunityFilters({
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="ALL">All Positions</SelectItem>
+            <SelectItem value="ALL">{t("filters.allPositions")}</SelectItem>
             {POSITION_TYPES.map((pos) => (
               <SelectItem key={pos} value={pos}>
                 {t(`positionTypes.${pos}`)}
@@ -177,7 +176,7 @@ export function OpportunityFilters({
 
       {/* Actions */}
       <div className="flex flex-col gap-2 pt-2 border-t border-border">
-        <Button className="w-full text-white-black" onClick={handleApply}>
+        <Button className="w-full" onClick={handleApply}>
           {t("applyFilters")}
         </Button>
         <Button variant="outline" className="w-full" onClick={handleReset}>
