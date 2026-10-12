@@ -54,7 +54,9 @@
     "messages": "Mensajes",
     "profile": "Perfil",
     "settings": "Configuración",
-    "logout": "Cerrar sesión"
+    "logout": "Cerrar sesión",
+    "home": "Ir al inicio",
+    "logoAlt": "Stick Transfer"
   },
   "auth": {
     "login": "Iniciar sesión",

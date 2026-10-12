@@ -16,6 +16,7 @@ import { useRole } from "@/hooks/useRole";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useAuthHydrated } from "@/hooks/ui/use-auth-hydrated";
 import { Role } from "@/types/enums";
+import { getActiveNavHref } from "@/lib/active-nav";
 import {
   Sidebar,
   SidebarContent,
@@ -25,7 +26,6 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  useSidebar,
 } from "@/components/ui/sidebar";
 import Image from "next/image";
 
@@ -34,9 +34,9 @@ export function SideNavigation() {
   const locale = useLocale();
   const t = useTranslations("navigation");
   const tOpportunities = useTranslations("opportunities");
-  const { state } = useSidebar();
   const { isClub, isLoading: isRoleLoading } = useRole();
   const storedRole = useAuthStore((s) => s.user?.role);
+  const storedUsername = useAuthStore((s) => s.user?.username);
   const hydrated = useAuthHydrated();
   // Navigation hint only (the create route has its own RoleGuard): while `me`
   // loads, trust the stored role so the club entry does not pop in and push the
@@ -61,35 +61,38 @@ export function SideNavigation() {
     return `/${locale}${href}`;
   };
 
-  const isActiveRoute = (href: string) => {
-    const localizedHref = getLocalizedHref(href);
-
-    if (
-      href === "/opportunities" &&
-      (pathname === "/" || pathname === `/${locale}`)
-    ) {
-      return true;
-    }
-
-    return pathname === localizedHref || pathname === href;
-  };
+  // Sub-routes count too (/profile/edit, /clubs/<id>). The username comes from
+  // persisted storage, so it waits for hydration to match the server markup.
+  const activeHref = getActiveNavHref(
+    pathname,
+    navItems.map(({ href }) => href),
+    hydrated ? storedUsername : undefined,
+  );
 
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
+        {/* Both logos are rendered and CSS picks one, so collapsing never
+            swaps markup (no hydration jump, no squashed wordmark). */}
         <Link
           href={getLocalizedHref("/opportunities")}
-          aria-label="Home"
-          className="flex w-full items-center justify-center px-2 py-1.5 group-data-[collapsible=icon]:px-0"
+          aria-label={t("home")}
+          className="flex w-full items-center justify-center rounded-md px-2 py-1.5 outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring group-data-[collapsible=icon]:px-0"
         >
           <Image
+            src="/icon-192.png"
+            alt={t("logoAlt")}
+            width={32}
+            height={32}
+            className="hidden size-8 shrink-0 group-data-[collapsible=icon]:block"
+          />
+          <Image
             src="/logo-og.png"
-            alt="stick transfer logo"
-            width={state === "collapsed" ? 32 : 180}
-            height={state === "collapsed" ? 32 : 65}
-            className={
-              state === "collapsed" ? "h-8 w-8 shrink-0" : "h-9 w-auto shrink-0"
-            }
+            alt={t("logoAlt")}
+            width={180}
+            height={65}
+            preload
+            className="h-9 w-auto shrink-0 group-data-[collapsible=icon]:hidden"
           />
         </Link>
       </SidebarHeader>
@@ -101,7 +104,7 @@ export function SideNavigation() {
                 <SidebarMenuItem key={href}>
                   <SidebarMenuButton
                     asChild
-                    isActive={isActiveRoute(href)}
+                    isActive={href === activeHref}
                     tooltip={label}
                   >
                     <Link href={getLocalizedHref(href)}>

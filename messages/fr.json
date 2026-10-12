@@ -54,7 +54,9 @@
     "messages": "Messages",
     "profile": "Profil",
     "settings": "Paramètres",
-    "logout": "Se déconnecter"
+    "logout": "Se déconnecter",
+    "home": "Aller à l'accueil",
+    "logoAlt": "Stick Transfer"
   },
   "auth": {
     "login": "Se connecter",
