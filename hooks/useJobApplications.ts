@@ -97,6 +97,11 @@ function writeApplicationToCache(
     (old) => old && { ...old, jobOpportunities: old.jobOpportunities.map(markApplied) },
   );
 
+  queryClient.setQueryData<JobOpportunity | null>(
+    ["jobOpportunity", application.jobOpportunityId],
+    (old) => old && markApplied(old),
+  );
+
   const { selectedOpportunity, setSelectedOpportunity } =
     useOpportunitiesStore.getState();
   if (selectedOpportunity && selectedOpportunity.id === application.jobOpportunityId) {

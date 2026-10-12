@@ -724,6 +724,7 @@
     },
     "availablePositions": "Posiciones Disponibles",
     "loadingDetails": "Cargando detalles de la oportunidad",
+    "detailsLoadError": "No se pudo cargar la oportunidad. Inténtalo de nuevo más tarde.",
     "filters": {
       "experience": "Experiencia",
       "location": "Ubicación",

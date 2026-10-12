@@ -170,6 +170,26 @@ describe("useApplyForJob", () => {
       ]);
     });
 
+    it("marks the cached opportunity detail as applied", async () => {
+      const queryClient = new QueryClient();
+      queryClient.setQueryData(["jobOpportunity", "job-1"], {
+        id: "job-1",
+        hasAppliedByCurrentUser: false,
+      });
+      const { result } = renderHook(() => useApplyForJob(), {
+        wrapper: wrapperFor(queryClient),
+      });
+
+      await act(async () => {
+        await result.current.mutateAsync({ jobOpportunityId: "job-1" });
+      });
+
+      expect(queryClient.getQueryData(["jobOpportunity", "job-1"])).toEqual({
+        id: "job-1",
+        hasAppliedByCurrentUser: true,
+      });
+    });
+
     it("invalidates the user's applications so they are refetched", async () => {
       const queryClient = new QueryClient();
       const invalidate = vi.spyOn(queryClient, "invalidateQueries");

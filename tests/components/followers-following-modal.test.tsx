@@ -105,6 +105,14 @@ describe("FollowersFollowingModal", () => {
     expect(await screen.findByText("followList.emptyFollowers")).toBeInTheDocument();
   });
 
+  it("moves the focus into the dialog when it opens", async () => {
+    mockRequest.mockResolvedValue({ followers: [] });
+
+    renderModal({ isOpen: true });
+
+    expect(screen.getByRole("button", { name: "followList.close" })).toHaveFocus();
+  });
+
   it("shows an error message when the list cannot be loaded", async () => {
     mockRequest.mockRejectedValue(new Error("boom"));
 

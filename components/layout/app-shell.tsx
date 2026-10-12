@@ -2,7 +2,7 @@
 
 import type React from "react";
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useLocale } from "next-intl";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { SideNavigation } from "./side-navigation";
@@ -11,6 +11,7 @@ import { PageContentSkeleton } from "./page-content-skeleton";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useAuthHydrated } from "@/hooks/ui/use-auth-hydrated";
 import { usePageTitle } from "@/hooks/usePageTitle";
+import { isProtectedPath } from "@/lib/protected-paths";
 import { Role } from "@/types/enums";
 
 interface AppShellProps {
@@ -28,23 +29,36 @@ interface AppShellProps {
  * load only) the sidebar and header stay visible and the content shows a
  * placeholder; pages read the stored user, so they wait for it.
  *
- * Also guards SUPERADMIN users away from these routes — they belong in /admin.
+ * Also guards SUPERADMIN users away from these routes — they belong in /admin —
+ * and visitors away from protected ones: proxy.ts lets them through when a
+ * stale routing cookie survived a logout elsewhere.
  */
 export function AppShell({ children }: AppShellProps) {
   const router = useRouter();
+  const pathname = usePathname() ?? "/";
   const locale = useLocale();
   const hydrated = useAuthHydrated();
   const user = useAuthStore((state) => state.user);
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const title = usePageTitle();
   const isSuperAdmin = hydrated && user?.role === Role.SUPERADMIN;
+  const isVisitorOnProtectedRoute = hydrated && !isLoggedIn && isProtectedPath(pathname);
+  const localePrefix = locale === "en" ? "" : `/${locale}`;
 
   useEffect(() => {
     if (!isSuperAdmin) return;
-    const localePrefix = locale === "en" ? "" : `/${locale}`;
     router.replace(`${localePrefix}/admin`);
-  }, [isSuperAdmin, locale, router]);
+  }, [isSuperAdmin, localePrefix, router]);
 
-  const canRenderPage = hydrated && !isSuperAdmin;
+  useEffect(() => {
+    if (!isVisitorOnProtectedRoute) return;
+    // Drop the stale cookie first, or proxy.ts sends "/" straight back here
+    fetch("/api/auth/session", { method: "DELETE" })
+      .catch(() => {})
+      .finally(() => router.replace(localePrefix || "/"));
+  }, [isVisitorOnProtectedRoute, localePrefix, router]);
+
+  const canRenderPage = hydrated && !isSuperAdmin && !isVisitorOnProtectedRoute;
 
   return (
     <SidebarProvider>

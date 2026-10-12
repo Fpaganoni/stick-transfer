@@ -724,6 +724,7 @@
     },
     "availablePositions": "Postes Disponibles",
     "loadingDetails": "Chargement des détails de l'opportunité",
+    "detailsLoadError": "Impossible de charger l'opportunité. Réessayez plus tard.",
     "filters": {
       "experience": "Expérience",
       "location": "Localisation",

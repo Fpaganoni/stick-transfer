@@ -50,6 +50,23 @@ export const MOCK_OPPORTUNITIES = [
   },
 ];
 
+/** Second opportunity, used to prove "applied" state does not leak between jobs. */
+export const MOCK_OPPORTUNITY_B = {
+  ...MOCK_OPPORTUNITIES[0],
+  id: "opp-2",
+  title: "Goalkeeper Wanted",
+  positionType: "Goalkeeper",
+  club: {
+    id: "club-2",
+    name: "Second Club",
+    city: "Rosario",
+    country: "AR",
+    isVerified: false,
+  },
+  city: "Rosario",
+  salary: "3000",
+};
+
 /** Second account (user B) used to prove accounts do not share server state. */
 export const MOCK_USER_B = {
   ...MOCK_USER,
@@ -68,14 +85,26 @@ export interface MockAccount {
   me: Record<string, unknown>;
 }
 
+export interface MockApplication {
+  id: string;
+  jobOpportunityId: string;
+  status: string;
+  appliedAt: string;
+  jobOpportunity: Record<string, unknown>;
+}
+
 export interface MockBackend {
   accounts: MockAccount[];
   jobs: Array<Record<string, unknown> & { id: string }>;
   /** accountId -> ids of saved job opportunities (shared by every browser). */
   saved: Map<string, Set<string>>;
+  /** accountId -> applications, newest first (shared by every browser). */
+  applications: Map<string, MockApplication[]>;
   logoutCalls: number;
   /** Saved job ids of an account, as an array (empty when none). */
   savedFor: (accountId: string) => string[];
+  /** Ids of the job opportunities an account applied to (empty when none). */
+  appliedJobIdsFor: (accountId: string) => string[];
 }
 
 export interface CreateMockBackendOptions {
@@ -103,12 +132,16 @@ export function createMockBackend(
   options: CreateMockBackendOptions = {},
 ): MockBackend {
   const saved = new Map<string, Set<string>>();
+  const applications = new Map<string, MockApplication[]>();
   const backend: MockBackend = {
     accounts: options.accounts ?? [MOCK_ACCOUNT_A, MOCK_ACCOUNT_B],
     jobs: options.jobs ?? MOCK_OPPORTUNITIES,
     saved,
+    applications,
     logoutCalls: 0,
     savedFor: (accountId) => [...(saved.get(accountId) ?? [])],
+    appliedJobIdsFor: (accountId) =>
+      (applications.get(accountId) ?? []).map((app) => app.jobOpportunityId),
   };
   return backend;
 }
@@ -136,9 +169,16 @@ function handleBackendOperation(
 ): unknown | null {
   const savedIds = () =>
     session.accountId ? (backend.saved.get(session.accountId) ?? new Set<string>()) : new Set<string>();
+  const appliedIds = () =>
+    new Set(
+      (session.accountId ? (backend.applications.get(session.accountId) ?? []) : []).map(
+        (app) => app.jobOpportunityId,
+      ),
+    );
   const withSavedFlag = (job: MockBackend["jobs"][number]) => ({
     ...job,
     isSavedByCurrentUser: savedIds().has(job.id),
+    hasAppliedByCurrentUser: appliedIds().has(job.id),
   });
 
   if (query.includes("mutation Login") || query.includes("login(email:")) {
@@ -171,6 +211,49 @@ function handleBackendOperation(
     return isUnsave
       ? { data: { unsaveJobOpportunity: true } }
       : { data: { saveJobOpportunity: true } };
+  }
+
+  if (query.includes("applyForJob(")) {
+    if (!session.accountId) return UNAUTHENTICATED_BODY;
+    const job = backend.jobs.find((j) => j.id === variables.jobOpportunityId);
+    if (!job) {
+      return { errors: [{ message: "Opportunity not found" }], data: null };
+    }
+    const current = backend.applications.get(session.accountId) ?? [];
+    if (current.some((app) => app.jobOpportunityId === job.id)) {
+      return { errors: [{ message: "Already applied" }], data: null };
+    }
+    const club = job.club as Record<string, unknown>;
+    const application: MockApplication = {
+      id: `app-${session.accountId}-${job.id}`,
+      jobOpportunityId: job.id,
+      status: "PENDING",
+      appliedAt: new Date().toISOString(),
+      jobOpportunity: {
+        id: job.id,
+        title: job.title,
+        city: job.city,
+        country: job.country,
+        salary: job.salary,
+        currency: job.currency,
+        level: job.level,
+        status: job.status,
+        positionType: job.positionType,
+        club: { id: club.id, name: club.name, logo: null },
+      },
+    };
+    backend.applications.set(session.accountId, [application, ...current]);
+    return { data: { applyForJob: application } };
+  }
+
+  if (query.includes("userApplications(")) {
+    const list = session.accountId ? (backend.applications.get(session.accountId) ?? []) : [];
+    return { data: { userApplications: list } };
+  }
+
+  if (query.includes("jobOpportunity(id:")) {
+    const job = backend.jobs.find((j) => j.id === variables.id);
+    return { data: { jobOpportunity: job ? withSavedFlag(job) : null } };
   }
 
   if (query.includes("savedJobOpportunities")) {

@@ -143,6 +143,19 @@ describe("useOpenOpportunityDetail", () => {
     expect(useOpportunitiesStore.getState().selectedOpportunity).toEqual(other);
   });
 
+  it("closes the modal with a generic error when the details cannot be loaded", async () => {
+    vi.mocked(graphqlClient).request = vi.fn().mockRejectedValue(new TypeError("Failed to fetch"));
+    const { result } = renderHook(() => useOpenOpportunityDetail(), {
+      wrapper: createWrapper(),
+    });
+
+    act(() => result.current(preview));
+
+    await waitFor(() => expect(useOpportunitiesStore.getState().isModalOpen).toBe(false));
+    expect(toast.error).toHaveBeenCalledWith("detailsLoadError");
+    expect(toast.error).not.toHaveBeenCalledWith("opportunityNotFound");
+  });
+
   it("closes the modal when the opportunity no longer exists", async () => {
     vi.mocked(graphqlClient).request = vi.fn().mockResolvedValue({ jobOpportunity: null });
     const { result } = renderHook(() => useOpenOpportunityDetail(), {

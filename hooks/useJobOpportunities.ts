@@ -86,18 +86,21 @@ export function useOpenOpportunityDetail() {
     const isStillOpen = () =>
       useOpportunitiesStore.getState().selectedOpportunity?.id === preview.id;
 
+    const closeWith = (messageKey: "opportunityNotFound" | "detailsLoadError") => {
+      if (!isStillOpen()) return;
+      useOpportunitiesStore.getState().closeModal();
+      toast.error(t(messageKey));
+    };
+
     queryClient
       .fetchQuery(jobOpportunityQueryOptions(preview.id))
       .then((opportunity) => {
-        if (!isStillOpen()) return;
-        if (!opportunity) throw new Error("Opportunity not found");
-        useOpportunitiesStore.getState().setSelectedOpportunity(opportunity);
+        if (!opportunity) return closeWith("opportunityNotFound");
+        if (isStillOpen()) {
+          useOpportunitiesStore.getState().setSelectedOpportunity(opportunity);
+        }
       })
-      .catch(() => {
-        if (!isStillOpen()) return;
-        useOpportunitiesStore.getState().closeModal();
-        toast.error(t("opportunityNotFound"));
-      });
+      .catch(() => closeWith("detailsLoadError"));
   };
 }
 

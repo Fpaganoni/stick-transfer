@@ -724,6 +724,7 @@
     },
     "availablePositions": "Available Positions",
     "loadingDetails": "Loading opportunity details",
+    "detailsLoadError": "Could not load the opportunity. Try again later.",
     "filters": {
       "experience": "Experience",
       "location": "Location",

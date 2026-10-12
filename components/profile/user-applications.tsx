@@ -77,11 +77,11 @@ function ApplicationItem({ application, onOpen }: ApplicationItemProps) {
     : application.status;
 
   return (
-    <button
-      type="button"
-      onClick={onOpen}
+    // The title button stretches over the card (after:inset-0): the whole card
+    // is clickable while the markup stays valid and the name is just the title
+    <article
       data-status={application.status}
-      className={`w-full text-left bg-background rounded-xl overflow-hidden border border-border hover:shadow-lg transition duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
+      className={`relative bg-background rounded-xl overflow-hidden border border-border hover:shadow-lg transition duration-200 focus-within:ring-2 focus-within:ring-primary ${
         isWithdrawn ? "opacity-70" : ""
       }`}
     >
@@ -90,7 +90,13 @@ function ApplicationItem({ application, onOpen }: ApplicationItemProps) {
         <div className="flex items-start justify-between gap-4 mb-3">
           <div className="flex-1">
             <h3 className="text-lg font-semibold text-foreground mb-1">
-              {opportunity?.title}
+              <button
+                type="button"
+                onClick={onOpen}
+                className="text-left cursor-pointer focus-visible:outline-none after:absolute after:inset-0 after:content-['']"
+              >
+                {opportunity?.title}
+              </button>
             </h3>
             <p className="text-foreground-muted font-medium">{opportunity?.club.name}</p>
           </div>
@@ -153,7 +159,7 @@ function ApplicationItem({ application, onOpen }: ApplicationItemProps) {
           )}
         </div>
       </div>
-    </button>
+    </article>
   );
 }
 

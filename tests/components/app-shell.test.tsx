@@ -6,8 +6,8 @@
  *      pathname, and while the auth store hydrates the sidebar and header stay
  *      on screen with placeholders instead of a spinner.
  */
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { render, screen, waitFor } from "@testing-library/react";
 import { useEffect } from "react";
 import { AppShell } from "@/components/layout/app-shell";
 import { Role } from "@/types/enums";
@@ -16,6 +16,7 @@ const { nav, authState, mockReplace, sidebarMounts } = vi.hoisted(() => ({
   nav: { pathname: "/opportunities" },
   authState: {
     hydrated: true,
+    isLoggedIn: true,
     user: { id: "u1", username: "lucia", role: "PLAYER" } as {
       id: string;
       username: string;
@@ -41,8 +42,12 @@ vi.mock("@/hooks/ui/use-auth-hydrated", () => ({
 }));
 
 vi.mock("@/stores/useAuthStore", () => ({
-  useAuthStore: (selector?: (state: { user: typeof authState.user }) => unknown) =>
-    selector ? selector({ user: authState.user }) : { user: authState.user },
+  useAuthStore: (
+    selector?: (state: { user: typeof authState.user; isLoggedIn: boolean }) => unknown,
+  ) => {
+    const state = { user: authState.user, isLoggedIn: authState.isLoggedIn };
+    return selector ? selector(state) : state;
+  },
 }));
 
 vi.mock("@/components/layout/side-navigation", () => ({
@@ -72,9 +77,46 @@ describe("AppShell", () => {
   beforeEach(() => {
     nav.pathname = "/opportunities";
     authState.hydrated = true;
+    authState.isLoggedIn = true;
     authState.user = { id: "u1", username: "lucia", role: Role.PLAYER };
     mockReplace.mockReset();
     sidebarMounts.count = 0;
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: true }));
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it("sends a visitor on a protected route back to the landing, dropping a stale routing cookie", async () => {
+    authState.isLoggedIn = false;
+    authState.user = null;
+    nav.pathname = "/profile";
+
+    render(
+      <AppShell>
+        <p>page content</p>
+      </AppShell>,
+    );
+
+    await waitFor(() => expect(mockReplace).toHaveBeenCalledWith("/"));
+    expect(fetch).toHaveBeenCalledWith("/api/auth/session", { method: "DELETE" });
+    expect(screen.queryByText("page content")).not.toBeInTheDocument();
+  });
+
+  it("lets visitors read the public news inside the shell", () => {
+    authState.isLoggedIn = false;
+    authState.user = null;
+    nav.pathname = "/news";
+
+    render(
+      <AppShell>
+        <p>news content</p>
+      </AppShell>,
+    );
+
+    expect(screen.getByText("news content")).toBeInTheDocument();
+    expect(mockReplace).not.toHaveBeenCalled();
   });
 
   it("keeps the sidebar mounted and shows no spinner when the route changes", () => {

@@ -127,7 +127,8 @@ test.describe("Umpires in explore and profiles", () => {
 
     await expect(page.getByText("Javier García")).toBeVisible();
     await expect(page.getByText("International", { exact: true })).toBeVisible();
-    await expect(page.getByText("Turf", { exact: true })).toBeVisible();
+    // Modality labels were renamed with the OUTDOOR / INDOOR values (en: "Outdoor")
+    await expect(page.getByText("Outdoor", { exact: true })).toBeVisible();
   });
 
   test("a public umpire profile opens on the officiating tab and can be messaged", async ({ page }) => {

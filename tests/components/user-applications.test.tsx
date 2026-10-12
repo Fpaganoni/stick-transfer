@@ -108,7 +108,7 @@ describe("UserApplications", () => {
 
     render(<UserApplications />);
 
-    const [active, withdrawn] = screen.getAllByRole("button");
+    const [active, withdrawn] = screen.getAllByRole("article");
     expect(active).toHaveAttribute("data-status", "PENDING");
     expect(withdrawn).toHaveAttribute("data-status", "WITHDRAWN");
     expect(screen.getByText("applications.status.WITHDRAWN")).toBeInTheDocument();
@@ -123,6 +123,14 @@ describe("UserApplications", () => {
     await user.click(screen.getByRole("button", { name: /Goalkeeper wanted/ }));
 
     expect(openDetailMock).toHaveBeenCalledWith(app.jobOpportunity);
+  });
+
+  it("names each application by its opportunity title", () => {
+    applicationsState.applications = [application()];
+
+    render(<UserApplications />);
+
+    expect(screen.getByRole("button", { name: "Goalkeeper wanted" })).toBeInTheDocument();
   });
 
   it("shows the empty state when there are no applications", () => {

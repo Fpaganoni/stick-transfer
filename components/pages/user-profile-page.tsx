@@ -5,6 +5,7 @@ import { ProfileHeader } from "@/components/profile/profile-header";
 import { ProfileTabs } from "@/components/profile/profile-tabs";
 import { ProfilePageSkeleton } from "@/components/profile/profile-page-skeleton";
 import { useMe, useMyFollowCounts } from "@/hooks/useUsers";
+import { useAuthStore } from "@/stores/useAuthStore";
 import { Role } from "@/types/enums";
 
 interface UserProfilePageProps {
@@ -18,8 +19,10 @@ export function UserProfilePage({
   // The stored user renders at once and `me` replaces it in place
   const { data } = useMe({ placeholderFromStore: true });
   const { data: counts } = useMyFollowCounts();
+  const storedUser = useAuthStore((state) => state.user);
 
-  const user = data?.me;
+  // Placeholder data is dropped when `me` fails (offline, 5xx): keep the stored user
+  const user = data?.me ?? storedUser;
 
   if (!user) {
     return <ProfilePageSkeleton />;

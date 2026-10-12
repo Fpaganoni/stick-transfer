@@ -1,6 +1,7 @@
 import createMiddleware from "next-intl/middleware";
 import { type NextRequest, NextResponse } from "next/server";
 import { locales } from "./i18n/request";
+import { isProtectedPath } from "./lib/protected-paths";
 
 const intlMiddleware = createMiddleware({
   locales,
@@ -8,23 +9,6 @@ const intlMiddleware = createMiddleware({
   localePrefix: "as-needed",
   localeDetection: false,
 });
-
-const PROTECTED_PATHS = [
-  "/opportunities",
-  "/explore",
-  "/profile",
-  "/clubs",
-  "/messages",
-  "/onboarding",
-  "/admin",
-];
-
-function isProtectedPath(pathname: string): boolean {
-  const withoutLocale = pathname.replace(/^\/(en|es|fr)/, "") || "/";
-  return PROTECTED_PATHS.some(
-    (p) => withoutLocale === p || withoutLocale.startsWith(p + "/")
-  );
-}
 
 function isHomePath(pathname: string): boolean {
   return /^(\/(en|es|fr))?\/?$/.test(pathname);

@@ -8,6 +8,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { UserProfilePage } from "@/components/pages/user-profile-page";
+import { useAuthStore } from "@/stores/useAuthStore";
 import { Role } from "@/types/enums";
 
 const { meState, countsState, useMeMock } = vi.hoisted(() => ({
@@ -58,6 +59,16 @@ describe("UserProfilePage", () => {
     meState.isPlaceholderData = false;
     countsState.data = undefined;
     useMeMock.mockReset();
+    useAuthStore.setState({ user: null, isLoggedIn: false });
+  });
+
+  it("falls back to the stored user when me fails (e.g. offline)", () => {
+    useAuthStore.setState({ user: storedUser as never, isLoggedIn: true });
+
+    render(<UserProfilePage isOwnProfile />);
+
+    expect(screen.getByTestId("header")).toHaveTextContent("Lucia Jimenez");
+    expect(screen.queryByLabelText("loadingProfile")).not.toBeInTheDocument();
   });
 
   it("asks useMe for the stored user as placeholder data", () => {

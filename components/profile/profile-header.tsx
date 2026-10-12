@@ -185,6 +185,7 @@ function FollowCounts({
   if (followersCount === undefined || followingCount === undefined) {
     return (
       <div
+        role="status"
         aria-busy="true"
         aria-label={t("followList.loadingCounts")}
         className="flex items-center gap-2 justify-center sm:justify-start"

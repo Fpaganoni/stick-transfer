@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useEffectEvent } from "react";
+import { useEffect, useEffectEvent, useRef } from "react";
 import { X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
@@ -82,9 +82,19 @@ export function FollowersFollowingModal({
   const emptyText =
     mode === "followers" ? t("followList.emptyFollowers") : t("followList.emptyFollowing");
 
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+
   const onEscape = useEffectEvent(() => {
     onClose();
   });
+
+  // Focus moves into the dialog on open and back to the trigger on close
+  useEffect(() => {
+    if (!isOpen) return;
+    const trigger = document.activeElement as HTMLElement | null;
+    closeButtonRef.current?.focus();
+    return () => trigger?.focus();
+  }, [isOpen]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -114,19 +124,14 @@ export function FollowersFollowingModal({
     <AnimatePresence>
       {isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          {/* Overlay */}
+          {/* Overlay: closes on click; keyboard users have Escape and the close button */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            role="button"
-            tabIndex={0}
-            aria-label={t("followList.close")}
+            aria-hidden="true"
             className="absolute inset-0 bg-black/50 backdrop-blur-sm"
             onClick={onClose}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") onClose();
-            }}
           />
 
           {/* Modal */}
@@ -147,6 +152,7 @@ export function FollowersFollowingModal({
                 <span className="text-foreground-muted font-normal">({totalCount})</span>
               </h2>
               <button
+                ref={closeButtonRef}
                 onClick={onClose}
                 className="p-1.5 rounded-lg text-foreground-muted hover:text-foreground hover:bg-border/30 transition-colors"
                 aria-label={t("followList.close")}
