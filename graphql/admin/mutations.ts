@@ -61,7 +61,7 @@ export const CREATE_NEWS_ARTICLE = gql`
 `;
 
 export const UPDATE_NEWS_ARTICLE = gql`
-  mutation UpdateNewsArticle($id: ID!, $input: NewsArticleInput!) {
+  mutation UpdateNewsArticle($id: ID!, $input: NewsArticleUpdateInput!) {
     updateNewsArticle(id: $id, input: $input) {
       id
       slug
@@ -73,9 +73,7 @@ export const UPDATE_NEWS_ARTICLE = gql`
 
 export const DELETE_NEWS_ARTICLE = gql`
   mutation DeleteNewsArticle($id: ID!) {
-    deleteNewsArticle(id: $id) {
-      id
-    }
+    deleteNewsArticle(id: $id)
   }
 `;
 

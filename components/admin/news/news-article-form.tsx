@@ -47,7 +47,7 @@ import {
 import { cn } from "@/lib/utils";
 import { formatDate } from "@/lib/date-utils";
 import { useCreateNewsArticle, useSuperAdminNews, useUpdateNewsArticle, usePublishNewsArticle } from "@/hooks/useAdminNews";
-import { AdminNewsArticle, NewsArticleInput } from "@/types/models/admin";
+import { AdminNewsArticle, NewsArticleInput, NewsArticleUpdateInput } from "@/types/models/admin";
 import { NewsCategory } from "@/hooks/useNews";
 
 const CATEGORIES: NewsCategory[] = ["INTERNATIONAL", "NATIONAL", "TRANSFERS", "EQUIPMENT", "RESULTS"];
@@ -425,6 +425,11 @@ function getDefaultFormValues(article?: AdminNewsArticle): NewsFormValues {
   };
 }
 
+function toNewsArticleUpdateInput(input: NewsArticleInput): NewsArticleUpdateInput {
+  const { title, excerpt, content, coverImage, category, readingTimeMinutes, relatedSlugs } = input;
+  return { title, excerpt, content, coverImage, category, readingTimeMinutes, relatedSlugs };
+}
+
 function buildNewsArticleInput(
   values: NewsFormValues,
   candidates: NewsArticleCandidate[],
@@ -491,7 +496,7 @@ export function NewsArticleForm({ article, mode }: NewsArticleFormProps) {
     try {
       let articleId = article?.id;
       if (mode === "edit" && article) {
-        await updateMutation.mutateAsync({ id: article.id, input });
+        await updateMutation.mutateAsync({ id: article.id, input: toNewsArticleUpdateInput(input) });
       } else {
         const created = await createMutation.mutateAsync(input);
         articleId = created.createNewsArticle.id;

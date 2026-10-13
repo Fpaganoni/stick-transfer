@@ -11,6 +11,7 @@ import {
 import {
   AdminNewsArticle,
   NewsArticleInput,
+  NewsArticleUpdateInput,
   SuperAdminNewsFilters,
   SuperAdminNewsResponse,
 } from "@/types/models/admin";
@@ -60,7 +61,7 @@ export function useUpdateNewsArticle() {
   return useMutation<
     { updateNewsArticle: AdminNewsArticle },
     Error,
-    { id: string; input: NewsArticleInput }
+    { id: string; input: NewsArticleUpdateInput }
   >({
     mutationFn: async ({ id, input }) =>
       graphqlClient.request(UPDATE_NEWS_ARTICLE, { id, input }),
@@ -78,7 +79,7 @@ export function useDeleteNewsArticle() {
   const invalidate = useInvalidateAdminNews();
   const t = useTranslations("admin.news");
 
-  return useMutation<{ deleteNewsArticle: { id: string } }, Error, { id: string }>({
+  return useMutation<{ deleteNewsArticle: boolean }, Error, { id: string }>({
     mutationFn: async ({ id }) => graphqlClient.request(DELETE_NEWS_ARTICLE, { id }),
     onSuccess: () => {
       invalidate();

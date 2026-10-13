@@ -29,7 +29,7 @@ export interface UnreadCountResponse {
 }
 
 export interface MarkAsReadResponse {
-  markNotificationAsRead: Pick<Notification, "id" | "isRead">;
+  markNotificationAsRead: boolean;
 }
 
 export interface MarkAllAsReadResponse {

@@ -3,8 +3,8 @@ import { gql } from "graphql-request";
 export const CREATE_REPORT = gql`
   mutation CreateReport(
     $targetType: ReportTargetType!
-    $targetId: String!
-    $reason: String!
+    $targetId: ID!
+    $reason: ReportReason!
     $description: String
   ) {
     createReport(

@@ -113,7 +113,7 @@ describe("useDeleteNewsArticle", () => {
   beforeEach(() => mockRequest.mockReset());
 
   it("mutates with the article id", async () => {
-    mockRequest.mockResolvedValueOnce({ deleteNewsArticle: { id: "article-1" } });
+    mockRequest.mockResolvedValueOnce({ deleteNewsArticle: true });
 
     const { result } = renderHook(() => useDeleteNewsArticle(), { wrapper: wrapper() });
     result.current.mutate({ id: "article-1" });

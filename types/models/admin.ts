@@ -188,6 +188,18 @@ export interface NewsArticleInput {
   relatedSlugs?: string[];
 }
 
+/** Mirrors the backend NewsArticleUpdateInput: slug, publishedAt and author are immutable on update. */
+export type NewsArticleUpdateInput = Pick<
+  NewsArticleInput,
+  | "title"
+  | "excerpt"
+  | "content"
+  | "coverImage"
+  | "category"
+  | "readingTimeMinutes"
+  | "relatedSlugs"
+>;
+
 // ============================================
 // SHARED PAGINATED RESPONSE SHAPES
 // ============================================

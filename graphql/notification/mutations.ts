@@ -6,10 +6,7 @@ import { gql } from "graphql-request";
 
 export const MARK_NOTIFICATION_AS_READ = gql`
   mutation MarkNotificationAsRead($id: ID!) {
-    markNotificationAsRead(id: $id) {
-      id
-      isRead
-    }
+    markNotificationAsRead(id: $id)
   }
 `;
 
