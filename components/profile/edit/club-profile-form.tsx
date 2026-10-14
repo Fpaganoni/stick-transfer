@@ -273,6 +273,7 @@ export function ClubProfileForm() {
               name="clubLogo"
               render={({ field }) => (
                 <ImageUploadField
+                  target="CLUB_LOGO"
                   label={t("editForm.club.logoUrl")}
                   value={field.value || ""}
                   onChange={field.onChange}

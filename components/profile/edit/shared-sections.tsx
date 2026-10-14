@@ -32,6 +32,8 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { FileUploader } from "@/components/clubs/file-uploader";
+import { useImageUpload } from "@/hooks/useUploads";
+import type { ImageUploadTarget } from "@/types/models/upload";
 
 const IMAGE_ACCEPT = ".jpg,.jpeg,.png,.webp";
 const IMAGE_VALID_TYPES = ["image/jpeg", "image/png", "image/webp"];
@@ -41,11 +43,14 @@ interface ImageUploadFieldProps {
   label: string;
   value: string;
   onChange: (url: string) => void;
+  /** Which of the caller's own Cloudinary slots the image goes to. */
+  target: ImageUploadTarget;
 }
 
 /** Photo upload field restricted to JPG/PNG/WEBP, used for avatar, cover image and club logo. */
-export function ImageUploadField({ label, value, onChange }: ImageUploadFieldProps) {
+export function ImageUploadField({ label, value, onChange, target }: ImageUploadFieldProps) {
   const t = useTranslations("profile.editForm.photo");
+  const upload = useImageUpload(target);
 
   if (value) {
     return (
@@ -79,6 +84,7 @@ export function ImageUploadField({ label, value, onChange }: ImageUploadFieldPro
     <FormItem>
       <FormLabel>{label}</FormLabel>
       <FileUploader
+        upload={upload}
         accept={IMAGE_ACCEPT}
         validTypes={IMAGE_VALID_TYPES}
         maxSizeMB={IMAGE_MAX_SIZE_MB}
@@ -182,6 +188,7 @@ export function BasicInfoSection({ control, t }: BasicInfoSectionProps) {
           name="avatar"
           render={({ field }) => (
             <ImageUploadField
+              target="USER_AVATAR"
               label={t("editForm.avatarUrl")}
               value={field.value || ""}
               onChange={field.onChange}
@@ -194,6 +201,7 @@ export function BasicInfoSection({ control, t }: BasicInfoSectionProps) {
           name="coverImage"
           render={({ field }) => (
             <ImageUploadField
+              target="USER_COVER"
               label={t("editForm.coverImageUrl") || "Cover Image URL"}
               value={field.value || ""}
               onChange={field.onChange}

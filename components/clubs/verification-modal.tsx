@@ -6,6 +6,7 @@ import { X } from "lucide-react";
 import { FileUploader } from "./file-uploader";
 import { toast } from "@/hooks/ui/use-toast";
 import { useRequestClubVerification } from "@/hooks/useClubMutations";
+import { useDocumentUpload } from "@/hooks/useUploads";
 
 interface VerificationModalProps {
   clubId: string;
@@ -16,6 +17,7 @@ export function VerificationModal({ clubId, onClose }: VerificationModalProps) {
   const t = useTranslations("clubs.verification");
   const [documentUrl, setDocumentUrl] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const uploadDocument = useDocumentUpload("CLUB_VERIFICATION", clubId);
 
   const { mutate: requestVerification, isPending } =
     useRequestClubVerification();
@@ -91,6 +93,7 @@ export function VerificationModal({ clubId, onClose }: VerificationModalProps) {
             </label>
             <FileUploader
               id="verification-document"
+              upload={uploadDocument}
               onFileSelect={setDocumentUrl}
               isLoading={isPending || isSubmitting}
             />

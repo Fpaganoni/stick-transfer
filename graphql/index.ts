@@ -80,3 +80,9 @@ export {
 export { GET_REPORTS } from "./report/queries";
 
 export { CREATE_REPORT, UPDATE_REPORT_STATUS } from "./report/mutations";
+
+// UPLOADS (backend-signed direct uploads to Cloudinary)
+export {
+  CREATE_IMAGE_UPLOAD_SIGNATURE,
+  CREATE_DOCUMENT_UPLOAD_SIGNATURE,
+} from "./upload/mutations";

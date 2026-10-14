@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { Upload, X, Check } from "lucide-react";
 import { useTranslations } from "next-intl";
+import type { FileUpload } from "@/hooks/useUploads";
 
 interface FileUploaderLabels {
   dragOrClick: string;
@@ -15,6 +16,8 @@ interface FileUploaderLabels {
 }
 
 interface FileUploaderProps {
+  /** Sends the file to storage and resolves with its url (see hooks/useUploads.ts). */
+  upload: FileUpload;
   onFileSelect: (url: string) => void;
   isLoading?: boolean;
   accept?: string;
@@ -34,6 +37,7 @@ const DEFAULT_VALID_TYPES = [
 ];
 
 export function FileUploader({
+  upload,
   onFileSelect,
   isLoading,
   accept = ".pdf,.doc,.docx",
@@ -69,20 +73,7 @@ export function FileUploader({
     setIsUploading(true);
 
     try {
-      const formData = new FormData();
-      formData.append("file", file);
-
-      const response = await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
-      });
-
-      if (!response.ok) {
-        throw new Error("Upload failed");
-      }
-
-      const data = await response.json();
-      onFileSelect(data.url);
+      onFileSelect(await upload(file));
     } catch {
       setError(label("uploadFailed"));
       setUploadedFile(null);
