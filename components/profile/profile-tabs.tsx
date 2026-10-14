@@ -8,6 +8,7 @@ import { UserApplications } from "./user-applications";
 import { UserSavedJobs } from "./user-saved-jobs";
 import { Download, FileText } from "lucide-react";
 import { UmpireInfoSection, type UmpireInfo } from "./umpire-info-section";
+import { toSafeLinkUrl } from "@/lib/social-links";
 
 interface UserData {
   id: string;
@@ -33,6 +34,8 @@ export function ProfileTabs({
   isOwnProfile = false,
 }: ProfileTabsProps) {
   const t = useTranslations("profile");
+  // The CV url is user-supplied: only a plain http(s) link is previewed or downloadable
+  const cvUrl = toSafeLinkUrl(userData.cvUrl);
 
   const role = userData.role?.toUpperCase();
   const isUmpire = role === "UMPIRE";
@@ -138,16 +141,16 @@ export function ProfileTabs({
 
         {activeTab === "cv" && (
           <div className="space-y-4">
-            {userData.cvUrl ? (
+            {cvUrl ? (
               <>
                 <iframe
-                  src={`${userData.cvUrl}#zoom=75`}
+                  src={`${cvUrl}#zoom=75`}
                   className="w-full h-screen p-10 rounded-xl border border-border"
                   title="CV Preview"
                   sandbox=""
                 />
                 <a
-                  href={userData.cvUrl}
+                  href={cvUrl}
                   download
                   target="_blank"
                   rel="noopener noreferrer"

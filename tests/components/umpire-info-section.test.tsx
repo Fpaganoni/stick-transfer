@@ -156,3 +156,28 @@ describe("UmpireInfoSection", () => {
     );
   });
 });
+
+describe("UmpireInfoSection — certificate links", () => {
+  const withCert = (fileUrl: string | null) => ({
+    ...fullInfo,
+    umpireCertifications: [
+      { id: "c1", name: "Level 1", issuer: "CAH", issuedAt: null, fileUrl, order: 0 },
+    ],
+  });
+
+  it("links a certificate document over https", () => {
+    render(<UmpireInfoSection info={withCert("https://res.cloudinary.com/demo/raw/upload/c.pdf")} />);
+
+    expect(screen.getByRole("link", { name: /umpire.viewDocument/ })).toHaveAttribute(
+      "href",
+      "https://res.cloudinary.com/demo/raw/upload/c.pdf",
+    );
+  });
+
+  it("does not render a javascript: certificate as a link", () => {
+    render(<UmpireInfoSection info={withCert("javascript:alert(1)")} />);
+
+    expect(screen.queryByRole("link", { name: /umpire.viewDocument/ })).toBeNull();
+    expect(document.querySelector('a[href^="javascript"]')).toBeNull();
+  });
+});

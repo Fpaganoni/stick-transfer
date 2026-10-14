@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { MapPin, Briefcase, Globe, Mail, Video, Plus, X } from "lucide-react";
 import { YoutubeWidget } from "@/components/ui/youtube-widget";
+import { toMailtoUrl, toWebsiteUrl } from "@/lib/social-links";
 import { OpportunityListCard } from "@/components/opportunities/opportunity-list-card";
 import { useJobOpportunities } from "@/hooks/useJobOpportunities";
 import type { JobOpportunity } from "@/types/models/job-opportunity";
@@ -49,6 +50,9 @@ interface ProfileTabPanelProps {
 }
 
 function ProfileTabPanel({ t, clubData }: ProfileTabPanelProps) {
+  // Stored values are rendered as links: only well-formed http(s) / mailto targets get an href
+  const websiteUrl = clubData.website ? toWebsiteUrl(clubData.website) : null;
+  const mailtoUrl = clubData.email ? toMailtoUrl(clubData.email) : null;
   const hasAnyDetail =
     clubData.bio ||
     clubData.city ||
@@ -112,7 +116,7 @@ function ProfileTabPanel({ t, clubData }: ProfileTabPanelProps) {
           </div>
         )}
 
-        {clubData.website && (
+        {websiteUrl && (
           <div className="flex items-start gap-3 mb-4">
             <Globe className="w-5 h-5 text-primary shrink-0 mt-1" />
             <div>
@@ -120,7 +124,7 @@ function ProfileTabPanel({ t, clubData }: ProfileTabPanelProps) {
                 {t("profile.website")}
               </p>
               <a
-                href={clubData.website}
+                href={websiteUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-primary text-sm hover:underline"
@@ -131,7 +135,7 @@ function ProfileTabPanel({ t, clubData }: ProfileTabPanelProps) {
           </div>
         )}
 
-        {clubData.email && (
+        {mailtoUrl && (
           <div className="flex items-start gap-3 mb-4">
             <Mail className="w-5 h-5 text-primary shrink-0 mt-1" />
             <div>
@@ -139,7 +143,7 @@ function ProfileTabPanel({ t, clubData }: ProfileTabPanelProps) {
                 {t("profile.email")}
               </p>
               <a
-                href={`mailto:${clubData.email}`}
+                href={mailtoUrl}
                 className="text-primary text-sm hover:underline"
               >
                 {clubData.email}

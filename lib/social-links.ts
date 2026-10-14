@@ -124,6 +124,17 @@ export function toWebsiteUrl(input: string): string | null {
     : url.href;
 }
 
+/**
+ * href for an already-stored link (CV, certificate, verification document):
+ * plain http(s) only and never completed, so `javascript:`/`data:` values that
+ * reached the database are never rendered as clickable links. Null otherwise.
+ */
+export function toSafeLinkUrl(input: string | null | undefined): string | null {
+  const value = input?.trim();
+  if (!value) return null;
+  return parseHttpUrl(value)?.href ?? null;
+}
+
 export function isValidEmail(value: string): boolean {
   return EMAIL_SCHEMA.safeParse(value.trim()).success;
 }

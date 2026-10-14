@@ -28,6 +28,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { useAdminSetClubVerification } from "@/hooks/useAdminClubs";
 import { AdminClubRow } from "@/types/models/admin";
+import { toSafeLinkUrl } from "@/lib/social-links";
 
 interface ClubVerificationDialogProps {
   club: AdminClubRow | null;
@@ -43,6 +44,9 @@ export function ClubVerificationDialog({ club, open, onOpenChange }: ClubVerific
   const setVerification = useAdminSetClubVerification();
 
   if (!club) return null;
+
+  // The document URL is user-supplied: only a plain http(s) link is clickable
+  const documentUrl = toSafeLinkUrl(club.verificationDoc);
 
   const handleConfirm = () => {
     if (!pendingAction) return;
@@ -83,9 +87,9 @@ export function ClubVerificationDialog({ club, open, onOpenChange }: ClubVerific
 
             <div className="rounded-lg border border-border p-3">
               <p className="mb-2 text-sm font-medium">{t("documentLabel")}</p>
-              {club.verificationDoc ? (
+              {documentUrl ? (
                 <Link
-                  href={club.verificationDoc}
+                  href={documentUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 text-sm text-primary hover:underline"

@@ -10,6 +10,7 @@ import {
   normalizeSocialHandle,
   socialProfileUrl,
   toWebsiteUrl,
+  toSafeLinkUrl,
 } from "@/lib/social-links";
 
 describe("normalizeSocialHandle", () => {
@@ -98,4 +99,28 @@ describe("toWebsiteUrl", () => {
       expect(toWebsiteUrl(input)).toBeNull();
     },
   );
+});
+
+describe("toSafeLinkUrl", () => {
+  it.each([
+    ["https://res.cloudinary.com/demo/raw/upload/v1/cv.pdf", "https://res.cloudinary.com/demo/raw/upload/v1/cv.pdf"],
+    ["  http://example.com/doc.pdf  ", "http://example.com/doc.pdf"],
+  ])("keeps the plain http(s) link %p", (input, expected) => {
+    expect(toSafeLinkUrl(input)).toBe(expected);
+  });
+
+  it.each([
+    "javascript:alert(1)",
+    "JaVaScRiPt:alert(1)",
+    "data:text/html,<script>alert(1)</script>",
+    "file:///etc/passwd",
+    "vbscript:msgbox(1)",
+    "example.com/cv.pdf",
+    "",
+    "   ",
+    null,
+    undefined,
+  ])("returns null for %p", (input) => {
+    expect(toSafeLinkUrl(input)).toBeNull();
+  });
 });

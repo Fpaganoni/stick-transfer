@@ -28,6 +28,7 @@ import { Role } from "@/types/enums";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { toSafeLinkUrl } from "@/lib/social-links";
 import { toast } from "sonner";
 import { FollowersFollowingModal } from "./followers-following-modal";
 import { ReportModal } from "./report-modal";
@@ -249,6 +250,9 @@ function OtherProfileActions({
   onShowFollowers,
   onShowFollowing,
 }: OtherProfileActionsProps) {
+  // The CV url is user-supplied: only a plain http(s) link is rendered as a download
+  const safeCvUrl = toSafeLinkUrl(cvUrl);
+
   return (
     <div className="flex flex-col items-center sm:items-start gap-2 mt-3">
       <div className="flex gap-3 items-center justify-center sm:justify-start">
@@ -299,9 +303,9 @@ function OtherProfileActions({
           )}
         </motion.button>
 
-        {cvUrl && (
+        {safeCvUrl && (
           <motion.a
-            href={cvUrl}
+            href={safeCvUrl}
             target="_blank"
             rel="noopener noreferrer"
             download

@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { FileText } from "lucide-react";
 import type { User } from "@/types/models/user";
 import { toDateInputValue } from "@/components/profile/edit/umpire-profile-schema";
+import { toSafeLinkUrl } from "@/lib/social-links";
 
 export type UmpireInfo = Pick<
   User,
@@ -147,9 +148,9 @@ export function UmpireInfoSection({
                       <p className="text-xs text-foreground-muted mt-1">{issuedAt}</p>
                     )}
                   </div>
-                  {cert.fileUrl && (
+                  {toSafeLinkUrl(cert.fileUrl) && (
                     <a
-                      href={cert.fileUrl}
+                      href={toSafeLinkUrl(cert.fileUrl) ?? undefined}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="shrink-0 text-primary hover:underline flex items-center gap-1 text-sm"

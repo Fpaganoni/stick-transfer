@@ -114,3 +114,40 @@ describe("ClubProfileTabs — videos tab", () => {
     expect(screen.queryByText("videos.addVideo")).not.toBeInTheDocument();
   });
 });
+
+describe("ClubProfileTabs — profile tab links", () => {
+  const renderProfile = (extra: Record<string, unknown>) =>
+    render(
+      <ClubProfileTabs
+        activeTab="profile"
+        setActiveTab={vi.fn()}
+        clubData={{ ...baseClubData, ...extra }}
+      />
+    );
+
+  it("links a valid website and email", () => {
+    renderProfile({ website: "https://club.example.com", email: "info@club.example.com" });
+
+    expect(screen.getByRole("link", { name: "https://club.example.com" })).toHaveAttribute(
+      "href",
+      "https://club.example.com"
+    );
+    expect(screen.getByRole("link", { name: "info@club.example.com" })).toHaveAttribute(
+      "href",
+      "mailto:info@club.example.com"
+    );
+  });
+
+  it("never renders a javascript: website as a link", () => {
+    renderProfile({ website: "javascript:alert(document.cookie)" });
+
+    expect(document.querySelector('a[href^="javascript"]')).toBeNull();
+    expect(screen.queryByRole("link", { name: /javascript/i })).toBeNull();
+  });
+
+  it("never renders an email that could inject extra mailto parameters", () => {
+    renderProfile({ email: "a@b.com?bcc=attacker@evil.com" });
+
+    expect(document.querySelector('a[href^="mailto"]')).toBeNull();
+  });
+});

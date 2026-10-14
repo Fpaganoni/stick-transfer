@@ -135,3 +135,40 @@ describe("ProfileTabs", () => {
     expect(setActiveTab).toHaveBeenCalledWith("cv");
   });
 });
+
+describe("ProfileTabs — CV links", () => {
+  const cvData = (cvUrl: string) => ({ ...playerData, cvUrl });
+
+  it("previews and offers a download for a normal CV link", () => {
+    render(
+      <ProfileTabs
+        activeTab="cv"
+        setActiveTab={vi.fn()}
+        userData={cvData("https://res.cloudinary.com/demo/raw/upload/v1/cv.pdf")}
+      />,
+    );
+
+    expect(screen.getByTitle("CV Preview")).toHaveAttribute(
+      "src",
+      "https://res.cloudinary.com/demo/raw/upload/v1/cv.pdf#zoom=75",
+    );
+    expect(screen.getByRole("link", { name: /cv.download/ })).toHaveAttribute(
+      "href",
+      "https://res.cloudinary.com/demo/raw/upload/v1/cv.pdf",
+    );
+  });
+
+  it("shows the empty state instead of a javascript: CV", () => {
+    render(
+      <ProfileTabs
+        activeTab="cv"
+        setActiveTab={vi.fn()}
+        userData={cvData("javascript:alert(document.cookie)")}
+      />,
+    );
+
+    expect(screen.getByText("cv.noCv")).toBeInTheDocument();
+    expect(screen.queryByTitle("CV Preview")).toBeNull();
+    expect(document.querySelector('a[href^="javascript"]')).toBeNull();
+  });
+});
