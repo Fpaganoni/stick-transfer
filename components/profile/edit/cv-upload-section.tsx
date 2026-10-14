@@ -11,6 +11,7 @@ import {
 import { Upload, Trash2, FileText } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
+import { toSafeLinkUrl } from "@/lib/social-links";
 
 interface CvUploadSectionProps {
   t: (key: string, opts?: { fallback?: string }) => string;
@@ -83,7 +84,7 @@ export function CvUploadSection({
               <div className="flex items-center gap-2">
                 <FileText className="w-5 h-5 text-primary" />
                 <a
-                  href={cvUrl}
+                  href={toSafeLinkUrl(cvUrl) ?? undefined}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-sm font-medium hover:underline text-primary truncate max-w-[200px] md:max-w-xs block"
