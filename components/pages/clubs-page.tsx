@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/empty";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Club } from "@/types/models/club";
+import { isActiveMember } from "@/lib/club-membership";
 
 interface ClubsPageProps {
   initialData?: { clubs: Club[] };
@@ -40,9 +41,7 @@ export function ClubsPage({ initialData }: ClubsPageProps) {
 
   const myClubs = useMemo(
     () =>
-      allClubs.filter((club) =>
-        club.members?.some((m) => m.user.id === user?.id)
-      ),
+      allClubs.filter((club) => isActiveMember(club, user?.id)),
     [allClubs, user]
   );
 

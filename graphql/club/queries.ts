@@ -20,6 +20,14 @@ export const GET_CLUBS = gql`
         id
         avatar
       }
+      # Needed by the "my clubs" tab; resolved for the whole page in one query.
+      members {
+        id
+        status
+        user {
+          id
+        }
+      }
     }
   }
 `;
