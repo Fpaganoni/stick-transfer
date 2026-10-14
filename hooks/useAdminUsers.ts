@@ -8,6 +8,7 @@ import {
 } from "@/graphql";
 import { AdminUserFilters, AdminUserRow, AdminUsersResponse } from "@/types/models/admin";
 import { Role } from "@/types/enums";
+import { fetchAllPages } from "@/lib/fetch-all-pages";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
@@ -31,12 +32,21 @@ function applyUserFilters(users: AdminUserRow[], filters?: AdminUserFilters): Ad
   });
 }
 
-// GAP backend: no existe adminUsers/AdminUserFiltersInput — `users` no soporta
-// filtros ni paginación. Se trae la lista completa y se filtra/pagina aquí.
+// GAP backend: no existe adminUsers/AdminUserFiltersInput — `users` solo pagina
+// (limit/offset, máx. 100) y no filtra. Se trae la lista completa por páginas
+// y se filtra/pagina aquí.
 export function useAdminUsers(filters?: AdminUserFilters, page = 1, limit = 20) {
   return useQuery<UsersResponse, Error, AdminUsersResponse>({
     queryKey: ADMIN_USERS_KEY,
-    queryFn: async () => graphqlClient.request<UsersResponse>(ADMIN_USERS),
+    queryFn: async () => ({
+      users: await fetchAllPages(async (pageLimit, offset) => {
+        const response = await graphqlClient.request<UsersResponse>(ADMIN_USERS, {
+          limit: pageLimit,
+          offset,
+        });
+        return response.users;
+      }),
+    }),
     select: (data) => {
       const filtered = applyUserFilters(data.users, filters);
       const start = (page - 1) * limit;

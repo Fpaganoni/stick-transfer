@@ -7,6 +7,7 @@ import {
 } from "@tanstack/react-query";
 import { graphqlClient } from "@/lib/graphql-client";
 import { useAuthStore } from "@/stores/useAuthStore";
+import { fetchAllPages } from "@/lib/fetch-all-pages";
 import {
   GET_USERS,
   GET_USER,
@@ -49,7 +50,12 @@ import {
 export function useUsers() {
   return useQuery<{ users: User[] }>({
     queryKey: ["users"],
-    queryFn: async () => graphqlClient.request(GET_USERS),
+    queryFn: async () => ({
+      users: await fetchAllPages(async (limit, offset) => {
+        const response = await graphqlClient.request<{ users: User[] }>(GET_USERS, { limit, offset });
+        return response.users;
+      }),
+    }),
   });
 }
 

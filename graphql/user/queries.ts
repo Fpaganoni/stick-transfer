@@ -32,8 +32,8 @@ const UMPIRE_FIELDS = `
 // ============================================
 
 export const GET_USERS = gql`
-  query GetUsers {
-    users {
+  query GetUsers($limit: Int, $offset: Int) {
+    users(limit: $limit, offset: $offset) {
       id
       email
       name

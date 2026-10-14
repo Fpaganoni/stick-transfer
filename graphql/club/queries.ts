@@ -5,8 +5,8 @@ import { gql } from "graphql-request";
 // ===========================================
 
 export const GET_CLUBS = gql`
-  query GetClubs {
-    clubs {
+  query GetClubs($limit: Int, $offset: Int) {
+    clubs(limit: $limit, offset: $offset) {
       id
       name
       logo

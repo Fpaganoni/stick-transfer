@@ -72,7 +72,20 @@ describe("useAdminUsers", () => {
     expect(result.current.data?.adminUsers.items).toHaveLength(1);
     expect(result.current.data?.adminUsers.items[0].id).toBe("user-2");
     expect(result.current.data?.adminUsers.total).toBe(1);
-    expect(mockRequest).toHaveBeenCalledWith(expect.anything());
+    expect(mockRequest).toHaveBeenCalledWith(expect.anything(), { limit: 100, offset: 0 });
+  });
+
+  it("keeps fetching 100-row pages until it has the whole list", async () => {
+    const fullPage = Array.from({ length: 100 }, (_, i) => ({ ...mockUserRow, id: `u-${i}` }));
+    mockRequest
+      .mockResolvedValueOnce({ users: fullPage })
+      .mockResolvedValueOnce({ users: [otherUserRow] });
+
+    const { result } = renderHook(() => useAdminUsers(undefined, 1, 20), { wrapper: wrapper() });
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(result.current.data?.adminUsers.total).toBe(101);
+    expect(mockRequest).toHaveBeenNthCalledWith(2, expect.anything(), { limit: 100, offset: 100 });
   });
 });
 

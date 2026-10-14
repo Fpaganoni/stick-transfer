@@ -70,7 +70,7 @@ describe("useAdminClubs", () => {
     expect(result.current.data?.adminClubs.items[0].id).toBe("club-1");
     expect(result.current.data?.adminClubs.items[0].membersCount).toBe(2);
     expect(result.current.data?.adminClubs.total).toBe(1);
-    expect(mockRequest).toHaveBeenCalledWith(expect.anything());
+    expect(mockRequest).toHaveBeenCalledWith(expect.anything(), { limit: 100, offset: 0 });
   });
 
   it("finds clubs by the name of their country code", async () => {

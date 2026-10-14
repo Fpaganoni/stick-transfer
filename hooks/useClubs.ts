@@ -3,14 +3,26 @@ import { graphqlClient } from "@/lib/graphql-client";
 import { GET_CLUBS, GET_CLUB } from "@/graphql/club/queries";
 import { UPDATE_CLUB } from "@/graphql/club/mutations";
 import { Club, UpdateClubVariables } from "@/types/models/club";
+import { fetchAllPages } from "@/lib/fetch-all-pages";
 
 // Club verification mutations live in hooks/useClubMutations.ts
 
+/**
+ * The clubs page filters on the client, so it needs the whole list: pages of
+ * 100 are fetched until a short one arrives. `initialData` is the SSR first
+ * page only, so it is marked stale and completed on mount.
+ */
 export function useClubs(initialData?: { clubs: Club[] }) {
   return useQuery<{ clubs: Club[] }>({
     queryKey: ["clubs"],
-    queryFn: async () => graphqlClient.request(GET_CLUBS),
+    queryFn: async () => ({
+      clubs: await fetchAllPages(async (limit, offset) => {
+        const page = await graphqlClient.request<{ clubs: Club[] }>(GET_CLUBS, { limit, offset });
+        return page.clubs;
+      }),
+    }),
     initialData,
+    initialDataUpdatedAt: 0,
   });
 }
 

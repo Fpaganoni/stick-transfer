@@ -42,8 +42,8 @@ export const ADMIN_DASHBOARD_STATS = gql`
 // en useAdminUsers. authProvider tampoco existe en User (ver AdminUserRow) —
 // queda undefined hasta que el backend lo agregue.
 export const ADMIN_USERS = gql`
-  query AdminUsers {
-    users {
+  query AdminUsers($limit: Int, $offset: Int) {
+    users(limit: $limit, offset: $offset) {
       id
       name
       email
@@ -68,8 +68,8 @@ export const ADMIN_USERS = gql`
 // en useAdminClubs. membersCount no existe como campo propio — se deriva de
 // members.length.
 export const ADMIN_CLUBS = gql`
-  query AdminClubs {
-    clubs {
+  query AdminClubs($limit: Int, $offset: Int) {
+    clubs(limit: $limit, offset: $offset) {
       id
       name
       logo

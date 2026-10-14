@@ -9,6 +9,7 @@ import {
 } from "@/types/models/admin";
 import { useTranslations } from "next-intl";
 import { useCountryNames } from "@/hooks/useCountryNames";
+import { fetchAllPages } from "@/lib/fetch-all-pages";
 import { toast } from "sonner";
 
 const ADMIN_CLUBS_KEY = ["admin", "clubs"] as const;
@@ -46,13 +47,22 @@ function applyClubFilters(
   });
 }
 
-// GAP backend: no existe adminClubs/AdminClubFiltersInput — `clubs` no soporta
-// filtros ni paginación. Se trae la lista completa y se filtra/pagina aquí.
+// GAP backend: no existe adminClubs/AdminClubFiltersInput — `clubs` solo pagina
+// (limit/offset, máx. 100) y no filtra. Se trae la lista completa por páginas
+// y se filtra/pagina aquí.
 export function useAdminClubs(filters?: AdminClubFilters, page = 1, limit = 20) {
   const { nameOf } = useCountryNames();
   return useQuery<ClubsResponse, Error, AdminClubsResponse>({
     queryKey: ADMIN_CLUBS_KEY,
-    queryFn: async () => graphqlClient.request<ClubsResponse>(ADMIN_CLUBS),
+    queryFn: async () => ({
+      clubs: await fetchAllPages(async (pageLimit, offset) => {
+        const response = await graphqlClient.request<ClubsResponse>(ADMIN_CLUBS, {
+          limit: pageLimit,
+          offset,
+        });
+        return response.clubs;
+      }),
+    }),
     select: (data) => {
       const filtered = applyClubFilters(data.clubs, filters, nameOf);
       const start = (page - 1) * limit;
