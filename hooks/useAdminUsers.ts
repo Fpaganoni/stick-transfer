@@ -9,6 +9,7 @@ import {
 import { AdminUserFilters, AdminUserRow, AdminUsersResponse } from "@/types/models/admin";
 import { Role } from "@/types/enums";
 import { fetchAllPages } from "@/lib/fetch-all-pages";
+import { parseApiError } from "@/lib/auth-errors";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
@@ -178,9 +179,14 @@ export function useAdminChangeUserRole() {
       toast.success(t("toasts.roleChanged"));
     },
 
-    onError: (_err, _vars, context) => {
+    onError: (err, _vars, context) => {
       rollbackUser(queryClient, context);
-      toast.error(t("toasts.actionFailed"));
+      // A club account keeps its role: say so instead of a generic failure
+      toast.error(
+        parseApiError(err).code === "ROLE_CHANGE_NOT_ALLOWED"
+          ? t("toasts.roleChangeClub")
+          : t("toasts.actionFailed"),
+      );
     },
 
     onSettled: () => {

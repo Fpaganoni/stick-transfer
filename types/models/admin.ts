@@ -94,6 +94,8 @@ export interface AdminClubRow {
   isVerified: boolean;
   membersCount: number;
   createdAt: string;
+  /** The person in charge: private, only a SUPERADMIN (and the club itself) receives it. */
+  managedBy?: { firstName: string; lastName: string } | null;
 }
 
 export interface AdminClubFilters {

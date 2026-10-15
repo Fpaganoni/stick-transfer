@@ -16,6 +16,7 @@ import {
   useAdminChangeUserRole,
 } from "@/hooks/useAdminUsers";
 import { Role } from "@/types/enums";
+import { toast } from "sonner";
 
 const mockRequest = vi.fn();
 vi.mock("@/lib/graphql-client", () => ({
@@ -136,6 +137,31 @@ describe("useAdminChangeUserRole", () => {
     expect(mockRequest).toHaveBeenCalledWith(expect.anything(), {
       userId: "user-1",
       role: Role.COACH,
+    });
+  });
+
+  describe("when the backend refuses", () => {
+    function backendError(code: string) {
+      return { response: { errors: [{ message: "x", extensions: { code } }] } };
+    }
+
+    it("explains that a club role cannot be changed (ROLE_CHANGE_NOT_ALLOWED)", async () => {
+      mockRequest.mockRejectedValueOnce(backendError("ROLE_CHANGE_NOT_ALLOWED"));
+
+      const { result } = renderHook(() => useAdminChangeUserRole(), { wrapper: wrapper() });
+      result.current.mutate({ userId: "club-1", role: Role.PLAYER });
+
+      await waitFor(() => expect(toast.error).toHaveBeenCalledWith("toasts.roleChangeClub"));
+      expect(toast.error).not.toHaveBeenCalledWith("toasts.actionFailed");
+    });
+
+    it("keeps the generic message for any other failure", async () => {
+      mockRequest.mockRejectedValueOnce(backendError("INTERNAL_ERROR"));
+
+      const { result } = renderHook(() => useAdminChangeUserRole(), { wrapper: wrapper() });
+      result.current.mutate({ userId: "user-1", role: Role.COACH });
+
+      await waitFor(() => expect(toast.error).toHaveBeenCalledWith("toasts.actionFailed"));
     });
   });
 });

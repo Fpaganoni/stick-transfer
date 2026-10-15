@@ -141,6 +141,55 @@ describe("OpportunityDetailModal", () => {
     });
   });
 
+  describe("a vacancy that is not open", () => {
+    const closedApplication = () => screen.queryByRole("button", { name: "applicationsClosed" });
+    const sent = () => screen.queryByRole("button", { name: "applicationSent" });
+
+    it.each(["CLOSED", "FILLED", "closed", "filled"])(
+      "does not offer to apply to a %s vacancy and says why",
+      (status) => {
+        open({ ...base, status: status as JobOpportunity["status"] });
+
+        expect(applyButton()).not.toBeInTheDocument();
+        expect(closedApplication()).toBeDisabled();
+      },
+    );
+
+    it("never claims an application was sent when none was", () => {
+      open({ ...base, status: "FILLED" });
+
+      expect(sent()).not.toBeInTheDocument();
+    });
+
+    it("keeps showing the application as sent for someone who applied before it closed", () => {
+      open({ ...base, status: "CLOSED", hasAppliedByCurrentUser: true });
+
+      expect(sent()).toBeInTheDocument();
+      expect(closedApplication()).not.toBeInTheDocument();
+    });
+
+    it("still lets people apply to an open vacancy", () => {
+      open({ ...base, status: "OPEN" });
+
+      expect(applyButton()).toBeEnabled();
+      expect(closedApplication()).not.toBeInTheDocument();
+    });
+
+    it("shows a club neither button, closed or not", () => {
+      roleState.isClub = true;
+      open({ ...base, status: "CLOSED" });
+
+      expect(applyButton()).not.toBeInTheDocument();
+      expect(closedApplication()).not.toBeInTheDocument();
+    });
+
+    it("keeps the bookmark available on a closed vacancy", () => {
+      open({ ...base, status: "CLOSED" });
+
+      expect(screen.getByRole("button", { name: "Bookmark" })).toBeEnabled();
+    });
+  });
+
   describe("application sent state", () => {
     const sent = () => screen.queryByRole("button", { name: "applicationSent" });
 

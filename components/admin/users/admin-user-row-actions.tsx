@@ -36,7 +36,9 @@ import {
 import { AdminUserRow } from "@/types/models/admin";
 import { Role } from "@/types/enums";
 
-const ROLE_OPTIONS = [Role.PLAYER, Role.COACH, Role.CLUB, Role.UMPIRE, Role.SUPERADMIN];
+// CLUB is never a destination: a club needs its Club row, name key and place, which a
+// bare role switch cannot create (the backend answers ROLE_CHANGE_NOT_ALLOWED).
+const ROLE_OPTIONS = [Role.PLAYER, Role.COACH, Role.UMPIRE, Role.SUPERADMIN];
 
 interface AdminUserRowActionsProps {
   user: AdminUserRow;
@@ -93,7 +95,12 @@ export function AdminUserRowActions({ user }: AdminUserRowActionsProps) {
             {user.isVerified ? t("unverify") : t("verify")}
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem onSelect={openRoleDialog}>{t("changeRole")}</DropdownMenuItem>
+          {user.role === Role.CLUB ? (
+            // A club account keeps its role: it cannot be turned into a person
+            <DropdownMenuItem disabled>{t("changeRoleClubLocked")}</DropdownMenuItem>
+          ) : (
+            <DropdownMenuItem onSelect={openRoleDialog}>{t("changeRole")}</DropdownMenuItem>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
 

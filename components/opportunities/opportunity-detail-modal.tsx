@@ -68,13 +68,21 @@ function OpportunityActionButtons({
 }: OpportunityActionButtonsProps) {
   return (
     <div className="flex gap-3 pt-4 border-t border-border">
-      {!canApply ? null : normalizedStatus === "filled" || userAlreadyApplied ? (
+      {!canApply ? null : userAlreadyApplied ? (
         <button
           disabled
           className="flex-1 py-2 rounded-lg border-2 border-success bg-success/20 font-semibold text-foreground flex items-center justify-center gap-2 transition-colors duration-300 cursor-default"
         >
           <CheckCircle size={18} />
           {t("applicationSent")}
+        </button>
+      ) : normalizedStatus !== "open" ? (
+        // Closed or filled: the backend rejects the application, so none is offered
+        <button
+          disabled
+          className="flex-1 py-2 rounded-lg border border-border bg-foreground/10 font-semibold text-foreground-muted flex items-center justify-center gap-2 cursor-not-allowed"
+        >
+          {t("applicationsClosed")}
         </button>
       ) : (
         <button

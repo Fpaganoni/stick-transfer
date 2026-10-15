@@ -80,6 +80,11 @@ export const ADMIN_CLUBS = gql`
       verificationDoc
       isVerified
       createdAt
+      # Private: the backend only sends it to a SUPERADMIN. Shown to decide on a verification.
+      managedBy {
+        firstName
+        lastName
+      }
       members {
         id
       }

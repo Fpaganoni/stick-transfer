@@ -13,7 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { ClubCrest } from "@/components/clubs/club-crest";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -63,6 +63,7 @@ export function AdminClubsTable({ clubs, isLoading, onReview }: AdminClubsTableP
         <TableHeader>
           <TableRow>
             <TableHead>{t("table.name")}</TableHead>
+            <TableHead>{t("table.manager")}</TableHead>
             <TableHead>{t("table.location")}</TableHead>
             <TableHead>{t("table.league")}</TableHead>
             <TableHead>{t("table.members")}</TableHead>
@@ -79,12 +80,12 @@ export function AdminClubsTable({ clubs, isLoading, onReview }: AdminClubsTableP
             >
               <TableCell>
                 <Link href={`/clubs/${club.id}`} className="flex items-center gap-3 hover:underline">
-                  <Avatar className="size-8">
-                    <AvatarImage src={club.logo} alt={club.name} />
-                    <AvatarFallback>{club.name?.[0]?.toUpperCase()}</AvatarFallback>
-                  </Avatar>
+                  <ClubCrest name={club.name} logo={club.logo} size={32} className="size-8 text-sm" />
                   <span className="font-medium">{club.name}</span>
                 </Link>
+              </TableCell>
+              <TableCell className="text-foreground-muted">
+                {club.managedBy ? `${club.managedBy.firstName} ${club.managedBy.lastName}` : "—"}
               </TableCell>
               <TableCell className="text-foreground-muted">
                 <CountryLabel city={club.city} value={club.country} fallback="—" />

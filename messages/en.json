@@ -855,6 +855,7 @@
     "closed": "Closed",
     "published": "Published",
     "applicationSent": "Application Sent",
+    "applicationsClosed": "No longer accepting applications",
     "applyWithProfile": "Apply with Profile",
     "searchPlaceholder": "Search by title, city, club...",
     "verified": "Verified Club",
@@ -1236,6 +1237,7 @@
         "verify": "Verify",
         "unverify": "Unverify",
         "changeRole": "Change role",
+        "changeRoleClubLocked": "Club accounts keep their role",
         "confirmActivateTitle": "Activate this account?",
         "confirmActivateDescription": "{name} will regain full access to the platform immediately.",
         "confirmDeactivateTitle": "Deactivate this account?",
@@ -1258,6 +1260,7 @@
         "verified": "User verified",
         "unverified": "User unverified",
         "roleChanged": "User role updated",
+        "roleChangeClub": "A club account cannot change its role, and nobody can become a club this way.",
         "actionFailed": "Couldn't complete the action. Please try again."
       }
     },
@@ -1266,6 +1269,7 @@
       "subtitle": "Review club profiles and manage verification status.",
       "table": {
         "name": "Club",
+        "manager": "Person in charge",
         "location": "Location",
         "league": "League",
         "members": "Members",
@@ -1292,6 +1296,7 @@
         "title": "Club verification",
         "description": "Review the club's verification document and approve or reject the request.",
         "documentLabel": "Verification document",
+        "managedBy": "Person in charge:",
         "viewDocument": "View document",
         "noDocument": "No document was submitted.",
         "reject": "Reject",

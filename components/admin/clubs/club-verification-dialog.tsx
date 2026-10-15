@@ -24,7 +24,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { ClubCrest } from "@/components/clubs/club-crest";
 import { Badge } from "@/components/ui/badge";
 import { useAdminSetClubVerification } from "@/hooks/useAdminClubs";
 import { AdminClubRow } from "@/types/models/admin";
@@ -69,16 +69,22 @@ export function ClubVerificationDialog({ club, open, onOpenChange }: ClubVerific
 
           <div className="space-y-4">
             <div className="flex items-center gap-3">
-              <Avatar className="size-12">
-                <AvatarImage src={club.logo} alt={club.name} />
-                <AvatarFallback>{club.name?.[0]?.toUpperCase()}</AvatarFallback>
-              </Avatar>
+              <ClubCrest name={club.name} logo={club.logo} size={48} className="size-12 text-base" />
               <div>
                 <p className="font-medium">{club.name}</p>
                 <p className="text-sm text-foreground-muted">
                   <CountryLabel city={club.city} value={club.country} fallback="—" />
                   {club.league ? ` · ${club.league}` : ""}
                 </p>
+                {/* Who registered the club: what the admin weighs before verifying it */}
+                {club.managedBy && (
+                  <p className="text-sm text-foreground-muted">
+                    <span>{t("managedBy")}</span>{" "}
+                    <span className="text-foreground">
+                      {club.managedBy.firstName} {club.managedBy.lastName}
+                    </span>
+                  </p>
+                )}
               </div>
               <Badge variant="outline" className="ml-auto">
                 {club.verificationStatus}

@@ -14,7 +14,7 @@ describe("parseApiError", () => {
     });
   });
 
-  it.each(["JOB_HAS_UNANSWERED_APPLICATIONS", "JOB_FILLED_COOLDOWN"])(
+  it.each(["JOB_HAS_UNANSWERED_APPLICATIONS", "JOB_FILLED_COOLDOWN", "ROLE_CHANGE_NOT_ALLOWED"])(
     "recognizes %s",
     (code) => {
       expect(parseApiError(apiError({ code })).code).toBe(code);

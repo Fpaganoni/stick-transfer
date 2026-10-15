@@ -10,6 +10,7 @@ import { renderHook, waitFor } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React from "react";
 import { useAdminClubs, useAdminSetClubVerification } from "@/hooks/useAdminClubs";
+import { ADMIN_CLUBS } from "@/graphql";
 
 const mockRequest = vi.fn();
 vi.mock("@/lib/graphql-client", () => ({
@@ -23,6 +24,7 @@ vi.mock("sonner", () => ({
 const mockClubRow = {
   id: "club-1",
   name: "HC Barcelona",
+  managedBy: { firstName: "Ana", lastName: "Garcia" },
   city: "Barcelona",
   country: "ES",
   league: "División de Honor",
@@ -71,6 +73,22 @@ describe("useAdminClubs", () => {
     expect(result.current.data?.adminClubs.items[0].membersCount).toBe(2);
     expect(result.current.data?.adminClubs.total).toBe(1);
     expect(mockRequest).toHaveBeenCalledWith(expect.anything(), { limit: 100, offset: 0 });
+  });
+
+  it("keeps the person in charge, which only a SUPERADMIN receives", async () => {
+    mockRequest.mockResolvedValueOnce({ clubs: [mockClubRow] });
+
+    const { result } = renderHook(() => useAdminClubs(undefined, 1, 20), { wrapper: wrapper() });
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(result.current.data?.adminClubs.items[0].managedBy).toEqual({
+      firstName: "Ana",
+      lastName: "Garcia",
+    });
+  });
+
+  it("asks the backend for the person in charge of each club", () => {
+    expect(ADMIN_CLUBS).toContain("managedBy");
   });
 
   it("finds clubs by the name of their country code", async () => {

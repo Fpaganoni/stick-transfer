@@ -855,6 +855,7 @@
     "closed": "Fermé",
     "published": "Publié",
     "applicationSent": "Demande Envoyée",
+    "applicationsClosed": "N'accepte plus de candidatures",
     "applyWithProfile": "Postuler avec le Profil",
     "searchPlaceholder": "Rechercher par titre, ville, club...",
     "verified": "Club Vérifié",
@@ -1236,6 +1237,7 @@
         "verify": "Vérifier",
         "unverify": "Retirer la vérification",
         "changeRole": "Changer le rôle",
+        "changeRoleClubLocked": "Les comptes de club gardent leur rôle",
         "confirmActivateTitle": "Activer ce compte ?",
         "confirmActivateDescription": "{name} retrouvera immédiatement un accès complet à la plateforme.",
         "confirmDeactivateTitle": "Désactiver ce compte ?",
@@ -1258,6 +1260,7 @@
         "verified": "Utilisateur vérifié",
         "unverified": "Vérification retirée",
         "roleChanged": "Rôle mis à jour",
+        "roleChangeClub": "Un compte de club ne peut pas changer de rôle, et personne ne peut devenir un club ainsi.",
         "actionFailed": "Impossible de terminer l'action. Veuillez réessayer."
       }
     },
@@ -1266,6 +1269,7 @@
       "subtitle": "Examinez les profils des clubs et gérez leur statut de vérification.",
       "table": {
         "name": "Club",
+        "manager": "Personne responsable",
         "location": "Lieu",
         "league": "Ligue",
         "members": "Membres",
@@ -1292,6 +1296,7 @@
         "title": "Vérification du club",
         "description": "Examinez le document de vérification du club puis approuvez ou rejetez la demande.",
         "documentLabel": "Document de vérification",
+        "managedBy": "Personne responsable :",
         "viewDocument": "Voir le document",
         "noDocument": "Aucun document n'a été soumis.",
         "reject": "Rejeter",

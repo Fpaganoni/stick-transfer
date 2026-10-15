@@ -60,9 +60,43 @@ describe("AdminUserRowActions role change", () => {
     const dialog = await openRoleDialog(user, player);
     await openOptions(user, dialog);
 
-    for (const role of ["PLAYER", "COACH", "CLUB", "UMPIRE", "SUPERADMIN"]) {
+    for (const role of ["PLAYER", "COACH", "UMPIRE", "SUPERADMIN"]) {
       expect(await screen.findByRole("option", { name: role })).toBeInTheDocument();
     }
+  });
+
+  it("never offers CLUB as a destination: the backend refuses to turn a person into a club", async () => {
+    const user = userEvent.setup();
+    const dialog = await openRoleDialog(user, player);
+    await openOptions(user, dialog);
+
+    await screen.findByRole("option", { name: "COACH" });
+    expect(screen.queryByRole("option", { name: "CLUB" })).toBeNull();
+  });
+
+  it("does not let the role of a club account be changed", async () => {
+    const user = userEvent.setup();
+    render(<AdminUserRowActions user={{ ...player, role: "CLUB" }} />);
+
+    await user.click(screen.getByRole("button", { name: "openMenu" }));
+
+    expect(await screen.findByRole("menuitem", { name: "changeRoleClubLocked" })).toHaveAttribute(
+      "aria-disabled",
+      "true",
+    );
+    expect(screen.queryByText("changeRole")).toBeNull();
+  });
+
+  it("still lets the role of a person be changed", async () => {
+    const user = userEvent.setup();
+    render(<AdminUserRowActions user={player} />);
+
+    await user.click(screen.getByRole("button", { name: "openMenu" }));
+
+    expect(await screen.findByRole("menuitem", { name: "changeRole" })).not.toHaveAttribute(
+      "aria-disabled",
+      "true",
+    );
   });
 
   it("does not let an umpire be 'changed' to UMPIRE", async () => {
