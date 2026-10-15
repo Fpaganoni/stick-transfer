@@ -11,7 +11,13 @@ import { ProfileSlugWrapper } from "@/components/profile/profile-slug-wrapper";
 import { Role } from "@/types/enums";
 
 const { authState, query, useUserByUsernameMock } = vi.hoisted(() => ({
-  authState: { user: { username: "lucia", role: "PLAYER" } as { username: string; role: string } | null },
+  authState: {
+    user: { id: "lucia-id", username: "lucia", role: "PLAYER" } as {
+      id: string;
+      username: string;
+      role: string;
+    } | null,
+  },
   query: { data: undefined as unknown, isLoading: false },
   useUserByUsernameMock: vi.fn(),
 }));
@@ -35,19 +41,16 @@ vi.mock("@/hooks/useUsers", () => ({
 vi.mock("@/components/pages/public-user-profile-page", () => ({
   PublicUserProfilePage: () => <div>public-user-page</div>,
 }));
-vi.mock("@/components/pages/public-club-profile-page", () => ({
-  PublicClubProfilePage: () => <div>public-club-page</div>,
+vi.mock("@/components/clubs/club-profile-route", () => ({
+  ClubProfileRoute: ({ clubId }: { clubId: string }) => <div>club-profile:{clubId}</div>,
 }));
 vi.mock("@/components/pages/user-profile-page", () => ({
   UserProfilePage: () => <div>own-user-page</div>,
 }));
-vi.mock("@/components/pages/club-profile-page", () => ({
-  ClubProfilePage: () => <div>own-club-page</div>,
-}));
 
 describe("ProfileSlugWrapper", () => {
   beforeEach(() => {
-    authState.user = { username: "lucia", role: Role.PLAYER };
+    authState.user = { id: "lucia-id", username: "lucia", role: Role.PLAYER };
     query.data = undefined;
     query.isLoading = false;
     useUserByUsernameMock.mockReset();
@@ -60,15 +63,16 @@ describe("ProfileSlugWrapper", () => {
 
     expect(screen.getByLabelText("loadingProfile")).toHaveAttribute("aria-busy", "true");
     expect(screen.queryByText("public-user-page")).not.toBeInTheDocument();
-    expect(screen.queryByText("public-club-page")).not.toBeInTheDocument();
+    expect(screen.queryByText(/club-profile:/)).not.toBeInTheDocument();
   });
 
-  it("renders the club profile once the role is CLUB", () => {
-    query.data = { getUserByUsername: { role: Role.CLUB } };
+  it("renders the club profile, fetched by the account id, once the role is CLUB", () => {
+    query.data = { getUserByUsername: { id: "club-9", role: Role.CLUB } };
 
     render(<ProfileSlugWrapper username="hc_norte" />);
 
-    expect(screen.getByText("public-club-page")).toBeInTheDocument();
+    expect(screen.getByText("club-profile:club-9")).toBeInTheDocument();
+    expect(screen.queryByText("public-user-page")).not.toBeInTheDocument();
   });
 
   it("renders the user profile for any other role", () => {
@@ -95,10 +99,11 @@ describe("ProfileSlugWrapper", () => {
   });
 
   it("renders the own club profile for a club account", () => {
-    authState.user = { username: "hc_norte", role: Role.CLUB };
+    authState.user = { id: "club-7", username: "hc_norte", role: Role.CLUB };
 
     render(<ProfileSlugWrapper username="hc_norte" />);
 
-    expect(screen.getByText("own-club-page")).toBeInTheDocument();
+    expect(screen.getByText("club-profile:club-7")).toBeInTheDocument();
+    expect(screen.queryByText("own-user-page")).not.toBeInTheDocument();
   });
 });

@@ -668,13 +668,13 @@
     }
   },
   "clubProfile": {
+    "notFound": "Club not found",
     "editProfile": "Edit Profile",
     "noBio": "No description available.",
     "tabs": {
+      "label": "Club sections",
       "profile": "Profile",
-      "posts": "Posts",
       "vacancies": "Vacancies",
-      "videos": "Videos",
       "opportunities": "Opportunities",
       "about": "About"
     },
@@ -687,7 +687,11 @@
       "unfollow": "Unfollow",
       "followed": "You are now following this club.",
       "unfollowed": "You stopped following this club.",
-      "followError": "We could not update the follow. Please try again."
+      "followError": "We could not update the follow. Please try again.",
+      "more": "More actions",
+      "followers": "{count} followers",
+      "verified": "Verified club",
+      "linkCopied": "Link copied"
     },
     "onboarding": {
       "title": "Complete your club profile",
@@ -703,27 +707,20 @@
       "founded": "Founded",
       "website": "Website",
       "email": "Email",
-      "description": "Description"
-    },
-    "posts": {
-      "noPosts": "No posts yet."
+      "description": "Description",
+      "league": "League",
+      "benefits": "Benefits"
     },
     "vacancies": {
       "noVacancies": "No open positions at the moment.",
+      "publish": "Publish vacancy",
+      "ownerEmpty": "You have not published any vacancy yet.",
       "statusUpdateFailed": "We could not update the vacancy. Please try again.",
       "deleted": "Vacancy deleted.",
       "deleteFailed": "We could not delete the vacancy. Please try again.",
       "deleteBlockedUnanswered": "Answer every application before deleting this vacancy.",
       "deleteBlockedCooldown": "This vacancy was filled recently. You can delete it 14 days after it was filled.",
       "applicationUpdateFailed": "We could not update the application. Please try again."
-    },
-    "videos": {
-      "noVideos": "No videos yet",
-      "addVideo": "Add Video",
-      "addVideoTitle": "Add YouTube Video",
-      "videoUrlPlaceholder": "YouTube URL",
-      "save": "Save",
-      "cancel": "Cancel"
     },
     "visitor": {
       "title": "{name} is a member of Stick Transfer",

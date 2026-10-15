@@ -668,13 +668,13 @@
     }
   },
   "clubProfile": {
+    "notFound": "Club no encontrado",
     "editProfile": "Editar Perfil",
     "noBio": "Sin descripción disponible.",
     "tabs": {
+      "label": "Secciones del club",
       "profile": "Perfil",
-      "posts": "Publicaciones",
       "vacancies": "Vacantes",
-      "videos": "Videos",
       "opportunities": "Oportunidades",
       "about": "Acerca de"
     },
@@ -687,7 +687,11 @@
       "unfollow": "Dejar de seguir",
       "followed": "Ahora seguís a este club.",
       "unfollowed": "Dejaste de seguir a este club.",
-      "followError": "No pudimos actualizar el seguimiento. Intentá de nuevo."
+      "followError": "No pudimos actualizar el seguimiento. Intentá de nuevo.",
+      "more": "Más acciones",
+      "followers": "{count} seguidores",
+      "verified": "Club verificado",
+      "linkCopied": "Enlace copiado"
     },
     "onboarding": {
       "title": "Completá el perfil de tu club",
@@ -703,27 +707,20 @@
       "founded": "Fundado",
       "website": "Sitio web",
       "email": "Correo",
-      "description": "Descripción"
-    },
-    "posts": {
-      "noPosts": "Sin publicaciones aún."
+      "description": "Descripción",
+      "league": "Liga",
+      "benefits": "Beneficios"
     },
     "vacancies": {
       "noVacancies": "Sin posiciones abiertas en este momento.",
+      "publish": "Publicar vacante",
+      "ownerEmpty": "Todavía no publicaste ninguna vacante.",
       "statusUpdateFailed": "No pudimos actualizar la vacante. Intentá de nuevo.",
       "deleted": "Vacante eliminada.",
       "deleteFailed": "No pudimos eliminar la vacante. Intentá de nuevo.",
       "deleteBlockedUnanswered": "Respondé todas las postulaciones antes de eliminar esta vacante.",
       "deleteBlockedCooldown": "Esta vacante se cubrió hace poco. Podés eliminarla 14 días después de cubrirla.",
       "applicationUpdateFailed": "No pudimos actualizar la postulación. Intentá de nuevo."
-    },
-    "videos": {
-      "noVideos": "Sin videos aún",
-      "addVideo": "Agregar Video",
-      "addVideoTitle": "Agregar Video de YouTube",
-      "videoUrlPlaceholder": "URL de YouTube",
-      "save": "Guardar",
-      "cancel": "Cancelar"
     },
     "visitor": {
       "title": "{name} es miembro de Stick Transfer",

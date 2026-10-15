@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { ClubDetailPage } from "@/components/pages/club-detail-page";
+import { ClubProfileRoute } from "@/components/clubs/club-profile-route";
 
 interface ClubDetailRouteProps {
   params: Promise<{
@@ -19,5 +19,5 @@ export default async function ClubDetailRoute({
 }: ClubDetailRouteProps) {
   const { id } = await params;
 
-  return <ClubDetailPage clubId={id} />;
+  return <ClubProfileRoute clubId={id} />;
 }
