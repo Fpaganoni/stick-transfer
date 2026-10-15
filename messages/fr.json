@@ -120,6 +120,8 @@
     "stepBasicTitle": "Informations de base",
     "stepRoleDataTitle": "Complétez votre profil",
     "umpireProfileHint": "Votre licence, certifications et expérience sont ajoutées ensuite depuis votre profil.",
+    "responsiblePerson": "Personne responsable",
+    "responsiblePersonHint": "Ces informations sont privées. Seuls vous et les administrateurs de la plateforme peuvent les voir.",
     "next": "Suivant",
     "back": "Retour",
     "createProfile": "Créer le Profil",
@@ -178,7 +180,9 @@
       "dobInvalid": "Saisissez une date de naissance valide",
       "dobTooYoung": "Vous devez avoir au moins 16 ans pour vous inscrire",
       "dobTooOld": "La date de naissance ne peut pas remonter à plus de 100 ans",
-      "clubNameRequired": "Le nom du club doit contenir au moins 2 caractères"
+      "clubNameRequired": "Le nom du club doit contenir au moins 2 caractères",
+      "clubNameTaken": "Un club portant ce nom existe déjà",
+      "nameInvalid": "Ce nom contient des caractères non autorisés"
     },
     "roles": {
       "player": "Joueur",

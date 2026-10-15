@@ -88,8 +88,13 @@ async function fillUntilStep3(user: ReturnType<typeof userEvent.setup>, roleCard
   await user.click(screen.getByTestId(`role-card-${roleCardId}`));
   await user.click(screen.getByText("next"));
 
-  await user.type(screen.getByLabelText("firstName"), "Ana");
-  await user.type(screen.getByLabelText("lastName"), "Referee");
+  // A club account is the club: step 2 asks for the club name, not for a person
+  if (roleCardId === "clubAdmin") {
+    await user.type(screen.getByLabelText("clubName"), "HC Madrid");
+  } else {
+    await user.type(screen.getByLabelText("firstName"), "Ana");
+    await user.type(screen.getByLabelText("lastName"), "Referee");
+  }
   await user.type(screen.getByLabelText("username"), "ana_ref");
   await user.type(screen.getByLabelText("email"), "ana@x.com");
   await user.type(screen.getByLabelText("password"), "Password1!");
@@ -206,9 +211,105 @@ describe("RegisterPage", () => {
   });
 
   describe("club flow", () => {
-    // The backend creates the club with id = user id; me.clubId is the player
-    // membership field and comes back empty for a club account.
-    it("sends the new club to its own club page", async () => {
+    /** Step 3 of a club: city + the (private) person in charge. */
+    async function fillClubStep3(user: ReturnType<typeof userEvent.setup>) {
+      await user.type(await screen.findByLabelText("city"), "Madrid");
+      await user.type(screen.getByLabelText("firstName"), "Laura");
+      await user.type(screen.getByLabelText("lastName"), "Gomez");
+    }
+
+    it("asks for the club name on step 2 instead of a first and last name", async () => {
+      const user = userEvent.setup();
+      renderWithProviders(<RegisterPage />);
+
+      await user.click(screen.getByTestId("role-card-clubAdmin"));
+      await user.click(screen.getByText("next"));
+
+      expect(screen.getByLabelText("clubName")).toBeDefined();
+      expect(screen.queryByLabelText("firstName")).toBeNull();
+      expect(screen.queryByLabelText("lastName")).toBeNull();
+    });
+
+    it("keeps asking for a first and last name on step 2 for every other role", async () => {
+      const user = userEvent.setup();
+      renderWithProviders(<RegisterPage />);
+
+      await user.click(screen.getByTestId("role-card-player"));
+      await user.click(screen.getByText("next"));
+
+      expect(screen.getByLabelText("firstName")).toBeDefined();
+      expect(screen.queryByLabelText("clubName")).toBeNull();
+    });
+
+    it("does not leave step 2 without a club name", async () => {
+      const user = userEvent.setup();
+      renderWithProviders(<RegisterPage />);
+
+      await user.click(screen.getByTestId("role-card-clubAdmin"));
+      await user.click(screen.getByText("next"));
+      await user.click(screen.getByText("next"));
+
+      expect(await screen.findByText("clubNameRequired")).toBeDefined();
+      expect(screen.queryByLabelText("city")).toBeNull();
+    });
+
+    it("step 3 asks for the city and the responsible person, and says it is private", async () => {
+      const user = userEvent.setup();
+      renderWithProviders(<RegisterPage />);
+
+      await fillUntilStep3(user, "clubAdmin");
+
+      expect(await screen.findByLabelText("city")).toBeDefined();
+      expect(screen.getByText("responsiblePerson")).toBeDefined();
+      expect(screen.getByText("responsiblePersonHint")).toBeDefined();
+      expect(screen.getByLabelText("firstName")).toBeDefined();
+      expect(screen.getByLabelText("lastName")).toBeDefined();
+      // The country was already chosen on step 2
+      expect(screen.queryByLabelText("country")).toBeNull();
+    });
+
+    it("requires the responsible person before registering", async () => {
+      const user = userEvent.setup();
+      renderWithProviders(<RegisterPage />);
+
+      await fillUntilStep3(user, "clubAdmin");
+      await user.type(await screen.findByLabelText("city"), "Madrid");
+      await user.click(screen.getByText("createProfile"));
+
+      expect(await screen.findByText("firstNameMin")).toBeDefined();
+      expect(screen.getByText("lastNameMin")).toBeDefined();
+      expect(mockRegister).not.toHaveBeenCalled();
+    });
+
+    it("registers with the club name and never sends person fields", async () => {
+      const user = userEvent.setup();
+      renderWithProviders(<RegisterPage />);
+
+      await fillUntilStep3(user, "clubAdmin");
+      await fillClubStep3(user);
+      await user.click(screen.getByText("createProfile"));
+
+      await waitFor(() => expect(mockRegister).toHaveBeenCalledTimes(1));
+      const variables = mockRegister.mock.calls[0][0];
+      expect(variables).toMatchObject({
+        email: "ana@x.com",
+        name: "HC Madrid",
+        clubName: "HC Madrid",
+        username: "ana_ref",
+        role: "CLUB",
+        country: "ES",
+        city: "Madrid",
+        managedByFirstName: "Laura",
+        managedByLastName: "Gomez",
+      });
+      // The backend answers FIELD_NOT_ALLOWED for these on a CLUB account
+      expect(variables).not.toHaveProperty("dateOfBirth");
+      expect(variables).not.toHaveProperty("position");
+    });
+
+    // The backend creates the club with id = user id; the new club completes
+    // its crest and description from the profile editor.
+    it("sends the new club to the profile editor, not to its public page", async () => {
       mockRegister.mockImplementation((_vars, opts) => opts.onSuccess());
       mockRequest.mockResolvedValue({
         me: { id: "club-user-1", role: "CLUB", clubId: null },
@@ -217,13 +318,63 @@ describe("RegisterPage", () => {
       renderWithProviders(<RegisterPage />);
 
       await fillUntilStep3(user, "clubAdmin");
-      await user.type(await screen.findByLabelText("clubName"), "HC Madrid");
-      await user.type(screen.getByLabelText("city"), "Madrid");
-      await pickCountry(user, "Spain");
+      await fillClubStep3(user);
       await user.click(screen.getByText("createProfile"));
 
-      await waitFor(() => expect(mockPush).toHaveBeenCalledWith("/en/clubs/club-user-1"));
+      await waitFor(() => expect(mockPush).toHaveBeenCalledWith("/en/profile/edit"));
+      expect(mockPush).not.toHaveBeenCalledWith("/en/clubs/club-user-1");
       expect(mockPush).not.toHaveBeenCalledWith("/en/opportunities");
+    });
+
+    it("shows CLUB_NAME_TAKEN on the club name field back on step 2", async () => {
+      mockRegister.mockImplementation((_vars, opts) =>
+        opts.onError({
+          response: {
+            errors: [{ extensions: { code: "CLUB_NAME_TAKEN", field: "clubName" } }],
+          },
+        }),
+      );
+      const user = userEvent.setup();
+      renderWithProviders(<RegisterPage />);
+
+      await fillUntilStep3(user, "clubAdmin");
+      await fillClubStep3(user);
+      await user.click(screen.getByText("createProfile"));
+
+      expect(await screen.findByText("clubNameTaken")).toBeDefined();
+      expect(screen.getByLabelText("clubName")).toBeDefined();
+      expect(screen.queryByText("registrationFailed")).toBeNull();
+    });
+
+    it("shows NAME_INVALID on the responsible person field", async () => {
+      mockRegister.mockImplementation((_vars, opts) =>
+        opts.onError(validationError("managedByFirstName", "NAME_INVALID")),
+      );
+      const user = userEvent.setup();
+      renderWithProviders(<RegisterPage />);
+
+      await fillUntilStep3(user, "clubAdmin");
+      await fillClubStep3(user);
+      await user.click(screen.getByText("createProfile"));
+
+      expect(await screen.findByText("nameInvalid")).toBeDefined();
+      expect(screen.getByLabelText("city")).toBeDefined();
+      expect(screen.queryByText("registrationFailed")).toBeNull();
+    });
+
+    it("shows NAME_INVALID on the club name field back on step 2", async () => {
+      mockRegister.mockImplementation((_vars, opts) =>
+        opts.onError(validationError("clubName", "NAME_INVALID")),
+      );
+      const user = userEvent.setup();
+      renderWithProviders(<RegisterPage />);
+
+      await fillUntilStep3(user, "clubAdmin");
+      await fillClubStep3(user);
+      await user.click(screen.getByText("createProfile"));
+
+      expect(await screen.findByText("nameInvalid")).toBeDefined();
+      expect(screen.getByLabelText("clubName")).toBeDefined();
     });
   });
 
@@ -379,9 +530,9 @@ describe("RegisterPage", () => {
       renderWithProviders(<RegisterPage />);
 
       await fillUntilStep3(user, "clubAdmin");
-      await user.type(await screen.findByLabelText("clubName"), "HC Madrid");
-      await user.type(screen.getByLabelText("city"), "Madrid");
-      await pickCountry(user, "Spain");
+      await user.type(await screen.findByLabelText("city"), "Madrid");
+      await user.type(screen.getByLabelText("firstName"), "Laura");
+      await user.type(screen.getByLabelText("lastName"), "Gomez");
       await user.click(screen.getByText("createProfile"));
 
       expect(await screen.findByText("registrationFailed")).toBeDefined();

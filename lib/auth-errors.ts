@@ -112,6 +112,7 @@ export const FIELD_ERROR_MESSAGE_KEY: Record<string, string> = {
   USERNAME_RESERVED: "usernameReserved",
   NAME_REQUIRED: "fieldRequired",
   NAME_TOO_LONG: "nameTooLong",
+  NAME_INVALID: "nameInvalid",
   ROLE_INVALID: "roleInvalid",
   FIELD_REQUIRED: "fieldRequired",
   DATE_OF_BIRTH_INVALID: "dobInvalid",

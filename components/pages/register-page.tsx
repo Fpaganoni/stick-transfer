@@ -7,7 +7,6 @@ import {
   Eye,
   EyeOff,
   User,
-  ArrowUpIcon,
   ChevronLeft,
   ChevronRight,
   AlertCircle,
@@ -48,6 +47,12 @@ import dynamic from "next/dynamic";
 import { useCooldown } from "@/hooks/useCooldown";
 import { useTranslations } from "next-intl";
 import { useUIStore } from "@/stores/useUIStore";
+import { FieldError } from "./register-field-error";
+import {
+  ClubNameField,
+  Step3ClubDataForm,
+  type Step3ClubData,
+} from "./register-club-steps";
 
 // ---------------------------------------------------------------------------
 // Role card definitions
@@ -67,6 +72,23 @@ const ROLE_CARDS: RoleCard[] = [
   { id: "umpire", icon: "🏁", backendRole: "UMPIRE" },
   { id: "clubAdmin", icon: "🏟️", backendRole: "CLUB" },
 ];
+
+// Backend field name (VALIDATION_ERROR fields[].field) -> step 2 input that shows it.
+// A club is named by `clubName`; every other role by first and last name.
+const SHARED_STEP2_SERVER_FIELDS = {
+  email: "email",
+  password: "password",
+  username: "username",
+  country: "country",
+} as const;
+
+const STEP2_SERVER_FIELDS: Record<
+  "club" | "person",
+  Partial<Record<string, keyof Step2Data>>
+> = {
+  person: { ...SHARED_STEP2_SERVER_FIELDS, name: "firstName" },
+  club: { ...SHARED_STEP2_SERVER_FIELDS, name: "clubName", clubName: "clubName" },
+};
 
 // The country combobox (cmdk + popover) is only needed from step 2 on, so it
 // stays out of the page's first-load JS.
@@ -128,31 +150,14 @@ function StepIndicator({ currentStep }: { currentStep: number }) {
 }
 
 // ---------------------------------------------------------------------------
-// Validation error helper
-// ---------------------------------------------------------------------------
-
-function FieldError({ message }: { message?: string }) {
-  if (!message) return null;
-  return (
-    <motion.p
-      initial={{ opacity: 0, y: -4 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.2 }}
-      className="flex gap-1 text-error bg-error/20 font-semibold p-1 text-xs mt-1"
-    >
-      <ArrowUpIcon size={14} className="shrink-0 mt-px" />
-      {message}
-    </motion.p>
-  );
-}
-
-// ---------------------------------------------------------------------------
 // Step 2 form types & schema
 // ---------------------------------------------------------------------------
 
 type Step2Data = {
   firstName: string;
   lastName: string;
+  /** Only asked (and sent) for a CLUB account: it is the account name. */
+  clubName: string;
   username: string;
   email: string;
   password: string;
@@ -167,7 +172,6 @@ type Step2Data = {
 
 type Step3PlayerData = { position: string; dateOfBirth?: string };
 type Step3CoachData = { dateOfBirth?: string };
-type Step3ClubData = { name: string; city: string; country: string };
 type Step3UmpireData = { city: string; dateOfBirth?: string };
 
 // ---------------------------------------------------------------------------
@@ -266,11 +270,63 @@ function LegalLink({ href, children }: { href: string; children: ReactNode }) {
   );
 }
 
+/** First + last name of the person registering (every role but CLUB). */
+function PersonNameFields({
+  t,
+  form,
+}: {
+  t: (key: string) => string;
+  form: UseFormReturn<Step2Data>;
+}) {
+  return (
+    <div className="grid grid-cols-2 gap-3">
+      <div>
+        <Label htmlFor="firstName" className="mb-1 text-sm">
+          {t("firstName")}
+        </Label>
+        <div className="relative">
+          <User
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground"
+            size={16}
+          />
+          <Input
+            {...form.register("firstName")}
+            id="firstName"
+            placeholder={t("placeholders.firstName")}
+            className="pl-9 h-9 text-sm"
+          />
+        </div>
+        <FieldError message={form.formState.errors.firstName?.message} />
+      </div>
+      <div>
+        <Label htmlFor="lastName" className="mb-1 text-sm">
+          {t("lastName")}
+        </Label>
+        <div className="relative">
+          <User
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground"
+            size={16}
+          />
+          <Input
+            {...form.register("lastName")}
+            id="lastName"
+            placeholder={t("placeholders.lastName")}
+            className="pl-9 h-9 text-sm"
+          />
+        </div>
+        <FieldError message={form.formState.errors.lastName?.message} />
+      </div>
+    </div>
+  );
+}
+
 interface Step2BasicDataProps {
   t: (key: string) => string;
   /** Rich text with the terms and privacy links (needs t.rich, built by the parent). */
   termsLabel: ReactNode;
   form: UseFormReturn<Step2Data>;
+  /** A club is named instead of asking for a person's first and last name. */
+  isClub: boolean;
   showPassword: boolean;
   showConfirmPassword: boolean;
   onTogglePassword: () => void;
@@ -284,6 +340,7 @@ function Step2BasicData({
   t,
   termsLabel,
   form,
+  isClub,
   showPassword,
   showConfirmPassword,
   onTogglePassword,
@@ -305,45 +362,15 @@ function Step2BasicData({
         {t("stepBasicTitle")}
       </h3>
 
-      {/* First + Last name */}
-      <div className="grid grid-cols-2 gap-3">
-        <div>
-          <Label htmlFor="firstName" className="mb-1 text-sm">
-            {t("firstName")}
-          </Label>
-          <div className="relative">
-            <User
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground"
-              size={16}
-            />
-            <Input
-              {...form.register("firstName")}
-              id="firstName"
-              placeholder={t("placeholders.firstName")}
-              className="pl-9 h-9 text-sm"
-            />
-          </div>
-          <FieldError message={form.formState.errors.firstName?.message} />
-        </div>
-        <div>
-          <Label htmlFor="lastName" className="mb-1 text-sm">
-            {t("lastName")}
-          </Label>
-          <div className="relative">
-            <User
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground"
-              size={16}
-            />
-            <Input
-              {...form.register("lastName")}
-              id="lastName"
-              placeholder={t("placeholders.lastName")}
-              className="pl-9 h-9 text-sm"
-            />
-          </div>
-          <FieldError message={form.formState.errors.lastName?.message} />
-        </div>
-      </div>
+      {isClub ? (
+        <ClubNameField
+          t={t}
+          registration={form.register("clubName")}
+          error={form.formState.errors.clubName?.message}
+        />
+      ) : (
+        <PersonNameFields t={t} form={form} />
+      )}
 
       {/* Username */}
       <div>
@@ -559,100 +586,6 @@ function DateOfBirthField({ id, label, registration, error }: DateOfBirthFieldPr
       />
       <FieldError message={error} />
     </div>
-  );
-}
-
-interface Step3ClubDataProps {
-  t: (key: string) => string;
-  form: UseFormReturn<Step3ClubData>;
-  isRegistering: boolean;
-  onBack: () => void;
-  onSubmit: SubmitHandler<Step3ClubData>;
-}
-
-function Step3ClubDataForm({
-  t,
-  form,
-  isRegistering,
-  onBack,
-  onSubmit,
-}: Step3ClubDataProps) {
-  return (
-    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
-      {/* Club name */}
-      <div>
-        <Label htmlFor="clubName" className="mb-1 text-sm">
-          {t("clubName")}
-        </Label>
-        <Input
-          {...form.register("name")}
-          id="clubName"
-          placeholder={t("placeholders.clubName")}
-          className="h-9 text-sm"
-        />
-        <FieldError message={form.formState.errors.name?.message} />
-      </div>
-
-      {/* City */}
-      <div>
-        <Label htmlFor="city" className="mb-1 text-sm">
-          {t("city")}
-        </Label>
-        <Input
-          {...form.register("city")}
-          id="city"
-          placeholder={t("placeholders.city")}
-          className="h-9 text-sm"
-        />
-        <FieldError message={form.formState.errors.city?.message} />
-      </div>
-
-      {/* Country */}
-      <div>
-        <Label htmlFor="clubCountry" className="mb-1 text-sm">
-          {t("country")}
-        </Label>
-        <Controller
-          control={form.control}
-          name="country"
-          render={({ field }) => (
-            <CountrySelect
-              id="clubCountry"
-              ref={field.ref}
-              name={field.name}
-              value={field.value}
-              onChange={(code) => field.onChange(code ?? "")}
-              onBlur={field.onBlur}
-              placeholder={t("placeholders.country")}
-              aria-invalid={!!form.formState.errors.country}
-              className="h-9 text-sm"
-            />
-          )}
-        />
-        <FieldError message={form.formState.errors.country?.message} />
-      </div>
-
-      <div className="flex gap-2 pt-2">
-        <motion.button
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.97 }}
-          type="button"
-          onClick={onBack}
-          className="h-9 px-4 border border-border rounded-lg text-sm font-medium hover:bg-border/30 transition-colors cursor-pointer flex items-center gap-1"
-        >
-          <ChevronLeft size={16} /> {t("back")}
-        </motion.button>
-        <motion.button
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.97 }}
-          type="submit"
-          disabled={isRegistering}
-          className="flex-1 h-9 bg-primary text-white font-semibold rounded-lg hover:bg-primary-hover transition-colors cursor-pointer disabled:opacity-50 text-sm"
-        >
-          {isRegistering ? t("creatingProfile") : t("createProfile")}
-        </motion.button>
-      </div>
-    </form>
   );
 }
 
@@ -875,16 +808,28 @@ export const RegisterPage = () => {
   const step2Schema = z
     .object({
       // The backend stores the full name (max 100) as "first last".
-      firstName: z
-        .string()
-        .trim()
-        .min(2, tValidation("firstNameMin"))
-        .max(49, tValidation("nameTooLong")),
-      lastName: z
-        .string()
-        .trim()
-        .min(2, tValidation("lastNameMin"))
-        .max(50, tValidation("nameTooLong")),
+      // A club is named instead: the person in charge is asked on step 3
+      firstName: isClub
+        ? z.string()
+        : z
+            .string()
+            .trim()
+            .min(2, tValidation("firstNameMin"))
+            .max(49, tValidation("nameTooLong")),
+      lastName: isClub
+        ? z.string()
+        : z
+            .string()
+            .trim()
+            .min(2, tValidation("lastNameMin"))
+            .max(50, tValidation("nameTooLong")),
+      clubName: isClub
+        ? z
+            .string()
+            .trim()
+            .min(2, tValidation("clubNameRequired"))
+            .max(100, tValidation("nameTooLong"))
+        : z.string(),
       // Optional; backend lowercases it and checks duplicates case-insensitively
       username: z
         .string()
@@ -932,7 +877,7 @@ export const RegisterPage = () => {
 
   const step2Form = useForm<Step2Data>({
     resolver: zodResolver(step2Schema),
-    defaultValues: { terms: false },
+    defaultValues: { terms: false, firstName: "", lastName: "", clubName: "" },
   });
 
   // Step 3 schemas
@@ -942,13 +887,19 @@ export const RegisterPage = () => {
     dateOfBirth,
   });
   const step3CoachSchema = z.object({ dateOfBirth });
+  // Private data of the person in charge; the backend stores up to 100 chars each
   const step3ClubSchema = z.object({
-    name: z.string().min(2, tValidation("clubNameRequired")),
-    city: z.string().min(1, tValidation("cityRequired")),
-    country: z
+    city: z.string().trim().min(1, tValidation("cityRequired")),
+    managedByFirstName: z
       .string()
-      .min(1, tValidation("countryRequired"))
-      .refine(isCountryCode, tValidation("countryInvalid")),
+      .trim()
+      .min(2, tValidation("firstNameMin"))
+      .max(100, tValidation("nameTooLong")),
+    managedByLastName: z
+      .string()
+      .trim()
+      .min(2, tValidation("lastNameMin"))
+      .max(100, tValidation("nameTooLong")),
   });
 
   const step3UmpireSchema = z.object({
@@ -1025,29 +976,30 @@ export const RegisterPage = () => {
         });
         focusStep2("username");
         return;
+      case "CLUB_NAME_TAKEN":
+        step2Form.setError("clubName", {
+          ...opts,
+          message: tValidation("clubNameTaken"),
+        });
+        focusStep2("clubName");
+        return;
       case "VALIDATION_ERROR": {
         let firstStep2Field: keyof Step2Data | null = null;
         let unplaced = false;
 
         for (const { field, code } of parsed.fields) {
           const message = serverMessage(code);
-          const step2Field: keyof Step2Data | undefined = (
-            {
-              email: "email",
-              password: "password",
-              username: "username",
-              name: "firstName",
-              country: "country",
-              managedByFirstName: "firstName",
-              managedByLastName: "lastName",
-            } as const
-          )[field as string];
+          const step2Field = STEP2_SERVER_FIELDS[isClub ? "club" : "person"][
+            field as string
+          ];
 
           if (message && step2Field) {
             step2Form.setError(step2Field, { ...opts, message });
             firstStep2Field ??= step2Field;
-          } else if (message && field === "clubName" && isClub) {
-            step3ClubForm.setError("name", { ...opts, message });
+          } else if (message && field === "managedByFirstName" && isClub) {
+            step3ClubForm.setError("managedByFirstName", { ...opts, message });
+          } else if (message && field === "managedByLastName" && isClub) {
+            step3ClubForm.setError("managedByLastName", { ...opts, message });
           } else if (message && field === "city" && isClub) {
             step3ClubForm.setError("city", { ...opts, message });
           } else if (message && field === "city" && isUmpire) {
@@ -1120,7 +1072,11 @@ export const RegisterPage = () => {
   ) => {
     const step2Data = step2Form.getValues();
     const card = ROLE_CARDS.find((r) => r.id === selectedRole)!;
-    const fullName = `${step2Data.firstName.trim()} ${step2Data.lastName.trim()}`;
+    // A club account is named after the club; the backend ignores `name` for a CLUB
+    // but still needs a non-empty one.
+    const accountName = isClub
+      ? step2Data.clubName.trim()
+      : `${step2Data.firstName.trim()} ${step2Data.lastName.trim()}`;
     // The backend rejects dateOfBirth: "" (DATE_OF_BIRTH_INVALID): omit it instead
     const dateOfBirth =
       "dateOfBirth" in step3Data ? step3Data.dateOfBirth : undefined;
@@ -1129,20 +1085,21 @@ export const RegisterPage = () => {
     registerUser(
       {
         email: step2Data.email.trim(),
-        name: fullName,
+        name: accountName,
         username: step2Data.username.trim() || undefined,
         password: step2Data.password,
         role: card.backendRole,
         country: step2Data.country,
-        ...(isClub && "name" in step3Data
+        // Never dateOfBirth or position here: the backend rejects them for a CLUB
+        ...(isClub && "managedByFirstName" in step3Data
           ? {
-              clubName: step3Data.name,
-              city: step3Data.city,
-              managedByFirstName: step2Data.firstName,
-              managedByLastName: step2Data.lastName,
+              clubName: accountName,
+              city: step3Data.city.trim(),
+              managedByFirstName: step3Data.managedByFirstName.trim(),
+              managedByLastName: step3Data.managedByLastName.trim(),
             }
           : {}),
-        ...(isUmpire && "city" in step3Data && !("name" in step3Data)
+        ...(isUmpire && "city" in step3Data && !("managedByFirstName" in step3Data)
           ? { city: step3Data.city }
           : {}),
         // Position is only stored for PLAYER (POSITION_INVALID otherwise)
@@ -1167,10 +1124,10 @@ export const RegisterPage = () => {
           await login(fullUser);
           closeRegisterModal();
 
-          // A club account is the club itself (club id === user id); clubId is
-          // the player membership field and stays empty here.
-          if (isClub && fullUser.id) {
-            router.push(`/${locale}/clubs/${fullUser.id}`);
+          // A new club still has no crest or description: it completes them from
+          // the editor instead of landing on an empty public page.
+          if (isClub) {
+            router.push(`/${locale}/profile/edit`);
             return;
           }
 
@@ -1244,6 +1201,7 @@ export const RegisterPage = () => {
           t={t}
           termsLabel={termsLabel}
           form={step2Form}
+          isClub={isClub}
           showPassword={showPassword}
           showConfirmPassword={showConfirmPassword}
           onTogglePassword={() => setShowPassword((v) => !v)}

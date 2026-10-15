@@ -120,6 +120,8 @@
     "stepBasicTitle": "Basic Information",
     "stepRoleDataTitle": "Complete your profile",
     "umpireProfileHint": "Your licence, certifications and match experience are added next, from your profile.",
+    "responsiblePerson": "Person in charge",
+    "responsiblePersonHint": "This information is private. Only you and the platform administrators can see it.",
     "next": "Next",
     "back": "Back",
     "createProfile": "Create Profile",
@@ -178,7 +180,9 @@
       "dobInvalid": "Enter a valid date of birth",
       "dobTooYoung": "You must be at least 16 years old to register",
       "dobTooOld": "Date of birth cannot be more than 100 years ago",
-      "clubNameRequired": "Club name must be at least 2 characters"
+      "clubNameRequired": "Club name must be at least 2 characters",
+      "clubNameTaken": "A club with that name already exists",
+      "nameInvalid": "That name contains characters that are not allowed"
     },
     "roles": {
       "player": "Player",
