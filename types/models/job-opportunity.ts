@@ -5,6 +5,8 @@ import {
   UmpireCategory,
 } from "../enums";
 
+export type JobStatus = "OPEN" | "CLOSED" | "FILLED";
+
 export interface JobOpportunity {
   id: string;
   title: string;
@@ -16,7 +18,10 @@ export interface JobOpportunity {
   salary: number;
   currency: string;
   benefits: string[];
-  status: "open" | "closed" | "filled";
+  // The backend sends upper case; older code paths lower-case it themselves
+  status: JobStatus | Lowercase<JobStatus>;
+  /** When the job became FILLED (ISO 8601); starts the 14 day deletion cooldown. */
+  filledAt?: string | null;
 
   // Only set when positionType is UMPIRE
   licenseLevelRequired?: UmpireLicenseLevel | null;

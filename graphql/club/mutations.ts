@@ -1,14 +1,25 @@
 import { gql } from "graphql-request";
+import { CLUB_PROFILE_FIELDS } from "./queries";
 
+/**
+ * One transaction saves the club identity (name, username, bio, crest, cover,
+ * place) and the club data. `videos` is deprecated and ignored by the backend.
+ */
 export const UPDATE_CLUB = gql`
   mutation UpdateClub(
     $id: ID!
     $name: String
+    $username: String
+    $bio: String
     $description: String
+    $league: String
+    $foundedYear: Int
+    $benefits: [String!]
     $city: String
     $country: String
     $logo: String
     $coverImage: String
+    $coverImagePosition: String
     $website: String
     $email: String
     $phone: String
@@ -22,11 +33,17 @@ export const UPDATE_CLUB = gql`
     updateClub(
       id: $id
       name: $name
+      username: $username
+      bio: $bio
       description: $description
+      league: $league
+      foundedYear: $foundedYear
+      benefits: $benefits
       city: $city
       country: $country
       logo: $logo
       coverImage: $coverImage
+      coverImagePosition: $coverImagePosition
       website: $website
       email: $email
       phone: $phone
@@ -37,23 +54,13 @@ export const UPDATE_CLUB = gql`
       managedByFirstName: $managedByFirstName
       managedByLastName: $managedByLastName
     ) {
-      id
-      name
-      description
-      city
-      country
-      logo
-      coverImage
-      website
-      email
-      phone
-      instagram
-      twitter
-      facebook
-      tiktok
-      managedBy {
-        firstName
-        lastName
+      ${CLUB_PROFILE_FIELDS}
+      user {
+        id
+        username
+        name
+        avatar
+        coverImage
       }
     }
   }

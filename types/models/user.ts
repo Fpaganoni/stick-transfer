@@ -93,6 +93,8 @@ export interface User {
   // Relations
   clubId?: string;
   club?: Club;
+  /** Club data of a CLUB account (null for every other role). */
+  clubProfile?: Club | null;
   trajectories?: TrajectoryItem[];
 
   // Totals; the lists are fetched on demand (see useFollowList)

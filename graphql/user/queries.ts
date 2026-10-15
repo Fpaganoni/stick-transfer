@@ -1,4 +1,5 @@
 import { gql } from "graphql-request";
+import { CLUB_PROFILE_FIELDS } from "../club/queries";
 
 // ============================================
 // SHARED SELECTIONS
@@ -81,6 +82,10 @@ export const ME = gql`
       club {
         name
         logo
+      }
+      # CLUB accounts only (null for everyone else): the club data in the same request
+      clubProfile {
+        ${CLUB_PROFILE_FIELDS}
       }
       trajectories {
         title
@@ -173,6 +178,10 @@ export const GET_USER_BY_USERNAME = gql`
       cvUrl
       multimedia
       ${UMPIRE_FIELDS}
+      # CLUB accounts only (null for everyone else). followersCount below is the club's own counter.
+      clubProfile {
+        ${CLUB_PROFILE_FIELDS}
+      }
       followersCount
       followingCount
       isFollowedByCurrentUser

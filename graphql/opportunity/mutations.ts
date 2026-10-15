@@ -73,6 +73,37 @@ export const UNSAVE_JOB = gql`
   }
 `;
 
+/** status: OPEN | CLOSED | FILLED. FILLED stamps filledAt, which starts the deletion cooldown. */
+export const UPDATE_JOB_OPPORTUNITY_STATUS = gql`
+  mutation UpdateJobOpportunityStatus($id: String!, $status: String!) {
+    updateJobOpportunity(id: $id, status: $status) {
+      id
+      status
+      filledAt
+    }
+  }
+`;
+
+/** Rejected with JOB_HAS_UNANSWERED_APPLICATIONS or JOB_FILLED_COOLDOWN while the rules are not met. */
+export const DELETE_JOB_OPPORTUNITY = gql`
+  mutation DeleteJobOpportunity($id: String!) {
+    deleteJobOpportunity(id: $id)
+  }
+`;
+
+/** status: UNDER_REVIEW | ACCEPTED | REJECTED. */
+export const UPDATE_APPLICATION_STATUS = gql`
+  mutation UpdateApplicationStatus($applicationId: ID!, $status: String!, $notes: String) {
+    updateApplicationStatus(applicationId: $applicationId, status: $status, notes: $notes) {
+      id
+      jobOpportunityId
+      status
+      reviewedAt
+      notes
+    }
+  }
+`;
+
 export const APPLY_FOR_JOB = gql`
   mutation ApplyForJob(
     $jobOpportunityId: String!

@@ -13,6 +13,7 @@ const JOB_OPPORTUNITY_FIELDS = `
   club {
     id
     name
+    logo
     city
     country
     isVerified
@@ -24,6 +25,7 @@ const JOB_OPPORTUNITY_FIELDS = `
   currency
   benefits
   status
+  filledAt
   licenseLevelRequired
   modality
   umpireCategory
@@ -37,6 +39,66 @@ export const GET_JOB_OPPORTUNITIES = gql`
   query {
     jobOpportunities {
       ${JOB_OPPORTUNITY_FIELDS}
+    }
+  }
+`;
+
+/**
+ * The vacancies of one club, filtered by the backend. One page of up to 100:
+ * a club does not publish more than that at once.
+ */
+export const GET_CLUB_JOB_OPPORTUNITIES = gql`
+  query GetClubJobOpportunities($clubId: ID!, $status: String, $limit: Int) {
+    jobOpportunities(filters: { clubId: $clubId, status: $status }, limit: $limit) {
+      ${JOB_OPPORTUNITY_FIELDS}
+    }
+  }
+`;
+
+/** Applicants of one vacancy. Owning club or SUPERADMIN only. */
+export const GET_JOB_APPLICATIONS = gql`
+  query GetJobApplications($jobOpportunityId: String!, $limit: Int) {
+    jobApplications(jobOpportunityId: $jobOpportunityId, limit: $limit) {
+      id
+      jobOpportunityId
+      userId
+      status
+      coverLetter
+      resumeUrl
+      appliedAt
+      reviewedAt
+      notes
+      user {
+        id
+        name
+        username
+        avatar
+        role
+        position
+        country
+        city
+      }
+    }
+  }
+`;
+
+/**
+ * Applications still waiting for an answer (PENDING and UNDER_REVIEW) across all
+ * the vacancies of a club, in one request. Used to know which vacancy can be deleted.
+ */
+export const GET_CLUB_UNANSWERED_APPLICATIONS = gql`
+  query GetClubUnansweredApplications($clubId: ID!, $limit: Int) {
+    pending: getClubApplications(clubId: $clubId, status: "PENDING", limit: $limit) {
+      id
+      jobOpportunity {
+        id
+      }
+    }
+    underReview: getClubApplications(clubId: $clubId, status: "UNDER_REVIEW", limit: $limit) {
+      id
+      jobOpportunity {
+        id
+      }
     }
   }
 `;
