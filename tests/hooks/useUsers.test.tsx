@@ -239,4 +239,72 @@ describe("useFollow / useUnfollow optimistic update", () => {
 
     await act(async () => release());
   });
+
+  describe("a club on the CLUB axis", () => {
+    const clubVars = { ...vars, followingType: "CLUB", followingId: "club-1" };
+
+    function clubClient({ isFollowing }: { isFollowing: boolean }) {
+      const qc = seededClient({ isFollowing });
+      // The club page caches `club(id)` under ["club", id]
+      qc.setQueryData(["club", "club-1"], {
+        club: { id: "club-1", name: "HC Madrid", followersCount: 12, isFollowedByCurrentUser: isFollowing },
+      });
+      return qc;
+    }
+
+    const club = (qc: QueryClient) =>
+      qc.getQueryData<{ club: Record<string, unknown> }>(["club", "club-1"])?.club;
+
+    it("updates the club counter and the button before the server answers", async () => {
+      const release = pendingRequest();
+      const qc = clubClient({ isFollowing: false });
+      const { result } = renderHook(() => useFollow(), { wrapper: wrapperFor(qc) });
+
+      act(() => result.current.mutate(clubVars));
+
+      await waitFor(() => expect(club(qc)).toMatchObject({ followersCount: 13 }));
+      expect(club(qc)).toMatchObject({ isFollowedByCurrentUser: true });
+      expect(me(qc)).toMatchObject({ followingCount: 3 });
+
+      await act(async () => release());
+    });
+
+    it("rolls the club back when the follow fails", async () => {
+      mockRequest.mockRejectedValue(new Error("boom"));
+      const qc = clubClient({ isFollowing: false });
+      const { result } = renderHook(() => useFollow(), { wrapper: wrapperFor(qc) });
+
+      act(() => result.current.mutate(clubVars));
+
+      await waitFor(() => expect(result.current.isError).toBe(true));
+      expect(club(qc)).toMatchObject({ followersCount: 12, isFollowedByCurrentUser: false });
+      expect(me(qc)).toMatchObject({ followingCount: 2 });
+    });
+
+    it("decrements the club counter on unfollow", async () => {
+      const release = pendingRequest();
+      const qc = clubClient({ isFollowing: true });
+      const { result } = renderHook(() => useUnfollow(), { wrapper: wrapperFor(qc) });
+
+      act(() => result.current.mutate(clubVars));
+
+      await waitFor(() => expect(club(qc)).toMatchObject({ followersCount: 11 }));
+      expect(club(qc)).toMatchObject({ isFollowedByCurrentUser: false });
+
+      await act(async () => release());
+    });
+
+    it("refreshes the club once settled", async () => {
+      mockRequest.mockResolvedValue({ follow: { id: "f1" } });
+      const qc = clubClient({ isFollowing: false });
+      const invalidate = vi.spyOn(qc, "invalidateQueries");
+      const { result } = renderHook(() => useFollow(), { wrapper: wrapperFor(qc) });
+
+      await act(async () => {
+        await result.current.mutateAsync(clubVars);
+      });
+
+      expect(invalidate).toHaveBeenCalledWith({ queryKey: ["club"] });
+    });
+  });
 });

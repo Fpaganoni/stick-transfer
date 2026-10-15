@@ -683,7 +683,20 @@
       "share": "Compartir",
       "contact": "Contactar",
       "report": "Reportar",
-      "members": "miembros"
+      "members": "miembros",
+      "unfollow": "Dejar de seguir",
+      "followed": "Ahora seguís a este club.",
+      "unfollowed": "Dejaste de seguir a este club.",
+      "followError": "No pudimos actualizar el seguimiento. Intentá de nuevo."
+    },
+    "onboarding": {
+      "title": "Completá el perfil de tu club",
+      "description": "Jugadores y entrenadores confían en los clubes que muestran quiénes son. Agregá lo que falta:",
+      "missing": {
+        "crest": "Escudo del club",
+        "description": "Descripción del club"
+      },
+      "action": "Completar perfil"
     },
     "profile": {
       "category": "Categoría",

@@ -683,7 +683,20 @@
       "share": "Share",
       "contact": "Contact",
       "report": "Report",
-      "members": "members"
+      "members": "members",
+      "unfollow": "Unfollow",
+      "followed": "You are now following this club.",
+      "unfollowed": "You stopped following this club.",
+      "followError": "We could not update the follow. Please try again."
+    },
+    "onboarding": {
+      "title": "Complete your club profile",
+      "description": "Players and coaches trust clubs that show who they are. Add what is missing:",
+      "missing": {
+        "crest": "Club crest",
+        "description": "Club description"
+      },
+      "action": "Complete profile"
     },
     "profile": {
       "category": "Category",

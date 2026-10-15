@@ -10,7 +10,8 @@ interface ReportModalProps {
   isOpen: boolean;
   onClose: () => void;
   targetId: string;
-  targetType: "USER";
+  /** A club account is reported on the CLUB axis, never as a USER. */
+  targetType: "USER" | "CLUB";
 }
 
 const REPORT_REASONS = [

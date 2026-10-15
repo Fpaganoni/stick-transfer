@@ -247,10 +247,15 @@ export function useFollowList({
 
 type FollowSnapshot = Array<[QueryKey, unknown]>;
 
-/** Any cached profile payload: {user}, {getUserByUsername} or {me}. */
-type ProfileQueryData = Record<string, User | null | undefined>;
+/** What follow / unfollow keeps in sync: the same two fields on a user and on a club. */
+type FollowableProfile = Pick<User, "id" | "followersCount" | "isFollowedByCurrentUser">;
 
-const PROFILE_FIELDS = ["user", "getUserByUsername"] as const;
+/** Any cached profile payload: {user}, {getUserByUsername}, {club} or {me}. */
+type ProfileQueryData = Record<string, FollowableProfile | null | undefined>;
+
+// A club is followed on the CLUB axis only, and its page caches `club(id)` under ["club", id]
+const PROFILE_FIELDS = ["user", "getUserByUsername", "club"] as const;
+const PROFILE_QUERY_ROOTS = [["user"], ["club"]] as const;
 
 function patchFollowedProfile(data: unknown, targetId: string, follow: boolean) {
   if (!data || typeof data !== "object") return data;
@@ -283,25 +288,27 @@ async function applyOptimisticFollow(
   follow: boolean,
 ): Promise<FollowSnapshot> {
   await Promise.all([
-    queryClient.cancelQueries({ queryKey: ["user"] }),
+    ...PROFILE_QUERY_ROOTS.map((queryKey) => queryClient.cancelQueries({ queryKey })),
     queryClient.cancelQueries({ queryKey: ["me"] }),
   ]);
   const snapshot: FollowSnapshot = [
-    ...queryClient.getQueriesData({ queryKey: ["user"] }),
+    ...PROFILE_QUERY_ROOTS.flatMap((queryKey) => queryClient.getQueriesData({ queryKey })),
     ...queryClient.getQueriesData({ queryKey: ["me"] }),
   ];
 
-  const wasFollowing = queryClient
-    .getQueriesData<ProfileQueryData>({ queryKey: ["user"] })
-    .some(([, data]) =>
-      PROFILE_FIELDS.some(
-        (field) =>
-          data?.[field]?.id === followingId && data[field]?.isFollowedByCurrentUser === follow,
-      ),
-    );
+  const wasFollowing = PROFILE_QUERY_ROOTS.flatMap((queryKey) =>
+    queryClient.getQueriesData<ProfileQueryData>({ queryKey }),
+  ).some(([, data]) =>
+    PROFILE_FIELDS.some(
+      (field) =>
+        data?.[field]?.id === followingId && data[field]?.isFollowedByCurrentUser === follow,
+    ),
+  );
 
-  queryClient.setQueriesData({ queryKey: ["user"] }, (data: unknown) =>
-    patchFollowedProfile(data, followingId, follow),
+  PROFILE_QUERY_ROOTS.forEach((queryKey) =>
+    queryClient.setQueriesData({ queryKey }, (data: unknown) =>
+      patchFollowedProfile(data, followingId, follow),
+    ),
   );
 
   if (!wasFollowing) {
@@ -325,6 +332,7 @@ function restoreSnapshot(queryClient: QueryClient, snapshot: FollowSnapshot | un
 
 function invalidateFollowQueries(queryClient: QueryClient) {
   queryClient.invalidateQueries({ queryKey: ["user"] });
+  queryClient.invalidateQueries({ queryKey: ["club"] });
   queryClient.invalidateQueries({ queryKey: ["me"] });
   queryClient.invalidateQueries({ queryKey: ["followList"] });
 }
