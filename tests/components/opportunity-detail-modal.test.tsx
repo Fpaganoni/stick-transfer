@@ -112,6 +112,35 @@ describe("OpportunityDetailModal", () => {
     appliedIds.clear();
   });
 
+  describe("club crest and status", () => {
+    it("shows the club crest whole next to the club name", () => {
+      open({
+        ...base,
+        club: { ...base.club, logo: "https://res.cloudinary.com/demo/crest.png" },
+      });
+
+      const crest = screen.getByAltText("HC Madrid");
+      expect(crest).toHaveClass("object-contain");
+      expect(crest.parentElement).not.toHaveClass("rounded-full");
+    });
+
+    it("shows the club initial when the club has no crest", () => {
+      open(base);
+
+      expect(screen.getByRole("img", { name: "HC Madrid" })).toHaveTextContent("H");
+    });
+
+    it.each([
+      ["OPEN", "open"],
+      ["CLOSED", "closed"],
+      ["FILLED", "filled"],
+    ])("labels a %s vacancy as %s", (status, label) => {
+      open({ ...base, status: status as JobOpportunity["status"] });
+
+      expect(screen.getByText(label)).toBeInTheDocument();
+    });
+  });
+
   describe("application sent state", () => {
     const sent = () => screen.queryByRole("button", { name: "applicationSent" });
 

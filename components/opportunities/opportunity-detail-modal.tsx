@@ -31,6 +31,7 @@ import { formatRelativeTime } from "@/lib/date-utils";
 import { getPositionTypeLabel, isUmpireJob } from "@/lib/job-position-type";
 import { UmpireJobDetails } from "./umpire-job-details";
 import { CountryLabel } from "@/components/ui/country-label";
+import { ClubCrest } from "@/components/clubs/club-crest";
 
 function getBenefitsArray(benefits: JobOpportunity["benefits"] | undefined): string[] {
   return Array.isArray(benefits) ? benefits : [];
@@ -195,18 +196,26 @@ export function OpportunityDetailModal() {
         {/* Club and Status */}
         <div className="space-y-4 overflow-y-auto px-6 pb-6">
           <div className="flex items-start justify-between gap-4">
-            <div>
-              <p className="text-lg font-semibold text-foreground">
-                {opportunity.club.name}
-              </p>
-              {opportunity.club.isVerified && (
-                <div className="flex items-center gap-1 mt-1">
-                  <CheckCircle size={16} className="text-success" />
-                  <span className="text-sm text-success font-medium">
-                    {t("verified")}
-                  </span>
-                </div>
-              )}
+            <div className="flex items-start gap-3 min-w-0">
+              <ClubCrest
+                name={opportunity.club.name}
+                logo={opportunity.club.logo}
+                size={48}
+                className="size-12 text-base"
+              />
+              <div className="min-w-0">
+                <p className="text-lg font-semibold text-foreground">
+                  {opportunity.club.name}
+                </p>
+                {opportunity.club.isVerified && (
+                  <div className="flex items-center gap-1 mt-1">
+                    <CheckCircle size={16} className="text-success" />
+                    <span className="text-sm text-success font-medium">
+                      {t("verified")}
+                    </span>
+                  </div>
+                )}
+              </div>
             </div>
             <div className="flex flex-wrap gap-2 justify-end">
               <Badge
@@ -216,7 +225,7 @@ export function OpportunityDetailModal() {
                     : "bg-error/30 text-foreground border-error/40"
                 }
               >
-                {normalizedStatus === "open" ? t("open") : t("filled")}
+                {t(normalizedStatus)}
               </Badge>
               {userAlreadyApplied && (
                 <Badge className="bg-accent/30 text-foreground border-accent/40">

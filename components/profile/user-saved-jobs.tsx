@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { CountryLabel } from "@/components/ui/country-label";
-import Image from "next/image";
+import { ClubCrest } from "@/components/clubs/club-crest";
 import { Bookmark, MapPin, Briefcase, Loader2 } from "lucide-react";
 import { useTranslations, useLocale } from "next-intl";
 import { useSavedJobs, useToggleSaveJob } from "@/hooks/useSavedJobs";
@@ -65,22 +65,13 @@ export function UserSavedJobs() {
               className="block p-4"
             >
               <div className="flex gap-3 min-h-[100px]">
-                {/* Club logo */}
-                <div className="shrink-0">
-                  {club.logo ? (
-                    <Image
-                      src={club.logo}
-                      alt={club.name}
-                      width={56}
-                      height={56}
-                      className="rounded-sm object-cover w-14 h-14"
-                    />
-                  ) : (
-                    <div className="w-14 h-14 rounded-sm bg-primary/10 border border-border flex items-center justify-center text-lg font-bold text-primary">
-                      {club.name.charAt(0).toUpperCase()}
-                    </div>
-                  )}
-                </div>
+                {/* Club crest: whole, never cropped */}
+                <ClubCrest
+                  name={club.name}
+                  logo={club.logo}
+                  size={56}
+                  className="size-14 text-lg"
+                />
 
                 {/* Content */}
                 <div className="flex-1 min-w-0 flex flex-col justify-between">
@@ -133,7 +124,7 @@ export function UserSavedJobs() {
                       )}
                       {normalizedStatus !== "open" && (
                         <Badge className="text-xs py-0 px-1.5 bg-error/20 text-error border-error/30">
-                          {tOpp("filled")}
+                          {tOpp(normalizedStatus)}
                         </Badge>
                       )}
                     </div>

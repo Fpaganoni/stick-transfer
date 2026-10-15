@@ -50,6 +50,16 @@ describe("ClubListCard", () => {
     expect(img).toBeInTheDocument();
   });
 
+  it("draws the crest whole on a neutral background, not cropped to a circle", () => {
+    render(<ClubListCard {...mockClub} logo="https://example.com/logo.png" />);
+
+    const img = screen.getByAltText("HC Barcelona");
+    expect(img).toHaveClass("object-contain");
+    expect(img).not.toHaveClass("object-cover");
+    expect(img.parentElement).toHaveClass("bg-background");
+    expect(img.parentElement).not.toHaveClass("rounded-full");
+  });
+
   it("renders the flag and the English name of the country code", () => {
     render(<ClubListCard {...mockClub} />);
     expect(screen.getByText("🇪🇸")).toBeInTheDocument();

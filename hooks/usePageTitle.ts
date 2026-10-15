@@ -1,6 +1,7 @@
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useAuthStore } from "@/stores/useAuthStore";
+import { Role } from "@/types/enums";
 
 const LOCALE_PREFIX = /^\/(en|es|fr)(?=\/|$)/;
 
@@ -41,8 +42,15 @@ export function usePageTitle(): string {
   const pathname = usePathname() ?? "/";
   const t = useTranslations();
   const ownUsername = useAuthStore((state) => state.user?.username);
+  const ownId = useAuthStore((state) => state.user?.id);
+  // A club account IS the club: its own pages read "My club"
+  const isClubAccount = useAuthStore((state) => state.user?.role === Role.CLUB);
 
   const path = pathname.replace(LOCALE_PREFIX, "").replace(/\/+$/, "") || "/";
+
+  if (isClubAccount && (path === "/profile" || path === `/clubs/${ownId}`)) {
+    return t("pageTitles.myClub");
+  }
 
   const exactKey = TITLE_KEYS[path];
   if (exactKey) return t(exactKey);
@@ -53,7 +61,8 @@ export function usePageTitle(): string {
   if (path.startsWith(PUBLIC_PROFILE_PREFIX)) {
     // Same join as app/[locale]/(app)/profile/[...slug]/page.tsx
     const username = safeDecode(path.slice(PUBLIC_PROFILE_PREFIX.length).split("/").join("."));
-    return username === ownUsername ? t("pageTitles.myProfile") : username;
+    if (username !== ownUsername) return username;
+    return t(isClubAccount ? "pageTitles.myClub" : "pageTitles.myProfile");
   }
 
   return t("pageTitles.default");

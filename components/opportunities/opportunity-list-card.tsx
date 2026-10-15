@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { Bookmark, ChevronRight } from "lucide-react";
 import { Badge } from "../ui/badge";
+import { ClubCrest } from "@/components/clubs/club-crest";
 import { JobOpportunity } from "@/types/models/job-opportunity";
 import { formatRelativeTime } from "@/lib/date-utils";
 import { useTranslations, useLocale } from "next-intl";
@@ -64,22 +64,13 @@ export function OpportunityListCard(opportunity: OpportunityListCardProps) {
       className="bg-background rounded-xl border border-border shadow-sm hover:shadow-md transition-shadow duration-200"
     >
       <div className="p-4 flex gap-3 min-h-[120px]">
-        {/* Club Logo */}
-        <div className="shrink-0">
-          {club.logo ? (
-            <Image
-              src={club.logo}
-              alt={club.name}
-              width={60}
-              height={60}
-              className="rounded-sm object-cover w-[60px] h-[60px]"
-            />
-          ) : (
-            <div className="w-[60px] h-[60px] rounded-sm bg-primary/10 border border-border flex items-center justify-center text-lg font-bold text-primary">
-              {club.name.charAt(0).toUpperCase()}
-            </div>
-          )}
-        </div>
+        {/* Club crest: whole, never cropped */}
+        <ClubCrest
+          name={club.name}
+          logo={club.logo}
+          size={60}
+          className="size-[60px] text-lg"
+        />
 
         {/* Content */}
         <div className="flex-1 min-w-0 flex flex-col justify-between">
@@ -130,7 +121,7 @@ export function OpportunityListCard(opportunity: OpportunityListCardProps) {
               )}
               {normalizedStatus !== "open" && (
                 <Badge className="text-xs py-0 px-1.5 bg-error/20 text-error border-error/30">
-                  {t("filled")}
+                  {t(normalizedStatus)}
                 </Badge>
               )}
               {userAlreadyApplied && (

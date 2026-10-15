@@ -13,6 +13,8 @@ import { useNotificationsStore } from "@/stores/useNotificationsStore";
 import { useUnreadNotificationsCount } from "@/hooks/useNotifications";
 import { NotificationDropdown } from "@/components/notifications/NotificationDropdown";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ClubCrest } from "@/components/clubs/club-crest";
+import { Role } from "@/types/enums";
 
 interface HeaderProps {
   title: string;
@@ -65,10 +67,15 @@ export function Header({ title, isLoadingUser = false }: HeaderProps) {
           </div>
         ) : (
           <div className="flex items-center gap-2 pl-2">
-            <Avatar className="size-8">
-              <AvatarImage src={user?.avatar} alt={user?.name} />
-              <AvatarFallback>{user?.name?.[0]?.toUpperCase() ?? "U"}</AvatarFallback>
-            </Avatar>
+            {user?.role === Role.CLUB ? (
+              // A club account IS the club: its avatar is the crest, drawn whole
+              <ClubCrest name={user.name} logo={user.avatar} size={32} className="size-8 text-sm" />
+            ) : (
+              <Avatar className="size-8">
+                <AvatarImage src={user?.avatar} alt={user?.name} />
+                <AvatarFallback>{user?.name?.[0]?.toUpperCase() ?? "U"}</AvatarFallback>
+              </Avatar>
+            )}
             <span className="hidden text-sm font-medium sm:inline">{user?.name}</span>
           </div>
         )}

@@ -41,19 +41,20 @@ export function SideNavigation() {
   // Navigation hint only (the create route has its own RoleGuard): while `me`
   // loads, trust the stored role so the club entry does not pop in and push the
   // rest of the menu down. Not before hydration, to match the server markup.
-  const showPostJob =
+  const isClubAccount =
     isClub || (hydrated && isRoleLoading && storedRole === Role.CLUB);
 
   const navItems = [
     { href: "/opportunities", label: t("opportunities"), icon: Target },
-    ...(showPostJob
+    ...(isClubAccount
       ? [{ href: "/opportunities/new", label: tOpportunities("postJob"), icon: PlusCircle }]
       : []),
     { href: "/explore", label: t("players"), icon: Compass },
     { href: "/clubs", label: t("clubs"), icon: Building2 },
     { href: "/news", label: t("news"), icon: Newspaper },
     { href: "/messages", label: t("messages"), icon: MessageSquare },
-    { href: "/profile", label: t("profile"), icon: User },
+    // A club account IS the club: its profile is "My club"
+    { href: "/profile", label: isClubAccount ? t("myClub") : t("profile"), icon: User },
   ];
 
   const getLocalizedHref = (href: string) => {

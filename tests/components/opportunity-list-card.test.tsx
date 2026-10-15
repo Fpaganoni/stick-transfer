@@ -225,4 +225,51 @@ describe("OpportunityListCard umpire opportunities", () => {
     render(<OpportunityListCard {...baseOpportunity} />);
     expect(screen.getByText(/Full-Time/)).toBeInTheDocument();
   });
+
+  describe("club crest and status", () => {
+    const crest = "https://res.cloudinary.com/demo/crest.png";
+
+    it("shows the crest whole on a neutral background, never cropped", () => {
+      render(
+        <OpportunityListCard
+          {...baseOpportunity}
+          club={{ ...baseOpportunity.club, logo: crest }}
+        />,
+      );
+
+      const image = screen.getByAltText("HC Barcelona");
+      expect(image).toHaveAttribute("src", crest);
+      expect(image).toHaveClass("object-contain");
+      expect(image).not.toHaveClass("object-cover");
+      expect(image.parentElement).toHaveClass("bg-background");
+      expect(image.parentElement).not.toHaveClass("rounded-full");
+    });
+
+    it("shows the club initial when the club has no crest", () => {
+      render(<OpportunityListCard {...baseOpportunity} />);
+
+      expect(screen.getByRole("img", { name: "HC Barcelona" })).toHaveTextContent("H");
+    });
+
+    it("labels a closed vacancy as closed, not as filled", () => {
+      render(<OpportunityListCard {...baseOpportunity} status="CLOSED" />);
+
+      expect(screen.getByText("closed")).toBeInTheDocument();
+      expect(screen.queryByText("filled")).not.toBeInTheDocument();
+    });
+
+    it("labels a filled vacancy as filled", () => {
+      render(<OpportunityListCard {...baseOpportunity} status="FILLED" />);
+
+      expect(screen.getByText("filled")).toBeInTheDocument();
+      expect(screen.queryByText("closed")).not.toBeInTheDocument();
+    });
+
+    it("shows no status label on an open vacancy", () => {
+      render(<OpportunityListCard {...baseOpportunity} status="OPEN" />);
+
+      expect(screen.queryByText("closed")).not.toBeInTheDocument();
+      expect(screen.queryByText("filled")).not.toBeInTheDocument();
+    });
+  });
 });

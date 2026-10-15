@@ -10,7 +10,11 @@ import { usePageTitle } from "@/hooks/usePageTitle";
 
 const { nav, authState } = vi.hoisted(() => ({
   nav: { pathname: "/opportunities" },
-  authState: { username: "lucia" as string | undefined },
+  authState: {
+    username: "lucia" as string | undefined,
+    id: "user-1",
+    role: "PLAYER",
+  },
 }));
 
 vi.mock("next/navigation", () => ({
@@ -22,8 +26,16 @@ vi.mock("next-intl", () => ({
 }));
 
 vi.mock("@/stores/useAuthStore", () => ({
-  useAuthStore: (selector: (state: { user: { username?: string } | null }) => unknown) =>
-    selector({ user: authState.username ? { username: authState.username } : null }),
+  useAuthStore: (
+    selector: (state: {
+      user: { username?: string; id: string; role: string } | null;
+    }) => unknown,
+  ) =>
+    selector({
+      user: authState.username
+        ? { username: authState.username, id: authState.id, role: authState.role }
+        : null,
+    }),
 }));
 
 function titleFor(pathname: string) {
@@ -34,6 +46,8 @@ function titleFor(pathname: string) {
 describe("usePageTitle", () => {
   beforeEach(() => {
     authState.username = "lucia";
+    authState.id = "user-1";
+    authState.role = "PLAYER";
   });
 
   it.each([
@@ -63,5 +77,34 @@ describe("usePageTitle", () => {
 
   it("decodes encoded usernames", () => {
     expect(titleFor("/profile/jos%C3%A9")).toBe("josé");
+  });
+
+  describe("a club account, which IS the club", () => {
+    beforeEach(() => {
+      authState.username = "hc_madrid";
+      authState.id = "club-1";
+      authState.role = "CLUB";
+    });
+
+    it.each(["/profile", "/es/profile", "/profile/hc_madrid", "/clubs/club-1"])(
+      "reads My club on its own page %s",
+      (pathname) => {
+        expect(titleFor(pathname)).toBe("pageTitles.myClub");
+      },
+    );
+
+    it("keeps the edit title while editing", () => {
+      expect(titleFor("/profile/edit")).toBe("pageTitles.editProfile");
+    });
+
+    it("titles another club by its name page and a profile by its username", () => {
+      expect(titleFor("/clubs/club-2")).toBe("pageTitles.club");
+      expect(titleFor("/profile/maria.lopez")).toBe("maria.lopez");
+    });
+  });
+
+  it("reads Profile on /profile for a person", () => {
+    expect(titleFor("/profile")).toBe("pageTitles.profile");
+    expect(titleFor("/clubs/user-1")).toBe("pageTitles.club");
   });
 });

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useLocale } from "next-intl";
 import { ChevronRight } from "lucide-react";
-import Image from "next/image";
+import { ClubCrest } from "@/components/clubs/club-crest";
 import { Club } from "@/types/models/club";
 import { cn } from "@/lib/utils";
 import { CountryLabel } from "@/components/ui/country-label";
@@ -41,21 +41,14 @@ export function ClubListCard(club: Club) {
         className="absolute top-2 right-2 text-foreground-muted"
       />
 
-      <div className="mt-4 mb-2 w-14 h-14 sm:w-20 sm:h-20 rounded-full border-2 border-border overflow-hidden flex items-center justify-center bg-primary/10 shrink-0">
-        {club.logo ? (
-          <Image
-            src={club.logo}
-            alt={club.name}
-            width={80}
-            height={80}
-            className="object-cover w-full h-full"
-          />
-        ) : (
-          <span className="text-primary font-bold text-lg select-none">
-            {initials}
-          </span>
-        )}
-      </div>
+      {/* Crest: whole on a neutral background, never cropped to a circle */}
+      <ClubCrest
+        name={club.name}
+        logo={club.logo}
+        size={80}
+        initials={initials}
+        className="mt-4 mb-2 w-14 h-14 sm:w-20 sm:h-20 rounded-xl border-2 text-lg"
+      />
 
       <p className="text-foreground font-semibold text-sm text-center line-clamp-2 leading-tight w-full">
         {club.name}

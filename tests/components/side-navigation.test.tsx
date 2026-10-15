@@ -91,7 +91,7 @@ describe("SideNavigation", () => {
   });
 
   it.each([
-    ["/profile/edit", "profile"],
+    ["/profile/edit", "myClub"],
     ["/clubs/08317e2d", "clubs"],
     ["/es/news/some-article", "news"],
     ["/opportunities/new", "postJob"],
@@ -109,6 +109,23 @@ describe("SideNavigation", () => {
     state.pathname = "/profile/someone_else";
     renderNav();
 
-    expect(navLink("profile")).toHaveAttribute("data-active", "false");
+    expect(navLink("myClub")).toHaveAttribute("data-active", "false");
+  });
+
+  describe("the profile entry", () => {
+    it("reads My club for a club account, which IS the club", () => {
+      renderNav();
+
+      expect(navLink("myClub")).toHaveAttribute("href", "/profile");
+      expect(screen.queryByRole("link", { name: "profile" })).toBeNull();
+    });
+
+    it.each([Role.PLAYER, Role.COACH, Role.UMPIRE])("reads Profile for a %s", (role) => {
+      state.user = { id: "u1", username: "lucia", role };
+      renderNav();
+
+      expect(navLink("profile")).toHaveAttribute("href", "/profile");
+      expect(screen.queryByRole("link", { name: "myClub" })).toBeNull();
+    });
   });
 });

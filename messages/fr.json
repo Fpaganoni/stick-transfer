@@ -53,6 +53,7 @@
     "news": "Actualités",
     "messages": "Messages",
     "profile": "Profil",
+    "myClub": "Mon club",
     "settings": "Paramètres",
     "logout": "Se déconnecter",
     "home": "Aller à l'accueil",
@@ -1532,6 +1533,7 @@
     "editProfile": "Modifier le profil",
     "club": "Club",
     "myProfile": "Mon profil",
+    "myClub": "Mon club",
     "default": "Stick Transfer",
     "loading": "Chargement de la page"
   }

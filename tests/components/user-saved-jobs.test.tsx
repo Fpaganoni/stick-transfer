@@ -91,6 +91,44 @@ describe("UserSavedJobs", () => {
     expect(screen.getByText("Umpire")).toBeInTheDocument();
   });
 
+  it("shows the club crest whole on a neutral background, never cropped", () => {
+    const job = buildJob("job-1", "Goalkeeper");
+    savedJobsState.data = {
+      savedJobOpportunities: [
+        { ...job, club: { ...job.club, logo: "https://res.cloudinary.com/demo/crest.png" } },
+      ],
+    };
+
+    render(<UserSavedJobs />);
+
+    const image = screen.getByAltText("HC Madrid");
+    expect(image).toHaveClass("object-contain");
+    expect(image).not.toHaveClass("object-cover");
+    expect(image.parentElement).toHaveClass("bg-background");
+  });
+
+  it("shows the club initial when the club has no crest", () => {
+    savedJobsState.data = { savedJobOpportunities: [buildJob("job-1", "Goalkeeper")] };
+
+    render(<UserSavedJobs />);
+
+    expect(screen.getByRole("img", { name: "HC Madrid" })).toHaveTextContent("H");
+  });
+
+  it.each([
+    ["CLOSED", "closed", "filled"],
+    ["FILLED", "filled", "closed"],
+  ])("labels a %s vacancy as %s only", (status, shown, hidden) => {
+    savedJobsState.data = {
+      savedJobOpportunities: [{ ...buildJob("job-1", "Goalkeeper"), status }],
+    };
+
+    render(<UserSavedJobs />);
+
+    expect(screen.getByText(shown)).toBeInTheDocument();
+    expect(screen.queryByText(hidden)).not.toBeInTheDocument();
+  });
+
   it("does not cross-reference the full opportunities list", () => {
     savedJobsState.data = { savedJobOpportunities: [buildJob("job-1", "Goalkeeper")] };
 
