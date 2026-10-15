@@ -692,7 +692,13 @@
       "noPosts": "Sin publicaciones aún."
     },
     "vacancies": {
-      "noVacancies": "Sin posiciones abiertas en este momento."
+      "noVacancies": "Sin posiciones abiertas en este momento.",
+      "statusUpdateFailed": "No pudimos actualizar la vacante. Intentá de nuevo.",
+      "deleted": "Vacante eliminada.",
+      "deleteFailed": "No pudimos eliminar la vacante. Intentá de nuevo.",
+      "deleteBlockedUnanswered": "Respondé todas las postulaciones antes de eliminar esta vacante.",
+      "deleteBlockedCooldown": "Esta vacante se cubrió hace poco. Podés eliminarla 14 días después de cubrirla.",
+      "applicationUpdateFailed": "No pudimos actualizar la postulación. Intentá de nuevo."
     },
     "videos": {
       "noVideos": "Sin videos aún",

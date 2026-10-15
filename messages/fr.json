@@ -692,7 +692,13 @@
       "noPosts": "Pas encore de publications."
     },
     "vacancies": {
-      "noVacancies": "Aucun poste ouvert pour le moment."
+      "noVacancies": "Aucun poste ouvert pour le moment.",
+      "statusUpdateFailed": "Nous n'avons pas pu mettre à jour l'offre. Veuillez réessayer.",
+      "deleted": "Offre supprimée.",
+      "deleteFailed": "Nous n'avons pas pu supprimer l'offre. Veuillez réessayer.",
+      "deleteBlockedUnanswered": "Répondez à toutes les candidatures avant de supprimer cette offre.",
+      "deleteBlockedCooldown": "Cette offre a été pourvue récemment. Vous pourrez la supprimer 14 jours après qu'elle a été pourvue.",
+      "applicationUpdateFailed": "Nous n'avons pas pu mettre à jour la candidature. Veuillez réessayer."
     },
     "videos": {
       "noVideos": "Pas encore de vidéos",
