@@ -35,7 +35,7 @@ import {
   type SocialPlatform,
 } from "@/lib/social-links";
 import type { Club, UpdateClubVariables } from "@/types/models/club";
-import type { ClubFormValues } from "./club-profile-form";
+import type { ClubFormValues } from "./club-form-model";
 
 const PHONE_PATTERN = /^\+?[0-9 ()-]{6,20}$/;
 

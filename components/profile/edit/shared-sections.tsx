@@ -45,10 +45,18 @@ interface ImageUploadFieldProps {
   onChange: (url: string) => void;
   /** Which of the caller's own Cloudinary slots the image goes to. */
   target: ImageUploadTarget;
+  /** "logo" shows the whole image (a club crest is never cropped); default crops to a square. */
+  variant?: "default" | "logo";
 }
 
 /** Photo upload field restricted to JPG/PNG/WEBP, used for avatar, cover image and club logo. */
-export function ImageUploadField({ label, value, onChange, target }: ImageUploadFieldProps) {
+export function ImageUploadField({
+  label,
+  value,
+  onChange,
+  target,
+  variant = "default",
+}: ImageUploadFieldProps) {
   const t = useTranslations("profile.editForm.photo");
   const upload = useImageUpload(target);
 
@@ -60,9 +68,13 @@ export function ImageUploadField({ label, value, onChange, target }: ImageUpload
           <Image
             src={value}
             alt={label}
-            width={48}
-            height={48}
-            className="rounded-md object-cover h-12 w-12 shrink-0"
+            width={64}
+            height={64}
+            className={
+              variant === "logo"
+                ? "rounded-md object-contain bg-background border border-border p-1 h-16 w-16 shrink-0"
+                : "rounded-md object-cover h-12 w-12 shrink-0"
+            }
             unoptimized
           />
           <span className="text-sm text-foreground-muted truncate flex-1">{value}</span>
@@ -76,6 +88,7 @@ export function ImageUploadField({ label, value, onChange, target }: ImageUpload
             <X className="w-4 h-4 text-error" />
           </Button>
         </div>
+        <FormMessage />
       </FormItem>
     );
   }

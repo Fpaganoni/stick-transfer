@@ -45,6 +45,11 @@ export function useUpdateClub() {
         queryClient.invalidateQueries({ queryKey: ["club", data.updateClub.id] });
       }
       queryClient.invalidateQueries({ queryKey: ["clubs"] });
+      // The club IS the account: the session, the profile by username and every
+      // vacancy carrying the club name and crest change with it
+      queryClient.invalidateQueries({ queryKey: ["me"] });
+      queryClient.invalidateQueries({ queryKey: ["user"] });
+      queryClient.invalidateQueries({ queryKey: ["jobOpportunities"] });
     },
   });
 }

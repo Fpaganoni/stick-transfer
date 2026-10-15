@@ -39,6 +39,15 @@ describe("EditProfileForm", () => {
     expect(screen.getByText(expected)).toBeInTheDocument();
   });
 
+  it("never renders the player/coach form for a CLUB account", () => {
+    state.user = { role: Role.CLUB };
+    render(<EditProfileForm />);
+
+    expect(screen.getByText("club-form")).toBeInTheDocument();
+    expect(screen.queryByText("player-coach-form")).not.toBeInTheDocument();
+    expect(screen.queryByText("umpire-form")).not.toBeInTheDocument();
+  });
+
   it("shows a loading state without a user", () => {
     state.user = null;
     render(<EditProfileForm />);
