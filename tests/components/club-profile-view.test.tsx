@@ -47,6 +47,12 @@ vi.mock("@/hooks/useClubVacancies", () => ({
     useClubVacanciesCall(clubId, status);
     return { data: state.vacancies, isLoading: false };
   },
+  // The owner's actions have their own tests (club-vacancy-owner-row, club-applicants-sheet)
+  useUnansweredApplicationCounts: () => ({ data: {} }),
+  useUpdateVacancyStatus: () => ({ mutate: vi.fn(), isPending: false }),
+  useDeleteVacancy: () => ({ mutate: vi.fn(), isPending: false }),
+  useJobApplicants: () => ({ data: [], isLoading: false, isError: false }),
+  useUpdateApplicationStatus: () => ({ mutate: vi.fn(), isPending: false }),
 }));
 
 vi.mock("@/hooks/useClubFollow", () => ({

@@ -3,9 +3,10 @@
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { Briefcase, Plus } from "lucide-react";
+import { ClubVacancyOwnerRow } from "@/components/clubs/club-vacancy-owner-row";
 import { OpportunityListCard } from "@/components/opportunities/opportunity-list-card";
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
-import { useClubVacancies } from "@/hooks/useClubVacancies";
+import { useClubVacancies, useUnansweredApplicationCounts } from "@/hooks/useClubVacancies";
 
 interface ClubVacanciesTabProps {
   clubId: string;
@@ -23,6 +24,8 @@ export function ClubVacanciesTab({ clubId, mode }: ClubVacanciesTabProps) {
     clubId,
     isOwner ? undefined : "OPEN",
   );
+  // Only the owner can read (and needs) the applications waiting for an answer
+  const { data: unansweredCounts = {} } = useUnansweredApplicationCounts(isOwner ? clubId : null);
 
   return (
     <div className="space-y-3">
@@ -52,7 +55,18 @@ export function ClubVacanciesTab({ clubId, mode }: ClubVacanciesTabProps) {
           </EmptyHeader>
         </Empty>
       ) : (
-        vacancies.map((vacancy) => <OpportunityListCard key={vacancy.id} {...vacancy} />)
+        vacancies.map((vacancy) =>
+          isOwner ? (
+            <ClubVacancyOwnerRow
+              key={vacancy.id}
+              clubId={clubId}
+              vacancy={vacancy}
+              unansweredCount={unansweredCounts[vacancy.id] ?? 0}
+            />
+          ) : (
+            <OpportunityListCard key={vacancy.id} {...vacancy} />
+          ),
+        )
       )}
     </div>
   );
