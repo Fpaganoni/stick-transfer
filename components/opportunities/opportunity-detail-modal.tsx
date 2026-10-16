@@ -28,6 +28,7 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { formatRelativeTime } from "@/lib/date-utils";
+import { getLevelLabel } from "@/lib/job-level";
 import { getPositionTypeLabel, isUmpireJob } from "@/lib/job-position-type";
 import { UmpireJobDetails } from "./umpire-job-details";
 import { CountryLabel } from "@/components/ui/country-label";
@@ -241,7 +242,7 @@ export function OpportunityDetailModal() {
                 </Badge>
               )}
               <Badge className="bg-info/30 text-foreground border-info/40">
-                {opportunity.level}
+                {getLevelLabel(t, opportunity.level)}
               </Badge>
             </div>
           </div>

@@ -8,6 +8,7 @@ import { useTranslations, useLocale } from "next-intl";
 import { useSavedJobs, useToggleSaveJob } from "@/hooks/useSavedJobs";
 import { Badge } from "@/components/ui/badge";
 import { formatRelativeTime } from "@/lib/date-utils";
+import { getLevelLabel } from "@/lib/job-level";
 import { getPositionTypeLabel } from "@/lib/job-position-type";
 import {
   Empty,
@@ -119,7 +120,7 @@ export function UserSavedJobs() {
                               : "bg-warning/20 text-warning border-warning/30"
                           }`}
                         >
-                          {level}
+                          {getLevelLabel(tOpp, level)}
                         </Badge>
                       )}
                       {normalizedStatus !== "open" && (

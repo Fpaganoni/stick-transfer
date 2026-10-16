@@ -4,6 +4,7 @@ import { useUserApplications } from "@/hooks/useJobApplications";
 import { useOpenOpportunityDetail } from "@/hooks/useJobOpportunities";
 import { useTranslations, useLocale } from "next-intl";
 import { formatRelativeTime } from "@/lib/date-utils";
+import { getLevelLabel } from "@/lib/job-level";
 import { MapPin, Award, Calendar, CheckCircle, Clock, XCircle, Undo2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -69,6 +70,7 @@ interface ApplicationItemProps {
 
 function ApplicationItem({ application, onOpen }: ApplicationItemProps) {
   const t = useTranslations("profile");
+  const tOpp = useTranslations("opportunities");
   const locale = useLocale() as "en" | "es" | "fr";
   const opportunity = application.jobOpportunity;
   const isWithdrawn = application.status === "WITHDRAWN";
@@ -153,7 +155,7 @@ function ApplicationItem({ application, onOpen }: ApplicationItemProps) {
           {opportunity?.level && (
             <div className="flex items-center gap-2">
               <Badge className="bg-info/30 text-foreground border-info/40 text-xs">
-                {opportunity.level}
+                {getLevelLabel(tOpp, opportunity.level)}
               </Badge>
             </div>
           )}

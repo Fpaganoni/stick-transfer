@@ -91,6 +91,15 @@ describe("UserSavedJobs", () => {
     expect(screen.getByText("Umpire")).toBeInTheDocument();
   });
 
+  it("translates the level instead of showing the raw value", () => {
+    savedJobsState.data = { savedJobOpportunities: [buildJob("job-1", "Goalkeeper")] };
+
+    render(<UserSavedJobs />);
+
+    expect(screen.getByText("filters.levels.PROFESSIONAL")).toBeInTheDocument();
+    expect(screen.queryByText("PROFESSIONAL")).toBeNull();
+  });
+
   it("shows the club crest whole on a neutral background, never cropped", () => {
     const job = buildJob("job-1", "Goalkeeper");
     savedJobsState.data = {

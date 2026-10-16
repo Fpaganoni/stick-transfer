@@ -112,6 +112,13 @@ describe("OpportunityDetailModal", () => {
     appliedIds.clear();
   });
 
+  it("translates the level instead of showing the raw value", () => {
+    open({ ...base, level: "AMATEUR" });
+
+    expect(screen.getByText("filters.levels.AMATEUR")).toBeInTheDocument();
+    expect(screen.queryByText("AMATEUR")).toBeNull();
+  });
+
   describe("club crest and status", () => {
     it("shows the club crest whole next to the club name", () => {
       open({

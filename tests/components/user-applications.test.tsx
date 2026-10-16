@@ -91,6 +91,15 @@ describe("UserApplications", () => {
     expect(useJobOpportunitiesMock).not.toHaveBeenCalled();
   });
 
+  it("translates the level instead of showing the raw value", () => {
+    applicationsState.applications = [application()];
+
+    render(<UserApplications />);
+
+    expect(screen.getByText("filters.levels.PROFESSIONAL")).toBeInTheDocument();
+    expect(screen.queryByText("PROFESSIONAL")).toBeNull();
+  });
+
   it("translates the status instead of showing the raw enum", () => {
     applicationsState.applications = [application({ status: "UNDER_REVIEW" })];
 

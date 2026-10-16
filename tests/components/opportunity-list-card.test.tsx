@@ -107,6 +107,13 @@ describe("OpportunityListCard", () => {
     expect(screen.getByText("Spain")).toBeInTheDocument();
   });
 
+  it("translates the level instead of showing the raw value", () => {
+    render(<OpportunityListCard {...baseOpportunity} level="PROFESSIONAL" />);
+
+    expect(screen.getByText("filters.levels.PROFESSIONAL")).toBeInTheDocument();
+    expect(screen.queryByText("PROFESSIONAL")).toBeNull();
+  });
+
   it("shows filled badge for filled status", () => {
     render(<OpportunityListCard {...baseOpportunity} status="filled" />);
     expect(screen.getByText("filled")).toBeInTheDocument();

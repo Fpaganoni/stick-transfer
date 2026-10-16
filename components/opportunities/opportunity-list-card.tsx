@@ -12,6 +12,7 @@ import { useUserApplications } from "@/hooks/useJobApplications";
 import { useToggleSaveJob } from "@/hooks/useSavedJobs";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useUIStore } from "@/stores/useUIStore";
+import { getLevelLabel } from "@/lib/job-level";
 import { getPositionTypeLabel, isUmpireJob } from "@/lib/job-position-type";
 import { UmpireJobDetails } from "./umpire-job-details";
 import { CountryLabel } from "@/components/ui/country-label";
@@ -116,7 +117,7 @@ export function OpportunityListCard(opportunity: OpportunityListCardProps) {
                       : "bg-warning/20 text-warning border-warning/30"
                   }`}
                 >
-                  {level}
+                  {getLevelLabel(t, level)}
                 </Badge>
               )}
               {normalizedStatus !== "open" && (
