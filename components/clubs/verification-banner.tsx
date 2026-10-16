@@ -33,9 +33,9 @@ export function VerificationBanner({
     >
       <div className="flex items-start gap-3 flex-1">
         {isPending ? (
-          <Clock className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-1" />
+          <Clock className="w-5 h-5 text-yellow-600 shrink-0 mt-1" />
         ) : (
-          <AlertCircle className="w-5 h-5 text-destructive flex-shrink-0 mt-1" />
+          <AlertCircle className="w-5 h-5 text-destructive shrink-0 mt-1" />
         )}
         <div>
           <p
@@ -58,7 +58,7 @@ export function VerificationBanner({
       {!isPending && (
         <button
           onClick={onVerifyClick}
-          className="flex-shrink-0 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition text-sm font-medium whitespace-nowrap"
+          className="shrink-0 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition text-sm font-medium whitespace-nowrap"
         >
           {t("verifyButton")}
         </button>
