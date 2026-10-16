@@ -138,7 +138,8 @@ export function toUpdateClubVariables(
     city: values.city.trim(),
     description: values.description.trim(),
     league: values.league.trim(),
-    ...(Number.isFinite(foundedYear) ? { foundedYear } : {}),
+    // null clears the year; leaving it out would keep the old one
+    foundedYear: Number.isFinite(foundedYear) ? foundedYear : null,
     benefits: parseBenefits(values.benefits),
     managedByFirstName: values.managedByFirstName.trim(),
     managedByLastName: values.managedByLastName.trim(),
@@ -167,6 +168,9 @@ const SERVER_FIELD: Record<string, ClubErrorField> = {
   country: "country",
   managedByFirstName: "managedByFirstName",
   managedByLastName: "managedByLastName",
+  website: "website",
+  email: "email",
+  phone: "phone",
 };
 
 const SERVER_MESSAGE: Record<string, string> = {
@@ -178,6 +182,9 @@ const SERVER_MESSAGE: Record<string, string> = {
   IMAGE_URL_INVALID: "imageInvalid",
   COUNTRY_INVALID: "countryInvalid",
   FIELD_REQUIRED: "fieldRequired",
+  URL_INVALID: "urlInvalid",
+  EMAIL_INVALID: "emailInvalid",
+  PHONE_INVALID: "phoneInvalid",
 };
 
 export function mapClubSaveError(error: unknown): ClubSaveErrors {

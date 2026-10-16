@@ -91,9 +91,14 @@ export function AdminUserRowActions({ user }: AdminUserRowActionsProps) {
           <DropdownMenuItem onSelect={() => setConfirmKind("active")}>
             {user.isActive ? t("deactivate") : t("activate")}
           </DropdownMenuItem>
-          <DropdownMenuItem onSelect={() => setConfirmKind("verified")}>
-            {user.isVerified ? t("unverify") : t("verify")}
-          </DropdownMenuItem>
+          {user.role === Role.CLUB ? (
+            // A club is verified from the clubs panel (documents), not by this flag
+            <DropdownMenuItem disabled>{t("verifyClubLocked")}</DropdownMenuItem>
+          ) : (
+            <DropdownMenuItem onSelect={() => setConfirmKind("verified")}>
+              {user.isVerified ? t("unverify") : t("verify")}
+            </DropdownMenuItem>
+          )}
           <DropdownMenuSeparator />
           {user.role === Role.CLUB ? (
             // A club account keeps its role: it cannot be turned into a person

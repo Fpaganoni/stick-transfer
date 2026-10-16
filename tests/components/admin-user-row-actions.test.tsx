@@ -87,6 +87,32 @@ describe("AdminUserRowActions role change", () => {
     expect(screen.queryByText("changeRole")).toBeNull();
   });
 
+  it("sends the admin to the clubs panel to verify a club, not to the user flag", async () => {
+    const user = userEvent.setup();
+    render(<AdminUserRowActions user={{ ...player, role: "CLUB" }} />);
+
+    await user.click(screen.getByRole("button", { name: "openMenu" }));
+
+    expect(await screen.findByRole("menuitem", { name: "verifyClubLocked" })).toHaveAttribute(
+      "aria-disabled",
+      "true",
+    );
+    expect(screen.queryByRole("menuitem", { name: "verify" })).toBeNull();
+    expect(mockSetVerified).not.toHaveBeenCalled();
+  });
+
+  it("still lets a person be verified from the users panel", async () => {
+    const user = userEvent.setup();
+    render(<AdminUserRowActions user={player} />);
+
+    await user.click(screen.getByRole("button", { name: "openMenu" }));
+
+    expect(await screen.findByRole("menuitem", { name: "verify" })).not.toHaveAttribute(
+      "aria-disabled",
+      "true",
+    );
+  });
+
   it("still lets the role of a person be changed", async () => {
     const user = userEvent.setup();
     render(<AdminUserRowActions user={player} />);

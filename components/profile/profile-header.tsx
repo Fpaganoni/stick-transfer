@@ -29,6 +29,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toSafeLinkUrl } from "@/lib/social-links";
+import { followerTypeFor } from "@/lib/follow-axis";
 import { toast } from "sonner";
 import { FollowersFollowingModal } from "./followers-following-modal";
 import { ReportModal } from "./report-modal";
@@ -448,7 +449,7 @@ export function ProfileHeader({
   const handleFollowToggle = () => {
     if (!currentUser) return;
     const vars = {
-      followerType: "USER",
+      followerType: followerTypeFor(currentUser.role),
       followerId: currentUser.id,
       followingType: "USER",
       followingId: id,

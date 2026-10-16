@@ -43,7 +43,7 @@ function makeJob(overrides: Partial<JobOpportunity> = {}): JobOpportunity {
   } as JobOpportunity;
 }
 
-function renderRow(vacancy: JobOpportunity, unansweredCount = 0) {
+function renderRow(vacancy: JobOpportunity, unansweredCount: number | null = 0) {
   return render(
     <ClubVacancyOwnerRow clubId="club-1" vacancy={vacancy} unansweredCount={unansweredCount} />,
   );
@@ -145,6 +145,19 @@ describe("ClubVacancyOwnerRow", () => {
 
       expect(screen.getByRole("button", { name: "delete" })).toBeDisabled();
       expect(screen.getByText("deleteAvailableOn")).toBeInTheDocument();
+    });
+
+    it("keeps the delete disabled, and says so, while the unanswered applications are unknown", () => {
+      renderRow(makeJob({ status: "OPEN" }), null);
+
+      expect(screen.getByRole("button", { name: "delete" })).toBeDisabled();
+      expect(screen.getByText("deleteCountsUnavailable")).toBeInTheDocument();
+    });
+
+    it("shows no applicants badge while the count is unknown", () => {
+      renderRow(makeJob(), null);
+
+      expect(screen.getByRole("button", { name: /applicants/ })).not.toHaveTextContent(/\d/);
     });
 
     it("allows deleting a vacancy filled 14 days ago even with applications left", () => {

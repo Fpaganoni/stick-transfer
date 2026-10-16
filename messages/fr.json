@@ -600,6 +600,8 @@
           "managedByFirstNameRequired": "Le prénom est requis.",
           "managedByLastNameRequired": "Le nom est requis."
         },
+        "loadError": "Impossible de charger votre club. Vérifiez votre connexion et réessayez.",
+        "retry": "Réessayer",
         "serverErrors": {
           "clubNameTaken": "Un club portant ce nom existe déjà.",
           "usernameTaken": "Ce nom d'utilisateur n'est pas disponible.",
@@ -610,7 +612,10 @@
           "nameTooLong": "Le nom est trop long.",
           "nameInvalid": "Ce nom contient des caractères non autorisés.",
           "usernameInvalid": "Le nom d'utilisateur doit comporter 3-20 caractères : lettres, chiffres et _",
-          "usernameReserved": "Ce nom d'utilisateur est réservé, choisissez-en un autre."
+          "usernameReserved": "Ce nom d'utilisateur est réservé, choisissez-en un autre.",
+          "urlInvalid": "Saisissez une adresse web valide.",
+          "emailInvalid": "Saisissez une adresse e-mail valide.",
+          "phoneInvalid": "Saisissez un numéro de téléphone valide."
         },
         "contact": {
           "title": "Contact et réseaux",
@@ -774,6 +779,8 @@
       "deleted": "Offre supprimée.",
       "deleteFailed": "Nous n'avons pas pu supprimer l'offre. Veuillez réessayer.",
       "deleteBlockedUnanswered": "Répondez à toutes les candidatures avant de supprimer cette offre.",
+      "deleteCountsUnavailable": "Impossible de vérifier les candidatures en attente pour le moment. Réessayez dans un instant.",
+      "reopenLimitReached": "Vous avez déjà 5 offres ouvertes. Fermez-en une ou pourvoyez-en une avant de rouvrir celle-ci.",
       "deleteBlockedCooldown": "Cette offre a été pourvue récemment. Vous pourrez la supprimer 14 jours après qu'elle a été pourvue.",
       "applicationUpdateFailed": "Nous n'avons pas pu mettre à jour la candidature. Veuillez réessayer."
     },
@@ -1208,6 +1215,7 @@
         "unverify": "Retirer la vérification",
         "changeRole": "Changer le rôle",
         "changeRoleClubLocked": "Les comptes de club gardent leur rôle",
+        "verifyClubLocked": "Les clubs se vérifient depuis le panneau Clubs",
         "confirmActivateTitle": "Activer ce compte ?",
         "confirmActivateDescription": "{name} retrouvera immédiatement un accès complet à la plateforme.",
         "confirmDeactivateTitle": "Désactiver ce compte ?",

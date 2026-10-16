@@ -600,6 +600,8 @@
           "managedByFirstNameRequired": "El nombre es obligatorio.",
           "managedByLastNameRequired": "El apellido es obligatorio."
         },
+        "loadError": "No pudimos cargar tu club. Revisá tu conexión y probá de nuevo.",
+        "retry": "Reintentar",
         "serverErrors": {
           "clubNameTaken": "Ya existe un club con ese nombre.",
           "usernameTaken": "Ese nombre de usuario no está disponible.",
@@ -610,7 +612,10 @@
           "nameTooLong": "El nombre es demasiado largo.",
           "nameInvalid": "Ese nombre contiene caracteres que no están permitidos.",
           "usernameInvalid": "El usuario debe tener 3-20 caracteres: letras, números y _",
-          "usernameReserved": "Ese nombre de usuario está reservado, elegí otro."
+          "usernameReserved": "Ese nombre de usuario está reservado, elegí otro.",
+          "urlInvalid": "Ingresá una dirección web válida.",
+          "emailInvalid": "Ingresá un email válido.",
+          "phoneInvalid": "Ingresá un teléfono válido."
         },
         "contact": {
           "title": "Contacto y redes",
@@ -774,6 +779,8 @@
       "deleted": "Vacante eliminada.",
       "deleteFailed": "No pudimos eliminar la vacante. Intentá de nuevo.",
       "deleteBlockedUnanswered": "Respondé todas las postulaciones antes de eliminar esta vacante.",
+      "deleteCountsUnavailable": "Todavía no podemos verificar las postulaciones pendientes. Probá de nuevo en un momento.",
+      "reopenLimitReached": "Ya tenés 5 vacantes abiertas. Cerrá o completá una antes de reabrir esta.",
       "deleteBlockedCooldown": "Esta vacante se cubrió hace poco. Podés eliminarla 14 días después de cubrirla.",
       "applicationUpdateFailed": "No pudimos actualizar la postulación. Intentá de nuevo."
     },
@@ -1208,6 +1215,7 @@
         "unverify": "Quitar verificación",
         "changeRole": "Cambiar rol",
         "changeRoleClubLocked": "Las cuentas de club conservan su rol",
+        "verifyClubLocked": "Los clubes se verifican desde el panel de Clubes",
         "confirmActivateTitle": "¿Activar esta cuenta?",
         "confirmActivateDescription": "{name} recuperará acceso completo a la plataforma de inmediato.",
         "confirmDeactivateTitle": "¿Desactivar esta cuenta?",

@@ -32,8 +32,8 @@ const actionButton =
 interface ClubVacancyOwnerRowProps {
   clubId: string;
   vacancy: JobOpportunity;
-  /** Applications still PENDING or UNDER_REVIEW. */
-  unansweredCount: number;
+  /** Applications still PENDING or UNDER_REVIEW; null while they are unknown. */
+  unansweredCount: number | null;
 }
 
 /** One vacancy as its owner sees it: the card plus close, fill, delete and applicants. */
@@ -50,7 +50,8 @@ export function ClubVacancyOwnerRow({ clubId, vacancy, unansweredCount }: ClubVa
   const deletion = getJobDeletionState({
     status,
     filledAt: vacancy.filledAt,
-    unansweredCount,
+    // Unknown counts are treated as "waiting": never offer a delete we cannot vouch for
+    unansweredCount: unansweredCount ?? 1,
   });
   const hintId = `delete-hint-${vacancy.id}`;
 
@@ -63,7 +64,9 @@ export function ClubVacancyOwnerRow({ clubId, vacancy, unansweredCount }: ClubVa
       ? t("deleteAvailableOn", {
           date: new Intl.DateTimeFormat(locale, { dateStyle: "medium" }).format(deletion.availableAt),
         })
-      : t("deleteBlockedUnanswered");
+      : unansweredCount === null
+        ? t("deleteCountsUnavailable")
+        : t("deleteBlockedUnanswered");
 
   return (
     <div className="space-y-2">
@@ -77,7 +80,7 @@ export function ClubVacancyOwnerRow({ clubId, vacancy, unansweredCount }: ClubVa
         <button type="button" className={actionButton} onClick={() => setIsApplicantsOpen(true)}>
           <Users aria-hidden size={16} />
           {t("applicants")}
-          {unansweredCount > 0 && (
+          {unansweredCount !== null && unansweredCount > 0 && (
             <span className="min-w-5 px-1.5 rounded-full bg-primary text-white-black text-xs font-semibold text-center">
               {unansweredCount}
             </span>

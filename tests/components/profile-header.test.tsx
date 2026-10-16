@@ -14,9 +14,10 @@ import userEvent from "@testing-library/user-event";
 import { ProfileHeader } from "@/components/profile/profile-header";
 import { Role, UmpireLicenseLevel } from "@/types/enums";
 
-const { mockPush, roleState, followMock, unfollowMock, modalProps } = vi.hoisted(() => ({
+const { mockPush, roleState, authState, followMock, unfollowMock, modalProps } = vi.hoisted(() => ({
   mockPush: vi.fn(),
   roleState: { isClub: false, isSuperAdmin: false },
+  authState: { role: "PLAYER" as string },
   followMock: vi.fn(),
   unfollowMock: vi.fn(),
   modalProps: [] as Array<{ isOpen: boolean; mode: string; userId: string; totalCount: number }>,
@@ -36,7 +37,7 @@ vi.mock("@/hooks/useRole", () => ({
 }));
 
 vi.mock("@/stores/useAuthStore", () => ({
-  useAuthStore: () => ({ user: { id: "viewer-1" } }),
+  useAuthStore: () => ({ user: { id: "viewer-1", role: authState.role } }),
 }));
 
 vi.mock("@/hooks/useUsers", () => ({
@@ -156,6 +157,20 @@ describe("ProfileHeader", () => {
 
       expect(followMock).toHaveBeenCalledWith(vars, expect.anything());
       expect(unfollowMock).not.toHaveBeenCalled();
+    });
+
+    it("follows as a CLUB when the viewer is a club account", async () => {
+      authState.role = "CLUB";
+      const user = userEvent.setup();
+      render(<ProfileHeader {...player} followersCount={7} isFollowedByCurrentUser={false} />);
+
+      await user.click(screen.getByTitle("follow"));
+
+      expect(followMock).toHaveBeenCalledWith(
+        { ...vars, followerType: "CLUB" },
+        expect.anything(),
+      );
+      authState.role = "PLAYER";
     });
 
     it("unfollows when the backend says the viewer already follows", async () => {

@@ -2,7 +2,7 @@ import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { useFollow, useUnfollow } from "@/hooks/useUsers";
 import { useAuthStore } from "@/stores/useAuthStore";
-import { Role } from "@/types/enums";
+import { followerTypeFor } from "@/lib/follow-axis";
 import type { Club } from "@/types/models/club";
 
 /**
@@ -26,7 +26,7 @@ export function useClubFollow(club: Pick<Club, "id" | "isFollowedByCurrentUser">
   const toggle = () => {
     if (!canFollow || !currentUser || !club) return;
     const variables = {
-      followerType: currentUser.role === Role.CLUB ? "CLUB" : "USER",
+      followerType: followerTypeFor(currentUser.role),
       followerId: currentUser.id,
       followingType: "CLUB",
       followingId: club.id,

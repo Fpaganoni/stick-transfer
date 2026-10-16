@@ -152,11 +152,32 @@ describe("useUnansweredApplicationCounts", () => {
 
     const { result } = renderHook(() => useUnansweredApplicationCounts(CLUB_ID), { wrapper });
 
-    await waitFor(() => expect(result.current.data).toEqual({ "job-1": 2, "job-2": 1 }));
+    await waitFor(() =>
+      expect(result.current.data).toEqual({
+        counts: { "job-1": 2, "job-2": 1 },
+        isComplete: true,
+      }),
+    );
     expect(request).toHaveBeenCalledWith(GET_CLUB_UNANSWERED_APPLICATIONS, {
       clubId: CLUB_ID,
       limit: 100,
     });
+  });
+
+  it("says the counts may be incomplete when a page came back full", async () => {
+    const fullPage = Array.from({ length: 100 }, (_, index) => ({
+      id: `a-${index}`,
+      jobOpportunity: { id: "job-1" },
+    }));
+    vi.mocked(graphqlClient).request = vi
+      .fn()
+      .mockResolvedValue({ pending: fullPage, underReview: [] });
+    const { wrapper } = setup();
+
+    const { result } = renderHook(() => useUnansweredApplicationCounts(CLUB_ID), { wrapper });
+
+    await waitFor(() => expect(result.current.data?.isComplete).toBe(false));
+    expect(result.current.data?.counts["job-1"]).toBe(100);
   });
 });
 
@@ -214,6 +235,23 @@ describe("useUpdateVacancyStatus", () => {
       expect(queryClient.getQueryData<{ jobOpportunities: JobOpportunity[] }>(key)?.jobOpportunities[0].status).toBe("OPEN"),
     );
     expect(toast.error).toHaveBeenCalledWith("statusUpdateFailed");
+  });
+
+  it("explains that the club already has 5 open vacancies when reopening one", async () => {
+    const { queryClient, wrapper } = setup();
+    const key = clubVacanciesQueryKey(CLUB_ID);
+    queryClient.setQueryData(key, { jobOpportunities: [makeJob({ status: "CLOSED" })] });
+    const { reject } = pendingRequest();
+
+    const { result } = renderHook(() => useUpdateVacancyStatus(), { wrapper });
+    act(() => result.current.mutate({ id: "job-1", clubId: CLUB_ID, status: "OPEN" }));
+    await act(async () => reject(backendError("ACTIVE_JOBS_LIMIT_REACHED")));
+
+    await waitFor(() => expect(toast.error).toHaveBeenCalledWith("reopenLimitReached"));
+    expect(toast.error).not.toHaveBeenCalledWith("statusUpdateFailed");
+    expect(
+      queryClient.getQueryData<{ jobOpportunities: JobOpportunity[] }>(key)?.jobOpportunities[0].status,
+    ).toBe("CLOSED");
   });
 });
 

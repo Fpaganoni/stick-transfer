@@ -73,19 +73,30 @@ export function useClubVacancies(clubId: string | null, status?: JobStatus) {
   });
 }
 
+export interface UnansweredApplicationCounts {
+  counts: Record<string, number>;
+  /** False when a page came back full: some vacancy may have more than counted. */
+  isComplete: boolean;
+}
+
 /**
  * Applications still waiting for an answer, counted per vacancy. Capped at one
- * page per status; the backend enforces the delete rule either way.
+ * page per status; when a page is full the counts are flagged incomplete so the
+ * UI never treats a missing count as "no applications". The backend enforces the
+ * delete rule either way.
  */
 export function useUnansweredApplicationCounts(clubId: string | null) {
-  return useQuery<Record<string, number>>({
+  return useQuery<UnansweredApplicationCounts>({
     queryKey: unansweredCountsQueryKey(clubId ?? ""),
     queryFn: async () => {
       const data = await graphqlClient.request<{
         pending: Array<{ id: string; jobOpportunity: { id: string } }>;
         underReview: Array<{ id: string; jobOpportunity: { id: string } }>;
       }>(GET_CLUB_UNANSWERED_APPLICATIONS, { clubId, limit: PAGE_LIMIT });
-      return countApplicationsByJob([...data.pending, ...data.underReview]);
+      return {
+        counts: countApplicationsByJob([...data.pending, ...data.underReview]),
+        isComplete: data.pending.length < PAGE_LIMIT && data.underReview.length < PAGE_LIMIT,
+      };
     },
     enabled: !!clubId,
   });
@@ -118,9 +129,10 @@ export function useUpdateVacancyStatus() {
       );
       return { snapshot };
     },
-    onError: (_error, _variables, context) => {
+    onError: (error, _variables, context) => {
       restoreJobs(queryClient, context?.snapshot);
-      toast.error(t("statusUpdateFailed"));
+      const limitReached = parseApiError(error).code === "ACTIVE_JOBS_LIMIT_REACHED";
+      toast.error(t(limitReached ? "reopenLimitReached" : "statusUpdateFailed"));
     },
     onSettled: (_data, _error, { id, clubId }) => {
       queryClient.invalidateQueries({ queryKey: ["jobOpportunities"] });

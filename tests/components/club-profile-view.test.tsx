@@ -26,6 +26,9 @@ const { state, openLoginModal, toggleFollow, createReport, useClubVacanciesCall 
       isFollowing: false,
       canFollow: true,
       canContact: false,
+      unanswered: { counts: {}, isComplete: true } as
+        | { counts: Record<string, number>; isComplete: boolean }
+        | undefined,
     },
     openLoginModal: vi.fn(),
     toggleFollow: vi.fn(),
@@ -48,7 +51,7 @@ vi.mock("@/hooks/useClubVacancies", () => ({
     return { data: state.vacancies, isLoading: false };
   },
   // The owner's actions have their own tests (club-vacancy-owner-row, club-applicants-sheet)
-  useUnansweredApplicationCounts: () => ({ data: {} }),
+  useUnansweredApplicationCounts: () => ({ data: state.unanswered }),
   useUpdateVacancyStatus: () => ({ mutate: vi.fn(), isPending: false }),
   useDeleteVacancy: () => ({ mutate: vi.fn(), isPending: false }),
   useJobApplicants: () => ({ data: [], isLoading: false, isError: false }),
@@ -140,6 +143,7 @@ describe("ClubProfileView", () => {
     state.isFollowing = false;
     state.canFollow = true;
     state.canContact = false;
+    state.unanswered = { counts: {}, isComplete: true };
   });
 
   describe("loading and errors", () => {
@@ -368,6 +372,30 @@ describe("ClubProfileView", () => {
       render(<ClubProfileView clubId="club-1" mode="owner" />);
 
       expect(screen.queryByRole("status")).toBeNull();
+    });
+
+    it("does not let a vacancy be deleted until its unanswered applications are known", async () => {
+      state.vacancies = [makeJob()];
+      state.unanswered = undefined; // the counts are still loading, or failed
+      const user = userEvent.setup();
+
+      render(<ClubProfileView clubId="club-1" mode="owner" />);
+      await user.click(screen.getByRole("tab", { name: "tabs.vacancies" }));
+
+      expect(screen.getByRole("button", { name: "delete" })).toBeDisabled();
+    });
+
+    it("treats a vacancy missing from an incomplete count as unknown, not as zero", async () => {
+      state.vacancies = [makeJob(), makeJob({ id: "job-2", title: "Coach" })];
+      state.unanswered = { counts: { "job-1": 0 }, isComplete: false };
+      const user = userEvent.setup();
+
+      render(<ClubProfileView clubId="club-1" mode="owner" />);
+      await user.click(screen.getByRole("tab", { name: "tabs.vacancies" }));
+
+      const deletes = screen.getAllByRole("button", { name: "delete" });
+      expect(deletes[0]).toBeEnabled();
+      expect(deletes[1]).toBeDisabled();
     });
 
     it("lists every vacancy of the club and links to publish a new one", async () => {

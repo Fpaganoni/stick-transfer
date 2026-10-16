@@ -177,7 +177,62 @@ describe("ClubProfileForm", () => {
     });
   });
 
+  describe("while the club loads or fails to load", () => {
+    it("shows a loading state instead of an empty form that would be wiped when the club arrives", () => {
+      mocks.useClub.mockReturnValue({ data: undefined, isLoading: true });
+
+      render(<ClubProfileForm />);
+
+      expect(screen.getByText("loading")).toBeInTheDocument();
+      expect(screen.queryByLabelText("editForm.club.name")).not.toBeInTheDocument();
+      expect(screen.queryByRole("button", { name: "editForm.saveChanges" })).not.toBeInTheDocument();
+    });
+
+    it("says the club could not be loaded and offers to retry", async () => {
+      const refetch = vi.fn();
+      mocks.useClub.mockReturnValue({ data: undefined, isLoading: false, isError: true, refetch });
+      const user = userEvent.setup();
+
+      render(<ClubProfileForm />);
+
+      expect(screen.getByRole("alert")).toHaveTextContent("editForm.club.loadError");
+      expect(screen.queryByLabelText("editForm.club.name")).not.toBeInTheDocument();
+      await user.click(screen.getByRole("button", { name: "editForm.club.retry" }));
+      expect(refetch).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe("a background refetch while the owner is editing", () => {
+    it("keeps what the owner typed and still brings in the fields they did not touch", async () => {
+      const user = userEvent.setup();
+      const { rerender } = render(<ClubProfileForm />);
+
+      const name = screen.getByLabelText("editForm.club.name");
+      await user.clear(name);
+      await user.type(name, "My unsaved name");
+
+      mocks.useClub.mockReturnValue({
+        data: { club: { ...mockClub, description: "Changed on the server" } },
+      });
+      rerender(<ClubProfileForm />);
+
+      expect(screen.getByLabelText("editForm.club.name")).toHaveValue("My unsaved name");
+      expect(screen.getByLabelText("editForm.club.description")).toHaveValue("Changed on the server");
+    });
+  });
+
   describe("saving", () => {
+    it("clears the founded year when the owner empties it", async () => {
+      const user = userEvent.setup();
+      render(<ClubProfileForm />);
+
+      await user.clear(screen.getByLabelText("editForm.club.foundedYear"));
+      await user.click(save());
+
+      await waitFor(() => expect(mocks.updateClub).toHaveBeenCalledTimes(1));
+      expect(mocks.updateClub.mock.calls[0][0].foundedYear).toBeNull();
+    });
+
     it("saves identity and club data with ONE updateClub call", async () => {
       const user = userEvent.setup();
       render(<ClubProfileForm />);

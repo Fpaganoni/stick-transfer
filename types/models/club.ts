@@ -71,7 +71,7 @@ export interface UpdateClubVariables {
   bio?: string;
   description?: string;
   league?: string;
-  foundedYear?: number;
+  foundedYear?: number | null;
   benefits?: string[];
   city?: string;
   country?: string;

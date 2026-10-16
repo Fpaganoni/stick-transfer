@@ -25,7 +25,14 @@ export function ClubVacanciesTab({ clubId, mode }: ClubVacanciesTabProps) {
     isOwner ? undefined : "OPEN",
   );
   // Only the owner can read (and needs) the applications waiting for an answer
-  const { data: unansweredCounts = {} } = useUnansweredApplicationCounts(isOwner ? clubId : null);
+  const { data: unanswered } = useUnansweredApplicationCounts(isOwner ? clubId : null);
+
+  // null = unknown (still loading, failed, or the page was full): never read it as zero
+  const unansweredFor = (vacancyId: string): number | null => {
+    const known = unanswered?.counts[vacancyId];
+    if (known !== undefined) return known;
+    return unanswered?.isComplete ? 0 : null;
+  };
 
   return (
     <div className="space-y-3">
@@ -61,7 +68,7 @@ export function ClubVacanciesTab({ clubId, mode }: ClubVacanciesTabProps) {
               key={vacancy.id}
               clubId={clubId}
               vacancy={vacancy}
-              unansweredCount={unansweredCounts[vacancy.id] ?? 0}
+              unansweredCount={unansweredFor(vacancy.id)}
             />
           ) : (
             <OpportunityListCard key={vacancy.id} {...vacancy} />

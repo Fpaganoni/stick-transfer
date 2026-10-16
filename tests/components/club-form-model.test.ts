@@ -169,10 +169,10 @@ describe("toUpdateClubVariables", () => {
     expect(variables.benefits).toEqual([]);
   });
 
-  it("leaves the founded year out when it is blank", () => {
+  it("sends null to clear the founded year when it is blank, instead of keeping the old one", () => {
     const variables = toUpdateClubVariables("club-1", { ...baseValues, foundedYear: " " });
 
-    expect(variables).not.toHaveProperty("foundedYear");
+    expect(variables.foundedYear).toBeNull();
   });
 });
 
@@ -212,6 +212,26 @@ describe("mapClubSaveError", () => {
       { name: "city", messageKey: "fieldRequired" },
       { name: "managedByFirstName", messageKey: "nameInvalid" },
       { name: "name", messageKey: "nameTooLong" },
+    ]);
+  });
+
+  it("places the contact field errors the backend validates on their inputs", () => {
+    const result = mapClubSaveError(
+      backendError({
+        code: "VALIDATION_ERROR",
+        fields: [
+          { field: "website", code: "URL_INVALID" },
+          { field: "email", code: "EMAIL_INVALID" },
+          { field: "phone", code: "PHONE_INVALID" },
+        ],
+      }),
+    );
+
+    expect(result.showToast).toBe(false);
+    expect(result.fields).toEqual([
+      { name: "website", messageKey: "urlInvalid" },
+      { name: "email", messageKey: "emailInvalid" },
+      { name: "phone", messageKey: "phoneInvalid" },
     ]);
   });
 

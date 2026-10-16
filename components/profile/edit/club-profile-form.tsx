@@ -6,7 +6,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
+import type { Club } from "@/types/models/club";
 import { ClubOnboardingNotice } from "@/components/clubs/club-onboarding-notice";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useClub, useUpdateClub } from "@/hooks/useClubs";
@@ -32,25 +34,47 @@ import {
  * person (birth date, CV, position, trajectories, multimedia) are never sent.
  */
 export function ClubProfileForm() {
+  const t = useTranslations("profile");
+  const tCommon = useTranslations("common");
+  const { user } = useAuthStore();
+  // A CLUB account is the club itself: its club id is the account id
+  const { data: clubData, isError, refetch } = useClub(user?.id ?? null);
+  const club = clubData?.club;
+
+  // The form is only mounted once the club is here: an empty form that fills in
+  // later would let the owner type over data that is about to arrive
+  if (club) return <ClubProfileFormBody club={club} />;
+
+  if (isError) {
+    return (
+      <div role="alert" className="space-y-3 text-sm text-error">
+        <p>{t("editForm.club.loadError")}</p>
+        <Button type="button" variant="outline" onClick={() => refetch()}>
+          {t("editForm.club.retry")}
+        </Button>
+      </div>
+    );
+  }
+
+  return <div>{tCommon("loading")}</div>;
+}
+
+function ClubProfileFormBody({ club }: { club: Club }) {
   const router = useRouter();
   const t = useTranslations("profile");
   const tCommon = useTranslations("common");
-  const { user, updateUser } = useAuthStore();
+  const { updateUser } = useAuthStore();
   const { mutateAsync: updateClub } = useUpdateClub();
-  // A CLUB account is the club itself: its club id is the account id
-  const { data: clubData } = useClub(user?.id ?? null);
   const [isSaving, setIsSaving] = useState(false);
-
-  const club = clubData?.club;
 
   const form = useForm<ClubFormValues>({
     resolver: zodResolver(createClubFormSchema(t)),
     values: getClubFormValues(club),
+    // A background refetch brings in untouched fields without wiping what is being typed
+    resetOptions: { keepDirtyValues: true },
   });
 
   async function onSubmit(data: ClubFormValues) {
-    if (!club) return;
-
     setIsSaving(true);
     try {
       const { updateClub: saved } = await updateClub(toUpdateClubVariables(club.id, data));
@@ -83,10 +107,6 @@ export function ClubProfileForm() {
     }
   }
 
-  if (!user) {
-    return <div>Loading...</div>;
-  }
-
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -106,7 +126,7 @@ export function ClubProfileForm() {
         <FormActions
           tCommon={tCommon}
           saveLabel={isSaving ? t("editForm.saving") : t("editForm.saveChanges")}
-          isSaving={isSaving || !club}
+          isSaving={isSaving}
           onCancel={() => router.push("/profile")}
         />
       </form>
