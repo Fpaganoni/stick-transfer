@@ -1,6 +1,14 @@
 "use client";
 
-import { useCallback, useEffect, useEffectEvent, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useEffectEvent,
+  useId,
+  useRef,
+  useState,
+  type KeyboardEvent,
+} from "react";
 import { X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCreateReport } from "@/hooks/useReport";
@@ -39,6 +47,9 @@ export function ReportModal({
   const [reason, setReason] = useState("");
   const [description, setDescription] = useState("");
   const createReport = useCreateReport();
+  const titleId = useId();
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const reasonRef = useRef<HTMLSelectElement>(null);
 
   const handleSubmit = () => {
     if (!reason) return;
@@ -68,12 +79,38 @@ export function ReportModal({
 
   useEffect(() => {
     if (!isOpen) return;
-    const handleKeyDown = (e: KeyboardEvent) => {
+    const handleKeyDown = (e: globalThis.KeyboardEvent) => {
       if (e.key === "Escape") onEscape();
     };
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [isOpen]);
+
+  // Focus goes to the first field when it opens and back to what opened it when it closes
+  useEffect(() => {
+    if (!isOpen) return;
+    const opener = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    reasonRef.current?.focus();
+    return () => opener?.focus();
+  }, [isOpen]);
+
+  // Tab and Shift+Tab wrap inside the dialog instead of reaching the page behind it
+  const trapFocus = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (event.key !== "Tab") return;
+    const focusable = dialogRef.current?.querySelectorAll<HTMLElement>(
+      "button:not(:disabled), select, textarea, input, a[href]",
+    );
+    if (!focusable?.length) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  };
 
   return (
     <AnimatePresence>
@@ -83,17 +120,17 @@ export function ReportModal({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            role="button"
-            tabIndex={0}
-            aria-label="Close"
+            aria-hidden="true"
             className="absolute inset-0 bg-black/50 backdrop-blur-sm"
             onClick={handleClose}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") handleClose();
-            }}
           />
 
           <motion.div
+            ref={dialogRef}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby={titleId}
+            onKeyDown={trapFocus}
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
@@ -101,7 +138,7 @@ export function ReportModal({
             className="relative z-10 w-full max-w-md bg-background border border-border rounded-2xl shadow-xl"
           >
             <div className="flex items-center justify-between px-5 py-4 border-b border-border">
-              <h2 className="text-base font-semibold text-foreground">
+              <h2 id={titleId} className="text-base font-semibold text-foreground">
                 Report User
               </h2>
               <button
@@ -119,6 +156,7 @@ export function ReportModal({
                   Reason
                 </label>
                 <select
+                  ref={reasonRef}
                   id="report-reason"
                   value={reason}
                   onChange={(e) => setReason(e.target.value)}
