@@ -784,6 +784,8 @@
       "reopenNotVerified": "Solo los clubes verificados pueden reabrir una vacante. Primero verificá tu club desde tu perfil.",
       "reopenNeedsVerification": "Solo los clubes verificados pueden reabrir una vacante.",
       "publishNeedsVerification": "Verificá tu club para publicar vacantes.",
+      "applicantsLimitNotice": "Mostrando las 100 postulaciones más recientes. Puede haber más.",
+      "vacanciesLimitNotice": "Mostrando 100 vacantes. Puede haber más.",
       "deleteBlockedCooldown": "Esta vacante se cubrió hace poco. Podés eliminarla 14 días después de cubrirla.",
       "applicationUpdateFailed": "No pudimos actualizar la postulación. Intentá de nuevo."
     },

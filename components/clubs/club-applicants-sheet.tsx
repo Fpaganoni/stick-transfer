@@ -13,6 +13,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { useJobApplicants, useUpdateApplicationStatus } from "@/hooks/useClubVacancies";
+import { mayBeTruncated } from "@/lib/club-page-limit";
 import { formatRelativeTime } from "@/lib/date-utils";
 import { toSafeLinkUrl } from "@/lib/social-links";
 import type { ApplicationStatus, JobApplication } from "@/types/models/job-application";
@@ -167,16 +168,23 @@ export function ClubApplicantsSheet({
         ) : applicants.length === 0 ? (
           <p className="text-sm text-foreground-muted">{t("applicantsEmpty")}</p>
         ) : (
-          <ul className="space-y-3">
-            {applicants.map((application) => (
-              <ApplicantRow
-                key={application.id}
-                application={application}
-                clubId={clubId}
-                jobId={jobId}
-              />
-            ))}
-          </ul>
+          <>
+            {mayBeTruncated(applicants.length) && (
+              <p role="status" className="text-xs text-foreground-muted">
+                {t("applicantsLimitNotice")}
+              </p>
+            )}
+            <ul className="space-y-3">
+              {applicants.map((application) => (
+                <ApplicantRow
+                  key={application.id}
+                  application={application}
+                  clubId={clubId}
+                  jobId={jobId}
+                />
+              ))}
+            </ul>
+          </>
         )}
       </SheetContent>
     </Sheet>

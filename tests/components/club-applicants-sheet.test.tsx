@@ -80,6 +80,31 @@ describe("ClubApplicantsSheet", () => {
     expect(screen.getByText("applicantsEmpty")).toBeInTheDocument();
   });
 
+  describe("when the list may be cut at the page limit", () => {
+    const applicants = (count: number) =>
+      Array.from({ length: count }, (_, index) =>
+        makeApplication({
+          id: `app-${index}`,
+          user: { id: `u${index}`, name: `Applicant ${index}`, username: `applicant_${index}` },
+        } as Partial<JobApplication>),
+      );
+
+    it("warns that there may be more applications than the ones listed", () => {
+      state.applicants = applicants(100);
+      renderSheet();
+
+      expect(screen.getByRole("status")).toHaveTextContent("applicantsLimitNotice");
+      expect(screen.getAllByRole("listitem")).toHaveLength(100);
+    });
+
+    it("says nothing while the list is shorter than a page", () => {
+      state.applicants = applicants(99);
+      renderSheet();
+
+      expect(screen.queryByRole("status")).toBeNull();
+    });
+  });
+
   it("says when the applicants could not be loaded", () => {
     state.isError = true;
     renderSheet();

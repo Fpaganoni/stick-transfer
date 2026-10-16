@@ -784,6 +784,8 @@
       "reopenNotVerified": "Only verified clubs can reopen a vacancy. Verify your club from your profile first.",
       "reopenNeedsVerification": "Only verified clubs can reopen a vacancy.",
       "publishNeedsVerification": "Verify your club to publish vacancies.",
+      "applicantsLimitNotice": "Showing the 100 most recent applications. There may be more.",
+      "vacanciesLimitNotice": "Showing 100 vacancies. There may be more.",
       "deleteBlockedCooldown": "This vacancy was filled recently. You can delete it 14 days after it was filled.",
       "applicationUpdateFailed": "We could not update the application. Please try again."
     },

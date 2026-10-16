@@ -784,6 +784,8 @@
       "reopenNotVerified": "Seuls les clubs vérifiés peuvent rouvrir une offre. Faites d'abord vérifier votre club depuis votre profil.",
       "reopenNeedsVerification": "Seuls les clubs vérifiés peuvent rouvrir une offre.",
       "publishNeedsVerification": "Faites vérifier votre club pour publier des offres.",
+      "applicantsLimitNotice": "Affichage des 100 candidatures les plus récentes. Il peut y en avoir davantage.",
+      "vacanciesLimitNotice": "Affichage de 100 offres. Il peut y en avoir davantage.",
       "deleteBlockedCooldown": "Cette offre a été pourvue récemment. Vous pourrez la supprimer 14 jours après qu'elle a été pourvue.",
       "applicationUpdateFailed": "Nous n'avons pas pu mettre à jour la candidature. Veuillez réessayer."
     },

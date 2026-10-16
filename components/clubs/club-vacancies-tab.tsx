@@ -7,6 +7,7 @@ import { ClubVacancyOwnerRow } from "@/components/clubs/club-vacancy-owner-row";
 import { OpportunityListCard } from "@/components/opportunities/opportunity-list-card";
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
 import { useClubVacancies, useUnansweredApplicationCounts } from "@/hooks/useClubVacancies";
+import { mayBeTruncated } from "@/lib/club-page-limit";
 
 const publishButton =
   "inline-flex items-center gap-2 px-4 py-2 bg-primary text-white-black font-semibold rounded-lg hover:bg-primary-hover transition-colors text-sm";
@@ -81,19 +82,24 @@ export function ClubVacanciesTab({ clubId, mode, canPublish }: ClubVacanciesTabP
           </EmptyHeader>
         </Empty>
       ) : (
-        vacancies.map((vacancy) =>
-          isOwner ? (
-            <ClubVacancyOwnerRow
-              key={vacancy.id}
-              clubId={clubId}
-              vacancy={vacancy}
-              canReopen={canPublish}
-              unansweredCount={unansweredFor(vacancy.id)}
-            />
-          ) : (
-            <OpportunityListCard key={vacancy.id} {...vacancy} />
-          ),
-        )
+        <>
+          {isOwner && mayBeTruncated(vacancies.length) && (
+            <p className="text-xs text-foreground-muted">{t("vacanciesLimitNotice")}</p>
+          )}
+          {vacancies.map((vacancy) =>
+            isOwner ? (
+              <ClubVacancyOwnerRow
+                key={vacancy.id}
+                clubId={clubId}
+                vacancy={vacancy}
+                canReopen={canPublish}
+                unansweredCount={unansweredFor(vacancy.id)}
+              />
+            ) : (
+              <OpportunityListCard key={vacancy.id} {...vacancy} />
+            ),
+          )}
+        </>
       )}
     </div>
   );

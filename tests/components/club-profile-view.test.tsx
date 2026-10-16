@@ -433,6 +433,28 @@ describe("ClubProfileView", () => {
       });
     });
 
+    it("warns the owner when the vacancy list came back full, so it may be cut", async () => {
+      state.vacancies = Array.from({ length: 100 }, (_, index) =>
+        makeJob({ id: `job-${index}`, title: `Vacancy ${index}` }),
+      );
+      const user = userEvent.setup();
+
+      render(<ClubProfileView clubId="club-1" mode="owner" />);
+      await user.click(screen.getByRole("tab", { name: "tabs.vacancies" }));
+
+      expect(screen.getByText("vacanciesLimitNotice")).toBeInTheDocument();
+    });
+
+    it("does not warn while the vacancy list is shorter than a page", async () => {
+      state.vacancies = [makeJob(), makeJob({ id: "job-2", title: "Coach" })];
+      const user = userEvent.setup();
+
+      render(<ClubProfileView clubId="club-1" mode="owner" />);
+      await user.click(screen.getByRole("tab", { name: "tabs.vacancies" }));
+
+      expect(screen.queryByText("vacanciesLimitNotice")).toBeNull();
+    });
+
     it("lets a verified club reopen a closed vacancy", async () => {
       state.vacancies = [makeJob({ status: "CLOSED" })];
       const user = userEvent.setup();

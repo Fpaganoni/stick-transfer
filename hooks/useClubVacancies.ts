@@ -9,6 +9,7 @@ import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { graphqlClient } from "@/lib/graphql-client";
 import { parseApiError } from "@/lib/auth-errors";
+import { CLUB_PAGE_LIMIT } from "@/lib/club-page-limit";
 import {
   DELETE_JOB_OPPORTUNITY,
   GET_CLUB_JOB_OPPORTUNITIES,
@@ -20,8 +21,7 @@ import {
 import type { JobOpportunity, JobStatus } from "@/types/models/job-opportunity";
 import type { JobApplication } from "@/types/models/job-application";
 
-/** A club does not publish, or receive, more than one backend page at once. */
-const PAGE_LIMIT = 100;
+const PAGE_LIMIT = CLUB_PAGE_LIMIT;
 
 type JobsData = { jobOpportunities: JobOpportunity[] };
 
