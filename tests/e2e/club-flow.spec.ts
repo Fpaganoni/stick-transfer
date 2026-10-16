@@ -1,19 +1,28 @@
 import { test, expect, type Browser, type Page } from "@playwright/test";
 
 // What: club journey against the REAL backend (no GraphQL mocks): register a
-//   club -> upload its crest -> publish a vacancy -> close it -> check what a
+//   club -> upload its crest -> see that an unverified club cannot publish -> a
+//   SUPERADMIN verifies it -> publish a vacancy -> close it -> check what a
 //   visitor (a signed-in player, since /clubs/* needs a session) sees -> delete
 //   the vacancy.
 // Why: the club profile is one view for owner and visitors; only a real run
-//   proves the owner actions and the "visitors only see OPEN vacancies" rule
-//   end to end (cookies, Cloudinary signature, status filter).
+//   proves the owner actions, the "only a VERIFIED club publishes" rule and the
+//   "visitors only see OPEN vacancies" rule end to end (cookies, Cloudinary
+//   signature, status filter, CLUB_NOT_VERIFIED).
 //
 // Gated: it writes to the dev database and uploads ONE tiny image to Cloudinary.
 // Run it with E2E_REAL_BACKEND=1 and the backend on NEXT_PUBLIC_GRAPHQL_URL.
+// The SUPERADMIN that verifies the club comes from the seed (pnpm prisma:seed in
+// the backend): set E2E_ADMIN_PASSWORD to its dev password, and E2E_ADMIN_EMAIL if
+// it is not superadmin@hockey-test.com.
 // The club account cannot be deleted from the app, so one e2e club stays behind.
+
+const adminEmail = process.env.E2E_ADMIN_EMAIL ?? "superadmin@hockey-test.com";
+const adminPassword = process.env.E2E_ADMIN_PASSWORD;
 
 test.describe("Club flow (real backend)", () => {
   test.skip(!process.env.E2E_REAL_BACKEND, "needs the real backend (set E2E_REAL_BACKEND=1)");
+  test.skip(!adminPassword, "needs the seeded SUPERADMIN to verify the club (set E2E_ADMIN_PASSWORD)");
 
   const stamp = Date.now();
   const email = `e2e-club-${stamp}@hockey-test.com`;
@@ -63,6 +72,35 @@ test.describe("Club flow (real backend)", () => {
     await page.goto(`/en/clubs/${clubId}`);
     await expect(page.getByRole("tablist")).toBeVisible({ timeout: 30_000 });
     await page.getByRole("tab", { name: "Vacancies" }).click();
+  }
+
+  /**
+   * A SUPERADMIN in its own browser context approves the club in the admin panel.
+   * It is the only way for a club to become VERIFIED, which publishing requires.
+   */
+  async function verifyClubAsAdmin(browser: Browser, baseURL: string | undefined, name: string) {
+    const context = await browser.newContext({ baseURL });
+    try {
+      const page = await context.newPage();
+      await page.goto("/en/login");
+      await page.waitForLoadState("networkidle");
+      await page.getByLabel("Email address").fill(adminEmail);
+      await page.getByLabel("Password", { exact: true }).fill(adminPassword ?? "");
+      await page.getByRole("button", { name: "Login", exact: true }).click();
+      await expect(page).not.toHaveURL(/login/, { timeout: 45_000 });
+
+      await page.goto("/en/admin/clubs");
+      await page.getByPlaceholder(/search/i).fill(name);
+      const row = page.getByRole("row", { name: new RegExp(name) });
+      await expect(row).toBeVisible({ timeout: 30_000 });
+      await row.getByRole("button", { name: "Review" }).click();
+
+      await page.getByRole("dialog").getByRole("button", { name: "Approve" }).click();
+      await page.getByRole("alertdialog").getByRole("button", { name: "Confirm" }).click();
+      await expect(row.getByText("Verified", { exact: true })).toBeVisible({ timeout: 30_000 });
+    } finally {
+      await context.close();
+    }
   }
 
   let visitor: Awaited<ReturnType<typeof newVisitor>> | undefined;
@@ -146,6 +184,29 @@ test.describe("Club flow (real backend)", () => {
       await expect(page.getByText("Complete your club profile")).toHaveCount(0);
     });
 
+    await test.step("an unverified club cannot publish", async () => {
+      await page.getByRole("tab", { name: "Vacancies" }).click();
+      await expect(page.getByRole("link", { name: "Publish vacancy" })).toHaveCount(0);
+      await expect(page.getByRole("button", { name: "Publish vacancy" })).toBeDisabled();
+      await expect(page.getByText("Verify your club to publish vacancies.")).toBeVisible();
+
+      // Going straight to the form does not help: the gate explains and sends it back
+      await page.goto("/en/opportunities/new");
+      await expect(page.getByText("Verify your club to publish openings")).toBeVisible({ timeout: 30_000 });
+      await expect(page.getByLabel("Job title")).toHaveCount(0);
+      await expect(page.getByRole("link", { name: "Go to my club profile" })).toHaveAttribute(
+        "href",
+        /\/profile$/,
+      );
+    });
+
+    await test.step("a SUPERADMIN verifies the club", async () => {
+      await verifyClubAsAdmin(browser, baseURL, clubName);
+      await page.goto("/en/profile");
+      await expect(page.getByRole("tablist")).toBeVisible({ timeout: 30_000 });
+      await expect(page.getByTestId("verified-badge")).toBeVisible({ timeout: 30_000 });
+    });
+
     await test.step("publish a vacancy", async () => {
       await page.getByRole("tab", { name: "Vacancies" }).click();
       await page.getByRole("link", { name: "Publish vacancy" }).click();
@@ -169,7 +230,7 @@ test.describe("Club flow (real backend)", () => {
       await openVacancies(visitor.page, clubId);
       await expect(visitor.page.getByText(vacancyTitle).first()).toBeVisible({ timeout: 30_000 });
       await expect(visitor.page.getByText(/not verified|unverified/i)).toHaveCount(0);
-      await expect(visitor.page.getByText("Verified club")).toHaveCount(0);
+      await expect(visitor.page.getByTestId("verified-badge")).toBeVisible();
       await expectNoOwnerActions(visitor.page);
     });
 
