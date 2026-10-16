@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { useCreateJobOpportunity } from "@/hooks/useJobOpportunities";
+import { parseApiError } from "@/lib/auth-errors";
 import {
   Level,
   UmpireLicenseLevel,
@@ -44,7 +45,17 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-const ACTIVE_LIMIT_ERROR_HINT = "limit";
+/** Backend refusals the club can act on, by stable code -> key under opportunities.create. */
+function createRefusalKey(error: unknown): "activeLimitReached" | "clubNotVerified" | null {
+  switch (parseApiError(error).code) {
+    case "ACTIVE_JOBS_LIMIT_REACHED":
+      return "activeLimitReached";
+    case "CLUB_NOT_VERIFIED":
+      return "clubNotVerified";
+    default:
+      return null;
+  }
+}
 
 const createOpportunitySchema = (t: (key: string) => string) =>
   z.object({
@@ -141,11 +152,10 @@ export function CreateOpportunityForm() {
       });
       router.push("/opportunities");
     } catch (error) {
-      const message =
-        error instanceof Error ? error.message : String(error);
-      if (message.toLowerCase().includes(ACTIVE_LIMIT_ERROR_HINT)) {
+      const refusalKey = createRefusalKey(error);
+      if (refusalKey) {
         toast.error(t("create.errorTitle"), {
-          description: t("create.activeLimitReached"),
+          description: t(`create.${refusalKey}`),
         });
       } else {
         toast.error(t("create.errorTitle"));

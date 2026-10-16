@@ -257,5 +257,46 @@ describe("CreateOpportunityForm", () => {
       await waitFor(() => expect(mockToast.error).toHaveBeenCalled());
       expect(mockPush).not.toHaveBeenCalled();
     });
+
+    describe("when the backend refuses with a stable code", () => {
+      const backendError = (code: string, message = "x") => ({
+        response: { errors: [{ message, extensions: { code } }] },
+      });
+
+      async function submitRejectedBy(error: unknown) {
+        mockCreate.mockRejectedValueOnce(error);
+        vi.spyOn(console, "error").mockImplementation(() => {});
+        const user = userEvent.setup();
+        render(<CreateOpportunityForm />);
+
+        await fillBasics(user);
+        await choose(user, positionTrigger(), "positionTypes.COACH");
+        await user.click(submit());
+        await waitFor(() => expect(mockToast.error).toHaveBeenCalled());
+      }
+
+      it("tells the club it must be verified to publish (CLUB_NOT_VERIFIED)", async () => {
+        await submitRejectedBy(backendError("CLUB_NOT_VERIFIED"));
+
+        expect(mockToast.error).toHaveBeenCalledWith("create.errorTitle", {
+          description: "create.clubNotVerified",
+        });
+        expect(mockPush).not.toHaveBeenCalled();
+      });
+
+      it("tells the club it has 5 active openings (ACTIVE_JOBS_LIMIT_REACHED)", async () => {
+        await submitRejectedBy(backendError("ACTIVE_JOBS_LIMIT_REACHED"));
+
+        expect(mockToast.error).toHaveBeenCalledWith("create.errorTitle", {
+          description: "create.activeLimitReached",
+        });
+      });
+
+      it("never decides by the message text: the word limit alone is a generic error", async () => {
+        await submitRejectedBy(backendError("INTERNAL_ERROR", "rate limit exceeded"));
+
+        expect(mockToast.error).toHaveBeenCalledWith("create.errorTitle");
+      });
+    });
   });
 });

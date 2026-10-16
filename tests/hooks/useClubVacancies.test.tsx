@@ -253,6 +253,23 @@ describe("useUpdateVacancyStatus", () => {
       queryClient.getQueryData<{ jobOpportunities: JobOpportunity[] }>(key)?.jobOpportunities[0].status,
     ).toBe("CLOSED");
   });
+
+  it("explains that the club must be verified when reopening is refused for that", async () => {
+    const { queryClient, wrapper } = setup();
+    const key = clubVacanciesQueryKey(CLUB_ID);
+    queryClient.setQueryData(key, { jobOpportunities: [makeJob({ status: "CLOSED" })] });
+    const { reject } = pendingRequest();
+
+    const { result } = renderHook(() => useUpdateVacancyStatus(), { wrapper });
+    act(() => result.current.mutate({ id: "job-1", clubId: CLUB_ID, status: "OPEN" }));
+    await act(async () => reject(backendError("CLUB_NOT_VERIFIED")));
+
+    await waitFor(() => expect(toast.error).toHaveBeenCalledWith("reopenNotVerified"));
+    expect(toast.error).not.toHaveBeenCalledWith("statusUpdateFailed");
+    expect(
+      queryClient.getQueryData<{ jobOpportunities: JobOpportunity[] }>(key)?.jobOpportunities[0].status,
+    ).toBe("CLOSED");
+  });
 });
 
 describe("useDeleteVacancy", () => {

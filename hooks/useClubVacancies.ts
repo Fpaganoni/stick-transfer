@@ -108,6 +108,18 @@ interface UpdateVacancyStatusVariables {
   status: JobStatus;
 }
 
+/** Only reopening can be refused for a reason the owner can act on; the rest is a generic failure. */
+function statusErrorKey(error: unknown) {
+  switch (parseApiError(error).code) {
+    case "ACTIVE_JOBS_LIMIT_REACHED":
+      return "reopenLimitReached";
+    case "CLUB_NOT_VERIFIED":
+      return "reopenNotVerified";
+    default:
+      return "statusUpdateFailed";
+  }
+}
+
 /** Close, reopen or mark as filled. FILLED stamps filledAt, which starts the delete cooldown. */
 export function useUpdateVacancyStatus() {
   const queryClient = useQueryClient();
@@ -131,8 +143,7 @@ export function useUpdateVacancyStatus() {
     },
     onError: (error, _variables, context) => {
       restoreJobs(queryClient, context?.snapshot);
-      const limitReached = parseApiError(error).code === "ACTIVE_JOBS_LIMIT_REACHED";
-      toast.error(t(limitReached ? "reopenLimitReached" : "statusUpdateFailed"));
+      toast.error(t(statusErrorKey(error)));
     },
     onSettled: (_data, _error, { id, clubId }) => {
       queryClient.invalidateQueries({ queryKey: ["jobOpportunities"] });

@@ -781,6 +781,7 @@
       "deleteBlockedUnanswered": "Respondé todas las postulaciones antes de eliminar esta vacante.",
       "deleteCountsUnavailable": "Todavía no podemos verificar las postulaciones pendientes. Probá de nuevo en un momento.",
       "reopenLimitReached": "Ya tenés 5 vacantes abiertas. Cerrá o completá una antes de reabrir esta.",
+      "reopenNotVerified": "Solo los clubes verificados pueden reabrir una vacante. Primero verificá tu club desde tu perfil.",
       "deleteBlockedCooldown": "Esta vacante se cubrió hace poco. Podés eliminarla 14 días después de cubrirla.",
       "applicationUpdateFailed": "No pudimos actualizar la postulación. Intentá de nuevo."
     },
@@ -891,6 +892,7 @@
       "successDescription": "Tu oferta laboral ya está publicada.",
       "errorTitle": "No se pudo publicar la oferta",
       "activeLimitReached": "Ya tenés 5 ofertas activas. Cerrá una antes de publicar otra.",
+      "clubNotVerified": "Solo los clubes verificados pueden publicar ofertas. Primero verificá tu club desde tu perfil.",
       "validation": {
         "titleRequired": "El título es obligatorio.",
         "descriptionRequired": "La descripción es obligatoria.",

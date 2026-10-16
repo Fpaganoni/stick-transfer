@@ -19,6 +19,7 @@ describe("parseApiError", () => {
     "JOB_FILLED_COOLDOWN",
     "ROLE_CHANGE_NOT_ALLOWED",
     "ACTIVE_JOBS_LIMIT_REACHED",
+    "CLUB_NOT_VERIFIED",
   ])(
     "recognizes %s",
     (code) => {

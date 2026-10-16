@@ -781,6 +781,7 @@
       "deleteBlockedUnanswered": "Answer every application before deleting this vacancy.",
       "deleteCountsUnavailable": "We cannot check the pending applications yet. Try again in a moment.",
       "reopenLimitReached": "You already have 5 open vacancies. Close or fill one before reopening this.",
+      "reopenNotVerified": "Only verified clubs can reopen a vacancy. Verify your club from your profile first.",
       "deleteBlockedCooldown": "This vacancy was filled recently. You can delete it 14 days after it was filled.",
       "applicationUpdateFailed": "We could not update the application. Please try again."
     },
@@ -891,6 +892,7 @@
       "successDescription": "Your job opportunity is now live.",
       "errorTitle": "Could not publish opportunity",
       "activeLimitReached": "You already have 5 active openings. Close one before publishing a new one.",
+      "clubNotVerified": "Only verified clubs can publish openings. Verify your club from your profile first.",
       "validation": {
         "titleRequired": "Title is required.",
         "descriptionRequired": "Description is required.",
