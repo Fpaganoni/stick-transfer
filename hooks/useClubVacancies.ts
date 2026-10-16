@@ -1,4 +1,10 @@
-import { QueryClient, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  QueryClient,
+  type QueryKey,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { graphqlClient } from "@/lib/graphql-client";
@@ -18,7 +24,6 @@ import type { JobApplication } from "@/types/models/job-application";
 const PAGE_LIMIT = 100;
 
 type JobsData = { jobOpportunities: JobOpportunity[] };
-type JobsSnapshot = ReturnType<QueryClient["getQueriesData"]>;
 
 // Every key starts with "jobOpportunities", so invalidating that prefix also
 // refreshes the club tab, the public lists and the detail modal.
@@ -47,13 +52,76 @@ function patchJobs(queryClient: QueryClient, update: (jobs: JobOpportunity[]) =>
   );
 }
 
-function restoreJobs(queryClient: QueryClient, snapshot: JobsSnapshot | undefined) {
-  snapshot?.forEach(([key, data]) => queryClient.setQueryData(key, data));
+// A failed change is undone for ITS vacancy only. Restoring a snapshot of every list
+// would also wipe whatever the owner changed on other vacancies while this one was in
+// flight, so each mutation remembers just what it touched.
+
+function cachedJobLists(queryClient: QueryClient) {
+  return queryClient
+    .getQueriesData<JobsData>({ queryKey: ["jobOpportunities"] })
+    .filter(([, data]) => Array.isArray(data?.jobOpportunities)) as Array<
+    [QueryKey, JobsData]
+  >;
 }
 
-async function snapshotJobs(queryClient: QueryClient): Promise<JobsSnapshot> {
+function findCachedJob(queryClient: QueryClient, id: string): JobOpportunity | undefined {
+  for (const [, data] of cachedJobLists(queryClient)) {
+    const job = data.jobOpportunities.find((candidate) => candidate.id === id);
+    if (job) return job;
+  }
+  return undefined;
+}
+
+/** Stop in-flight refetches from overwriting the optimistic change. */
+async function cancelJobQueries(queryClient: QueryClient) {
   await queryClient.cancelQueries({ queryKey: ["jobOpportunities"] });
-  return queryClient.getQueriesData({ queryKey: ["jobOpportunities"] });
+}
+
+type PreviousStatus = Pick<JobOpportunity, "status" | "filledAt">;
+
+/**
+ * Undo an optimistic status change, but only while the vacancy still shows the status
+ * this mutation applied: a newer change to the same vacancy must not be undone by an
+ * older one that failed.
+ */
+function revertStatus(
+  queryClient: QueryClient,
+  id: string,
+  applied: JobStatus,
+  previous: PreviousStatus,
+) {
+  patchJobs(queryClient, (jobs) =>
+    jobs.map((job) =>
+      job.id === id && job.status === applied
+        ? { ...job, status: previous.status, filledAt: previous.filledAt }
+        : job,
+    ),
+  );
+}
+
+/** Where a vacancy sat in each cached list before an optimistic delete removed it. */
+type RemovedFrom = Array<{ queryKey: QueryKey; index: number; job: JobOpportunity }>;
+
+function removeJob(queryClient: QueryClient, id: string): RemovedFrom {
+  const removedFrom: RemovedFrom = [];
+  for (const [queryKey, data] of cachedJobLists(queryClient)) {
+    const index = data.jobOpportunities.findIndex((job) => job.id === id);
+    if (index >= 0) removedFrom.push({ queryKey, index, job: data.jobOpportunities[index] });
+  }
+  patchJobs(queryClient, (jobs) => jobs.filter((job) => job.id !== id));
+  return removedFrom;
+}
+
+/** Put a deleted vacancy back where it was, unless a refetch already brought it back. */
+function reinsertJob(queryClient: QueryClient, removedFrom: RemovedFrom) {
+  for (const { queryKey, index, job } of removedFrom) {
+    queryClient.setQueryData<JobsData>(queryKey, (old) => {
+      if (!old || old.jobOpportunities.some((candidate) => candidate.id === job.id)) return old;
+      const jobs = [...old.jobOpportunities];
+      jobs.splice(Math.min(index, jobs.length), 0, job);
+      return { ...old, jobOpportunities: jobs };
+    });
+  }
 }
 
 /** Vacancies of one club; the backend filters by club (and status when given). */
@@ -125,11 +193,13 @@ export function useUpdateVacancyStatus() {
   const queryClient = useQueryClient();
   const t = useTranslations("clubProfile.vacancies");
 
-  return useMutation<unknown, Error, UpdateVacancyStatusVariables, { snapshot: JobsSnapshot }>({
+  return useMutation<unknown, Error, UpdateVacancyStatusVariables, { previous?: PreviousStatus }>({
     mutationFn: ({ id, status }) =>
       graphqlClient.request(UPDATE_JOB_OPPORTUNITY_STATUS, { id, status }),
     onMutate: async ({ id, status }) => {
-      const snapshot = await snapshotJobs(queryClient);
+      await cancelJobQueries(queryClient);
+      const cached = findCachedJob(queryClient, id);
+      const previous = cached && { status: cached.status, filledAt: cached.filledAt };
       const now = new Date().toISOString();
       patchJobs(queryClient, (jobs) =>
         jobs.map((job) => {
@@ -139,10 +209,10 @@ export function useUpdateVacancyStatus() {
           return { ...job, status, filledAt };
         }),
       );
-      return { snapshot };
+      return { previous };
     },
-    onError: (error, _variables, context) => {
-      restoreJobs(queryClient, context?.snapshot);
+    onError: (error, { id, status }, context) => {
+      if (context?.previous) revertStatus(queryClient, id, status, context.previous);
       toast.error(t(statusErrorKey(error)));
     },
     onSettled: (_data, _error, { id, clubId }) => {
@@ -169,19 +239,18 @@ export function useDeleteVacancy() {
   const queryClient = useQueryClient();
   const t = useTranslations("clubProfile.vacancies");
 
-  return useMutation<unknown, Error, { id: string; clubId: string }, { snapshot: JobsSnapshot }>({
+  return useMutation<unknown, Error, { id: string; clubId: string }, { removedFrom: RemovedFrom }>({
     mutationFn: ({ id }) => graphqlClient.request(DELETE_JOB_OPPORTUNITY, { id }),
     onMutate: async ({ id }) => {
-      const snapshot = await snapshotJobs(queryClient);
-      patchJobs(queryClient, (jobs) => jobs.filter((job) => job.id !== id));
-      return { snapshot };
+      await cancelJobQueries(queryClient);
+      return { removedFrom: removeJob(queryClient, id) };
     },
     onSuccess: (_data, { id }) => {
       queryClient.removeQueries({ queryKey: ["jobOpportunity", id] });
       toast.success(t("deleted"));
     },
     onError: (error, _variables, context) => {
-      restoreJobs(queryClient, context?.snapshot);
+      if (context) reinsertJob(queryClient, context.removedFrom);
       toast.error(t(deleteErrorKey(error)));
     },
     onSettled: (_data, _error, { clubId }) => {

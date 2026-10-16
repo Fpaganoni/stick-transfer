@@ -272,6 +272,110 @@ describe("useUpdateVacancyStatus", () => {
   });
 });
 
+describe("rollback when several changes overlap", () => {
+  beforeEach(() => vi.clearAllMocks());
+
+  type Cached = { jobOpportunities: JobOpportunity[] };
+
+  /**
+   * One deferred request per change, so each can succeed or fail on its own. Keyed by
+   * "id:status" for a status change and by "id" for a delete.
+   */
+  function requestsByVacancy() {
+    const deferred = new Map<string, { resolve: (v: unknown) => void; reject: (e: unknown) => void }>();
+    vi.mocked(graphqlClient).request = vi
+      .fn()
+      .mockImplementation((_doc: unknown, variables: { id: string; status?: string }) => {
+        const key = variables.status ? `${variables.id}:${variables.status}` : variables.id;
+        return new Promise((resolve, reject) => deferred.set(key, { resolve, reject }));
+      });
+    return deferred;
+  }
+
+  const read = (queryClient: QueryClient) =>
+    queryClient.getQueryData<Cached>(clubVacanciesQueryKey(CLUB_ID))?.jobOpportunities ?? [];
+
+  it("a refused status change reverts its own vacancy and keeps another change made meanwhile", async () => {
+    const { queryClient, wrapper } = setup();
+    queryClient.setQueryData(clubVacanciesQueryKey(CLUB_ID), {
+      jobOpportunities: [makeJob({ id: "job-1" }), makeJob({ id: "job-2", title: "Coach" })],
+    });
+    const requests = requestsByVacancy();
+
+    const { result } = renderHook(() => useUpdateVacancyStatus(), { wrapper });
+    act(() => result.current.mutate({ id: "job-1", clubId: CLUB_ID, status: "CLOSED" }));
+    await waitFor(() => expect(read(queryClient)[0].status).toBe("CLOSED"));
+    act(() => result.current.mutate({ id: "job-2", clubId: CLUB_ID, status: "CLOSED" }));
+    await waitFor(() => expect(read(queryClient)[1].status).toBe("CLOSED"));
+
+    await act(async () => requests.get("job-1:CLOSED")!.reject(backendError("INTERNAL_ERROR")));
+
+    await waitFor(() => expect(read(queryClient)[0].status).toBe("OPEN"));
+    expect(read(queryClient)[1].status).toBe("CLOSED");
+  });
+
+  it("does not undo a newer change to the same vacancy when an older one is refused", async () => {
+    const { queryClient, wrapper } = setup();
+    queryClient.setQueryData(clubVacanciesQueryKey(CLUB_ID), { jobOpportunities: [makeJob()] });
+    const requests = requestsByVacancy();
+
+    const { result: older } = renderHook(() => useUpdateVacancyStatus(), { wrapper });
+    const { result: newer } = renderHook(() => useUpdateVacancyStatus(), { wrapper });
+    act(() => older.current.mutate({ id: "job-1", clubId: CLUB_ID, status: "CLOSED" }));
+    await waitFor(() => expect(read(queryClient)[0].status).toBe("CLOSED"));
+    act(() => newer.current.mutate({ id: "job-1", clubId: CLUB_ID, status: "FILLED" }));
+    await waitFor(() => expect(read(queryClient)[0].status).toBe("FILLED"));
+
+    await act(async () => requests.get("job-1:CLOSED")!.reject(backendError("INTERNAL_ERROR")));
+
+    await waitFor(() => expect(toast.error).toHaveBeenCalledWith("statusUpdateFailed"));
+    expect(read(queryClient)[0].status).toBe("FILLED");
+  });
+
+  it("a refused delete puts the vacancy back in its place and keeps another change made meanwhile", async () => {
+    const { queryClient, wrapper } = setup();
+    queryClient.setQueryData(clubVacanciesQueryKey(CLUB_ID), {
+      jobOpportunities: [
+        makeJob({ id: "job-1" }),
+        makeJob({ id: "job-2", title: "Coach" }),
+        makeJob({ id: "job-3", title: "Analyst" }),
+      ],
+    });
+    const requests = requestsByVacancy();
+
+    const { result: deleting } = renderHook(() => useDeleteVacancy(), { wrapper });
+    const { result: closing } = renderHook(() => useUpdateVacancyStatus(), { wrapper });
+    act(() => deleting.current.mutate({ id: "job-2", clubId: CLUB_ID }));
+    await waitFor(() => expect(read(queryClient).map((job) => job.id)).toEqual(["job-1", "job-3"]));
+    act(() => closing.current.mutate({ id: "job-3", clubId: CLUB_ID, status: "CLOSED" }));
+    await waitFor(() => expect(read(queryClient)[1].status).toBe("CLOSED"));
+
+    await act(async () => requests.get("job-2")!.reject(backendError("JOB_HAS_UNANSWERED_APPLICATIONS")));
+
+    await waitFor(() =>
+      expect(read(queryClient).map((job) => job.id)).toEqual(["job-1", "job-2", "job-3"]),
+    );
+    expect(read(queryClient)[2].status).toBe("CLOSED");
+  });
+
+  it("does not duplicate a vacancy that a refetch already brought back", async () => {
+    const { queryClient, wrapper } = setup();
+    const key = clubVacanciesQueryKey(CLUB_ID);
+    queryClient.setQueryData(key, { jobOpportunities: [makeJob({ id: "job-1" }), makeJob({ id: "job-2" })] });
+    const requests = requestsByVacancy();
+
+    const { result } = renderHook(() => useDeleteVacancy(), { wrapper });
+    act(() => result.current.mutate({ id: "job-1", clubId: CLUB_ID }));
+    await waitFor(() => expect(read(queryClient).map((job) => job.id)).toEqual(["job-2"]));
+    queryClient.setQueryData(key, { jobOpportunities: [makeJob({ id: "job-1" }), makeJob({ id: "job-2" })] });
+
+    await act(async () => requests.get("job-1")!.reject(backendError("INTERNAL_ERROR")));
+
+    await waitFor(() => expect(toast.error).toHaveBeenCalledWith("deleteFailed"));
+    expect(read(queryClient).map((job) => job.id)).toEqual(["job-1", "job-2"]);
+  });
+});
+
 describe("useDeleteVacancy", () => {
   beforeEach(() => vi.clearAllMocks());
 
