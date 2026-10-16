@@ -109,6 +109,21 @@ describe("CreateOpportunityGate", () => {
     expect(screen.queryByText("create.gate.title")).toBeNull();
   });
 
+  it("does not spin forever when the club answers without a verification status", () => {
+    state.status = undefined;
+    state.isLoading = false;
+    state.isError = false;
+
+    render(<CreateOpportunityGate />);
+
+    expect(screen.queryByText("create-form")).toBeNull();
+    expect(screen.getByText("create.gate.title")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "create.gate.goToProfile" })).toHaveAttribute(
+      "href",
+      "/profile",
+    );
+  });
+
   it("says the club could not be read instead of opening the form", () => {
     state.status = undefined;
     state.isError = true;

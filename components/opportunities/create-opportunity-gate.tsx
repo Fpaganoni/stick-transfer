@@ -37,7 +37,7 @@ export function CreateOpportunityGate() {
     );
   }
 
-  if (isLoading || !status) {
+  if (isLoading) {
     return (
       <div className="flex justify-center py-12">
         <Spinner className="size-8" />
