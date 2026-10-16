@@ -98,6 +98,7 @@ export function FileUploader({
     <div className="space-y-4">
       {!uploadedFile ? (
         <button
+          type="button"
           onClick={handleClick}
           disabled={isLoading || isUploading}
           className="w-full border-2 border-dashed border-primary/30 rounded-lg p-8 text-center hover:border-primary/50 hover:bg-primary/5 transition disabled:opacity-50 disabled:cursor-not-allowed"
@@ -122,6 +123,7 @@ export function FileUploader({
           </div>
           {!isUploading && (
             <button
+              type="button"
               onClick={handleRemove}
               disabled={isLoading}
               aria-label={label("removeFile")}
