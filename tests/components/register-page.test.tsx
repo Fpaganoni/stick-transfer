@@ -276,8 +276,40 @@ describe("RegisterPage", () => {
       await user.type(await screen.findByLabelText("city"), "Madrid");
       await user.click(screen.getByText("createProfile"));
 
-      expect(await screen.findByText("firstNameMin")).toBeDefined();
-      expect(screen.getByText("lastNameMin")).toBeDefined();
+      // Same rule as the backend: required, not "at least 2 characters"
+      expect(await screen.findAllByText("fieldRequired")).toHaveLength(2);
+      expect(screen.queryByText("firstNameMin")).toBeNull();
+      expect(mockRegister).not.toHaveBeenCalled();
+    });
+
+    it("accepts a one-letter name for the responsible person, as the backend does", async () => {
+      const user = userEvent.setup();
+      renderWithProviders(<RegisterPage />);
+
+      await fillUntilStep3(user, "clubAdmin");
+      await user.type(await screen.findByLabelText("city"), "Madrid");
+      await user.type(screen.getByLabelText("firstName"), "L");
+      await user.type(screen.getByLabelText("lastName"), "G");
+      await user.click(screen.getByText("createProfile"));
+
+      await waitFor(() => expect(mockRegister).toHaveBeenCalledTimes(1));
+      expect(mockRegister.mock.calls[0][0]).toMatchObject({
+        managedByFirstName: "L",
+        managedByLastName: "G",
+      });
+    });
+
+    it("rejects a responsible person name longer than the backend allows (100)", async () => {
+      const user = userEvent.setup();
+      renderWithProviders(<RegisterPage />);
+
+      await fillUntilStep3(user, "clubAdmin");
+      await user.type(await screen.findByLabelText("city"), "Madrid");
+      await user.type(screen.getByLabelText("firstName"), "a".repeat(101));
+      await user.type(screen.getByLabelText("lastName"), "Gomez");
+      await user.click(screen.getByText("createProfile"));
+
+      expect(await screen.findByText("nameTooLong")).toBeDefined();
       expect(mockRegister).not.toHaveBeenCalled();
     });
 

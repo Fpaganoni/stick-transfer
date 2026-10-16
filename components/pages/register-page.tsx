@@ -175,18 +175,19 @@ export const RegisterPage = () => {
     dateOfBirth,
   });
   const step3CoachSchema = z.object({ dateOfBirth });
-  // Private data of the person in charge; the backend stores up to 100 chars each
+  // Private data of the person in charge. Same rule as the backend (checkManagerName):
+  // required, up to 100 chars each; it has no minimum length beyond "not empty".
   const step3ClubSchema = z.object({
     city: z.string().trim().min(1, tValidation("cityRequired")),
     managedByFirstName: z
       .string()
       .trim()
-      .min(2, tValidation("firstNameMin"))
+      .min(1, tValidation("fieldRequired"))
       .max(100, tValidation("nameTooLong")),
     managedByLastName: z
       .string()
       .trim()
-      .min(2, tValidation("lastNameMin"))
+      .min(1, tValidation("fieldRequired"))
       .max(100, tValidation("nameTooLong")),
   });
 
