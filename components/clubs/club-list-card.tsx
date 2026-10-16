@@ -5,14 +5,7 @@ import { useLocale } from "next-intl";
 import { ChevronRight } from "lucide-react";
 import { ClubCrest } from "@/components/clubs/club-crest";
 import { Club } from "@/types/models/club";
-import { cn } from "@/lib/utils";
 import { CountryLabel } from "@/components/ui/country-label";
-
-const TYPE_STYLES: Record<NonNullable<Club["type"]>, string> = {
-  Team: "bg-info/10 text-info",
-  Organization: "bg-accent/10 text-accent",
-  Brand: "bg-primary/10 text-primary",
-};
 
 function isNew(createdAt?: string): boolean {
   if (!createdAt) return false;
@@ -22,7 +15,6 @@ function isNew(createdAt?: string): boolean {
 export function ClubListCard(club: Club) {
   const locale = useLocale();
   const initials = club.name.slice(0, 2).toUpperCase();
-  const typeStyle = club.type ? TYPE_STYLES[club.type] : null;
   const showNew = isNew(club.createdAt);
 
   return (
@@ -53,17 +45,6 @@ export function ClubListCard(club: Club) {
       <p className="text-foreground font-semibold text-sm text-center line-clamp-2 leading-tight w-full">
         {club.name}
       </p>
-
-      {typeStyle && club.type && (
-        <span
-          className={cn(
-            "mt-1 text-[10px] font-medium px-2 py-0.5 rounded-full shrink-0",
-            typeStyle
-          )}
-        >
-          {club.type}
-        </span>
-      )}
 
       {club.country && (
         <div className="mt-1 text-sm text-foreground-muted">

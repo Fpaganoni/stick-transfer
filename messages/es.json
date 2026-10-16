@@ -562,8 +562,6 @@
       "saving": "Guardando...",
       "saveChanges": "Guardar Cambios",
       "club": {
-        "title": "Información del Club",
-        "desc": "Actualiza el perfil público de tu club.",
         "name": "Nombre del Club",
         "description": "Descripción",
         "identityTitle": "Identidad del club",
@@ -706,16 +704,13 @@
     "tabs": {
       "label": "Secciones del club",
       "profile": "Perfil",
-      "vacancies": "Vacantes",
-      "opportunities": "Oportunidades",
-      "about": "Acerca de"
+      "vacancies": "Vacantes"
     },
     "header": {
       "follow": "Seguir",
       "share": "Compartir",
       "contact": "Contactar",
       "report": "Reportar",
-      "members": "miembros",
       "unfollow": "Dejar de seguir",
       "followed": "Ahora seguís a este club.",
       "unfollowed": "Dejaste de seguir a este club.",
@@ -735,10 +730,7 @@
       "action": "Completar perfil"
     },
     "profile": {
-      "category": "Categoría",
       "founded": "Fundado",
-      "website": "Sitio web",
-      "email": "Correo",
       "description": "Descripción",
       "league": "Liga",
       "benefits": "Beneficios"
@@ -794,15 +786,6 @@
       "item4": "Gestiona tu perfil profesional",
       "createAccount": "Crear cuenta gratis",
       "logIn": "Iniciar sesión"
-    },
-    "opportunities": {
-      "title": "Posiciones Abiertas",
-      "noOpportunities": "Sin posiciones abiertas en este momento."
-    },
-    "about": {
-      "title": "Acerca de",
-      "location": "Ubicación",
-      "noLocation": "Ubicación no establecida."
     }
   },
   "messages": {
@@ -916,12 +899,8 @@
     "pageSubtitle": "Descubre clubes de hockey de élite en todo el mundo. Encuentra tu comunidad, conecta con entrenadores y lleva tu juego al siguiente nivel.",
     "allClubhouses": "Todos los clubhouses",
     "myClubhouses": "Mis clubhouses",
-    "newBadge": "NUEVO",
     "noClubsDescription": "Ningún club coincide con tu búsqueda. Intenta con otro término.",
-    "searchPlaceholder": "Buscar clubes...",
     "noClubs": "No se encontraron clubes",
-    "members": "Miembros",
-    "viewProfile": "Ver perfil",
     "loading": "Cargando clubes...",
     "detail": {
       "contactAndSocial": "Contacto y Redes",
@@ -930,15 +909,6 @@
       "website": "Sitio web",
       "email": "Email",
       "phone": "Teléfono"
-    },
-    "roles": {
-      "coach": "Entrenador",
-      "manager": "Gerente",
-      "player": "Jugador"
-    },
-    "status": {
-      "active": "Activo",
-      "inactive": "Inactivo"
     },
     "verification": {
       "verifyClub": "Verificar Club",

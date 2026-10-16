@@ -66,11 +66,6 @@ describe("ClubListCard", () => {
     expect(screen.getByText("Spain")).toBeInTheDocument();
   });
 
-  it("renders type badge when type is provided", () => {
-    render(<ClubListCard {...mockClub} type="Team" />);
-    expect(screen.getByText("Team")).toBeInTheDocument();
-  });
-
   it("does not render NEW badge when createdAt is old", () => {
     render(<ClubListCard {...mockClub} createdAt="2020-01-01T00:00:00Z" />);
     expect(screen.queryByText("NEW")).not.toBeInTheDocument();

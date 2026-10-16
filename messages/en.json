@@ -562,8 +562,6 @@
       "saving": "Saving...",
       "saveChanges": "Save Changes",
       "club": {
-        "title": "Club Information",
-        "desc": "Update your club's public profile.",
         "name": "Club Name",
         "description": "Description",
         "identityTitle": "Club identity",
@@ -706,16 +704,13 @@
     "tabs": {
       "label": "Club sections",
       "profile": "Profile",
-      "vacancies": "Vacancies",
-      "opportunities": "Opportunities",
-      "about": "About"
+      "vacancies": "Vacancies"
     },
     "header": {
       "follow": "Follow",
       "share": "Share",
       "contact": "Contact",
       "report": "Report",
-      "members": "members",
       "unfollow": "Unfollow",
       "followed": "You are now following this club.",
       "unfollowed": "You stopped following this club.",
@@ -735,10 +730,7 @@
       "action": "Complete profile"
     },
     "profile": {
-      "category": "Category",
       "founded": "Founded",
-      "website": "Website",
-      "email": "Email",
       "description": "Description",
       "league": "League",
       "benefits": "Benefits"
@@ -794,15 +786,6 @@
       "item4": "Manage your professional profile",
       "createAccount": "Create free account",
       "logIn": "Log In"
-    },
-    "opportunities": {
-      "title": "Open Positions",
-      "noOpportunities": "No open positions at the moment."
-    },
-    "about": {
-      "title": "About",
-      "location": "Location",
-      "noLocation": "Location not set."
     }
   },
   "messages": {
@@ -916,12 +899,8 @@
     "pageSubtitle": "Discover elite hockey clubs worldwide. Find your community, connect with coaches, and take your game to the next level.",
     "allClubhouses": "All clubhouses",
     "myClubhouses": "My clubhouses",
-    "newBadge": "NEW",
     "noClubsDescription": "No clubs match your search. Try a different query.",
-    "searchPlaceholder": "Search clubs...",
     "noClubs": "No clubs found",
-    "members": "Members",
-    "viewProfile": "View Profile",
     "loading": "Loading clubs...",
     "detail": {
       "contactAndSocial": "Contact & Social",
@@ -930,15 +909,6 @@
       "website": "Website",
       "email": "Email",
       "phone": "Phone"
-    },
-    "roles": {
-      "coach": "Coach",
-      "manager": "Manager",
-      "player": "Player"
-    },
-    "status": {
-      "active": "Active",
-      "inactive": "Inactive"
     },
     "verification": {
       "verifyClub": "Verify Club",

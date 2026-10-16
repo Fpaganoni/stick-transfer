@@ -39,7 +39,6 @@ export interface Club {
   league?: string;
   foundedYear?: number | null;
   benefits?: string[];
-  type?: "Team" | "Organization" | "Brand";
   createdAt?: string;
   /** Private: only the club itself and SUPERADMIN receive it, everyone else gets null. */
   managedBy?: ClubManagedBy | null;
@@ -54,8 +53,6 @@ export interface Club {
   facebook?: string;
   tiktok?: string;
   members?: ClubMember[];
-  /** @deprecated Clubs have no gallery any more; the backend always sends []. */
-  videos?: string[];
   user?: {
     id: string;
     username?: string | null;
@@ -65,8 +62,6 @@ export interface Club {
   followersCount?: number;
   isFollowedByCurrentUser?: boolean;
 }
-
-export type ClubBasic = Pick<Club, "id" | "name" | "logo">;
 
 /** Identity (name, username, bio, crest, cover, place) + club data, saved in one transaction. */
 export interface UpdateClubVariables {

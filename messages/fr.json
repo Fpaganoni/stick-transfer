@@ -562,8 +562,6 @@
       "saving": "Enregistrement...",
       "saveChanges": "Enregistrer les modifications",
       "club": {
-        "title": "Informations du Club",
-        "desc": "Mettez à jour le profil public de votre club.",
         "name": "Nom du Club",
         "description": "Description",
         "identityTitle": "Identité du club",
@@ -706,16 +704,13 @@
     "tabs": {
       "label": "Sections du club",
       "profile": "Profil",
-      "vacancies": "Postes",
-      "opportunities": "Opportunités",
-      "about": "À Propos"
+      "vacancies": "Postes"
     },
     "header": {
       "follow": "Suivre",
       "share": "Partager",
       "contact": "Contacter",
       "report": "Signaler",
-      "members": "membres",
       "unfollow": "Ne plus suivre",
       "followed": "Vous suivez maintenant ce club.",
       "unfollowed": "Vous ne suivez plus ce club.",
@@ -735,10 +730,7 @@
       "action": "Compléter le profil"
     },
     "profile": {
-      "category": "Catégorie",
       "founded": "Fondé en",
-      "website": "Site web",
-      "email": "Email",
       "description": "Description",
       "league": "Ligue",
       "benefits": "Avantages"
@@ -794,15 +786,6 @@
       "item4": "Gérez votre profil professionnel",
       "createAccount": "Créer un compte gratuit",
       "logIn": "Se connecter"
-    },
-    "opportunities": {
-      "title": "Postes Ouverts",
-      "noOpportunities": "Aucun poste ouvert pour le moment."
-    },
-    "about": {
-      "title": "À Propos",
-      "location": "Localisation",
-      "noLocation": "Localisation non définie."
     }
   },
   "messages": {
@@ -916,12 +899,8 @@
     "pageSubtitle": "Découvrez des clubs de hockey d'élite dans le monde entier. Trouvez votre communauté, connectez-vous avec des entraîneurs et portez votre jeu au niveau supérieur.",
     "allClubhouses": "Tous les clubhouses",
     "myClubhouses": "Mes clubhouses",
-    "newBadge": "NOUVEAU",
     "noClubsDescription": "Aucun club ne correspond à votre recherche. Essayez un autre terme.",
-    "searchPlaceholder": "Rechercher des clubs...",
     "noClubs": "Aucun club trouvé",
-    "members": "Membres",
-    "viewProfile": "Voir le profil",
     "loading": "Chargement des clubs...",
     "detail": {
       "contactAndSocial": "Contact et Réseaux",
@@ -930,15 +909,6 @@
       "website": "Site web",
       "email": "E-mail",
       "phone": "Téléphone"
-    },
-    "roles": {
-      "coach": "Entraîneur",
-      "manager": "Directeur",
-      "player": "Joueur"
-    },
-    "status": {
-      "active": "Actif",
-      "inactive": "Inactif"
     },
     "verification": {
       "verifyClub": "Vérifier le Club",

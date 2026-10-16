@@ -3,7 +3,7 @@ import { CLUB_PROFILE_FIELDS } from "./queries";
 
 /**
  * One transaction saves the club identity (name, username, bio, crest, cover,
- * place) and the club data. `videos` is deprecated and ignored by the backend.
+ * place) and the club data.
  */
 export const UPDATE_CLUB = gql`
   mutation UpdateClub(
