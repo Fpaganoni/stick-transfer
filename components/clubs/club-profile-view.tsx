@@ -13,6 +13,7 @@ import { VerificationBanner } from "@/components/clubs/verification-banner";
 import { VerificationModal } from "@/components/clubs/verification-modal";
 import { OpportunityDetailModal } from "@/components/opportunities/opportunity-detail-modal";
 import { useClub } from "@/hooks/useClubs";
+import { canPublishVacancies } from "@/lib/club-publishing";
 import { useAuthStore } from "@/stores/useAuthStore";
 
 type ClubProfileTab = "profile" | "vacancies";
@@ -108,7 +109,11 @@ export function ClubProfileView({ clubId, mode }: ClubProfileViewProps) {
           {activeTab === "profile" ? (
             <ClubProfileDetails club={club} />
           ) : (
-            <ClubVacanciesTab clubId={club.id} mode={mode} />
+            <ClubVacanciesTab
+              clubId={club.id}
+              mode={mode}
+              canPublish={canPublishVacancies(club.verificationStatus)}
+            />
           )}
         </div>
       </main>

@@ -43,9 +43,18 @@ function makeJob(overrides: Partial<JobOpportunity> = {}): JobOpportunity {
   } as JobOpportunity;
 }
 
-function renderRow(vacancy: JobOpportunity, unansweredCount: number | null = 0) {
+function renderRow(
+  vacancy: JobOpportunity,
+  unansweredCount: number | null = 0,
+  canReopen = true,
+) {
   return render(
-    <ClubVacancyOwnerRow clubId="club-1" vacancy={vacancy} unansweredCount={unansweredCount} />,
+    <ClubVacancyOwnerRow
+      clubId="club-1"
+      vacancy={vacancy}
+      unansweredCount={unansweredCount}
+      canReopen={canReopen}
+    />,
   );
 }
 

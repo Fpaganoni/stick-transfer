@@ -8,16 +8,21 @@ import { OpportunityListCard } from "@/components/opportunities/opportunity-list
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
 import { useClubVacancies, useUnansweredApplicationCounts } from "@/hooks/useClubVacancies";
 
+const publishButton =
+  "inline-flex items-center gap-2 px-4 py-2 bg-primary text-white-black font-semibold rounded-lg hover:bg-primary-hover transition-colors text-sm";
+
 interface ClubVacanciesTabProps {
   clubId: string;
   mode: "owner" | "public";
+  /** Only a verified club publishes or reopens vacancies; ignored in public mode. */
+  canPublish: boolean;
 }
 
 /**
  * Visitors see the OPEN vacancies of the club. The owner sees all of them,
  * whatever their status, and can publish a new one.
  */
-export function ClubVacanciesTab({ clubId, mode }: ClubVacanciesTabProps) {
+export function ClubVacanciesTab({ clubId, mode, canPublish }: ClubVacanciesTabProps) {
   const t = useTranslations("clubProfile.vacancies");
   const isOwner = mode === "owner";
   const { data: vacancies = [], isLoading } = useClubVacancies(
@@ -37,14 +42,28 @@ export function ClubVacanciesTab({ clubId, mode }: ClubVacanciesTabProps) {
   return (
     <div className="space-y-3">
       {isOwner && (
-        <div className="flex justify-end">
-          <Link
-            href="/opportunities/new"
-            className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-white-black font-semibold rounded-lg hover:bg-primary-hover transition-colors text-sm"
-          >
-            <Plus aria-hidden size={16} />
-            {t("publish")}
-          </Link>
+        <div className="flex flex-col items-end gap-1">
+          {canPublish ? (
+            <Link href="/opportunities/new" className={publishButton}>
+              <Plus aria-hidden size={16} />
+              {t("publish")}
+            </Link>
+          ) : (
+            <>
+              <button
+                type="button"
+                disabled
+                aria-describedby="publish-needs-verification"
+                className={`${publishButton} disabled:opacity-50 disabled:cursor-not-allowed`}
+              >
+                <Plus aria-hidden size={16} />
+                {t("publish")}
+              </button>
+              <p id="publish-needs-verification" className="text-xs text-foreground-muted">
+                {t("publishNeedsVerification")}
+              </p>
+            </>
+          )}
         </div>
       )}
 
@@ -68,6 +87,7 @@ export function ClubVacanciesTab({ clubId, mode }: ClubVacanciesTabProps) {
               key={vacancy.id}
               clubId={clubId}
               vacancy={vacancy}
+              canReopen={canPublish}
               unansweredCount={unansweredFor(vacancy.id)}
             />
           ) : (

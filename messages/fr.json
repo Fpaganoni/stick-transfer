@@ -782,6 +782,8 @@
       "deleteCountsUnavailable": "Impossible de vérifier les candidatures en attente pour le moment. Réessayez dans un instant.",
       "reopenLimitReached": "Vous avez déjà 5 offres ouvertes. Fermez-en une ou pourvoyez-en une avant de rouvrir celle-ci.",
       "reopenNotVerified": "Seuls les clubs vérifiés peuvent rouvrir une offre. Faites d'abord vérifier votre club depuis votre profil.",
+      "reopenNeedsVerification": "Seuls les clubs vérifiés peuvent rouvrir une offre.",
+      "publishNeedsVerification": "Faites vérifier votre club pour publier des offres.",
       "deleteBlockedCooldown": "Cette offre a été pourvue récemment. Vous pourrez la supprimer 14 jours après qu'elle a été pourvue.",
       "applicationUpdateFailed": "Nous n'avons pas pu mettre à jour la candidature. Veuillez réessayer."
     },
@@ -893,6 +895,13 @@
       "errorTitle": "Impossible de publier l'offre",
       "activeLimitReached": "Vous avez déjà 5 offres actives. Fermez-en une avant d'en publier une nouvelle.",
       "clubNotVerified": "Seuls les clubs vérifiés peuvent publier des offres. Faites d'abord vérifier votre club depuis votre profil.",
+      "gate": {
+        "title": "Faites vérifier votre club pour publier des offres",
+        "description": "Seuls les clubs vérifiés peuvent publier des offres. Envoyez le document de votre club depuis votre profil et un administrateur l'examinera.",
+        "pendingDescription": "Votre document de vérification est en cours d'examen. Vous pourrez publier dès son approbation.",
+        "goToProfile": "Aller au profil de mon club",
+        "loadError": "Impossible de contrôler le statut de vérification de votre club. Rechargez la page et réessayez."
+      },
       "validation": {
         "titleRequired": "Le titre est requis.",
         "descriptionRequired": "La description est requise.",

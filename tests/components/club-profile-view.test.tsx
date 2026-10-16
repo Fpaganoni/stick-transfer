@@ -398,6 +398,53 @@ describe("ClubProfileView", () => {
       expect(deletes[1]).toBeDisabled();
     });
 
+    describe("a club that is not verified", () => {
+      it.each(["UNVERIFIED", "PENDING", "REJECTED"] as const)(
+        "cannot publish while %s, and is told why",
+        async (verificationStatus) => {
+          state.club = { ...completeClub, isVerified: false, verificationStatus };
+          const user = userEvent.setup();
+
+          render(<ClubProfileView clubId="club-1" mode="owner" />);
+          await user.click(screen.getByRole("tab", { name: "tabs.vacancies" }));
+
+          expect(screen.queryByRole("link", { name: "publish" })).toBeNull();
+          expect(screen.getByRole("button", { name: "publish" })).toBeDisabled();
+          expect(screen.getByText("publishNeedsVerification")).toBeInTheDocument();
+        },
+      );
+
+      it("cannot reopen a closed vacancy, but can still close, fill or delete", async () => {
+        state.club = { ...completeClub, isVerified: false, verificationStatus: "UNVERIFIED" };
+        state.vacancies = [
+          makeJob({ id: "job-1", status: "OPEN" }),
+          makeJob({ id: "job-2", title: "Coach", status: "CLOSED" }),
+        ];
+        const user = userEvent.setup();
+
+        render(<ClubProfileView clubId="club-1" mode="owner" />);
+        await user.click(screen.getByRole("tab", { name: "tabs.vacancies" }));
+
+        expect(screen.getByRole("button", { name: "reopen" })).toBeDisabled();
+        expect(screen.getByText("reopenNeedsVerification")).toBeInTheDocument();
+        expect(screen.getByRole("button", { name: "close" })).toBeEnabled();
+        expect(screen.getAllByRole("button", { name: "markFilled" })[0]).toBeEnabled();
+        expect(screen.getAllByRole("button", { name: "delete" })[0]).toBeEnabled();
+      });
+    });
+
+    it("lets a verified club reopen a closed vacancy", async () => {
+      state.vacancies = [makeJob({ status: "CLOSED" })];
+      const user = userEvent.setup();
+
+      render(<ClubProfileView clubId="club-1" mode="owner" />);
+      await user.click(screen.getByRole("tab", { name: "tabs.vacancies" }));
+
+      expect(screen.getByRole("button", { name: "reopen" })).toBeEnabled();
+      expect(screen.queryByText("reopenNeedsVerification")).toBeNull();
+      expect(screen.queryByText("publishNeedsVerification")).toBeNull();
+    });
+
     it("lists every vacancy of the club and links to publish a new one", async () => {
       state.vacancies = [makeJob(), makeJob({ id: "job-2", title: "Coach", status: "CLOSED" })];
       const user = userEvent.setup();

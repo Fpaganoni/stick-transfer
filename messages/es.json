@@ -782,6 +782,8 @@
       "deleteCountsUnavailable": "Todavía no podemos verificar las postulaciones pendientes. Probá de nuevo en un momento.",
       "reopenLimitReached": "Ya tenés 5 vacantes abiertas. Cerrá o completá una antes de reabrir esta.",
       "reopenNotVerified": "Solo los clubes verificados pueden reabrir una vacante. Primero verificá tu club desde tu perfil.",
+      "reopenNeedsVerification": "Solo los clubes verificados pueden reabrir una vacante.",
+      "publishNeedsVerification": "Verificá tu club para publicar vacantes.",
       "deleteBlockedCooldown": "Esta vacante se cubrió hace poco. Podés eliminarla 14 días después de cubrirla.",
       "applicationUpdateFailed": "No pudimos actualizar la postulación. Intentá de nuevo."
     },
@@ -893,6 +895,13 @@
       "errorTitle": "No se pudo publicar la oferta",
       "activeLimitReached": "Ya tenés 5 ofertas activas. Cerrá una antes de publicar otra.",
       "clubNotVerified": "Solo los clubes verificados pueden publicar ofertas. Primero verificá tu club desde tu perfil.",
+      "gate": {
+        "title": "Verificá tu club para publicar ofertas",
+        "description": "Solo los clubes verificados pueden publicar ofertas. Subí el documento de tu club desde tu perfil y un administrador lo revisará.",
+        "pendingDescription": "Estamos revisando tu documento de verificación. Vas a poder publicar apenas lo aprueben.",
+        "goToProfile": "Ir al perfil de mi club",
+        "loadError": "No pudimos comprobar la verificación de tu club. Recargá la página y probá de nuevo."
+      },
       "validation": {
         "titleRequired": "El título es obligatorio.",
         "descriptionRequired": "La descripción es obligatoria.",

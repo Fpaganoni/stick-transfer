@@ -34,10 +34,17 @@ interface ClubVacancyOwnerRowProps {
   vacancy: JobOpportunity;
   /** Applications still PENDING or UNDER_REVIEW; null while they are unknown. */
   unansweredCount: number | null;
+  /** Reopening is publishing: only a verified club may do it. */
+  canReopen: boolean;
 }
 
 /** One vacancy as its owner sees it: the card plus close, fill, delete and applicants. */
-export function ClubVacancyOwnerRow({ clubId, vacancy, unansweredCount }: ClubVacancyOwnerRowProps) {
+export function ClubVacancyOwnerRow({
+  clubId,
+  vacancy,
+  unansweredCount,
+  canReopen,
+}: ClubVacancyOwnerRowProps) {
   const t = useTranslations("clubProfile.vacancies");
   const locale = useLocale();
   const updateStatus = useUpdateVacancyStatus();
@@ -54,6 +61,7 @@ export function ClubVacancyOwnerRow({ clubId, vacancy, unansweredCount }: ClubVa
     unansweredCount: unansweredCount ?? 1,
   });
   const hintId = `delete-hint-${vacancy.id}`;
+  const reopenHintId = `reopen-hint-${vacancy.id}`;
 
   const changeStatus = (next: JobStatus) =>
     updateStatus.mutate({ id: vacancy.id, clubId, status: next });
@@ -101,7 +109,8 @@ export function ClubVacancyOwnerRow({ clubId, vacancy, unansweredCount }: ClubVa
           <button
             type="button"
             className={actionButton}
-            disabled={updateStatus.isPending}
+            disabled={updateStatus.isPending || !canReopen}
+            aria-describedby={canReopen ? undefined : reopenHintId}
             onClick={() => changeStatus("OPEN")}
           >
             {t("reopen")}
@@ -129,6 +138,12 @@ export function ClubVacancyOwnerRow({ clubId, vacancy, unansweredCount }: ClubVa
           {t("delete")}
         </button>
       </div>
+
+      {status !== "OPEN" && !canReopen && (
+        <p id={reopenHintId} className="px-1 text-xs text-foreground-muted">
+          {t("reopenNeedsVerification")}
+        </p>
+      )}
 
       {deleteHint && (
         <p id={hintId} className="px-1 text-xs text-foreground-muted">
