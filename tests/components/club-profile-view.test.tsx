@@ -201,6 +201,33 @@ describe("ClubProfileView", () => {
     });
   });
 
+  describe("the bio in the header", () => {
+    it.each(["public", "owner"] as const)("shows the bio under the name in %s mode", (mode) => {
+      state.club = { ...completeClub, bio: "Hockey since 1935." };
+
+      render(<ClubProfileView clubId="club-1" mode={mode} />);
+
+      expect(screen.getByText("Hockey since 1935.")).toBeInTheDocument();
+    });
+
+    it("shows nothing when the bio is empty or only spaces", () => {
+      state.club = { ...completeClub, bio: "   " };
+
+      render(<ClubProfileView clubId="club-1" mode="public" />);
+
+      expect(screen.queryByTestId("club-bio")).toBeNull();
+    });
+
+    it("renders the bio as plain text, never as HTML", () => {
+      state.club = { ...completeClub, bio: "<b>bold</b>" };
+
+      render(<ClubProfileView clubId="club-1" mode="public" />);
+
+      expect(screen.getByTestId("club-bio")).toHaveTextContent("<b>bold</b>");
+      expect(screen.getByTestId("club-bio").querySelector("b")).toBeNull();
+    });
+  });
+
   describe("tabs", () => {
     it.each(["public", "owner"] as const)("has only Profile and Vacancies in %s mode", (mode) => {
       render(<ClubProfileView clubId="club-1" mode={mode} />);

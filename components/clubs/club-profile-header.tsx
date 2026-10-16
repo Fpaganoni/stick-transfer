@@ -151,6 +151,15 @@ export function ClubProfileHeader({ club, mode }: ClubProfileHeaderProps) {
                 {t("header.followers", { count: club.followersCount })}
               </p>
             )}
+            {/* Plain text: the owner wrote it */}
+            {club.bio?.trim() && (
+              <p
+                data-testid="club-bio"
+                className="text-foreground/80 text-sm mt-2 whitespace-pre-line wrap-break-word"
+              >
+                {club.bio.trim()}
+              </p>
+            )}
           </div>
 
           <div className="flex items-center gap-2 flex-wrap">
