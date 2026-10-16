@@ -209,6 +209,71 @@ describe("ClubProfileView", () => {
       expect(tabs).toEqual(["tabs.profile", "tabs.vacancies"]);
     });
 
+    describe("keyboard", () => {
+      const profileTab = () => screen.getByRole("tab", { name: "tabs.profile" });
+      const vacanciesTab = () => screen.getByRole("tab", { name: "tabs.vacancies" });
+
+      it("puts only the selected tab in the tab order, so Tab leaves the list", () => {
+        render(<ClubProfileView clubId="club-1" mode="public" />);
+
+        expect(profileTab()).toHaveAttribute("tabindex", "0");
+        expect(vacanciesTab()).toHaveAttribute("tabindex", "-1");
+      });
+
+      it("moves the selection and the focus with the arrow keys, wrapping around", async () => {
+        const user = userEvent.setup();
+        render(<ClubProfileView clubId="club-1" mode="public" />);
+
+        profileTab().focus();
+        await user.keyboard("{ArrowRight}");
+        expect(vacanciesTab()).toHaveAttribute("aria-selected", "true");
+        expect(vacanciesTab()).toHaveFocus();
+        expect(vacanciesTab()).toHaveAttribute("tabindex", "0");
+        expect(profileTab()).toHaveAttribute("tabindex", "-1");
+
+        await user.keyboard("{ArrowRight}");
+        expect(profileTab()).toHaveAttribute("aria-selected", "true");
+        expect(profileTab()).toHaveFocus();
+
+        await user.keyboard("{ArrowLeft}");
+        expect(vacanciesTab()).toHaveAttribute("aria-selected", "true");
+      });
+
+      it("jumps to the last tab with End and back to the first with Home", async () => {
+        const user = userEvent.setup();
+        render(<ClubProfileView clubId="club-1" mode="public" />);
+
+        profileTab().focus();
+        await user.keyboard("{End}");
+        expect(vacanciesTab()).toHaveAttribute("aria-selected", "true");
+        expect(vacanciesTab()).toHaveFocus();
+
+        await user.keyboard("{Home}");
+        expect(profileTab()).toHaveAttribute("aria-selected", "true");
+        expect(profileTab()).toHaveFocus();
+      });
+
+      it("shows the panel of the tab reached with the keyboard", async () => {
+        const user = userEvent.setup();
+        render(<ClubProfileView clubId="club-1" mode="public" />);
+
+        profileTab().focus();
+        await user.keyboard("{ArrowRight}");
+
+        expect(screen.getByRole("tabpanel")).toHaveAttribute("aria-labelledby", "club-tab-vacancies");
+      });
+
+      it("ignores keys that are not tab navigation", async () => {
+        const user = userEvent.setup();
+        render(<ClubProfileView clubId="club-1" mode="public" />);
+
+        profileTab().focus();
+        await user.keyboard("{ArrowDown}a");
+
+        expect(profileTab()).toHaveAttribute("aria-selected", "true");
+      });
+    });
+
     it("shows the details and the contact links on the Profile tab", () => {
       render(<ClubProfileView clubId="club-1" mode="public" />);
 

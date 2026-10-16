@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState, type KeyboardEvent } from "react";
 import { useTranslations } from "next-intl";
 import { Loader } from "@/components/ui/loader";
 import { Error as ErrorMessage } from "@/components/ui/error";
@@ -14,6 +14,7 @@ import { VerificationModal } from "@/components/clubs/verification-modal";
 import { OpportunityDetailModal } from "@/components/opportunities/opportunity-detail-modal";
 import { useClub } from "@/hooks/useClubs";
 import { canPublishVacancies } from "@/lib/club-publishing";
+import { nextTabIndex } from "@/lib/tab-keyboard";
 import { useAuthStore } from "@/stores/useAuthStore";
 
 type ClubProfileTab = "profile" | "vacancies";
@@ -37,6 +38,16 @@ export function ClubProfileView({ clubId, mode }: ClubProfileViewProps) {
   const { data, isLoading, error } = useClub(clubId);
   const [activeTab, setActiveTab] = useState<ClubProfileTab>("profile");
   const [isVerificationOpen, setIsVerificationOpen] = useState(false);
+  const tabRefs = useRef<Partial<Record<ClubProfileTab, HTMLButtonElement | null>>>({});
+
+  // Roving tabindex: the arrows select and focus the neighbour, Tab leaves the list
+  const handleTabKeyDown = (event: KeyboardEvent<HTMLButtonElement>, tab: ClubProfileTab) => {
+    const next = nextTabIndex(event.key, TABS.indexOf(tab), TABS.length);
+    if (next === null) return;
+    event.preventDefault();
+    setActiveTab(TABS[next]);
+    tabRefs.current[TABS[next]]?.focus();
+  };
 
   if (isLoading) {
     return (
@@ -83,12 +94,17 @@ export function ClubProfileView({ clubId, mode }: ClubProfileViewProps) {
           {TABS.map((tab) => (
             <button
               key={tab}
+              ref={(element) => {
+                tabRefs.current[tab] = element;
+              }}
               role="tab"
               id={`club-tab-${tab}`}
               aria-selected={activeTab === tab}
               aria-controls={`club-panel-${tab}`}
+              tabIndex={activeTab === tab ? 0 : -1}
               type="button"
               onClick={() => setActiveTab(tab)}
+              onKeyDown={(event) => handleTabKeyDown(event, tab)}
               className={`flex-1 py-4 font-medium text-center border-b-2 border-l border-r transition-transform duration-300 cursor-pointer whitespace-nowrap min-w-fit ${
                 activeTab === tab
                   ? "border-b-border-strong text-primary font-bold hover:text-primary shadow-lg"
