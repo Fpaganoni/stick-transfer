@@ -19,6 +19,11 @@ const IMAGE_HOSTS = [
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Root layout has no <html>/<body> (they live in app/[locale]/layout.tsx),
+  // so unmatched URLs need app/global-not-found.tsx.
+  experimental: {
+    globalNotFound: true,
+  },
   images: {
     remotePatterns: IMAGE_HOSTS.map((host) => ({ protocol: "https", ...host })),
   },
