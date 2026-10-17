@@ -85,7 +85,11 @@ export default async function LocaleLayout({
         <NextIntlClientProvider messages={messages}>
           <QueryProvider>
             <AuthInitializer />
-            <MotionConfig reducedMotion="user">
+            <MotionConfig
+              reducedMotion={
+                process.env.NODE_ENV === "production" ? "user" : "never"
+              }
+            >
               <ThemeProvider>{children}</ThemeProvider>
             </MotionConfig>
             <Toaster />

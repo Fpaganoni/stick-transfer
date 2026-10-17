@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  FaInstagram,
-  FaXTwitter,
-  FaFacebook,
-  FaLinkedin,
-} from "react-icons/fa6";
+import { FaInstagram } from "react-icons/fa6";
 import Link from "next/link";
 import Image from "next/image";
 import { LanguageSelector } from "@/components/ui/language-selector";
@@ -26,28 +21,28 @@ const FOOTER_LINKS = {
 const SOCIAL_LINKS = [
   {
     icon: FaInstagram,
-    href: "https://instagram.com",
+    href: "https://www.instagram.com/stick_transfer?utm_source=qr&cplk=MTV1ejdwbG95YzNjMA==",
     label: "Instagram",
     color: "var(--color-instagram)",
   },
-  {
-    icon: FaFacebook,
-    href: "https://facebook.com",
-    label: "Facebook",
-    color: "var(--color-facebook)",
-  },
-  {
-    icon: FaXTwitter,
-    href: "https://twitter.com",
-    label: "Twitter",
-    color: "var(--color-x)",
-  },
-  {
-    icon: FaLinkedin,
-    href: "https://linkedin.com",
-    label: "LinkedIn",
-    color: "var(--color-linkedin)",
-  },
+  // {
+  //   icon: FaFacebook,
+  //   href: "https://facebook.com",
+  //   label: "Facebook",
+  //   color: "var(--color-facebook)",
+  // },
+  // {
+  //   icon: FaXTwitter,
+  //   href: "https://twitter.com",
+  //   label: "Twitter",
+  //   color: "var(--color-x)",
+  // },
+  // {
+  //   icon: FaLinkedin,
+  //   href: "https://linkedin.com",
+  //   label: "LinkedIn",
+  //   color: "var(--color-linkedin)",
+  // },
 ];
 
 export function FooterLanding() {

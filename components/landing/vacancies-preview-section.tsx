@@ -8,10 +8,14 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { OpportunityListCard } from "@/components/opportunities/opportunity-list-card";
 import { useJobOpportunities } from "@/hooks/useJobOpportunities";
 
+const MAX_PREVIEW_VACANCIES = 8;
+
 export function VacanciesPreviewSection() {
   const t = useTranslations("landing.vacancies");
   const locale = useLocale();
-  const { data, isLoading, isError } = useJobOpportunities({ limit: 6 });
+  // The query takes no variables, so the backend returns every vacancy; cap here.
+  const { data, isLoading, isError } = useJobOpportunities();
+  const previewVacancies = data?.jobOpportunities?.slice(0, MAX_PREVIEW_VACANCIES);
 
   const opportunitiesHref =
     locale === "en" ? "/opportunities" : `/${locale}/opportunities`;
@@ -44,7 +48,7 @@ export function VacanciesPreviewSection() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {data?.jobOpportunities?.map((opportunity) => (
+            {previewVacancies?.map((opportunity) => (
               <OpportunityListCard key={opportunity.id} {...opportunity} />
             ))}
           </div>
